@@ -1,0 +1,781 @@
+{
+  "gameId": "animals",
+  "group": {
+    "ja": "どうぶつ",
+    "en": "Animals",
+    "de": "Tiere",
+    "es": "Animales",
+    "fr": "Animaux",
+    "hi": "जानवर",
+    "id": "Hewan",
+    "it": "Animali",
+    "ko": "동물",
+    "nl": "Dieren",
+    "pt-BR": "Animais",
+    "th": "สัตว์",
+    "vi": "Động vật",
+    "zh-Hans": "动物",
+    "zh-Hant": "動物"
+  },
+  "title": {
+    "ja": "どうぶつ",
+    "en": "Animals",
+    "de": "Tiere",
+    "es": "Animales",
+    "fr": "Animaux",
+    "hi": "जानवर",
+    "id": "Hewan",
+    "it": "Animali",
+    "ko": "동물",
+    "nl": "Dieren",
+    "pt-BR": "Animais",
+    "th": "สัตว์",
+    "vi": "Động vật",
+    "zh-Hans": "动物",
+    "zh-Hant": "動物"
+  },
+  "icon": "🐾",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🐶",
+      "name": {
+        "ja": "いぬ",
+        "en": "Dog",
+        "de": "Hund",
+        "es": "Perro",
+        "fr": "Chien",
+        "hi": "कुत्ता",
+        "id": "Anjing",
+        "it": "Cane",
+        "ko": "개",
+        "nl": "Hond",
+        "pt-BR": "Cachorro",
+        "th": "สุนัข",
+        "vi": "Chó",
+        "zh-Hans": "狗",
+        "zh-Hant": "狗"
+      }
+    },
+    {
+      "display": "🐱",
+      "name": {
+        "ja": "ねこ",
+        "en": "Cat",
+        "de": "Katze",
+        "es": "Gato",
+        "fr": "Chat",
+        "hi": "बिल्ली",
+        "id": "Kucing",
+        "it": "Gatto",
+        "ko": "고양이",
+        "nl": "Kat",
+        "pt-BR": "Gato",
+        "th": "แมว",
+        "vi": "Mèo",
+        "zh-Hans": "猫",
+        "zh-Hant": "貓"
+      }
+    },
+    {
+      "display": "🐰",
+      "name": {
+        "ja": "うさぎ",
+        "en": "Rabbit",
+        "de": "Kaninchen",
+        "es": "Conejo",
+        "fr": "Lapin",
+        "hi": "खरगोश",
+        "id": "Kelinci",
+        "it": "Coniglio",
+        "ko": "토끼",
+        "nl": "Konijn",
+        "pt-BR": "Coelho",
+        "th": "กระต่าย",
+        "vi": "Thỏ",
+        "zh-Hans": "兔子",
+        "zh-Hant": "兔子"
+      }
+    },
+    {
+      "display": "🦊",
+      "name": {
+        "ja": "きつね",
+        "en": "Fox",
+        "de": "Fuchs",
+        "es": "Zorro",
+        "fr": "Renard",
+        "hi": "लोमड़ी",
+        "id": "Rubah",
+        "it": "Volpe",
+        "ko": "여우",
+        "nl": "Vos",
+        "pt-BR": "Raposa",
+        "th": "จิ้งจอก",
+        "vi": "Cáo",
+        "zh-Hans": "狐狸",
+        "zh-Hant": "狐狸"
+      }
+    },
+    {
+      "display": "🐻",
+      "name": {
+        "ja": "くま",
+        "en": "Bear",
+        "de": "Bär",
+        "es": "Oso",
+        "fr": "Ours",
+        "hi": "भालू",
+        "id": "Beruang",
+        "it": "Orso",
+        "ko": "곰",
+        "nl": "Beer",
+        "pt-BR": "Urso",
+        "th": "หมี",
+        "vi": "Gấu",
+        "zh-Hans": "熊",
+        "zh-Hant": "熊"
+      }
+    },
+    {
+      "display": "🐼",
+      "name": {
+        "ja": "ぱんだ",
+        "en": "Panda",
+        "de": "Panda",
+        "es": "Panda",
+        "fr": "Panda",
+        "hi": "पांडा",
+        "id": "Panda",
+        "it": "Panda",
+        "ko": "판다",
+        "nl": "Panda",
+        "pt-BR": "Panda",
+        "th": "แพนด้า",
+        "vi": "Gấu trúc",
+        "zh-Hans": "熊猫",
+        "zh-Hant": "貓熊"
+      }
+    },
+    {
+      "display": "🐨",
+      "name": {
+        "ja": "こあら",
+        "en": "Koala",
+        "de": "Koala",
+        "es": "Koala",
+        "fr": "Koala",
+        "hi": "कोआला",
+        "id": "Koala",
+        "it": "Koala",
+        "ko": "코알라",
+        "nl": "Koala",
+        "pt-BR": "Coala",
+        "th": "โคอาล่า",
+        "vi": "Gấu túi",
+        "zh-Hans": "考拉",
+        "zh-Hant": "無尾熊"
+      }
+    },
+    {
+      "display": "🐯",
+      "name": {
+        "ja": "とら",
+        "en": "Tiger",
+        "de": "Tiger",
+        "es": "Tigre",
+        "fr": "Tigre",
+        "hi": "बाघ",
+        "id": "Harimau",
+        "it": "Tigre",
+        "ko": "호랑이",
+        "nl": "Tijger",
+        "pt-BR": "Tigre",
+        "th": "เสือ",
+        "vi": "Hổ",
+        "zh-Hans": "老虎",
+        "zh-Hant": "老虎"
+      }
+    },
+    {
+      "display": "🦁",
+      "name": {
+        "ja": "らいおん",
+        "en": "Lion",
+        "de": "Löwe",
+        "es": "León",
+        "fr": "Lion",
+        "hi": "शेर",
+        "id": "Singa",
+        "it": "Leone",
+        "ko": "사자",
+        "nl": "Leeuw",
+        "pt-BR": "Leão",
+        "th": "สิงโต",
+        "vi": "Sư tử",
+        "zh-Hans": "狮子",
+        "zh-Hant": "獅子"
+      }
+    },
+    {
+      "display": "🐮",
+      "name": {
+        "ja": "うし",
+        "en": "Cow",
+        "de": "Kuh",
+        "es": "Vaca",
+        "fr": "Vache",
+        "hi": "गाय",
+        "id": "Sapi",
+        "it": "Mucca",
+        "ko": "소",
+        "nl": "Koe",
+        "pt-BR": "Vaca",
+        "th": "วัว",
+        "vi": "Bò",
+        "zh-Hans": "牛",
+        "zh-Hant": "牛"
+      }
+    },
+    {
+      "display": "🐷",
+      "name": {
+        "ja": "ぶた",
+        "en": "Pig",
+        "de": "Schwein",
+        "es": "Cerdo",
+        "fr": "Cochon",
+        "hi": "सुअर",
+        "id": "Babi",
+        "it": "Maiale",
+        "ko": "돼지",
+        "nl": "Varken",
+        "pt-BR": "Porco",
+        "th": "หมู",
+        "vi": "Lợn",
+        "zh-Hans": "猪",
+        "zh-Hant": "豬"
+      }
+    },
+    {
+      "display": "🐸",
+      "name": {
+        "ja": "かえる",
+        "en": "Frog",
+        "de": "Frosch",
+        "es": "Rana",
+        "fr": "Grenouille",
+        "hi": "मेंढक",
+        "id": "Katak",
+        "it": "Rana",
+        "ko": "개구리",
+        "nl": "Kikker",
+        "pt-BR": "Sapo",
+        "th": "กบ",
+        "vi": "Ếch",
+        "zh-Hans": "青蛙",
+        "zh-Hant": "青蛙"
+      }
+    },
+    {
+      "display": "🐵",
+      "name": {
+        "ja": "さる",
+        "en": "Monkey",
+        "de": "Affe",
+        "es": "Mono",
+        "fr": "Singe",
+        "hi": "बंदर",
+        "id": "Monyet",
+        "it": "Scimmia",
+        "ko": "원숭이",
+        "nl": "Aap",
+        "pt-BR": "Macaco",
+        "th": "ลิง",
+        "vi": "Khỉ",
+        "zh-Hans": "猴子",
+        "zh-Hant": "猴子"
+      }
+    },
+    {
+      "display": "🐴",
+      "name": {
+        "ja": "うま",
+        "en": "Horse",
+        "de": "Pferd",
+        "es": "Caballo",
+        "fr": "Cheval",
+        "hi": "घोड़ा",
+        "id": "Kuda",
+        "it": "Cavallo",
+        "ko": "말",
+        "nl": "Paard",
+        "pt-BR": "Cavalo",
+        "th": "ม้า",
+        "vi": "Ngựa",
+        "zh-Hans": "马",
+        "zh-Hant": "馬"
+      }
+    },
+    {
+      "display": "🐝",
+      "name": {
+        "ja": "はち",
+        "en": "Bee",
+        "de": "Biene",
+        "es": "Abeja",
+        "fr": "Abeille",
+        "hi": "मधुमक्खी",
+        "id": "Lebah",
+        "it": "Ape",
+        "ko": "꿀벌",
+        "nl": "Bij",
+        "pt-BR": "Abelha",
+        "th": "ผึ้ง",
+        "vi": "Ong",
+        "zh-Hans": "蜜蜂",
+        "zh-Hant": "蜜蜂"
+      }
+    },
+    {
+      "display": "🦋",
+      "name": {
+        "ja": "ちょうちょ",
+        "en": "Butterfly",
+        "de": "Schmetterling",
+        "es": "Mariposa",
+        "fr": "Papillon",
+        "hi": "तितली",
+        "id": "Kupu-kupu",
+        "it": "Farfalla",
+        "ko": "나비",
+        "nl": "Vlinder",
+        "pt-BR": "Borboleta",
+        "th": "ผีเสื้อ",
+        "vi": "Bướm",
+        "zh-Hans": "蝴蝶",
+        "zh-Hant": "蝴蝶"
+      }
+    },
+    {
+      "display": "🐌",
+      "name": {
+        "ja": "かたつむり",
+        "en": "Snail",
+        "de": "Schnecke",
+        "es": "Caracol",
+        "fr": "Escargot",
+        "hi": "घोंघा",
+        "id": "Siput",
+        "it": "Lumaca",
+        "ko": "달팽이",
+        "nl": "Slak",
+        "pt-BR": "Caracol",
+        "th": "หอยทาก",
+        "vi": "Ốc sên",
+        "zh-Hans": "蜗牛",
+        "zh-Hant": "蝸牛"
+      }
+    },
+    {
+      "display": "🐞",
+      "name": {
+        "ja": "てんとうむし",
+        "en": "Ladybug",
+        "de": "Marienkäfer",
+        "es": "Mariquita",
+        "fr": "Coccinelle",
+        "hi": "लेडीबग",
+        "id": "Kepik",
+        "it": "Coccinella",
+        "ko": "무당벌레",
+        "nl": "Lieveheersbeestje",
+        "pt-BR": "Joaninha",
+        "th": "เต่าทอง",
+        "vi": "Bọ rùa",
+        "zh-Hans": "瓢虫",
+        "zh-Hant": "瓢蟲"
+      }
+    },
+    {
+      "display": "🐜",
+      "name": {
+        "ja": "あり",
+        "en": "Ant",
+        "de": "Ameise",
+        "es": "Hormiga",
+        "fr": "Fourmi",
+        "hi": "चींटी",
+        "id": "Semut",
+        "it": "Formica",
+        "ko": "개미",
+        "nl": "Mier",
+        "pt-BR": "Formiga",
+        "th": "มด",
+        "vi": "Kiến",
+        "zh-Hans": "蚂蚁",
+        "zh-Hant": "螞蟻"
+      }
+    },
+    {
+      "display": "🐢",
+      "name": {
+        "ja": "かめ",
+        "en": "Turtle",
+        "de": "Schildkröte",
+        "es": "Tortuga",
+        "fr": "Tortue",
+        "hi": "कछुआ",
+        "id": "Kura-kura",
+        "it": "Tartaruga",
+        "ko": "거북이",
+        "nl": "Schildpad",
+        "pt-BR": "Tartaruga",
+        "th": "เต่า",
+        "vi": "Rùa",
+        "zh-Hans": "乌龟",
+        "zh-Hant": "烏龜"
+      }
+    },
+    {
+      "display": "🐍",
+      "name": {
+        "ja": "へび",
+        "en": "Snake",
+        "de": "Schlange",
+        "es": "Serpiente",
+        "fr": "Serpent",
+        "hi": "सांप",
+        "id": "Ular",
+        "it": "Serpente",
+        "ko": "뱀",
+        "nl": "Slang",
+        "pt-BR": "Cobra",
+        "th": "งู",
+        "vi": "Rắn",
+        "zh-Hans": "蛇",
+        "zh-Hant": "蛇"
+      }
+    },
+    {
+      "display": "🐙",
+      "name": {
+        "ja": "たこ",
+        "en": "Octopus",
+        "de": "Oktopus",
+        "es": "Pulpo",
+        "fr": "Pieuvre",
+        "hi": "ऑक्टोपस",
+        "id": "Gurita",
+        "it": "Polpo",
+        "ko": "문어",
+        "nl": "Octopus",
+        "pt-BR": "Polvo",
+        "th": "ปลาหมึกยักษ์",
+        "vi": "Bạch tuộc",
+        "zh-Hans": "章鱼",
+        "zh-Hant": "章魚"
+      }
+    },
+    {
+      "display": "🦑",
+      "name": {
+        "ja": "いか",
+        "en": "Squid",
+        "de": "Kalmar",
+        "es": "Calamar",
+        "fr": "Calmar",
+        "hi": "स्क्विड",
+        "id": "Cumi-cumi",
+        "it": "Calamaro",
+        "ko": "오징어",
+        "nl": "Inktvis",
+        "pt-BR": "Lula",
+        "th": "ปลาหมึก",
+        "vi": "Mực",
+        "zh-Hans": "鱿鱼",
+        "zh-Hant": "魷魚"
+      }
+    },
+    {
+      "display": "🦀",
+      "name": {
+        "ja": "かに",
+        "en": "Crab",
+        "de": "Krabbe",
+        "es": "Cangrejo",
+        "fr": "Crabe",
+        "hi": "केकड़ा",
+        "id": "Kepiting",
+        "it": "Granchio",
+        "ko": "게",
+        "nl": "Krab",
+        "pt-BR": "Caranguejo",
+        "th": "ปู",
+        "vi": "Cua",
+        "zh-Hans": "螃蟹",
+        "zh-Hant": "螃蟹"
+      }
+    },
+    {
+      "display": "🐟",
+      "name": {
+        "ja": "さかな",
+        "en": "Fish",
+        "de": "Fisch",
+        "es": "Pez",
+        "fr": "Poisson",
+        "hi": "मछली",
+        "id": "Ikan",
+        "it": "Pesce",
+        "ko": "물고기",
+        "nl": "Vis",
+        "pt-BR": "Peixe",
+        "th": "ปลา",
+        "vi": "Cá",
+        "zh-Hans": "鱼",
+        "zh-Hant": "魚"
+      }
+    },
+    {
+      "display": "🐬",
+      "name": {
+        "ja": "いるか",
+        "en": "Dolphin",
+        "de": "Delfin",
+        "es": "Delfín",
+        "fr": "Dauphin",
+        "hi": "डॉल्फिन",
+        "id": "Lumba-lumba",
+        "it": "Delfino",
+        "ko": "돌고래",
+        "nl": "Dolfijn",
+        "pt-BR": "Golfinho",
+        "th": "โลมา",
+        "vi": "Cá heo",
+        "zh-Hans": "海豚",
+        "zh-Hant": "海豚"
+      }
+    },
+    {
+      "display": "🐳",
+      "name": {
+        "ja": "くじら",
+        "en": "Whale",
+        "de": "Wal",
+        "es": "Ballena",
+        "fr": "Baleine",
+        "hi": "व्हेल",
+        "id": "Paus",
+        "it": "Balena",
+        "ko": "고래",
+        "nl": "Walvis",
+        "pt-BR": "Baleia",
+        "th": "วาฬ",
+        "vi": "Cá voi",
+        "zh-Hans": "鲸鱼",
+        "zh-Hant": "鯨魚"
+      }
+    },
+    {
+      "display": "🦈",
+      "name": {
+        "ja": "さめ",
+        "en": "Shark",
+        "de": "Hai",
+        "es": "Tiburón",
+        "fr": "Requin",
+        "hi": "शार्क",
+        "id": "Hiu",
+        "it": "Squalo",
+        "ko": "상어",
+        "nl": "Haai",
+        "pt-BR": "Tubarão",
+        "th": "ฉลาม",
+        "vi": "Cá mập",
+        "zh-Hans": "鲨鱼",
+        "zh-Hant": "鯊魚"
+      }
+    },
+    {
+      "display": "🐊",
+      "name": {
+        "ja": "わに",
+        "en": "Crocodile",
+        "de": "Krokodil",
+        "es": "Cocodrilo",
+        "fr": "Crocodile",
+        "hi": "मगरमच्छ",
+        "id": "Buaya",
+        "it": "Coccodrillo",
+        "ko": "악어",
+        "nl": "Krokodil",
+        "pt-BR": "Crocodilo",
+        "th": "จระเข้",
+        "vi": "Cá sấu",
+        "zh-Hans": "鳄鱼",
+        "zh-Hant": "鱷魚"
+      }
+    },
+    {
+      "display": "🦓",
+      "name": {
+        "ja": "しまうま",
+        "en": "Zebra",
+        "de": "Zebra",
+        "es": "Cebra",
+        "fr": "Zèbre",
+        "hi": "ज़ेबरा",
+        "id": "Zebra",
+        "it": "Zebra",
+        "ko": "얼룩말",
+        "nl": "Zebra",
+        "pt-BR": "Zebra",
+        "th": "ม้าลาย",
+        "vi": "Ngựa vằn",
+        "zh-Hans": "斑马",
+        "zh-Hant": "斑馬"
+      }
+    },
+    {
+      "display": "🐘",
+      "name": {
+        "ja": "ぞう",
+        "en": "Elephant",
+        "de": "Elefant",
+        "es": "Elefante",
+        "fr": "Éléphant",
+        "hi": "हाथी",
+        "id": "Gajah",
+        "it": "Elefante",
+        "ko": "코끼리",
+        "nl": "Olifant",
+        "pt-BR": "Elefante",
+        "th": "ช้าง",
+        "vi": "Voi",
+        "zh-Hans": "大象",
+        "zh-Hant": "大象"
+      }
+    },
+    {
+      "display": "🦒",
+      "name": {
+        "ja": "きりん",
+        "en": "Giraffe",
+        "de": "Giraffe",
+        "es": "Jirafa",
+        "fr": "Girafe",
+        "hi": "जिराफ",
+        "id": "Jerapah",
+        "it": "Giraffa",
+        "ko": "기린",
+        "nl": "Giraf",
+        "pt-BR": "Girafa",
+        "th": "ยีราฟ",
+        "vi": "Hươu cao cổ",
+        "zh-Hans": "长颈鹿",
+        "zh-Hant": "長頸鹿"
+      }
+    },
+    {
+      "display": "🦘",
+      "name": {
+        "ja": "かんがるー",
+        "en": "Kangaroo",
+        "de": "Känguru",
+        "es": "Canguro",
+        "fr": "Kangourou",
+        "hi": "कंगारू",
+        "id": "Kanguru",
+        "it": "Canguro",
+        "ko": "캥거루",
+        "nl": "Kangoeroe",
+        "pt-BR": "Canguru",
+        "th": "จิงโจ้",
+        "vi": "Chuột túi",
+        "zh-Hans": "袋鼠",
+        "zh-Hant": "袋鼠"
+      }
+    },
+    {
+      "display": "🦚",
+      "name": {
+        "ja": "くじゃく",
+        "en": "Peacock",
+        "de": "Pfau",
+        "es": "Pavo real",
+        "fr": "Paon",
+        "hi": "मोर",
+        "id": "Merak",
+        "it": "Pavone",
+        "ko": "공작",
+        "nl": "Pauw",
+        "pt-BR": "Pavão",
+        "th": "นกยูง",
+        "vi": "Công",
+        "zh-Hans": "孔雀",
+        "zh-Hant": "孔雀"
+      }
+    },
+    {
+      "display": "🦩",
+      "name": {
+        "ja": "ふらみんご",
+        "en": "Flamingo",
+        "de": "Flamingo",
+        "es": "Flamenco",
+        "fr": "Flamant rose",
+        "hi": "फ्लेमिंगो",
+        "id": "Flamingo",
+        "it": "Fenicottero",
+        "ko": "홍학",
+        "nl": "Flamingo",
+        "pt-BR": "Flamingo",
+        "th": "นกฟลามิงโก",
+        "vi": "Hồng hạc",
+        "zh-Hans": "火烈鸟",
+        "zh-Hant": "紅鶴"
+      }
+    },
+    {
+      "display": "🦥",
+      "name": {
+        "ja": "なまけもの",
+        "en": "Sloth",
+        "de": "Faultier",
+        "es": "Perezoso",
+        "fr": "Paresseux",
+        "hi": "स्लॉथ",
+        "id": "Kungkang",
+        "it": "Bradipo",
+        "ko": "나무늘보",
+        "nl": "Luiaard",
+        "pt-BR": "Preguiça",
+        "th": "สลอธ",
+        "vi": "Con lười",
+        "zh-Hans": "树懒",
+        "zh-Hant": "樹懶"
+      }
+    },
+    {
+      "display": "🐿️",
+      "name": {
+        "ja": "りす",
+        "en": "Squirrel",
+        "de": "Eichhörnchen",
+        "es": "Ardilla",
+        "fr": "Écureuil",
+        "hi": "गिलहरी",
+        "id": "Tupai",
+        "it": "Scoiattolo",
+        "ko": "다람쥐",
+        "nl": "Eekhoorn",
+        "pt-BR": "Esquilo",
+        "th": "กระรอก",
+        "vi": "Sóc",
+        "zh-Hans": "松鼠",
+        "zh-Hant": "松鼠"
+      }
+    }
+  ]
+}

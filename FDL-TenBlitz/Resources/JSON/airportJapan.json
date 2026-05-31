@@ -1,0 +1,641 @@
+{
+  "gameId": "airportJapan",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "日本の空港コード",
+    "en": "Japan Airports",
+    "de": "Japanische Flughäfen",
+    "es": "Aeropuertos de Japón",
+    "fr": "Aéroports du Japon",
+    "hi": "जापान हवाई अड्डे",
+    "id": "Bandara Jepang",
+    "it": "Aeroporti del Giappone",
+    "ko": "일본 공항",
+    "nl": "Japanse luchthavens",
+    "pt-BR": "Aeroportos do Japão",
+    "th": "สนามบินในญี่ปุ่น",
+    "vi": "Sân bay Nhật Bản",
+    "zh-Hans": "日本机场",
+    "zh-Hant": "日本機場"
+  },
+  "icon": "✈️",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "NRT",
+      "name": {
+        "ja": "成田国際空港",
+        "en": "Narita Intl",
+        "de": "Flughafen Narita",
+        "es": "Aeropuerto de Narita",
+        "fr": "Aéroport de Narita",
+        "hi": "नारिता अंतर्राष्ट्रीय",
+        "id": "Bandara Narita",
+        "it": "Aeroporto di Narita",
+        "ko": "나리타 국제공항",
+        "nl": "Luchthaven Narita",
+        "pt-BR": "Aeroporto de Narita",
+        "th": "ท่าอากาศยานนาริตะ",
+        "vi": "Sân bay Narita",
+        "zh-Hans": "成田国际机场",
+        "zh-Hant": "成田國際機場"
+      }
+    },
+    {
+      "display": "HND",
+      "name": {
+        "ja": "東京国際空港（羽田）",
+        "en": "Tokyo Haneda",
+        "de": "Flughafen Haneda",
+        "es": "Aeropuerto de Haneda",
+        "fr": "Aéroport de Haneda",
+        "hi": "हानेडा हवाई अड्डा",
+        "id": "Bandara Haneda",
+        "it": "Aeroporto di Haneda",
+        "ko": "하네다 공항",
+        "nl": "Luchthaven Haneda",
+        "pt-BR": "Aeroporto de Haneda",
+        "th": "ท่าอากาศยานฮาเนดะ",
+        "vi": "Sân bay Haneda",
+        "zh-Hans": "羽田机场",
+        "zh-Hant": "羽田機場"
+      }
+    },
+    {
+      "display": "KIX",
+      "name": {
+        "ja": "関西国際空港",
+        "en": "Kansai Intl",
+        "de": "Flughafen Kansai",
+        "es": "Aeropuerto de Kansai",
+        "fr": "Aéroport international du Kansaï",
+        "hi": "कंसाई अंतर्राष्ट्रीय",
+        "id": "Bandara Kansai",
+        "it": "Aeroporto del Kansai",
+        "ko": "간사이 국제공항",
+        "nl": "Luchthaven Kansai",
+        "pt-BR": "Aeroporto de Kansai",
+        "th": "ท่าอากาศยานคันไซ",
+        "vi": "Sân bay Kansai",
+        "zh-Hans": "关西国际机场",
+        "zh-Hant": "關西國際機場"
+      }
+    },
+    {
+      "display": "ITM",
+      "name": {
+        "ja": "大阪国際空港（伊丹）",
+        "en": "Osaka Itami",
+        "de": "Flughafen Itami",
+        "es": "Aeropuerto de Itami",
+        "fr": "Aéroport d'Itami",
+        "hi": "इतामी हवाई अड्डा",
+        "id": "Bandara Itami",
+        "it": "Aeroporto di Itami",
+        "ko": "이타미 공항",
+        "nl": "Luchthaven Itami",
+        "pt-BR": "Aeroporto de Itami",
+        "th": "ท่าอากาศยานอิตามิ",
+        "vi": "Sân bay Itami",
+        "zh-Hans": "伊丹机场",
+        "zh-Hant": "伊丹機場"
+      }
+    },
+    {
+      "display": "CTS",
+      "name": {
+        "ja": "新千歳空港",
+        "en": "New Chitose",
+        "de": "Flughafen Shin-Chitose",
+        "es": "Aeropuerto de Shin-Chitose",
+        "fr": "Aéroport de Shin-Chitose",
+        "hi": "शिन-चितोसे हवाई अड्डा",
+        "id": "Bandara Shin-Chitose",
+        "it": "Aeroporto di Shin-Chitose",
+        "ko": "신치토세 공항",
+        "nl": "Luchthaven Shin-Chitose",
+        "pt-BR": "Aeroporto de Shin-Chitose",
+        "th": "ท่าอากาศยานชินชิโตเสะ",
+        "vi": "Sân bay Shin-Chitose",
+        "zh-Hans": "新千岁机场",
+        "zh-Hant": "新千歲機場"
+      }
+    },
+    {
+      "display": "FUK",
+      "name": {
+        "ja": "福岡空港",
+        "en": "Fukuoka",
+        "de": "Flughafen Fukuoka",
+        "es": "Aeropuerto de Fukuoka",
+        "fr": "Aéroport de Fukuoka",
+        "hi": "फुकुओका हवाई अड्डा",
+        "id": "Bandara Fukuoka",
+        "it": "Aeroporto di Fukuoka",
+        "ko": "후쿠오카 공항",
+        "nl": "Luchthaven Fukuoka",
+        "pt-BR": "Aeroporto de Fukuoka",
+        "th": "ท่าอากาศยานฟุกุโอกะ",
+        "vi": "Sân bay Fukuoka",
+        "zh-Hans": "福冈机场",
+        "zh-Hant": "福岡機場"
+      }
+    },
+    {
+      "display": "OKA",
+      "name": {
+        "ja": "那覇空港",
+        "en": "Naha",
+        "de": "Flughafen Naha",
+        "es": "Aeropuerto de Naha",
+        "fr": "Aéroport de Naha",
+        "hi": "नाहा हवाई अड्डा",
+        "id": "Bandara Naha",
+        "it": "Aeroporto di Naha",
+        "ko": "나하 공항",
+        "nl": "Luchthaven Naha",
+        "pt-BR": "Aeroporto de Naha",
+        "th": "ท่าอากาศยานนาฮะ",
+        "vi": "Sân bay Naha",
+        "zh-Hans": "那霸机场",
+        "zh-Hant": "那霸機場"
+      }
+    },
+    {
+      "display": "NGO",
+      "name": {
+        "ja": "中部国際空港（セントレア）",
+        "en": "Chubu Centrair",
+        "de": "Flughafen Chubu Centrair",
+        "es": "Aeropuerto de Chubu",
+        "fr": "Aéroport Chubu Centrair",
+        "hi": "चुबू सेंट्रेयर",
+        "id": "Bandara Chubu Centrair",
+        "it": "Aeroporto di Chubu",
+        "ko": "주부 국제공항",
+        "nl": "Luchthaven Chubu Centrair",
+        "pt-BR": "Aeroporto de Chubu",
+        "th": "ท่าอากาศยานชูบุ",
+        "vi": "Sân bay Chubu Centrair",
+        "zh-Hans": "中部国际机场",
+        "zh-Hant": "中部國際機場"
+      }
+    },
+    {
+      "display": "HIJ",
+      "name": {
+        "ja": "広島空港",
+        "en": "Hiroshima",
+        "de": "Flughafen Hiroshima",
+        "es": "Aeropuerto de Hiroshima",
+        "fr": "Aéroport de Hiroshima",
+        "hi": "हिरोशिमा हवाई अड्डा",
+        "id": "Bandara Hiroshima",
+        "it": "Aeroporto di Hiroshima",
+        "ko": "히로시마 공항",
+        "nl": "Luchthaven Hiroshima",
+        "pt-BR": "Aeroporto de Hiroshima",
+        "th": "ท่าอากาศยานฮิโรชิมะ",
+        "vi": "Sân bay Hiroshima",
+        "zh-Hans": "广岛机场",
+        "zh-Hant": "廣島機場"
+      }
+    },
+    {
+      "display": "SDJ",
+      "name": {
+        "ja": "仙台空港",
+        "en": "Sendai",
+        "de": "Flughafen Sendai",
+        "es": "Aeropuerto de Sendai",
+        "fr": "Aéroport de Sendai",
+        "hi": "सेंदाई हवाई अड्डा",
+        "id": "Bandara Sendai",
+        "it": "Aeroporto di Sendai",
+        "ko": "센다이 공항",
+        "nl": "Luchthaven Sendai",
+        "pt-BR": "Aeroporto de Sendai",
+        "th": "ท่าอากาศยานเซ็นได",
+        "vi": "Sân bay Sendai",
+        "zh-Hans": "仙台机场",
+        "zh-Hant": "仙台機場"
+      }
+    },
+    {
+      "display": "KOJ",
+      "name": {
+        "ja": "鹿児島空港",
+        "en": "Kagoshima",
+        "de": "Flughafen Kagoshima",
+        "es": "Aeropuerto de Kagoshima",
+        "fr": "Aéroport de Kagoshima",
+        "hi": "कागोशिमा हवाई अड्डा",
+        "id": "Bandara Kagoshima",
+        "it": "Aeroporto di Kagoshima",
+        "ko": "가고시마 공항",
+        "nl": "Luchthaven Kagoshima",
+        "pt-BR": "Aeroporto de Kagoshima",
+        "th": "ท่าอากาศยานคาโกชิมะ",
+        "vi": "Sân bay Kagoshima",
+        "zh-Hans": "鹿儿岛机场",
+        "zh-Hant": "鹿兒島機場"
+      }
+    },
+    {
+      "display": "KMJ",
+      "name": {
+        "ja": "熊本空港（阿蘇くまもと）",
+        "en": "Kumamoto",
+        "de": "Flughafen Kumamoto",
+        "es": "Aeropuerto de Kumamoto",
+        "fr": "Aéroport de Kumamoto",
+        "hi": "कुमामोतो हवाई अड्डा",
+        "id": "Bandara Kumamoto",
+        "it": "Aeroporto di Kumamoto",
+        "ko": "구마모토 공항",
+        "nl": "Luchthaven Kumamoto",
+        "pt-BR": "Aeroporto de Kumamoto",
+        "th": "ท่าอากาศยานคุมาโมโตะ",
+        "vi": "Sân bay Kumamoto",
+        "zh-Hans": "熊本机场",
+        "zh-Hant": "熊本機場"
+      }
+    },
+    {
+      "display": "OIT",
+      "name": {
+        "ja": "大分空港",
+        "en": "Oita",
+        "de": "Flughafen Oita",
+        "es": "Aeropuerto de Oita",
+        "fr": "Aéroport d'Oita",
+        "hi": "ओइता हवाई अड्डा",
+        "id": "Bandara Oita",
+        "it": "Aeroporto di Oita",
+        "ko": "오이타 공항",
+        "nl": "Luchthaven Oita",
+        "pt-BR": "Aeroporto de Oita",
+        "th": "ท่าอากาศยานโออิตะ",
+        "vi": "Sân bay Oita",
+        "zh-Hans": "大分机场",
+        "zh-Hant": "大分機場"
+      }
+    },
+    {
+      "display": "MYJ",
+      "name": {
+        "ja": "松山空港",
+        "en": "Matsuyama",
+        "de": "Flughafen Matsuyama",
+        "es": "Aeropuerto de Matsuyama",
+        "fr": "Aéroport de Matsuyama",
+        "hi": "मात्सुयामा हवाई अड्डा",
+        "id": "Bandara Matsuyama",
+        "it": "Aeroporto di Matsuyama",
+        "ko": "마쓰야마 공항",
+        "nl": "Luchthaven Matsuyama",
+        "pt-BR": "Aeroporto de Matsuyama",
+        "th": "ท่าอากาศยานมัตสึยามะ",
+        "vi": "Sân bay Matsuyama",
+        "zh-Hans": "松山机场",
+        "zh-Hant": "松山機場"
+      }
+    },
+    {
+      "display": "TAK",
+      "name": {
+        "ja": "高松空港",
+        "en": "Takamatsu",
+        "de": "Flughafen Takamatsu",
+        "es": "Aeropuerto de Takamatsu",
+        "fr": "Aéroport de Takamatsu",
+        "hi": "ताकामात्सु हवाई अड्डा",
+        "id": "Bandara Takamatsu",
+        "it": "Aeroporto di Takamatsu",
+        "ko": "다카마쓰 공항",
+        "nl": "Luchthaven Takamatsu",
+        "pt-BR": "Aeroporto de Takamatsu",
+        "th": "ท่าอากาศยานทาคามาตสึ",
+        "vi": "Sân bay Takamatsu",
+        "zh-Hans": "高松机场",
+        "zh-Hant": "高松機場"
+      }
+    },
+    {
+      "display": "KCZ",
+      "name": {
+        "ja": "高知龍馬空港",
+        "en": "Kochi Ryoma",
+        "de": "Flughafen Kochi",
+        "es": "Aeropuerto de Kochi",
+        "fr": "Aéroport Kochi Ryoma",
+        "hi": "कोची हवाई अड्डा",
+        "id": "Bandara Kochi",
+        "it": "Aeroporto di Kochi",
+        "ko": "고치 공항",
+        "nl": "Luchthaven Kochi",
+        "pt-BR": "Aeroporto de Kochi",
+        "th": "ท่าอากาศยานโคจิ",
+        "vi": "Sân bay Kochi",
+        "zh-Hans": "高知机场",
+        "zh-Hant": "高知機場"
+      }
+    },
+    {
+      "display": "AOJ",
+      "name": {
+        "ja": "青森空港",
+        "en": "Aomori",
+        "de": "Flughafen Aomori",
+        "es": "Aeropuerto de Aomori",
+        "fr": "Aéroport d'Aomori",
+        "hi": "आओमोरी हवाई अड्डा",
+        "id": "Bandara Aomori",
+        "it": "Aeroporto di Aomori",
+        "ko": "아오모리 공항",
+        "nl": "Luchthaven Aomori",
+        "pt-BR": "Aeroporto de Aomori",
+        "th": "ท่าอากาศยานอาโอโมริ",
+        "vi": "Sân bay Aomori",
+        "zh-Hans": "青森机场",
+        "zh-Hant": "青森機場"
+      }
+    },
+    {
+      "display": "AXT",
+      "name": {
+        "ja": "秋田空港",
+        "en": "Akita",
+        "de": "Flughafen Akita",
+        "es": "Aeropuerto de Akita",
+        "fr": "Aéroport d'Akita",
+        "hi": "अकिता हवाई अड्डा",
+        "id": "Bandara Akita",
+        "it": "Aeroporto di Akita",
+        "ko": "아키타 공항",
+        "nl": "Luchthaven Akita",
+        "pt-BR": "Aeroporto de Akita",
+        "th": "ท่าอากาศยานอากิตะ",
+        "vi": "Sân bay Akita",
+        "zh-Hans": "秋田机场",
+        "zh-Hant": "秋田機場"
+      }
+    },
+    {
+      "display": "GAJ",
+      "name": {
+        "ja": "山形空港",
+        "en": "Yamagata",
+        "de": "Flughafen Yamagata",
+        "es": "Aeropuerto de Yamagata",
+        "fr": "Aéroport de Yamagata",
+        "hi": "यामागाता हवाई अड्डा",
+        "id": "Bandara Yamagata",
+        "it": "Aeroporto di Yamagata",
+        "ko": "야마가타 공항",
+        "nl": "Luchthaven Yamagata",
+        "pt-BR": "Aeroporto de Yamagata",
+        "th": "ท่าอากาศยานยามางาตะ",
+        "vi": "Sân bay Yamagata",
+        "zh-Hans": "山形机场",
+        "zh-Hant": "山形機場"
+      }
+    },
+    {
+      "display": "KIJ",
+      "name": {
+        "ja": "新潟空港",
+        "en": "Niigata",
+        "de": "Flughafen Niigata",
+        "es": "Aeropuerto de Niigata",
+        "fr": "Aéroport de Niigata",
+        "hi": "नीगाता हवाई अड्डा",
+        "id": "Bandara Niigata",
+        "it": "Aeroporto di Niigata",
+        "ko": "니가타 공항",
+        "nl": "Luchthaven Niigata",
+        "pt-BR": "Aeroporto de Niigata",
+        "th": "ท่าอากาศยานนีกาตะ",
+        "vi": "Sân bay Niigata",
+        "zh-Hans": "新潟机场",
+        "zh-Hant": "新潟機場"
+      }
+    },
+    {
+      "display": "TOY",
+      "name": {
+        "ja": "富山空港",
+        "en": "Toyama",
+        "de": "Flughafen Toyama",
+        "es": "Aeropuerto de Toyama",
+        "fr": "Aéroport de Toyama",
+        "hi": "तोयामा हवाई अड्डा",
+        "id": "Bandara Toyama",
+        "it": "Aeroporto di Toyama",
+        "ko": "도야마 공항",
+        "nl": "Luchthaven Toyama",
+        "pt-BR": "Aeroporto de Toyama",
+        "th": "ท่าอากาศยานโตยามะ",
+        "vi": "Sân bay Toyama",
+        "zh-Hans": "富山机场",
+        "zh-Hant": "富山機場"
+      }
+    },
+    {
+      "display": "KMQ",
+      "name": {
+        "ja": "小松空港",
+        "en": "Komatsu",
+        "de": "Flughafen Komatsu",
+        "es": "Aeropuerto de Komatsu",
+        "fr": "Aéroport de Komatsu",
+        "hi": "कोमात्सु हवाई अड्डा",
+        "id": "Bandara Komatsu",
+        "it": "Aeroporto di Komatsu",
+        "ko": "고마쓰 공항",
+        "nl": "Luchthaven Komatsu",
+        "pt-BR": "Aeroporto de Komatsu",
+        "th": "ท่าอากาศยานโคมัตสึ",
+        "vi": "Sân bay Komatsu",
+        "zh-Hans": "小松机场",
+        "zh-Hant": "小松機場"
+      }
+    },
+    {
+      "display": "FSZ",
+      "name": {
+        "ja": "富士山静岡空港",
+        "en": "Fuji Shizuoka",
+        "de": "Flughafen Fuji-Shizuoka",
+        "es": "Aeropuerto Fuji-Shizuoka",
+        "fr": "Aéroport Fuji-Shizuoka",
+        "hi": "फूजी शिजुओका हवाई अड्डा",
+        "id": "Bandara Fuji Shizuoka",
+        "it": "Aeroporto Fuji-Shizuoka",
+        "ko": "후지 시즈오카 공항",
+        "nl": "Luchthaven Fuji-Shizuoka",
+        "pt-BR": "Aeroporto Fuji-Shizuoka",
+        "th": "ท่าอากาศยานฟูจิชิซึโอกะ",
+        "vi": "Sân bay Fuji Shizuoka",
+        "zh-Hans": "富士山静冈机场",
+        "zh-Hant": "富士山靜岡機場"
+      }
+    },
+    {
+      "display": "ISG",
+      "name": {
+        "ja": "南ぬ島石垣空港",
+        "en": "Ishigaki",
+        "de": "Flughafen Ishigaki",
+        "es": "Aeropuerto de Ishigaki",
+        "fr": "Aéroport d'Ishigaki",
+        "hi": "इशिगाकी हवाई अड्डा",
+        "id": "Bandara Ishigaki",
+        "it": "Aeroporto di Ishigaki",
+        "ko": "이시가키 공항",
+        "nl": "Luchthaven Ishigaki",
+        "pt-BR": "Aeroporto de Ishigaki",
+        "th": "ท่าอากาศยานอิชิกากิ",
+        "vi": "Sân bay Ishigaki",
+        "zh-Hans": "石垣机场",
+        "zh-Hant": "石垣機場"
+      }
+    },
+    {
+      "display": "MMY",
+      "name": {
+        "ja": "宮古空港",
+        "en": "Miyako",
+        "de": "Flughafen Miyako",
+        "es": "Aeropuerto de Miyako",
+        "fr": "Aéroport de Miyako",
+        "hi": "मियाको हवाई अड्डा",
+        "id": "Bandara Miyako",
+        "it": "Aeroporto di Miyako",
+        "ko": "미야코 공항",
+        "nl": "Luchthaven Miyako",
+        "pt-BR": "Aeroporto de Miyako",
+        "th": "ท่าอากาศยานมิยาโกะ",
+        "vi": "Sân bay Miyako",
+        "zh-Hans": "宫古机场",
+        "zh-Hant": "宮古機場"
+      }
+    },
+    {
+      "display": "KMI",
+      "name": {
+        "ja": "宮崎空港",
+        "en": "Miyazaki",
+        "de": "Flughafen Miyazaki",
+        "es": "Aeropuerto de Miyazaki",
+        "fr": "Aéroport de Miyazaki",
+        "hi": "मियाजाकी हवाई अड्डा",
+        "id": "Bandara Miyazaki",
+        "it": "Aeroporto di Miyazaki",
+        "ko": "미야자키 공항",
+        "nl": "Luchthaven Miyazaki",
+        "pt-BR": "Aeroporto de Miyazaki",
+        "th": "ท่าอากาศยานมิยาซากิ",
+        "vi": "Sân bay Miyazaki",
+        "zh-Hans": "宫崎机场",
+        "zh-Hant": "宮崎機場"
+      }
+    },
+    {
+      "display": "OKJ",
+      "name": {
+        "ja": "岡山空港",
+        "en": "Okayama",
+        "de": "Flughafen Okayama",
+        "es": "Aeropuerto de Okayama",
+        "fr": "Aéroport d'Okayama",
+        "hi": "ओकायामा हवाई अड्डा",
+        "id": "Bandara Okayama",
+        "it": "Aeroporto di Okayama",
+        "ko": "오카야마 공항",
+        "nl": "Luchthaven Okayama",
+        "pt-BR": "Aeroporto de Okayama",
+        "th": "ท่าอากาศยานโอกายามะ",
+        "vi": "Sân bay Okayama",
+        "zh-Hans": "冈山机场",
+        "zh-Hant": "岡山機場"
+      }
+    },
+    {
+      "display": "UBJ",
+      "name": {
+        "ja": "山口宇部空港",
+        "en": "Yamaguchi Ube",
+        "de": "Flughafen Yamaguchi-Ube",
+        "es": "Aeropuerto de Yamaguchi-Ube",
+        "fr": "Aéroport de Yamaguchi-Ube",
+        "hi": "यामागुची-उबे हवाई अड्डा",
+        "id": "Bandara Yamaguchi-Ube",
+        "it": "Aeroporto di Yamaguchi-Ube",
+        "ko": "야마구치 우베 공항",
+        "nl": "Luchthaven Yamaguchi-Ube",
+        "pt-BR": "Aeroporto de Yamaguchi-Ube",
+        "th": "ท่าอากาศยานยามางุจิอูเบะ",
+        "vi": "Sân bay Yamaguchi-Ube",
+        "zh-Hans": "山口宇部机场",
+        "zh-Hant": "山口宇部機場"
+      }
+    },
+    {
+      "display": "MMJ",
+      "name": {
+        "ja": "信州まつもと空港",
+        "en": "Matsumoto",
+        "de": "Flughafen Matsumoto",
+        "es": "Aeropuerto de Matsumoto",
+        "fr": "Aéroport de Matsumoto",
+        "hi": "मात्सुमोतो हवाई अड्डा",
+        "id": "Bandara Matsumoto",
+        "it": "Aeroporto di Matsumoto",
+        "ko": "마쓰모토 공항",
+        "nl": "Luchthaven Matsumoto",
+        "pt-BR": "Aeroporto de Matsumoto",
+        "th": "ท่าอากาศยานมัตสึโมโตะ",
+        "vi": "Sân bay Matsumoto",
+        "zh-Hans": "松本机场",
+        "zh-Hant": "松本機場"
+      }
+    },
+    {
+      "display": "HAC",
+      "name": {
+        "ja": "八丈島空港",
+        "en": "Hachijojima",
+        "de": "Flughafen Hachijojima",
+        "es": "Aeropuerto de Hachijojima",
+        "fr": "Aéroport de Hachijojima",
+        "hi": "हाचिजोजिमा हवाई अड्डा",
+        "id": "Bandara Hachijojima",
+        "it": "Aeroporto di Hachijojima",
+        "ko": "하치조지마 공항",
+        "nl": "Luchthaven Hachijojima",
+        "pt-BR": "Aeroporto de Hachijojima",
+        "th": "ท่าอากาศยานฮาจิโจจิมะ",
+        "vi": "Sân bay Hachijojima",
+        "zh-Hans": "八丈岛机场",
+        "zh-Hant": "八丈島機場"
+      }
+    }
+  ]
+}
