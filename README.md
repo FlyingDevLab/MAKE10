@@ -69,11 +69,11 @@ See [LICENSE](LICENSE) for details.
 
 ### App Store
 
-[Download on the App Store](https://apps.apple.com/app/id?)
+[Download on the App Store](https://apps.apple.com/app/id6760253962)
 
 ### Developer
 
-[空飛ぶ研究室 / Flying Dev Lab](https://flyingdevlab.com) — [@FlyingDevLab](https://x.com/FlyingDevLab)
+[空飛ぶ研究室 / Flying Dev Lab](https://flyingdevlab.com)
 
 ---
 
@@ -138,8 +138,8 @@ MITライセンス — このコードは自由に使ってください。
 
 ### App Store
 
-[App Storeでダウンロード](https://apps.apple.com/app/id?)
+[App Storeでダウンロード](https://apps.apple.com/app/id6760253962)
 
 ### 開発者
 
-[空飛ぶ研究室 / Flying Dev Lab](https://flyingdevlab.com) — [@FlyingDevLab](https://x.com/FlyingDevLab)
+[空飛ぶ研究室 / Flying Dev Lab](https://flyingdevlab.com)
