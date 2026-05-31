@@ -1,0 +1,47 @@
+{
+  "gameId": "flagsWorld",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "せかいの旗",
+    "en": "World Flags",
+    "de": "Weltflaggen",
+    "es": "Banderas del mundo",
+    "fr": "Drapeaux du monde",
+    "hi": "विश्व के झंडे",
+    "id": "Bendera dunia",
+    "it": "Bandiere del mondo",
+    "ko": "세계 국기",
+    "nl": "Wereldvlaggen",
+    "pt-BR": "Bandeiras do mundo",
+    "th": "ธงโลก",
+    "vi": "Cờ thế giới",
+    "zh-Hans": "世界国旗",
+    "zh-Hant": "世界國旗"
+  },
+  "icon": "🗺️",
+  "displayStyle": "emoji",
+  "composedOf": [
+    "flagsAsia",
+    "flagsEurope",
+    "flagsAmericas",
+    "flagsAfrica",
+    "flagsOceania"
+  ],
+  "items": []
+}

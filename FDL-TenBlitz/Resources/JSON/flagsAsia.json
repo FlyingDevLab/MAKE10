@@ -1,0 +1,541 @@
+{
+  "gameId": "flagsAsia",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "アジアの旗",
+    "en": "Asian Flags",
+    "de": "Asiatische Flaggen",
+    "es": "Banderas de Asia",
+    "fr": "Drapeaux d'Asie",
+    "hi": "एशियाई झंडे",
+    "id": "Bendera Asia",
+    "it": "Bandiere asiatiche",
+    "ko": "아시아 국기",
+    "nl": "Aziatische vlaggen",
+    "pt-BR": "Bandeiras da Ásia",
+    "th": "ธงเอเชีย",
+    "vi": "Cờ châu Á",
+    "zh-Hans": "亚洲国旗",
+    "zh-Hant": "亞洲國旗"
+  },
+  "icon": "🌏",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🇯🇵",
+      "name": {
+        "ja": "にほん",
+        "en": "Japan",
+        "de": "Japan",
+        "es": "Japón",
+        "fr": "Japon",
+        "hi": "जापान",
+        "id": "Jepang",
+        "it": "Giappone",
+        "ko": "일본",
+        "nl": "Japan",
+        "pt-BR": "Japão",
+        "th": "ญี่ปุ่น",
+        "vi": "Nhật Bản",
+        "zh-Hans": "日本",
+        "zh-Hant": "日本"
+      }
+    },
+    {
+      "display": "🇨🇳",
+      "name": {
+        "ja": "ちゅうごく",
+        "en": "China",
+        "de": "China",
+        "es": "China",
+        "fr": "Chine",
+        "hi": "चीन",
+        "id": "Tiongkok",
+        "it": "Cina",
+        "ko": "중국",
+        "nl": "China",
+        "pt-BR": "China",
+        "th": "จีน",
+        "vi": "Trung Quốc",
+        "zh-Hans": "中国",
+        "zh-Hant": "中國"
+      }
+    },
+    {
+      "display": "🇰🇷",
+      "name": {
+        "ja": "かんこく",
+        "en": "South Korea",
+        "de": "Südkorea",
+        "es": "Corea del Sur",
+        "fr": "Corée du Sud",
+        "hi": "दक्षिण कोरिया",
+        "id": "Korea Selatan",
+        "it": "Corea del Sud",
+        "ko": "한국",
+        "nl": "Zuid-Korea",
+        "pt-BR": "Coreia do Sul",
+        "th": "เกาหลีใต้",
+        "vi": "Hàn Quốc",
+        "zh-Hans": "韩国",
+        "zh-Hant": "韓國"
+      }
+    },
+    {
+      "display": "🇮🇳",
+      "name": {
+        "ja": "いんど",
+        "en": "India",
+        "de": "Indien",
+        "es": "India",
+        "fr": "Inde",
+        "hi": "भारत",
+        "id": "India",
+        "it": "India",
+        "ko": "인도",
+        "nl": "India",
+        "pt-BR": "Índia",
+        "th": "อินเดีย",
+        "vi": "Ấn Độ",
+        "zh-Hans": "印度",
+        "zh-Hant": "印度"
+      }
+    },
+    {
+      "display": "🇹🇭",
+      "name": {
+        "ja": "たい",
+        "en": "Thailand",
+        "de": "Thailand",
+        "es": "Tailandia",
+        "fr": "Thaïlande",
+        "hi": "थाईलैंड",
+        "id": "Thailand",
+        "it": "Tailandia",
+        "ko": "태국",
+        "nl": "Thailand",
+        "pt-BR": "Tailândia",
+        "th": "ไทย",
+        "vi": "Thái Lan",
+        "zh-Hans": "泰国",
+        "zh-Hant": "泰國"
+      }
+    },
+    {
+      "display": "🇻🇳",
+      "name": {
+        "ja": "べとなむ",
+        "en": "Vietnam",
+        "de": "Vietnam",
+        "es": "Vietnam",
+        "fr": "Viêt Nam",
+        "hi": "वियतनाम",
+        "id": "Vietnam",
+        "it": "Vietnam",
+        "ko": "베트남",
+        "nl": "Vietnam",
+        "pt-BR": "Vietnã",
+        "th": "เวียดนาม",
+        "vi": "Việt Nam",
+        "zh-Hans": "越南",
+        "zh-Hant": "越南"
+      }
+    },
+    {
+      "display": "🇮🇩",
+      "name": {
+        "ja": "いんどねしあ",
+        "en": "Indonesia",
+        "de": "Indonesien",
+        "es": "Indonesia",
+        "fr": "Indonésie",
+        "hi": "इंडोनेशिया",
+        "id": "Indonesia",
+        "it": "Indonesia",
+        "ko": "인도네시아",
+        "nl": "Indonesië",
+        "pt-BR": "Indonésia",
+        "th": "อินโดนีเซีย",
+        "vi": "Indonesia",
+        "zh-Hans": "印度尼西亚",
+        "zh-Hant": "印尼"
+      }
+    },
+    {
+      "display": "🇵🇭",
+      "name": {
+        "ja": "ふぃりぴん",
+        "en": "Philippines",
+        "de": "Philippinen",
+        "es": "Filipinas",
+        "fr": "Philippines",
+        "hi": "फिलीपींस",
+        "id": "Filipina",
+        "it": "Filippine",
+        "ko": "필리핀",
+        "nl": "Filipijnen",
+        "pt-BR": "Filipinas",
+        "th": "ฟิลิปปินส์",
+        "vi": "Philippines",
+        "zh-Hans": "菲律宾",
+        "zh-Hant": "菲律賓"
+      }
+    },
+    {
+      "display": "🇲🇾",
+      "name": {
+        "ja": "まれーしあ",
+        "en": "Malaysia",
+        "de": "Malaysia",
+        "es": "Malasia",
+        "fr": "Malaisie",
+        "hi": "मलेशिया",
+        "id": "Malaysia",
+        "it": "Malaysia",
+        "ko": "말레이시아",
+        "nl": "Maleisië",
+        "pt-BR": "Malásia",
+        "th": "มาเลเซีย",
+        "vi": "Malaysia",
+        "zh-Hans": "马来西亚",
+        "zh-Hant": "馬來西亞"
+      }
+    },
+    {
+      "display": "🇸🇬",
+      "name": {
+        "ja": "しんがぽーる",
+        "en": "Singapore",
+        "de": "Singapur",
+        "es": "Singapur",
+        "fr": "Singapour",
+        "hi": "सिंगापुर",
+        "id": "Singapura",
+        "it": "Singapore",
+        "ko": "싱가포르",
+        "nl": "Singapore",
+        "pt-BR": "Singapura",
+        "th": "สิงคโปร์",
+        "vi": "Singapore",
+        "zh-Hans": "新加坡",
+        "zh-Hant": "新加坡"
+      }
+    },
+    {
+      "display": "🇹🇼",
+      "name": {
+        "ja": "たいわん",
+        "en": "Taiwan",
+        "de": "Taiwan",
+        "es": "Taiwán",
+        "fr": "Taïwan",
+        "hi": "ताइवान",
+        "id": "Taiwan",
+        "it": "Taiwan",
+        "ko": "대만",
+        "nl": "Taiwan",
+        "pt-BR": "Taiwan",
+        "th": "ไต้หวัน",
+        "vi": "Đài Loan",
+        "zh-Hans": "台湾",
+        "zh-Hant": "台灣"
+      }
+    },
+    {
+      "display": "🇭🇰",
+      "name": {
+        "ja": "ほんこん",
+        "en": "Hong Kong",
+        "de": "Hongkong",
+        "es": "Hong Kong",
+        "fr": "Hong Kong",
+        "hi": "हांग कांग",
+        "id": "Hong Kong",
+        "it": "Hong Kong",
+        "ko": "홍콩",
+        "nl": "Hongkong",
+        "pt-BR": "Hong Kong",
+        "th": "ฮ่องกง",
+        "vi": "Hồng Kông",
+        "zh-Hans": "香港",
+        "zh-Hant": "香港"
+      }
+    },
+    {
+      "display": "🇲🇳",
+      "name": {
+        "ja": "もんごる",
+        "en": "Mongolia",
+        "de": "Mongolei",
+        "es": "Mongolia",
+        "fr": "Mongolie",
+        "hi": "मंगोलिया",
+        "id": "Mongolia",
+        "it": "Mongolia",
+        "ko": "몽골",
+        "nl": "Mongolië",
+        "pt-BR": "Mongólia",
+        "th": "มองโกเลีย",
+        "vi": "Mông Cổ",
+        "zh-Hans": "蒙古",
+        "zh-Hant": "蒙古"
+      }
+    },
+    {
+      "display": "🇳🇵",
+      "name": {
+        "ja": "ねぱーる",
+        "en": "Nepal",
+        "de": "Nepal",
+        "es": "Nepal",
+        "fr": "Népal",
+        "hi": "नेपाल",
+        "id": "Nepal",
+        "it": "Nepal",
+        "ko": "네팔",
+        "nl": "Nepal",
+        "pt-BR": "Nepal",
+        "th": "เนปาล",
+        "vi": "Nepal",
+        "zh-Hans": "尼泊尔",
+        "zh-Hant": "尼泊爾"
+      }
+    },
+    {
+      "display": "🇧🇩",
+      "name": {
+        "ja": "ばんぐらでしゅ",
+        "en": "Bangladesh",
+        "de": "Bangladesch",
+        "es": "Bangladesh",
+        "fr": "Bangladesh",
+        "hi": "बांग्लादेश",
+        "id": "Bangladesh",
+        "it": "Bangladesh",
+        "ko": "방글라데시",
+        "nl": "Bangladesh",
+        "pt-BR": "Bangladesh",
+        "th": "บังกลาเทศ",
+        "vi": "Bangladesh",
+        "zh-Hans": "孟加拉国",
+        "zh-Hant": "孟加拉"
+      }
+    },
+    {
+      "display": "🇵🇰",
+      "name": {
+        "ja": "ぱきすたん",
+        "en": "Pakistan",
+        "de": "Pakistan",
+        "es": "Pakistán",
+        "fr": "Pakistan",
+        "hi": "पाकिस्तान",
+        "id": "Pakistan",
+        "it": "Pakistan",
+        "ko": "파키스탄",
+        "nl": "Pakistan",
+        "pt-BR": "Paquistão",
+        "th": "ปากีสถาน",
+        "vi": "Pakistan",
+        "zh-Hans": "巴基斯坦",
+        "zh-Hant": "巴基斯坦"
+      }
+    },
+    {
+      "display": "🇮🇷",
+      "name": {
+        "ja": "いらん",
+        "en": "Iran",
+        "de": "Iran",
+        "es": "Irán",
+        "fr": "Iran",
+        "hi": "ईरान",
+        "id": "Iran",
+        "it": "Iran",
+        "ko": "이란",
+        "nl": "Iran",
+        "pt-BR": "Irã",
+        "th": "อิหร่าน",
+        "vi": "Iran",
+        "zh-Hans": "伊朗",
+        "zh-Hant": "伊朗"
+      }
+    },
+    {
+      "display": "🇮🇶",
+      "name": {
+        "ja": "いらく",
+        "en": "Iraq",
+        "de": "Irak",
+        "es": "Irak",
+        "fr": "Irak",
+        "hi": "इराक",
+        "id": "Irak",
+        "it": "Iraq",
+        "ko": "이라크",
+        "nl": "Irak",
+        "pt-BR": "Iraque",
+        "th": "อิรัก",
+        "vi": "Iraq",
+        "zh-Hans": "伊拉克",
+        "zh-Hant": "伊拉克"
+      }
+    },
+    {
+      "display": "🇸🇦",
+      "name": {
+        "ja": "さうじあらびあ",
+        "en": "Saudi Arabia",
+        "de": "Saudi-Arabien",
+        "es": "Arabia Saudita",
+        "fr": "Arabie Saoudite",
+        "hi": "सऊदी अरब",
+        "id": "Arab Saudi",
+        "it": "Arabia Saudita",
+        "ko": "사우디아라비아",
+        "nl": "Saoedi-Arabië",
+        "pt-BR": "Arábia Saudita",
+        "th": "ซาอุดีอาระเบีย",
+        "vi": "Ả Rập Saudi",
+        "zh-Hans": "沙特阿拉伯",
+        "zh-Hant": "沙烏地阿拉伯"
+      }
+    },
+    {
+      "display": "🇹🇷",
+      "name": {
+        "ja": "とるこ",
+        "en": "Turkey",
+        "de": "Türkei",
+        "es": "Turquía",
+        "fr": "Turquie",
+        "hi": "तुर्की",
+        "id": "Turki",
+        "it": "Turchia",
+        "ko": "터키",
+        "nl": "Turkije",
+        "pt-BR": "Turquia",
+        "th": "ตุรกี",
+        "vi": "Thổ Nhĩ Kỳ",
+        "zh-Hans": "土耳其",
+        "zh-Hant": "土耳其"
+      }
+    },
+    {
+      "display": "🇰🇭",
+      "name": {
+        "ja": "かんぼじあ",
+        "en": "Cambodia",
+        "de": "Kambodscha",
+        "es": "Camboya",
+        "fr": "Cambodge",
+        "hi": "कंबोडिया",
+        "id": "Kamboja",
+        "it": "Cambogia",
+        "ko": "캄보디아",
+        "nl": "Cambodja",
+        "pt-BR": "Camboja",
+        "th": "กัมพูชา",
+        "vi": "Campuchia",
+        "zh-Hans": "柬埔寨",
+        "zh-Hant": "柬埔寨"
+      }
+    },
+    {
+      "display": "🇲🇲",
+      "name": {
+        "ja": "みゃんまー",
+        "en": "Myanmar",
+        "de": "Myanmar",
+        "es": "Myanmar",
+        "fr": "Myanmar",
+        "hi": "म्यांमार",
+        "id": "Myanmar",
+        "it": "Myanmar",
+        "ko": "미얀마",
+        "nl": "Myanmar",
+        "pt-BR": "Mianmar",
+        "th": "เมียนมา",
+        "vi": "Myanmar",
+        "zh-Hans": "缅甸",
+        "zh-Hant": "緬甸"
+      }
+    },
+    {
+      "display": "🇱🇦",
+      "name": {
+        "ja": "らおす",
+        "en": "Laos",
+        "de": "Laos",
+        "es": "Laos",
+        "fr": "Laos",
+        "hi": "लाओस",
+        "id": "Laos",
+        "it": "Laos",
+        "ko": "라오스",
+        "nl": "Laos",
+        "pt-BR": "Laos",
+        "th": "ลาว",
+        "vi": "Lào",
+        "zh-Hans": "老挝",
+        "zh-Hant": "寮國"
+      }
+    },
+    {
+      "display": "🇧🇹",
+      "name": {
+        "ja": "ぶーたん",
+        "en": "Bhutan",
+        "de": "Bhutan",
+        "es": "Bután",
+        "fr": "Bhoutan",
+        "hi": "भूटान",
+        "id": "Bhutan",
+        "it": "Bhutan",
+        "ko": "부탄",
+        "nl": "Bhutan",
+        "pt-BR": "Butão",
+        "th": "ภูฏาน",
+        "vi": "Bhutan",
+        "zh-Hans": "不丹",
+        "zh-Hant": "不丹"
+      }
+    },
+    {
+      "display": "🇲🇻",
+      "name": {
+        "ja": "もるでぃぶ",
+        "en": "Maldives",
+        "de": "Malediven",
+        "es": "Maldivas",
+        "fr": "Maldives",
+        "hi": "मालदीव",
+        "id": "Maladewa",
+        "it": "Maldive",
+        "ko": "몰디브",
+        "nl": "Maldiven",
+        "pt-BR": "Maldivas",
+        "th": "มัลดีฟส์",
+        "vi": "Maldives",
+        "zh-Hans": "马尔代夫",
+        "zh-Hant": "馬爾地夫"
+      }
+    }
+  ]
+}

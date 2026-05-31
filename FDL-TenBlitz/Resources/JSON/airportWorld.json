@@ -1,0 +1,1101 @@
+{
+  "gameId": "airportWorld",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "世界の空港コード",
+    "en": "World Airports",
+    "de": "Weltflughäfen",
+    "es": "Aeropuertos del mundo",
+    "fr": "Aéroports du monde",
+    "hi": "विश्व हवाई अड्डे",
+    "id": "Bandara dunia",
+    "it": "Aeroporti del mondo",
+    "ko": "세계 공항",
+    "nl": "Wereldluchthavens",
+    "pt-BR": "Aeroportos do mundo",
+    "th": "สนามบินทั่วโลก",
+    "vi": "Sân bay thế giới",
+    "zh-Hans": "世界机场",
+    "zh-Hant": "世界機場"
+  },
+  "icon": "🗺️",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "JFK",
+      "name": {
+        "ja": "ジョン・F・ケネディ国際空港",
+        "en": "JFK Intl",
+        "de": "Flughafen New York JFK",
+        "es": "Aeropuerto JFK",
+        "fr": "Aéroport JFK",
+        "hi": "जे.एफ.के. हवाई अड्डा",
+        "id": "Bandara JFK",
+        "it": "Aeroporto JFK",
+        "ko": "JFK 국제공항",
+        "nl": "Luchthaven JFK",
+        "pt-BR": "Aeroporto JFK",
+        "th": "สนามบินเจเอฟเค",
+        "vi": "Sân bay JFK",
+        "zh-Hans": "肯尼迪国际机场",
+        "zh-Hant": "甘迺迪國際機場"
+      }
+    },
+    {
+      "display": "LAX",
+      "name": {
+        "ja": "ロサンゼルス国際空港",
+        "en": "Los Angeles Intl",
+        "de": "Flughafen Los Angeles",
+        "es": "Aeropuerto de Los Ángeles",
+        "fr": "Aéroport de Los Angeles",
+        "hi": "लॉस एंजेल्स हवाई अड्डा",
+        "id": "Bandara Los Angeles",
+        "it": "Aeroporto di Los Angeles",
+        "ko": "LA 국제공항",
+        "nl": "Luchthaven Los Angeles",
+        "pt-BR": "Aeroporto de Los Angeles",
+        "th": "สนามบินลอสแองเจลิส",
+        "vi": "Sân bay Los Angeles",
+        "zh-Hans": "洛杉矶国际机场",
+        "zh-Hant": "洛杉磯國際機場"
+      }
+    },
+    {
+      "display": "ORD",
+      "name": {
+        "ja": "シカゴ・オヘア国際空港",
+        "en": "Chicago O'Hare",
+        "de": "Flughafen Chicago O'Hare",
+        "es": "Aeropuerto O'Hare",
+        "fr": "Aéroport O'Hare",
+        "hi": "शिकागो ओ'हेयर हवाई अड्डा",
+        "id": "Bandara O'Hare",
+        "it": "Aeroporto O'Hare",
+        "ko": "시카고 오헤어 공항",
+        "nl": "Luchthaven O'Hare",
+        "pt-BR": "Aeroporto O'Hare",
+        "th": "สนามบินโอแฮร์",
+        "vi": "Sân bay O'Hare",
+        "zh-Hans": "芝加哥奥黑尔机场",
+        "zh-Hant": "芝加哥奧海爾機場"
+      }
+    },
+    {
+      "display": "ATL",
+      "name": {
+        "ja": "ハーツフィールド・ジャクソン・アトランタ国際空港",
+        "en": "Atlanta Hartsfield",
+        "de": "Flughafen Atlanta",
+        "es": "Aeropuerto Hartsfield-Jackson",
+        "fr": "Aéroport Hartsfield-Jackson",
+        "hi": "अटलांटा हवाई अड्डा",
+        "id": "Bandara Atlanta",
+        "it": "Aeroporto di Atlanta",
+        "ko": "애틀란타 공항",
+        "nl": "Luchthaven Atlanta",
+        "pt-BR": "Aeroporto de Atlanta",
+        "th": "สนามบินแอตแลนตา",
+        "vi": "Sân bay Atlanta",
+        "zh-Hans": "亚特兰大机场",
+        "zh-Hant": "亞特蘭大機場"
+      }
+    },
+    {
+      "display": "SFO",
+      "name": {
+        "ja": "サンフランシスコ国際空港",
+        "en": "San Francisco Intl",
+        "de": "Flughafen San Francisco",
+        "es": "Aeropuerto de San Francisco",
+        "fr": "Aéroport de San Francisco",
+        "hi": "सैन फ्रांसिस्को हवाई अड्डा",
+        "id": "Bandara San Francisco",
+        "it": "Aeroporto di San Francisco",
+        "ko": "샌프란시스코 공항",
+        "nl": "Luchthaven San Francisco",
+        "pt-BR": "Aeroporto de São Francisco",
+        "th": "สนามบินซานฟรานซิสโก",
+        "vi": "Sân bay San Francisco",
+        "zh-Hans": "旧金山国际机场",
+        "zh-Hant": "舊金山國際機場"
+      }
+    },
+    {
+      "display": "MIA",
+      "name": {
+        "ja": "マイアミ国際空港",
+        "en": "Miami Intl",
+        "de": "Flughafen Miami",
+        "es": "Aeropuerto Internacional de Miami",
+        "fr": "Aéroport de Miami",
+        "hi": "मियामी हवाई अड्डा",
+        "id": "Bandara Miami",
+        "it": "Aeroporto di Miami",
+        "ko": "마이애미 공항",
+        "nl": "Luchthaven Miami",
+        "pt-BR": "Aeroporto de Miami",
+        "th": "สนามบินไมอามี",
+        "vi": "Sân bay Miami",
+        "zh-Hans": "迈阿密国际机场",
+        "zh-Hant": "邁阿密國際機場"
+      }
+    },
+    {
+      "display": "BOS",
+      "name": {
+        "ja": "ローガン国際空港",
+        "en": "Boston Logan",
+        "de": "Flughafen Boston Logan",
+        "es": "Aeropuerto Logan de Boston",
+        "fr": "Aéroport Logan de Boston",
+        "hi": "बोस्टन लोगान हवाई अड्डा",
+        "id": "Bandara Logan",
+        "it": "Aeroporto Logan",
+        "ko": "보스턴 로건 공항",
+        "nl": "Luchthaven Boston Logan",
+        "pt-BR": "Aeroporto Logan de Boston",
+        "th": "สนามบินโลแกน",
+        "vi": "Sân bay Logan",
+        "zh-Hans": "波士顿洛根机场",
+        "zh-Hant": "波士頓洛根機場"
+      }
+    },
+    {
+      "display": "SEA",
+      "name": {
+        "ja": "シアトル・タコマ国際空港",
+        "en": "Seattle-Tacoma",
+        "de": "Flughafen Seattle-Tacoma",
+        "es": "Aeropuerto Seattle-Tacoma",
+        "fr": "Aéroport Seattle-Tacoma",
+        "hi": "सीएटल-ताकोमा हवाई अड्डा",
+        "id": "Bandara Seattle-Tacoma",
+        "it": "Aeroporto Seattle-Tacoma",
+        "ko": "시애틀-타코마 공항",
+        "nl": "Luchthaven Seattle-Tacoma",
+        "pt-BR": "Aeroporto Seattle-Tacoma",
+        "th": "สนามบินซีแอตเทิล-ทาโคมา",
+        "vi": "Sân bay Seattle-Tacoma",
+        "zh-Hans": "西雅图机场",
+        "zh-Hant": "西雅圖機場"
+      }
+    },
+    {
+      "display": "DFW",
+      "name": {
+        "ja": "ダラス・フォートワース国際空港",
+        "en": "Dallas/Fort Worth",
+        "de": "Flughafen Dallas/Fort Worth",
+        "es": "Aeropuerto Dallas/Fort Worth",
+        "fr": "Aéroport Dallas/Fort Worth",
+        "hi": "डलास-फोर्ट वर्थ हवाई अड्डा",
+        "id": "Bandara Dallas/Fort Worth",
+        "it": "Aeroporto Dallas/Fort Worth",
+        "ko": "달라스 포트워스 공항",
+        "nl": "Luchthaven Dallas/Fort Worth",
+        "pt-BR": "Aeroporto Dallas/Fort Worth",
+        "th": "สนามบินดัลลาส",
+        "vi": "Sân bay Dallas/Fort Worth",
+        "zh-Hans": "达拉斯沃思堡机场",
+        "zh-Hant": "達拉斯沃斯堡機場"
+      }
+    },
+    {
+      "display": "YYZ",
+      "name": {
+        "ja": "トロント・ピアソン国際空港",
+        "en": "Toronto Pearson",
+        "de": "Flughafen Toronto Pearson",
+        "es": "Aeropuerto Pearson de Toronto",
+        "fr": "Aéroport Pearson de Toronto",
+        "hi": "टोरंटो पियर्सन हवाई अड्डा",
+        "id": "Bandara Pearson",
+        "it": "Aeroporto Pearson",
+        "ko": "토론토 피어슨 공항",
+        "nl": "Luchthaven Toronto Pearson",
+        "pt-BR": "Aeroporto Pearson de Toronto",
+        "th": "สนามบินเพียร์สัน",
+        "vi": "Sân bay Pearson",
+        "zh-Hans": "多伦多皮尔逊机场",
+        "zh-Hant": "多倫多皮爾遜機場"
+      }
+    },
+    {
+      "display": "MEX",
+      "name": {
+        "ja": "メキシコシティ国際空港",
+        "en": "Mexico City Intl",
+        "de": "Flughafen Mexiko-Stadt",
+        "es": "Aeropuerto de Ciudad de México",
+        "fr": "Aéroport de Mexico",
+        "hi": "मेक्सिको सिटी हवाई अड्डा",
+        "id": "Bandara Kota Meksiko",
+        "it": "Aeroporto di Città del Messico",
+        "ko": "멕시코시티 공항",
+        "nl": "Luchthaven Mexico-Stad",
+        "pt-BR": "Aeroporto da Cidade do México",
+        "th": "สนามบินเม็กซิโกซิตี้",
+        "vi": "Sân bay Thành phố Mexico",
+        "zh-Hans": "墨西哥城国际机场",
+        "zh-Hant": "墨西哥城國際機場"
+      }
+    },
+    {
+      "display": "GRU",
+      "name": {
+        "ja": "グアルーリョス国際空港",
+        "en": "São Paulo Guarulhos",
+        "de": "Flughafen São Paulo Guarulhos",
+        "es": "Aeropuerto Guarulhos",
+        "fr": "Aéroport de São Paulo",
+        "hi": "साओ पाउलो हवाई अड्डा",
+        "id": "Bandara Guarulhos",
+        "it": "Aeroporto Guarulhos",
+        "ko": "과룰류스 공항",
+        "nl": "Luchthaven Guarulhos",
+        "pt-BR": "Aeroporto Guarulhos",
+        "th": "สนามบินเซาเปาลู",
+        "vi": "Sân bay Guarulhos",
+        "zh-Hans": "圣保罗瓜鲁柳斯机场",
+        "zh-Hant": "聖保羅瓜魯柳斯機場"
+      }
+    },
+    {
+      "display": "EZE",
+      "name": {
+        "ja": "エセイサ国際空港",
+        "en": "Buenos Aires Ezeiza",
+        "de": "Flughafen Buenos Aires Ezeiza",
+        "es": "Aeropuerto de Ezeiza",
+        "fr": "Aéroport d'Ezeiza",
+        "hi": "बुएनोस एयर्स हवाई अड्डा",
+        "id": "Bandara Ezeiza",
+        "it": "Aeroporto Ezeiza",
+        "ko": "에제이사 공항",
+        "nl": "Luchthaven Ezeiza",
+        "pt-BR": "Aeroporto de Ezeiza",
+        "th": "สนามบินเอเซซา",
+        "vi": "Sân bay Ezeiza",
+        "zh-Hans": "布宜诺斯艾利斯机场",
+        "zh-Hant": "布宜諾斯艾利斯機場"
+      }
+    },
+    {
+      "display": "BOG",
+      "name": {
+        "ja": "エルドラド国際空港",
+        "en": "Bogotá El Dorado",
+        "de": "Flughafen Bogotá El Dorado",
+        "es": "Aeropuerto El Dorado",
+        "fr": "Aéroport El Dorado",
+        "hi": "बोगोटा हवाई अड्डा",
+        "id": "Bandara El Dorado",
+        "it": "Aeroporto El Dorado",
+        "ko": "보고타 엘도라도 공항",
+        "nl": "Luchthaven El Dorado",
+        "pt-BR": "Aeroporto El Dorado",
+        "th": "สนามบินเอลโดราโด",
+        "vi": "Sân bay El Dorado",
+        "zh-Hans": "波哥大埃尔多拉多机场",
+        "zh-Hant": "波哥大埃爾多拉多機場"
+      }
+    },
+    {
+      "display": "SCL",
+      "name": {
+        "ja": "コモドーロ・アルトゥーロ・メリノ・ベニーテス国際空港",
+        "en": "Santiago Arturo Merino",
+        "de": "Flughafen Santiago",
+        "es": "Aeropuerto de Santiago",
+        "fr": "Aéroport de Santiago",
+        "hi": "सैंटियागो हवाई अड्डा",
+        "id": "Bandara Santiago",
+        "it": "Aeroporto di Santiago",
+        "ko": "산티아고 공항",
+        "nl": "Luchthaven Santiago",
+        "pt-BR": "Aeroporto de Santiago",
+        "th": "สนามบินซันติอาโก",
+        "vi": "Sân bay Santiago",
+        "zh-Hans": "圣地亚哥机场",
+        "zh-Hant": "聖地牙哥機場"
+      }
+    },
+    {
+      "display": "LIM",
+      "name": {
+        "ja": "ホルヘ・チャベス国際空港",
+        "en": "Lima Jorge Chávez",
+        "de": "Flughafen Lima",
+        "es": "Aeropuerto Jorge Chávez",
+        "fr": "Aéroport Jorge Chávez",
+        "hi": "लीमा हवाई अड्डा",
+        "id": "Bandara Lima",
+        "it": "Aeroporto Lima",
+        "ko": "리마 공항",
+        "nl": "Luchthaven Lima",
+        "pt-BR": "Aeroporto Lima",
+        "th": "สนามบินลิมา",
+        "vi": "Sân bay Lima",
+        "zh-Hans": "利马机场",
+        "zh-Hant": "利馬機場"
+      }
+    },
+    {
+      "display": "LHR",
+      "name": {
+        "ja": "ロンドン・ヒースロー空港",
+        "en": "London Heathrow",
+        "de": "Flughafen London Heathrow",
+        "es": "Aeropuerto de Heathrow",
+        "fr": "Aéroport de Heathrow",
+        "hi": "हीथ्रो हवाई अड्डा",
+        "id": "Bandara Heathrow",
+        "it": "Aeroporto Heathrow",
+        "ko": "런던 히드로 공항",
+        "nl": "Luchthaven Heathrow",
+        "pt-BR": "Aeroporto de Heathrow",
+        "th": "สนามบินฮีทโธรว์",
+        "vi": "Sân bay Heathrow",
+        "zh-Hans": "伦敦希思罗机场",
+        "zh-Hant": "倫敦希斯洛機場"
+      }
+    },
+    {
+      "display": "CDG",
+      "name": {
+        "ja": "シャルル・ド・ゴール国際空港",
+        "en": "Paris Charles de Gaulle",
+        "de": "Flughafen Paris Charles de Gaulle",
+        "es": "Aeropuerto Charles de Gaulle",
+        "fr": "Aéroport Charles de Gaulle",
+        "hi": "चार्ल्स डी गॉल हवाई अड्डा",
+        "id": "Bandara Charles de Gaulle",
+        "it": "Aeroporto Charles de Gaulle",
+        "ko": "파리 샤를 드골 공항",
+        "nl": "Luchthaven Charles de Gaulle",
+        "pt-BR": "Aeroporto Charles de Gaulle",
+        "th": "สนามบินชาร์ลส์เดอโกล",
+        "vi": "Sân bay Charles de Gaulle",
+        "zh-Hans": "巴黎戴高乐机场",
+        "zh-Hant": "巴黎戴高樂機場"
+      }
+    },
+    {
+      "display": "FRA",
+      "name": {
+        "ja": "フランクフルト国際空港",
+        "en": "Frankfurt Intl",
+        "de": "Flughafen Frankfurt",
+        "es": "Aeropuerto de Fráncfort",
+        "fr": "Aéroport de Francfort",
+        "hi": "फ्रैंकफर्ट हवाई अड्डा",
+        "id": "Bandara Frankfurt",
+        "it": "Aeroporto di Francoforte",
+        "ko": "프랑크푸르트 공항",
+        "nl": "Luchthaven Frankfurt",
+        "pt-BR": "Aeroporto de Frankfurt",
+        "th": "สนามบินแฟรงก์เฟิร์ต",
+        "vi": "Sân bay Frankfurt",
+        "zh-Hans": "法兰克福机场",
+        "zh-Hant": "法蘭克福機場"
+      }
+    },
+    {
+      "display": "AMS",
+      "name": {
+        "ja": "アムステルダム・スキポール空港",
+        "en": "Amsterdam Schiphol",
+        "de": "Flughafen Amsterdam Schiphol",
+        "es": "Aeropuerto de Ámsterdam Schiphol",
+        "fr": "Aéroport de Schiphol",
+        "hi": "स्किपोल हवाई अड्डा",
+        "id": "Bandara Schiphol",
+        "it": "Aeroporto Schiphol",
+        "ko": "암스테르담 스키폴 공항",
+        "nl": "Luchthaven Schiphol",
+        "pt-BR": "Aeroporto Schiphol",
+        "th": "สนามบินสคิโพล",
+        "vi": "Sân bay Schiphol",
+        "zh-Hans": "阿姆斯特丹史基浦机场",
+        "zh-Hant": "阿姆斯特丹史基浦機場"
+      }
+    },
+    {
+      "display": "MAD",
+      "name": {
+        "ja": "マドリード・バラハス国際空港",
+        "en": "Madrid Barajas",
+        "de": "Flughafen Madrid Barajas",
+        "es": "Aeropuerto Adolfo Suárez Barajas",
+        "fr": "Aéroport de Madrid-Barajas",
+        "hi": "मेड्रिड हवाई अड्डा",
+        "id": "Bandara Barajas",
+        "it": "Aeroporto Barajas",
+        "ko": "마드리드 바라하스 공항",
+        "nl": "Luchthaven Barajas",
+        "pt-BR": "Aeroporto de Madrid",
+        "th": "สนามบินบาราฮัส",
+        "vi": "Sân bay Barajas",
+        "zh-Hans": "马德里巴拉哈斯机场",
+        "zh-Hant": "馬德里巴拉哈斯機場"
+      }
+    },
+    {
+      "display": "FCO",
+      "name": {
+        "ja": "ローマ・フィウミチーノ空港",
+        "en": "Rome Fiumicino",
+        "de": "Flughafen Rom Fiumicino",
+        "es": "Aeropuerto de Fiumicino",
+        "fr": "Aéroport de Fiumicino",
+        "hi": "फ्यूमिचिनो हवाई अड्डा",
+        "id": "Bandara Fiumicino",
+        "it": "Aeroporto Fiumicino",
+        "ko": "로마 피우미치노 공항",
+        "nl": "Luchthaven Fiumicino",
+        "pt-BR": "Aeroporto Fiumicino",
+        "th": "สนามบินฟิวมิชิโน",
+        "vi": "Sân bay Fiumicino",
+        "zh-Hans": "罗马菲乌米奇诺机场",
+        "zh-Hant": "羅馬菲烏米奇諾機場"
+      }
+    },
+    {
+      "display": "MUC",
+      "name": {
+        "ja": "ミュンヘン国際空港",
+        "en": "Munich Intl",
+        "de": "Flughafen München",
+        "es": "Aeropuerto de Múnich",
+        "fr": "Aéroport de Munich",
+        "hi": "म्यूनिख हवाई अड्डा",
+        "id": "Bandara München",
+        "it": "Aeroporto di Monaco",
+        "ko": "뮌헨 공항",
+        "nl": "Luchthaven München",
+        "pt-BR": "Aeroporto de Munique",
+        "th": "สนามบินมิวนิก",
+        "vi": "Sân bay Munich",
+        "zh-Hans": "慕尼黑机场",
+        "zh-Hant": "慕尼黑機場"
+      }
+    },
+    {
+      "display": "ZRH",
+      "name": {
+        "ja": "チューリッヒ国際空港",
+        "en": "Zurich Intl",
+        "de": "Flughafen Zürich",
+        "es": "Aeropuerto de Zúrich",
+        "fr": "Aéroport de Zurich",
+        "hi": "ज़्यूरिख हवाई अड्डा",
+        "id": "Bandara Zürich",
+        "it": "Aeroporto di Zurigo",
+        "ko": "취리히 공항",
+        "nl": "Luchthaven Zürich",
+        "pt-BR": "Aeroporto de Zurique",
+        "th": "สนามบินซูริก",
+        "vi": "Sân bay Zürich",
+        "zh-Hans": "苏黎世机场",
+        "zh-Hant": "蘇黎世機場"
+      }
+    },
+    {
+      "display": "VIE",
+      "name": {
+        "ja": "ウィーン国際空港",
+        "en": "Vienna Intl",
+        "de": "Flughafen Wien",
+        "es": "Aeropuerto de Viena",
+        "fr": "Aéroport de Vienne",
+        "hi": "वियना हवाई अड्डा",
+        "id": "Bandara Wina",
+        "it": "Aeroporto di Vienna",
+        "ko": "빈 국제공항",
+        "nl": "Luchthaven Wenen",
+        "pt-BR": "Aeroporto de Viena",
+        "th": "สนามบินเวียนนา",
+        "vi": "Sân bay Vienna",
+        "zh-Hans": "维也纳机场",
+        "zh-Hant": "維也納機場"
+      }
+    },
+    {
+      "display": "CPH",
+      "name": {
+        "ja": "コペンハーゲン国際空港",
+        "en": "Copenhagen Kastrup",
+        "de": "Flughafen Kopenhagen",
+        "es": "Aeropuerto de Copenhague",
+        "fr": "Aéroport de Kastrup",
+        "hi": "कोपेनहेगन हवाई अड्डा",
+        "id": "Bandara Kopenhagen",
+        "it": "Aeroporto Kastrup",
+        "ko": "코펜하겐 공항",
+        "nl": "Luchthaven Kopenhagen",
+        "pt-BR": "Aeroporto de Copenhague",
+        "th": "สนามบินโคเปนเฮเกน",
+        "vi": "Sân bay Copenhagen",
+        "zh-Hans": "哥本哈根机场",
+        "zh-Hant": "哥本哈根機場"
+      }
+    },
+    {
+      "display": "ARN",
+      "name": {
+        "ja": "ストックホルム・アーランダ空港",
+        "en": "Stockholm Arlanda",
+        "de": "Flughafen Stockholm Arlanda",
+        "es": "Aeropuerto de Arlanda",
+        "fr": "Aéroport d'Arlanda",
+        "hi": "आर्लंडा हवाई अड्डा",
+        "id": "Bandara Arlanda",
+        "it": "Aeroporto Arlanda",
+        "ko": "스톡홀름 알란다 공항",
+        "nl": "Luchthaven Arlanda",
+        "pt-BR": "Aeroporto de Arlanda",
+        "th": "สนามบินอาร์ลันดา",
+        "vi": "Sân bay Arlanda",
+        "zh-Hans": "斯德哥尔摩阿兰达机场",
+        "zh-Hant": "斯德哥爾摩阿蘭達機場"
+      }
+    },
+    {
+      "display": "HEL",
+      "name": {
+        "ja": "ヘルシンキ・ヴァンター国際空港",
+        "en": "Helsinki Vantaa",
+        "de": "Flughafen Helsinki-Vantaa",
+        "es": "Aeropuerto Helsinki-Vantaa",
+        "fr": "Aéroport Helsinki-Vantaa",
+        "hi": "हेलसिंकी हवाई अड्डा",
+        "id": "Bandara Helsinki-Vantaa",
+        "it": "Aeroporto Helsinki-Vantaa",
+        "ko": "헬싱키 반타 공항",
+        "nl": "Luchthaven Helsinki-Vantaa",
+        "pt-BR": "Aeroporto de Helsinki-Vantaa",
+        "th": "สนามบินเฮลซิงกิ",
+        "vi": "Sân bay Helsinki-Vantaa",
+        "zh-Hans": "赫尔辛基万塔机场",
+        "zh-Hant": "赫爾辛基萬塔機場"
+      }
+    },
+    {
+      "display": "DUB",
+      "name": {
+        "ja": "ダブリン空港",
+        "en": "Dublin",
+        "de": "Flughafen Dublin",
+        "es": "Aeropuerto de Dublín",
+        "fr": "Aéroport de Dublin",
+        "hi": "डबलिन हवाई अड्डा",
+        "id": "Bandara Dublin",
+        "it": "Aeroporto di Dublino",
+        "ko": "더블린 공항",
+        "nl": "Luchthaven Dublin",
+        "pt-BR": "Aeroporto de Dublin",
+        "th": "สนามบินดับลิน",
+        "vi": "Sân bay Dublin",
+        "zh-Hans": "都柏林机场",
+        "zh-Hant": "都柏林機場"
+      }
+    },
+    {
+      "display": "ATH",
+      "name": {
+        "ja": "アテネ国際空港",
+        "en": "Athens Intl",
+        "de": "Flughafen Athen",
+        "es": "Aeropuerto de Atenas",
+        "fr": "Aéroport d'Athènes",
+        "hi": "एथेंस हवाई अड्डा",
+        "id": "Bandara Athena",
+        "it": "Aeroporto di Atene",
+        "ko": "아테네 공항",
+        "nl": "Luchthaven Athene",
+        "pt-BR": "Aeroporto de Atenas",
+        "th": "สนามบินเอเธนส์",
+        "vi": "Sân bay Athens",
+        "zh-Hans": "雅典机场",
+        "zh-Hant": "雅典機場"
+      }
+    },
+    {
+      "display": "WAW",
+      "name": {
+        "ja": "ワルシャワ・ショパン空港",
+        "en": "Warsaw Chopin",
+        "de": "Flughafen Warschau Chopin",
+        "es": "Aeropuerto Chopin de Varsovia",
+        "fr": "Aéroport Chopin de Varsovie",
+        "hi": "वारसॉ हवाई अड्डा",
+        "id": "Bandara Chopin",
+        "it": "Aeroporto Chopin",
+        "ko": "바르샤바 쇼팽 공항",
+        "nl": "Luchthaven Chopin",
+        "pt-BR": "Aeroporto de Varsóvia",
+        "th": "สนามบินโชแปง",
+        "vi": "Sân bay Chopin",
+        "zh-Hans": "华沙肖邦机场",
+        "zh-Hant": "華沙蕭邦機場"
+      }
+    },
+    {
+      "display": "DXB",
+      "name": {
+        "ja": "ドバイ国際空港",
+        "en": "Dubai Intl",
+        "de": "Flughafen Dubai",
+        "es": "Aeropuerto Internacional de Dubái",
+        "fr": "Aéroport international de Dubaï",
+        "hi": "दुबई अंतर्राष्ट्रीय हवाई अड्डा",
+        "id": "Bandara Internasional Dubai",
+        "it": "Aeroporto Internazionale di Dubai",
+        "ko": "두바이 국제공항",
+        "nl": "Luchthaven Dubai",
+        "pt-BR": "Aeroporto Internacional de Dubai",
+        "th": "สนามบินดูไบ",
+        "vi": "Sân bay Dubai",
+        "zh-Hans": "迪拜国际机场",
+        "zh-Hant": "杜拜國際機場"
+      }
+    },
+    {
+      "display": "DOH",
+      "name": {
+        "ja": "ハマド国際空港",
+        "en": "Doha Hamad",
+        "de": "Flughafen Hamad",
+        "es": "Aeropuerto Hamad de Doha",
+        "fr": "Aéroport Hamad de Doha",
+        "hi": "दोहा हमद हवाई अड्डा",
+        "id": "Bandara Hamad",
+        "it": "Aeroporto Hamad",
+        "ko": "도하 하마드 공항",
+        "nl": "Luchthaven Hamad",
+        "pt-BR": "Aeroporto Hamad de Doha",
+        "th": "สนามบินฮามัดโดฮา",
+        "vi": "Sân bay Hamad",
+        "zh-Hans": "多哈哈马德机场",
+        "zh-Hant": "多哈哈馬德機場"
+      }
+    },
+    {
+      "display": "AUH",
+      "name": {
+        "ja": "アブダビ国際空港",
+        "en": "Abu Dhabi Intl",
+        "de": "Flughafen Abu Dhabi",
+        "es": "Aeropuerto Internacional de Abu Dabi",
+        "fr": "Aéroport d'Abou Dhabi",
+        "hi": "अबू धाबी हवाई अड्डा",
+        "id": "Bandara Abu Dhabi",
+        "it": "Aeroporto di Abu Dhabi",
+        "ko": "아부다비 공항",
+        "nl": "Luchthaven Abu Dhabi",
+        "pt-BR": "Aeroporto de Abu Dhabi",
+        "th": "สนามบินอาบูดาบี",
+        "vi": "Sân bay Abu Dhabi",
+        "zh-Hans": "阿布扎比国际机场",
+        "zh-Hant": "阿布達比國際機場"
+      }
+    },
+    {
+      "display": "IST",
+      "name": {
+        "ja": "イスタンブール空港",
+        "en": "Istanbul",
+        "de": "Flughafen Istanbul",
+        "es": "Aeropuerto de Estambul",
+        "fr": "Aéroport d'Istanbul",
+        "hi": "इस्तांबुल हवाई अड्डा",
+        "id": "Bandara Istanbul",
+        "it": "Aeroporto di Istanbul",
+        "ko": "이스탄불 공항",
+        "nl": "Luchthaven Istanbul",
+        "pt-BR": "Aeroporto de Istambul",
+        "th": "สนามบินอิสตันบูล",
+        "vi": "Sân bay Istanbul",
+        "zh-Hans": "伊斯坦布尔机场",
+        "zh-Hant": "伊斯坦堡機場"
+      }
+    },
+    {
+      "display": "ICN",
+      "name": {
+        "ja": "仁川国際空港",
+        "en": "Incheon Intl",
+        "de": "Flughafen Incheon",
+        "es": "Aeropuerto Internacional de Incheon",
+        "fr": "Aéroport international d'Incheon",
+        "hi": "इंचियोन हवाई अड्डा",
+        "id": "Bandara Incheon",
+        "it": "Aeroporto di Incheon",
+        "ko": "인천 국제공항",
+        "nl": "Luchthaven Incheon",
+        "pt-BR": "Aeroporto de Incheon",
+        "th": "สนามบินอินชอน",
+        "vi": "Sân bay Incheon",
+        "zh-Hans": "仁川国际机场",
+        "zh-Hant": "仁川國際機場"
+      }
+    },
+    {
+      "display": "PEK",
+      "name": {
+        "ja": "北京首都国際空港",
+        "en": "Beijing Capital",
+        "de": "Flughafen Peking",
+        "es": "Aeropuerto Internacional de Pekín",
+        "fr": "Aéroport international de Pékin",
+        "hi": "बीजिंग हवाई अड्डा",
+        "id": "Bandara Beijing Capital",
+        "it": "Aeroporto di Pechino",
+        "ko": "베이징 수도 공항",
+        "nl": "Luchthaven Beijing",
+        "pt-BR": "Aeroporto de Pequim",
+        "th": "สนามบินปักกิ่ง",
+        "vi": "Sân bay Thủ đô Bắc Kinh",
+        "zh-Hans": "北京首都国际机场",
+        "zh-Hant": "北京首都國際機場"
+      }
+    },
+    {
+      "display": "PVG",
+      "name": {
+        "ja": "上海浦東国際空港",
+        "en": "Shanghai Pudong",
+        "de": "Flughafen Shanghai Pudong",
+        "es": "Aeropuerto Internacional Pudong",
+        "fr": "Aéroport international de Pudong",
+        "hi": "शंघाई पुडोंग हवाई अड्डा",
+        "id": "Bandara Pudong",
+        "it": "Aeroporto di Pudong",
+        "ko": "상하이 푸동 공항",
+        "nl": "Luchthaven Pudong",
+        "pt-BR": "Aeroporto Pudong",
+        "th": "สนามบินเซี่ยงไฮ้พูตง",
+        "vi": "Sân bay Phố Đông",
+        "zh-Hans": "上海浦东国际机场",
+        "zh-Hant": "上海浦東國際機場"
+      }
+    },
+    {
+      "display": "HKG",
+      "name": {
+        "ja": "香港国際空港",
+        "en": "Hong Kong Intl",
+        "de": "Flughafen Hongkong",
+        "es": "Aeropuerto Internacional de Hong Kong",
+        "fr": "Aéroport international de Hong Kong",
+        "hi": "हांग कांग हवाई अड्डा",
+        "id": "Bandara Hong Kong",
+        "it": "Aeroporto di Hong Kong",
+        "ko": "홍콩 국제공항",
+        "nl": "Luchthaven Hongkong",
+        "pt-BR": "Aeroporto de Hong Kong",
+        "th": "สนามบินฮ่องกง",
+        "vi": "Sân bay Hồng Kông",
+        "zh-Hans": "香港国际机场",
+        "zh-Hant": "香港國際機場"
+      }
+    },
+    {
+      "display": "SIN",
+      "name": {
+        "ja": "シンガポール・チャンギ国際空港",
+        "en": "Singapore Changi",
+        "de": "Flughafen Singapur Changi",
+        "es": "Aeropuerto de Changi",
+        "fr": "Aéroport de Changi",
+        "hi": "सिंगापुर चांगी हवाई अड्डा",
+        "id": "Bandara Changi",
+        "it": "Aeroporto Changi",
+        "ko": "싱가포르 창이 공항",
+        "nl": "Luchthaven Changi",
+        "pt-BR": "Aeroporto Changi",
+        "th": "ท่าอากาศยานชางงี",
+        "vi": "Sân bay Changi",
+        "zh-Hans": "新加坡樟宜机场",
+        "zh-Hant": "新加坡樟宜機場"
+      }
+    },
+    {
+      "display": "BKK",
+      "name": {
+        "ja": "スワンナプーム国際空港",
+        "en": "Bangkok Suvarnabhumi",
+        "de": "Flughafen Bangkok Suvarnabhumi",
+        "es": "Aeropuerto Suvarnabhumi",
+        "fr": "Aéroport Suvarnabhumi",
+        "hi": "सुवर्णभूमि हवाई अड्डा",
+        "id": "Bandara Suvarnabhumi",
+        "it": "Aeroporto Suvarnabhumi",
+        "ko": "방콕 수완나품 공항",
+        "nl": "Luchthaven Suvarnabhumi",
+        "pt-BR": "Aeroporto Suvarnabhumi",
+        "th": "ท่าอากาศยานสุวรรณภูมิ",
+        "vi": "Sân bay Suvarnabhumi",
+        "zh-Hans": "曼谷素万那普机场",
+        "zh-Hant": "曼谷素萬那普機場"
+      }
+    },
+    {
+      "display": "KUL",
+      "name": {
+        "ja": "クアラルンプール国際空港",
+        "en": "Kuala Lumpur Intl",
+        "de": "Flughafen Kuala Lumpur",
+        "es": "Aeropuerto Internacional de Kuala Lumpur",
+        "fr": "Aéroport international de Kuala Lumpur",
+        "hi": "कुआलालंपुर हवाई अड्डा",
+        "id": "Bandara Kuala Lumpur",
+        "it": "Aeroporto di Kuala Lumpur",
+        "ko": "쿠알라룸푸르 공항",
+        "nl": "Luchthaven Kuala Lumpur",
+        "pt-BR": "Aeroporto de Kuala Lumpur",
+        "th": "สนามบินกัวลาลัมเปอร์",
+        "vi": "Sân bay Kuala Lumpur",
+        "zh-Hans": "吉隆坡国际机场",
+        "zh-Hant": "吉隆坡國際機場"
+      }
+    },
+    {
+      "display": "MNL",
+      "name": {
+        "ja": "ニノイ・アキノ国際空港",
+        "en": "Manila Ninoy Aquino",
+        "de": "Flughafen Manila Ninoy Aquino",
+        "es": "Aeropuerto Ninoy Aquino",
+        "fr": "Aéroport Ninoy Aquino",
+        "hi": "निनॉय अकिनो हवाई अड्डा",
+        "id": "Bandara Ninoy Aquino",
+        "it": "Aeroporto Ninoy Aquino",
+        "ko": "마닐라 니노이아키노 공항",
+        "nl": "Luchthaven Ninoy Aquino",
+        "pt-BR": "Aeroporto Ninoy Aquino",
+        "th": "สนามบินนินอยอากีโน",
+        "vi": "Sân bay Ninoy Aquino",
+        "zh-Hans": "马尼拉尼诺伊阿基诺机场",
+        "zh-Hant": "馬尼拉尼諾伊阿基諾機場"
+      }
+    },
+    {
+      "display": "CGK",
+      "name": {
+        "ja": "スカルノ・ハッタ国際空港",
+        "en": "Jakarta Soekarno-Hatta",
+        "de": "Flughafen Jakarta Soekarno-Hatta",
+        "es": "Aeropuerto Soekarno-Hatta",
+        "fr": "Aéroport Soekarno-Hatta",
+        "hi": "सोएकार्नो-हट्टा हवाई अड्डा",
+        "id": "Bandara Soekarno-Hatta",
+        "it": "Aeroporto Soekarno-Hatta",
+        "ko": "자카르타 수카르노하타 공항",
+        "nl": "Luchthaven Soekarno-Hatta",
+        "pt-BR": "Aeroporto Soekarno-Hatta",
+        "th": "สนามบินซูการ์โน-ฮัตตา",
+        "vi": "Sân bay Soekarno-Hatta",
+        "zh-Hans": "雅加达苏加诺-哈达机场",
+        "zh-Hant": "雅加達蘇加諾-哈達機場"
+      }
+    },
+    {
+      "display": "DEL",
+      "name": {
+        "ja": "インディラ・ガンジー国際空港",
+        "en": "Delhi Indira Gandhi",
+        "de": "Flughafen Delhi Indira Gandhi",
+        "es": "Aeropuerto Indira Gandhi",
+        "fr": "Aéroport Indira Gandhi",
+        "hi": "इंदिरा गांधी हवाई अड्डा",
+        "id": "Bandara Indira Gandhi",
+        "it": "Aeroporto Indira Gandhi",
+        "ko": "델리 인디라 간디 공항",
+        "nl": "Luchthaven Indira Gandhi",
+        "pt-BR": "Aeroporto Indira Gandhi",
+        "th": "สนามบินอินทิรา คานธี",
+        "vi": "Sân bay Indira Gandhi",
+        "zh-Hans": "德里英迪拉甘地机场",
+        "zh-Hant": "德里英迪拉甘地機場"
+      }
+    },
+    {
+      "display": "BOM",
+      "name": {
+        "ja": "チャトラパティ・シヴァージー・マハラジ国際空港",
+        "en": "Mumbai Chhatrapati Shivaji",
+        "de": "Flughafen Mumbai",
+        "es": "Aeropuerto de Bombay",
+        "fr": "Aéroport Chhatrapati Shivaji",
+        "hi": "छत्रपति शिवाजी हवाई अड्डा",
+        "id": "Bandara Mumbai",
+        "it": "Aeroporto di Mumbai",
+        "ko": "뭄바이 공항",
+        "nl": "Luchthaven Mumbai",
+        "pt-BR": "Aeroporto de Mumbai",
+        "th": "สนามบินมุมไบ",
+        "vi": "Sân bay Mumbai",
+        "zh-Hans": "孟买国际机场",
+        "zh-Hant": "孟買國際機場"
+      }
+    },
+    {
+      "display": "SYD",
+      "name": {
+        "ja": "シドニー国際空港",
+        "en": "Sydney Kingsford Smith",
+        "de": "Flughafen Sydney",
+        "es": "Aeropuerto Internacional de Sídney",
+        "fr": "Aéroport de Sydney",
+        "hi": "सिडनी हवाई अड्डा",
+        "id": "Bandara Sydney",
+        "it": "Aeroporto di Sydney",
+        "ko": "시드니 공항",
+        "nl": "Luchthaven Sydney",
+        "pt-BR": "Aeroporto de Sydney",
+        "th": "สนามบินซิดนีย์",
+        "vi": "Sân bay Sydney",
+        "zh-Hans": "悉尼机场",
+        "zh-Hant": "雪梨機場"
+      }
+    },
+    {
+      "display": "MEL",
+      "name": {
+        "ja": "メルボルン空港",
+        "en": "Melbourne",
+        "de": "Flughafen Melbourne",
+        "es": "Aeropuerto de Melbourne",
+        "fr": "Aéroport de Melbourne",
+        "hi": "मेलबर्न हवाई अड्डा",
+        "id": "Bandara Melbourne",
+        "it": "Aeroporto di Melbourne",
+        "ko": "멜버른 공항",
+        "nl": "Luchthaven Melbourne",
+        "pt-BR": "Aeroporto de Melbourne",
+        "th": "สนามบินเมลเบิร์น",
+        "vi": "Sân bay Melbourne",
+        "zh-Hans": "墨尔本机场",
+        "zh-Hant": "墨爾本機場"
+      }
+    },
+    {
+      "display": "AKL",
+      "name": {
+        "ja": "オークランド国際空港",
+        "en": "Auckland Intl",
+        "de": "Flughafen Auckland",
+        "es": "Aeropuerto Internacional de Auckland",
+        "fr": "Aéroport international d'Auckland",
+        "hi": "ऑकलैंड हवाई अड्डा",
+        "id": "Bandara Auckland",
+        "it": "Aeroporto di Auckland",
+        "ko": "오클랜드 공항",
+        "nl": "Luchthaven Auckland",
+        "pt-BR": "Aeroporto de Auckland",
+        "th": "สนามบินโอ๊คแลนด์",
+        "vi": "Sân bay Auckland",
+        "zh-Hans": "奥克兰机场",
+        "zh-Hant": "奧克蘭機場"
+      }
+    },
+    {
+      "display": "JNB",
+      "name": {
+        "ja": "オーアール・タンボ国際空港",
+        "en": "Johannesburg OR Tambo",
+        "de": "Flughafen Johannesburg OR Tambo",
+        "es": "Aeropuerto OR Tambo",
+        "fr": "Aéroport OR Tambo",
+        "hi": "जोहान्सबर्ग हवाई अड्डा",
+        "id": "Bandara OR Tambo",
+        "it": "Aeroporto OR Tambo",
+        "ko": "요하네스버그 공항",
+        "nl": "Luchthaven OR Tambo",
+        "pt-BR": "Aeroporto OR Tambo",
+        "th": "สนามบินโอร์แทมโบ",
+        "vi": "Sân bay OR Tambo",
+        "zh-Hans": "约翰内斯堡坦博机场",
+        "zh-Hant": "約翰尼斯堡奧坦博機場"
+      }
+    },
+    {
+      "display": "CAI",
+      "name": {
+        "ja": "カイロ国際空港",
+        "en": "Cairo Intl",
+        "de": "Flughafen Kairo",
+        "es": "Aeropuerto Internacional de El Cairo",
+        "fr": "Aéroport international du Caire",
+        "hi": "काहिरा हवाई अड्डा",
+        "id": "Bandara Kairo",
+        "it": "Aeroporto Internazionale del Cairo",
+        "ko": "카이로 공항",
+        "nl": "Luchthaven Cairo",
+        "pt-BR": "Aeroporto Internacional do Cairo",
+        "th": "สนามบินไคโร",
+        "vi": "Sân bay Cairo",
+        "zh-Hans": "开罗国际机场",
+        "zh-Hant": "開羅國際機場"
+      }
+    },
+    {
+      "display": "NBO",
+      "name": {
+        "ja": "ジョモ・ケニヤッタ国際空港",
+        "en": "Nairobi Jomo Kenyatta",
+        "de": "Flughafen Nairobi Jomo Kenyatta",
+        "es": "Aeropuerto Jomo Kenyatta",
+        "fr": "Aéroport Jomo Kenyatta",
+        "hi": "नैरोबी हवाई अड्डा",
+        "id": "Bandara Jomo Kenyatta",
+        "it": "Aeroporto Jomo Kenyatta",
+        "ko": "나이로비 공항",
+        "nl": "Luchthaven Jomo Kenyatta",
+        "pt-BR": "Aeroporto de Nairóbi",
+        "th": "สนามบินโจโมเค็นยัตตา",
+        "vi": "Sân bay Jomo Kenyatta",
+        "zh-Hans": "内罗毕乔莫肯雅塔机场",
+        "zh-Hant": "奈洛比喬莫肯雅塔機場"
+      }
+    },
+    {
+      "display": "ADD",
+      "name": {
+        "ja": "ボレ国際空港",
+        "en": "Addis Ababa Bole",
+        "de": "Flughafen Addis Abeba Bole",
+        "es": "Aeropuerto Internacional de Bole",
+        "fr": "Aéroport international de Bole",
+        "hi": "अदीस अबाबा बोले हवाई अड्डा",
+        "id": "Bandara Bole",
+        "it": "Aeroporto Internazionale di Bole",
+        "ko": "아디스아바바 볼레 공항",
+        "nl": "Luchthaven Bole",
+        "pt-BR": "Aeroporto de Bole",
+        "th": "สนามบินโบลี",
+        "vi": "Sân bay Bole",
+        "zh-Hans": "亚的斯亚贝巴博莱机场",
+        "zh-Hant": "阿迪斯阿貝巴博萊機場"
+      }
+    }
+  ]
+}

@@ -1,0 +1,541 @@
+{
+  "gameId": "flagsEurope",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "ヨーロッパの旗",
+    "en": "European Flags",
+    "de": "Europäische Flaggen",
+    "es": "Banderas de Europa",
+    "fr": "Drapeaux européens",
+    "hi": "यूरोपीय झंडे",
+    "id": "Bendera Eropa",
+    "it": "Bandiere europee",
+    "ko": "유럽 국기",
+    "nl": "Europese vlaggen",
+    "pt-BR": "Bandeiras da Europa",
+    "th": "ธงยุโรป",
+    "vi": "Cờ châu Âu",
+    "zh-Hans": "欧洲国旗",
+    "zh-Hant": "歐洲國旗"
+  },
+  "icon": "🌍",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🇫🇷",
+      "name": {
+        "ja": "ふらんす",
+        "en": "France",
+        "de": "Frankreich",
+        "es": "Francia",
+        "fr": "France",
+        "hi": "फ्रांस",
+        "id": "Prancis",
+        "it": "Francia",
+        "ko": "프랑스",
+        "nl": "Frankrijk",
+        "pt-BR": "França",
+        "th": "ฝรั่งเศส",
+        "vi": "Pháp",
+        "zh-Hans": "法国",
+        "zh-Hant": "法國"
+      }
+    },
+    {
+      "display": "🇩🇪",
+      "name": {
+        "ja": "どいつ",
+        "en": "Germany",
+        "de": "Deutschland",
+        "es": "Alemania",
+        "fr": "Allemagne",
+        "hi": "जर्मनी",
+        "id": "Jerman",
+        "it": "Germania",
+        "ko": "독일",
+        "nl": "Duitsland",
+        "pt-BR": "Alemanha",
+        "th": "เยอรมนี",
+        "vi": "Đức",
+        "zh-Hans": "德国",
+        "zh-Hant": "德國"
+      }
+    },
+    {
+      "display": "🇮🇹",
+      "name": {
+        "ja": "いたりあ",
+        "en": "Italy",
+        "de": "Italien",
+        "es": "Italia",
+        "fr": "Italie",
+        "hi": "इटली",
+        "id": "Italia",
+        "it": "Italia",
+        "ko": "이탈리아",
+        "nl": "Italië",
+        "pt-BR": "Itália",
+        "th": "อิตาลี",
+        "vi": "Ý",
+        "zh-Hans": "意大利",
+        "zh-Hant": "義大利"
+      }
+    },
+    {
+      "display": "🇪🇸",
+      "name": {
+        "ja": "すぺいん",
+        "en": "Spain",
+        "de": "Spanien",
+        "es": "España",
+        "fr": "Espagne",
+        "hi": "स्पेन",
+        "id": "Spanyol",
+        "it": "Spagna",
+        "ko": "스페인",
+        "nl": "Spanje",
+        "pt-BR": "Espanha",
+        "th": "สเปน",
+        "vi": "Tây Ban Nha",
+        "zh-Hans": "西班牙",
+        "zh-Hant": "西班牙"
+      }
+    },
+    {
+      "display": "🇬🇧",
+      "name": {
+        "ja": "いぎりす",
+        "en": "UK",
+        "de": "Vereinigtes Königreich",
+        "es": "Reino Unido",
+        "fr": "Royaume-Uni",
+        "hi": "यूनाइटेड किंगडम",
+        "id": "Inggris",
+        "it": "Regno Unito",
+        "ko": "영국",
+        "nl": "Verenigd Koninkrijk",
+        "pt-BR": "Reino Unido",
+        "th": "สหราชอาณาจักร",
+        "vi": "Anh",
+        "zh-Hans": "英国",
+        "zh-Hant": "英國"
+      }
+    },
+    {
+      "display": "🇷🇺",
+      "name": {
+        "ja": "ろしあ",
+        "en": "Russia",
+        "de": "Russland",
+        "es": "Rusia",
+        "fr": "Russie",
+        "hi": "रूस",
+        "id": "Rusia",
+        "it": "Russia",
+        "ko": "러시아",
+        "nl": "Rusland",
+        "pt-BR": "Rússia",
+        "th": "รัสเซีย",
+        "vi": "Nga",
+        "zh-Hans": "俄罗斯",
+        "zh-Hant": "俄羅斯"
+      }
+    },
+    {
+      "display": "🇵🇹",
+      "name": {
+        "ja": "ぽるとがる",
+        "en": "Portugal",
+        "de": "Portugal",
+        "es": "Portugal",
+        "fr": "Portugal",
+        "hi": "पुर्तगाल",
+        "id": "Portugal",
+        "it": "Portogallo",
+        "ko": "포르투갈",
+        "nl": "Portugal",
+        "pt-BR": "Portugal",
+        "th": "โปรตุเกส",
+        "vi": "Bồ Đào Nha",
+        "zh-Hans": "葡萄牙",
+        "zh-Hant": "葡萄牙"
+      }
+    },
+    {
+      "display": "🇳🇱",
+      "name": {
+        "ja": "おらんだ",
+        "en": "Netherlands",
+        "de": "Niederlande",
+        "es": "Países Bajos",
+        "fr": "Pays-Bas",
+        "hi": "नीदरलैंड",
+        "id": "Belanda",
+        "it": "Paesi Bassi",
+        "ko": "네덜란드",
+        "nl": "Nederland",
+        "pt-BR": "Países Baixos",
+        "th": "เนเธอร์แลนด์",
+        "vi": "Hà Lan",
+        "zh-Hans": "荷兰",
+        "zh-Hant": "荷蘭"
+      }
+    },
+    {
+      "display": "🇧🇪",
+      "name": {
+        "ja": "べるぎー",
+        "en": "Belgium",
+        "de": "Belgien",
+        "es": "Bélgica",
+        "fr": "Belgique",
+        "hi": "बेल्जियम",
+        "id": "Belgia",
+        "it": "Belgio",
+        "ko": "벨기에",
+        "nl": "België",
+        "pt-BR": "Bélgica",
+        "th": "เบลเยียม",
+        "vi": "Bỉ",
+        "zh-Hans": "比利时",
+        "zh-Hant": "比利時"
+      }
+    },
+    {
+      "display": "🇨🇭",
+      "name": {
+        "ja": "すいす",
+        "en": "Switzerland",
+        "de": "Schweiz",
+        "es": "Suiza",
+        "fr": "Suisse",
+        "hi": "स्विट्जरलैंड",
+        "id": "Swiss",
+        "it": "Svizzera",
+        "ko": "스위스",
+        "nl": "Zwitserland",
+        "pt-BR": "Suíça",
+        "th": "สวิตเซอร์แลนด์",
+        "vi": "Thụy Sĩ",
+        "zh-Hans": "瑞士",
+        "zh-Hant": "瑞士"
+      }
+    },
+    {
+      "display": "🇦🇹",
+      "name": {
+        "ja": "おーすとりあ",
+        "en": "Austria",
+        "de": "Österreich",
+        "es": "Austria",
+        "fr": "Autriche",
+        "hi": "ऑस्ट्रिया",
+        "id": "Austria",
+        "it": "Austria",
+        "ko": "오스트리아",
+        "nl": "Oostenrijk",
+        "pt-BR": "Áustria",
+        "th": "ออสเตรีย",
+        "vi": "Áo",
+        "zh-Hans": "奥地利",
+        "zh-Hant": "奧地利"
+      }
+    },
+    {
+      "display": "🇸🇪",
+      "name": {
+        "ja": "すうぇーでん",
+        "en": "Sweden",
+        "de": "Schweden",
+        "es": "Suecia",
+        "fr": "Suède",
+        "hi": "स्वीडन",
+        "id": "Swedia",
+        "it": "Svezia",
+        "ko": "스웨덴",
+        "nl": "Zweden",
+        "pt-BR": "Suécia",
+        "th": "สวีเดน",
+        "vi": "Thụy Điển",
+        "zh-Hans": "瑞典",
+        "zh-Hant": "瑞典"
+      }
+    },
+    {
+      "display": "🇳🇴",
+      "name": {
+        "ja": "のるうぇー",
+        "en": "Norway",
+        "de": "Norwegen",
+        "es": "Noruega",
+        "fr": "Norvège",
+        "hi": "नॉर्वे",
+        "id": "Norwegia",
+        "it": "Norvegia",
+        "ko": "노르웨이",
+        "nl": "Noorwegen",
+        "pt-BR": "Noruega",
+        "th": "นอร์เวย์",
+        "vi": "Na Uy",
+        "zh-Hans": "挪威",
+        "zh-Hant": "挪威"
+      }
+    },
+    {
+      "display": "🇩🇰",
+      "name": {
+        "ja": "でんまーく",
+        "en": "Denmark",
+        "de": "Dänemark",
+        "es": "Dinamarca",
+        "fr": "Danemark",
+        "hi": "डेनमार्क",
+        "id": "Denmark",
+        "it": "Danimarca",
+        "ko": "덴마크",
+        "nl": "Denemarken",
+        "pt-BR": "Dinamarca",
+        "th": "เดนมาร์ก",
+        "vi": "Đan Mạch",
+        "zh-Hans": "丹麦",
+        "zh-Hant": "丹麥"
+      }
+    },
+    {
+      "display": "🇫🇮",
+      "name": {
+        "ja": "ふぃんらんど",
+        "en": "Finland",
+        "de": "Finnland",
+        "es": "Finlandia",
+        "fr": "Finlande",
+        "hi": "फ़िनलैंड",
+        "id": "Finlandia",
+        "it": "Finlandia",
+        "ko": "핀란드",
+        "nl": "Finland",
+        "pt-BR": "Finlândia",
+        "th": "ฟินแลนด์",
+        "vi": "Phần Lan",
+        "zh-Hans": "芬兰",
+        "zh-Hant": "芬蘭"
+      }
+    },
+    {
+      "display": "🇵🇱",
+      "name": {
+        "ja": "ぽーらんど",
+        "en": "Poland",
+        "de": "Polen",
+        "es": "Polonia",
+        "fr": "Pologne",
+        "hi": "पोलैंड",
+        "id": "Polandia",
+        "it": "Polonia",
+        "ko": "폴란드",
+        "nl": "Polen",
+        "pt-BR": "Polônia",
+        "th": "โปแลนด์",
+        "vi": "Ba Lan",
+        "zh-Hans": "波兰",
+        "zh-Hant": "波蘭"
+      }
+    },
+    {
+      "display": "🇬🇷",
+      "name": {
+        "ja": "ぎりしあ",
+        "en": "Greece",
+        "de": "Griechenland",
+        "es": "Grecia",
+        "fr": "Grèce",
+        "hi": "ग्रीस",
+        "id": "Yunani",
+        "it": "Grecia",
+        "ko": "그리스",
+        "nl": "Griekenland",
+        "pt-BR": "Grécia",
+        "th": "กรีซ",
+        "vi": "Hy Lạp",
+        "zh-Hans": "希腊",
+        "zh-Hant": "希臘"
+      }
+    },
+    {
+      "display": "🇨🇿",
+      "name": {
+        "ja": "ちぇこ",
+        "en": "Czech Republic",
+        "de": "Tschechien",
+        "es": "República Checa",
+        "fr": "République tchèque",
+        "hi": "चेक गणराज्य",
+        "id": "Ceko",
+        "it": "Repubblica Ceca",
+        "ko": "체코",
+        "nl": "Tsjechië",
+        "pt-BR": "República Tcheca",
+        "th": "เช็กเกีย",
+        "vi": "Séc",
+        "zh-Hans": "捷克",
+        "zh-Hant": "捷克"
+      }
+    },
+    {
+      "display": "🇭🇺",
+      "name": {
+        "ja": "はんがりー",
+        "en": "Hungary",
+        "de": "Ungarn",
+        "es": "Hungría",
+        "fr": "Hongrie",
+        "hi": "हंगरी",
+        "id": "Hongaria",
+        "it": "Ungheria",
+        "ko": "헝가리",
+        "nl": "Hongarije",
+        "pt-BR": "Hungria",
+        "th": "ฮังการี",
+        "vi": "Hungary",
+        "zh-Hans": "匈牙利",
+        "zh-Hant": "匈牙利"
+      }
+    },
+    {
+      "display": "🇷🇴",
+      "name": {
+        "ja": "るーまにあ",
+        "en": "Romania",
+        "de": "Rumänien",
+        "es": "Rumania",
+        "fr": "Roumanie",
+        "hi": "रोमानिया",
+        "id": "Rumania",
+        "it": "Romania",
+        "ko": "루마니아",
+        "nl": "Roemenië",
+        "pt-BR": "Romênia",
+        "th": "โรมาเนีย",
+        "vi": "Romania",
+        "zh-Hans": "罗马尼亚",
+        "zh-Hant": "羅馬尼亞"
+      }
+    },
+    {
+      "display": "🇺🇦",
+      "name": {
+        "ja": "うくらいな",
+        "en": "Ukraine",
+        "de": "Ukraine",
+        "es": "Ucrania",
+        "fr": "Ukraine",
+        "hi": "यूक्रेन",
+        "id": "Ukraina",
+        "it": "Ucraina",
+        "ko": "우크라이나",
+        "nl": "Oekraïne",
+        "pt-BR": "Ucrânia",
+        "th": "ยูเครน",
+        "vi": "Ukraine",
+        "zh-Hans": "乌克兰",
+        "zh-Hant": "烏克蘭"
+      }
+    },
+    {
+      "display": "🇮🇪",
+      "name": {
+        "ja": "あいるらんど",
+        "en": "Ireland",
+        "de": "Irland",
+        "es": "Irlanda",
+        "fr": "Irlande",
+        "hi": "आयरलैंड",
+        "id": "Irlandia",
+        "it": "Irlanda",
+        "ko": "아일랜드",
+        "nl": "Ierland",
+        "pt-BR": "Irlanda",
+        "th": "ไอร์แลนด์",
+        "vi": "Ireland",
+        "zh-Hans": "爱尔兰",
+        "zh-Hant": "愛爾蘭"
+      }
+    },
+    {
+      "display": "🇮🇸",
+      "name": {
+        "ja": "あいすらんど",
+        "en": "Iceland",
+        "de": "Island",
+        "es": "Islandia",
+        "fr": "Islande",
+        "hi": "आइसलैंड",
+        "id": "Islandia",
+        "it": "Islanda",
+        "ko": "아이슬란드",
+        "nl": "IJsland",
+        "pt-BR": "Islândia",
+        "th": "ไอซ์แลนด์",
+        "vi": "Iceland",
+        "zh-Hans": "冰岛",
+        "zh-Hant": "冰島"
+      }
+    },
+    {
+      "display": "🇭🇷",
+      "name": {
+        "ja": "くろあちあ",
+        "en": "Croatia",
+        "de": "Kroatien",
+        "es": "Croacia",
+        "fr": "Croatie",
+        "hi": "क्रोएशिया",
+        "id": "Kroasia",
+        "it": "Croazia",
+        "ko": "크로아티아",
+        "nl": "Kroatië",
+        "pt-BR": "Croácia",
+        "th": "โครเอเชีย",
+        "vi": "Croatia",
+        "zh-Hans": "克罗地亚",
+        "zh-Hant": "克羅埃西亞"
+      }
+    },
+    {
+      "display": "🇸🇰",
+      "name": {
+        "ja": "すろばきあ",
+        "en": "Slovakia",
+        "de": "Slowakei",
+        "es": "Eslovaquia",
+        "fr": "Slovaquie",
+        "hi": "स्लोवाकिया",
+        "id": "Slovakia",
+        "it": "Slovacchia",
+        "ko": "슬로바키아",
+        "nl": "Slowakije",
+        "pt-BR": "Eslováquia",
+        "th": "สโลวาเกีย",
+        "vi": "Slovakia",
+        "zh-Hans": "斯洛伐克",
+        "zh-Hant": "斯洛伐克"
+      }
+    }
+  ]
+}

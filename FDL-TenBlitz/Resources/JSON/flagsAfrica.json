@@ -1,0 +1,441 @@
+{
+  "gameId": "flagsAfrica",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "アフリカの旗",
+    "en": "African Flags",
+    "de": "Afrikanische Flaggen",
+    "es": "Banderas de África",
+    "fr": "Drapeaux africains",
+    "hi": "अफ्रीकी झंडे",
+    "id": "Bendera Afrika",
+    "it": "Bandiere africane",
+    "ko": "아프리카 국기",
+    "nl": "Afrikaanse vlaggen",
+    "pt-BR": "Bandeiras da África",
+    "th": "ธงแอฟริกา",
+    "vi": "Cờ châu Phi",
+    "zh-Hans": "非洲国旗",
+    "zh-Hant": "非洲國旗"
+  },
+  "icon": "🌍",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🇪🇬",
+      "name": {
+        "ja": "えじぷと",
+        "en": "Egypt",
+        "de": "Ägypten",
+        "es": "Egipto",
+        "fr": "Égypte",
+        "hi": "मिस्र",
+        "id": "Mesir",
+        "it": "Egitto",
+        "ko": "이집트",
+        "nl": "Egypte",
+        "pt-BR": "Egito",
+        "th": "อียิปต์",
+        "vi": "Ai Cập",
+        "zh-Hans": "埃及",
+        "zh-Hant": "埃及"
+      }
+    },
+    {
+      "display": "🇿🇦",
+      "name": {
+        "ja": "みなみあふりか",
+        "en": "South Africa",
+        "de": "Südafrika",
+        "es": "Sudáfrica",
+        "fr": "Afrique du Sud",
+        "hi": "दक्षिण अफ्रीका",
+        "id": "Afrika Selatan",
+        "it": "Sudafrica",
+        "ko": "남아프리카",
+        "nl": "Zuid-Afrika",
+        "pt-BR": "África do Sul",
+        "th": "แอฟริกาใต้",
+        "vi": "Nam Phi",
+        "zh-Hans": "南非",
+        "zh-Hant": "南非"
+      }
+    },
+    {
+      "display": "🇰🇪",
+      "name": {
+        "ja": "けにあ",
+        "en": "Kenya",
+        "de": "Kenia",
+        "es": "Kenia",
+        "fr": "Kenya",
+        "hi": "केन्या",
+        "id": "Kenya",
+        "it": "Kenya",
+        "ko": "케냐",
+        "nl": "Kenia",
+        "pt-BR": "Quênia",
+        "th": "เคนยา",
+        "vi": "Kenya",
+        "zh-Hans": "肯尼亚",
+        "zh-Hant": "肯亞"
+      }
+    },
+    {
+      "display": "🇳🇬",
+      "name": {
+        "ja": "ないじぇりあ",
+        "en": "Nigeria",
+        "de": "Nigeria",
+        "es": "Nigeria",
+        "fr": "Nigéria",
+        "hi": "नाइजीरिया",
+        "id": "Nigeria",
+        "it": "Nigeria",
+        "ko": "나이지리아",
+        "nl": "Nigeria",
+        "pt-BR": "Nigéria",
+        "th": "ไนจีเรีย",
+        "vi": "Nigeria",
+        "zh-Hans": "尼日利亚",
+        "zh-Hant": "奈及利亞"
+      }
+    },
+    {
+      "display": "🇪🇹",
+      "name": {
+        "ja": "えちおぴあ",
+        "en": "Ethiopia",
+        "de": "Äthiopien",
+        "es": "Etiopía",
+        "fr": "Éthiopie",
+        "hi": "इथियोपिया",
+        "id": "Etiopia",
+        "it": "Etiopia",
+        "ko": "에티오피아",
+        "nl": "Ethiopië",
+        "pt-BR": "Etiópia",
+        "th": "เอธิโอเปีย",
+        "vi": "Ethiopia",
+        "zh-Hans": "埃塞俄比亚",
+        "zh-Hant": "衣索比亞"
+      }
+    },
+    {
+      "display": "🇬🇭",
+      "name": {
+        "ja": "がーな",
+        "en": "Ghana",
+        "de": "Ghana",
+        "es": "Ghana",
+        "fr": "Ghana",
+        "hi": "घाना",
+        "id": "Ghana",
+        "it": "Ghana",
+        "ko": "가나",
+        "nl": "Ghana",
+        "pt-BR": "Gana",
+        "th": "กานา",
+        "vi": "Ghana",
+        "zh-Hans": "加纳",
+        "zh-Hant": "迦納"
+      }
+    },
+    {
+      "display": "🇹🇳",
+      "name": {
+        "ja": "ちゅにじあ",
+        "en": "Tunisia",
+        "de": "Tunesien",
+        "es": "Túnez",
+        "fr": "Tunisie",
+        "hi": "ट्यूनीशिया",
+        "id": "Tunisia",
+        "it": "Tunisia",
+        "ko": "튀니지",
+        "nl": "Tunesië",
+        "pt-BR": "Tunísia",
+        "th": "ตูนิเซีย",
+        "vi": "Tunisia",
+        "zh-Hans": "突尼斯",
+        "zh-Hant": "突尼西亞"
+      }
+    },
+    {
+      "display": "🇲🇦",
+      "name": {
+        "ja": "もろっこ",
+        "en": "Morocco",
+        "de": "Marokko",
+        "es": "Marruecos",
+        "fr": "Maroc",
+        "hi": "मोरक्को",
+        "id": "Maroko",
+        "it": "Marocco",
+        "ko": "모로코",
+        "nl": "Marokko",
+        "pt-BR": "Marrocos",
+        "th": "โมร็อกโก",
+        "vi": "Maroc",
+        "zh-Hans": "摩洛哥",
+        "zh-Hant": "摩洛哥"
+      }
+    },
+    {
+      "display": "🇨🇲",
+      "name": {
+        "ja": "かめるーん",
+        "en": "Cameroon",
+        "de": "Kamerun",
+        "es": "Camerún",
+        "fr": "Cameroun",
+        "hi": "कैमरून",
+        "id": "Kamerun",
+        "it": "Camerun",
+        "ko": "카메룬",
+        "nl": "Kameroen",
+        "pt-BR": "Camarões",
+        "th": "แคเมอรูน",
+        "vi": "Cameroon",
+        "zh-Hans": "喀麦隆",
+        "zh-Hant": "喀麥隆"
+      }
+    },
+    {
+      "display": "🇸🇳",
+      "name": {
+        "ja": "せねがる",
+        "en": "Senegal",
+        "de": "Senegal",
+        "es": "Senegal",
+        "fr": "Sénégal",
+        "hi": "सेनेगल",
+        "id": "Senegal",
+        "it": "Senegal",
+        "ko": "세네갈",
+        "nl": "Senegal",
+        "pt-BR": "Senegal",
+        "th": "เซเนกัล",
+        "vi": "Senegal",
+        "zh-Hans": "塞内加尔",
+        "zh-Hant": "塞內加爾"
+      }
+    },
+    {
+      "display": "🇹🇿",
+      "name": {
+        "ja": "たんざにあ",
+        "en": "Tanzania",
+        "de": "Tansania",
+        "es": "Tanzania",
+        "fr": "Tanzanie",
+        "hi": "तंजानिया",
+        "id": "Tanzania",
+        "it": "Tanzania",
+        "ko": "탄자니아",
+        "nl": "Tanzania",
+        "pt-BR": "Tanzânia",
+        "th": "แทนซาเนีย",
+        "vi": "Tanzania",
+        "zh-Hans": "坦桑尼亚",
+        "zh-Hant": "坦尚尼亞"
+      }
+    },
+    {
+      "display": "🇺🇬",
+      "name": {
+        "ja": "うがんだ",
+        "en": "Uganda",
+        "de": "Uganda",
+        "es": "Uganda",
+        "fr": "Ouganda",
+        "hi": "युगांडा",
+        "id": "Uganda",
+        "it": "Uganda",
+        "ko": "우간다",
+        "nl": "Oeganda",
+        "pt-BR": "Uganda",
+        "th": "ยูกันดา",
+        "vi": "Uganda",
+        "zh-Hans": "乌干达",
+        "zh-Hant": "烏干達"
+      }
+    },
+    {
+      "display": "🇿🇲",
+      "name": {
+        "ja": "ざんびあ",
+        "en": "Zambia",
+        "de": "Sambia",
+        "es": "Zambia",
+        "fr": "Zambie",
+        "hi": "जाम्बिया",
+        "id": "Zambia",
+        "it": "Zambia",
+        "ko": "잠비아",
+        "nl": "Zambia",
+        "pt-BR": "Zâmbia",
+        "th": "แซมเบีย",
+        "vi": "Zambia",
+        "zh-Hans": "赞比亚",
+        "zh-Hant": "尚比亞"
+      }
+    },
+    {
+      "display": "🇿🇼",
+      "name": {
+        "ja": "じんばぶえ",
+        "en": "Zimbabwe",
+        "de": "Simbabwe",
+        "es": "Zimbabue",
+        "fr": "Zimbabwe",
+        "hi": "जिम्बाब्वे",
+        "id": "Zimbabwe",
+        "it": "Zimbabwe",
+        "ko": "짐바브웨",
+        "nl": "Zimbabwe",
+        "pt-BR": "Zimbábue",
+        "th": "ซิมบับเว",
+        "vi": "Zimbabwe",
+        "zh-Hans": "津巴布韦",
+        "zh-Hant": "辛巴威"
+      }
+    },
+    {
+      "display": "🇲🇬",
+      "name": {
+        "ja": "まだがすかる",
+        "en": "Madagascar",
+        "de": "Madagaskar",
+        "es": "Madagascar",
+        "fr": "Madagascar",
+        "hi": "मेडागास्कर",
+        "id": "Madagaskar",
+        "it": "Madagascar",
+        "ko": "마다가스카르",
+        "nl": "Madagaskar",
+        "pt-BR": "Madagascar",
+        "th": "มาดากัสการ์",
+        "vi": "Madagascar",
+        "zh-Hans": "马达加斯加",
+        "zh-Hant": "馬達加斯加"
+      }
+    },
+    {
+      "display": "🇦🇴",
+      "name": {
+        "ja": "あんごら",
+        "en": "Angola",
+        "de": "Angola",
+        "es": "Angola",
+        "fr": "Angola",
+        "hi": "अंगोला",
+        "id": "Angola",
+        "it": "Angola",
+        "ko": "앙골라",
+        "nl": "Angola",
+        "pt-BR": "Angola",
+        "th": "แองโกลา",
+        "vi": "Angola",
+        "zh-Hans": "安哥拉",
+        "zh-Hant": "安哥拉"
+      }
+    },
+    {
+      "display": "🇲🇿",
+      "name": {
+        "ja": "もざんびーく",
+        "en": "Mozambique",
+        "de": "Mosambik",
+        "es": "Mozambique",
+        "fr": "Mozambique",
+        "hi": "मोजाम्बिक",
+        "id": "Mozambik",
+        "it": "Mozambico",
+        "ko": "모잠비크",
+        "nl": "Mozambique",
+        "pt-BR": "Moçambique",
+        "th": "โมซัมบิก",
+        "vi": "Mozambique",
+        "zh-Hans": "莫桑比克",
+        "zh-Hant": "莫三比克"
+      }
+    },
+    {
+      "display": "🇨🇮",
+      "name": {
+        "ja": "こーとじぼわーる",
+        "en": "Ivory Coast",
+        "de": "Elfenbeinküste",
+        "es": "Costa de Marfil",
+        "fr": "Côte d'Ivoire",
+        "hi": "आइवरी कोस्ट",
+        "id": "Pantai Gading",
+        "it": "Costa d'Avorio",
+        "ko": "코트디부아르",
+        "nl": "Ivoorkust",
+        "pt-BR": "Costa do Marfim",
+        "th": "โกตดิวัวร์",
+        "vi": "Bờ Biển Ngà",
+        "zh-Hans": "科特迪瓦",
+        "zh-Hant": "象牙海岸"
+      }
+    },
+    {
+      "display": "🇷🇼",
+      "name": {
+        "ja": "るわんだ",
+        "en": "Rwanda",
+        "de": "Ruanda",
+        "es": "Ruanda",
+        "fr": "Rwanda",
+        "hi": "रवांडा",
+        "id": "Rwanda",
+        "it": "Ruanda",
+        "ko": "르완다",
+        "nl": "Rwanda",
+        "pt-BR": "Ruanda",
+        "th": "รวันดา",
+        "vi": "Rwanda",
+        "zh-Hans": "卢旺达",
+        "zh-Hant": "盧安達"
+      }
+    },
+    {
+      "display": "🇩🇿",
+      "name": {
+        "ja": "あるじぇりあ",
+        "en": "Algeria",
+        "de": "Algerien",
+        "es": "Argelia",
+        "fr": "Algérie",
+        "hi": "अल्जीरिया",
+        "id": "Aljazair",
+        "it": "Algeria",
+        "ko": "알제리",
+        "nl": "Algerije",
+        "pt-BR": "Argélia",
+        "th": "แอลจีเรีย",
+        "vi": "Algeria",
+        "zh-Hans": "阿尔及利亚",
+        "zh-Hant": "阿爾及利亞"
+      }
+    }
+  ]
+}

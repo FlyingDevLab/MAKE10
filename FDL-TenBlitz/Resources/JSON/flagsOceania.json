@@ -1,0 +1,341 @@
+{
+  "gameId": "flagsOceania",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "オセアニアの旗",
+    "en": "Oceanian Flags",
+    "de": "Ozeanische Flaggen",
+    "es": "Banderas de Oceanía",
+    "fr": "Drapeaux océaniens",
+    "hi": "ओशेनिया के झंडे",
+    "id": "Bendera Oseania",
+    "it": "Bandiere dell'Oceania",
+    "ko": "오세아니아 국기",
+    "nl": "Oceanische vlaggen",
+    "pt-BR": "Bandeiras da Oceania",
+    "th": "ธงโอเชียเนีย",
+    "vi": "Cờ châu Đại Dương",
+    "zh-Hans": "大洋洲国旗",
+    "zh-Hant": "大洋洲國旗"
+  },
+  "icon": "🌊",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🇦🇺",
+      "name": {
+        "ja": "おーすとらりあ",
+        "en": "Australia",
+        "de": "Australien",
+        "es": "Australia",
+        "fr": "Australie",
+        "hi": "ऑस्ट्रेलिया",
+        "id": "Australia",
+        "it": "Australia",
+        "ko": "호주",
+        "nl": "Australië",
+        "pt-BR": "Austrália",
+        "th": "ออสเตรเลีย",
+        "vi": "Úc",
+        "zh-Hans": "澳大利亚",
+        "zh-Hant": "澳洲"
+      }
+    },
+    {
+      "display": "🇳🇿",
+      "name": {
+        "ja": "にゅーじーらんど",
+        "en": "New Zealand",
+        "de": "Neuseeland",
+        "es": "Nueva Zelanda",
+        "fr": "Nouvelle-Zélande",
+        "hi": "न्यूजीलैंड",
+        "id": "Selandia Baru",
+        "it": "Nuova Zelanda",
+        "ko": "뉴질랜드",
+        "nl": "Nieuw-Zeeland",
+        "pt-BR": "Nova Zelândia",
+        "th": "นิวซีแลนด์",
+        "vi": "New Zealand",
+        "zh-Hans": "新西兰",
+        "zh-Hant": "紐西蘭"
+      }
+    },
+    {
+      "display": "🇫🇯",
+      "name": {
+        "ja": "ふぃじー",
+        "en": "Fiji",
+        "de": "Fidschi",
+        "es": "Fiyi",
+        "fr": "Fidji",
+        "hi": "फिजी",
+        "id": "Fiji",
+        "it": "Figi",
+        "ko": "피지",
+        "nl": "Fiji",
+        "pt-BR": "Fiji",
+        "th": "ฟิจิ",
+        "vi": "Fiji",
+        "zh-Hans": "斐济",
+        "zh-Hant": "斐濟"
+      }
+    },
+    {
+      "display": "🇵🇬",
+      "name": {
+        "ja": "ぱぷあにゅーぎにあ",
+        "en": "Papua New Guinea",
+        "de": "Papua-Neuguinea",
+        "es": "Papúa Nueva Guinea",
+        "fr": "Papouasie-Nouvelle-Guinée",
+        "hi": "पापुआ न्यू गिनी",
+        "id": "Papua Nugini",
+        "it": "Papua Nuova Guinea",
+        "ko": "파푸아뉴기니",
+        "nl": "Papoea-Nieuw-Guinea",
+        "pt-BR": "Papua-Nova Guiné",
+        "th": "ปาปัวนิวกินี",
+        "vi": "Papua New Guinea",
+        "zh-Hans": "巴布亚新几内亚",
+        "zh-Hant": "巴布亞紐幾內亞"
+      }
+    },
+    {
+      "display": "🇼🇸",
+      "name": {
+        "ja": "さもあ",
+        "en": "Samoa",
+        "de": "Samoa",
+        "es": "Samoa",
+        "fr": "Samoa",
+        "hi": "समोआ",
+        "id": "Samoa",
+        "it": "Samoa",
+        "ko": "사모아",
+        "nl": "Samoa",
+        "pt-BR": "Samoa",
+        "th": "ซามัว",
+        "vi": "Samoa",
+        "zh-Hans": "萨摩亚",
+        "zh-Hant": "薩摩亞"
+      }
+    },
+    {
+      "display": "🇹🇴",
+      "name": {
+        "ja": "とんが",
+        "en": "Tonga",
+        "de": "Tonga",
+        "es": "Tonga",
+        "fr": "Tonga",
+        "hi": "टोंगा",
+        "id": "Tonga",
+        "it": "Tonga",
+        "ko": "통가",
+        "nl": "Tonga",
+        "pt-BR": "Tonga",
+        "th": "ตองกา",
+        "vi": "Tonga",
+        "zh-Hans": "汤加",
+        "zh-Hant": "東加"
+      }
+    },
+    {
+      "display": "🇻🇺",
+      "name": {
+        "ja": "ばぬあつ",
+        "en": "Vanuatu",
+        "de": "Vanuatu",
+        "es": "Vanuatu",
+        "fr": "Vanuatu",
+        "hi": "वानुआतु",
+        "id": "Vanuatu",
+        "it": "Vanuatu",
+        "ko": "바누아투",
+        "nl": "Vanuatu",
+        "pt-BR": "Vanuatu",
+        "th": "วานูอาตู",
+        "vi": "Vanuatu",
+        "zh-Hans": "瓦努阿图",
+        "zh-Hant": "萬那杜"
+      }
+    },
+    {
+      "display": "🇸🇧",
+      "name": {
+        "ja": "そろもんしょとう",
+        "en": "Solomon Islands",
+        "de": "Salomonen",
+        "es": "Islas Salomón",
+        "fr": "Îles Salomon",
+        "hi": "सोलोमन द्वीप",
+        "id": "Kepulauan Solomon",
+        "it": "Isole Salomone",
+        "ko": "솔로몬 제도",
+        "nl": "Salomonseilanden",
+        "pt-BR": "Ilhas Salomão",
+        "th": "หมู่เกาะโซโลมอน",
+        "vi": "Quần đảo Solomon",
+        "zh-Hans": "所罗门群岛",
+        "zh-Hant": "索羅門群島"
+      }
+    },
+    {
+      "display": "🇵🇼",
+      "name": {
+        "ja": "ぱらお",
+        "en": "Palau",
+        "de": "Palau",
+        "es": "Palaos",
+        "fr": "Palaos",
+        "hi": "पलाउ",
+        "id": "Palau",
+        "it": "Palau",
+        "ko": "팔라우",
+        "nl": "Palau",
+        "pt-BR": "Palau",
+        "th": "ปาเลา",
+        "vi": "Palau",
+        "zh-Hans": "帕劳",
+        "zh-Hant": "帛琉"
+      }
+    },
+    {
+      "display": "🇫🇲",
+      "name": {
+        "ja": "みくろねしあ",
+        "en": "Micronesia",
+        "de": "Mikronesien",
+        "es": "Micronesia",
+        "fr": "Micronésie",
+        "hi": "माइक्रोनेशिया",
+        "id": "Mikronesia",
+        "it": "Micronesia",
+        "ko": "미크로네시아",
+        "nl": "Micronesië",
+        "pt-BR": "Micronésia",
+        "th": "ไมโครนีเซีย",
+        "vi": "Micronesia",
+        "zh-Hans": "密克罗尼西亚",
+        "zh-Hant": "密克羅尼西亞"
+      }
+    },
+    {
+      "display": "🇳🇷",
+      "name": {
+        "ja": "なうる",
+        "en": "Nauru",
+        "de": "Nauru",
+        "es": "Nauru",
+        "fr": "Nauru",
+        "hi": "नाउरू",
+        "id": "Nauru",
+        "it": "Nauru",
+        "ko": "나우루",
+        "nl": "Nauru",
+        "pt-BR": "Nauru",
+        "th": "นาอูรู",
+        "vi": "Nauru",
+        "zh-Hans": "瑙鲁",
+        "zh-Hant": "諾魯"
+      }
+    },
+    {
+      "display": "🇰🇮",
+      "name": {
+        "ja": "きりばす",
+        "en": "Kiribati",
+        "de": "Kiribati",
+        "es": "Kiribati",
+        "fr": "Kiribati",
+        "hi": "किरिबाती",
+        "id": "Kiribati",
+        "it": "Kiribati",
+        "ko": "키리바시",
+        "nl": "Kiribati",
+        "pt-BR": "Kiribati",
+        "th": "คิริบาส",
+        "vi": "Kiribati",
+        "zh-Hans": "基里巴斯",
+        "zh-Hant": "吉里巴斯"
+      }
+    },
+    {
+      "display": "🇹🇻",
+      "name": {
+        "ja": "つばる",
+        "en": "Tuvalu",
+        "de": "Tuvalu",
+        "es": "Tuvalu",
+        "fr": "Tuvalu",
+        "hi": "तुवालु",
+        "id": "Tuvalu",
+        "it": "Tuvalu",
+        "ko": "투발루",
+        "nl": "Tuvalu",
+        "pt-BR": "Tuvalu",
+        "th": "ตูวาลู",
+        "vi": "Tuvalu",
+        "zh-Hans": "图瓦卢",
+        "zh-Hant": "吐瓦魯"
+      }
+    },
+    {
+      "display": "🇲🇭",
+      "name": {
+        "ja": "まーしゃるしょとう",
+        "en": "Marshall Islands",
+        "de": "Marshallinseln",
+        "es": "Islas Marshall",
+        "fr": "Îles Marshall",
+        "hi": "मार्शल द्वीप",
+        "id": "Kepulauan Marshall",
+        "it": "Isole Marshall",
+        "ko": "마셜 제도",
+        "nl": "Marshalleilanden",
+        "pt-BR": "Ilhas Marshall",
+        "th": "หมู่เกาะมาร์แชลล์",
+        "vi": "Quần đảo Marshall",
+        "zh-Hans": "马绍尔群岛",
+        "zh-Hant": "馬紹爾群島"
+      }
+    },
+    {
+      "display": "🇳🇨",
+      "name": {
+        "ja": "にゅーかれどにあ",
+        "en": "New Caledonia",
+        "de": "Neukaledonien",
+        "es": "Nueva Caledonia",
+        "fr": "Nouvelle-Calédonie",
+        "hi": "न्यू कैलेडोनिया",
+        "id": "Kaledonia Baru",
+        "it": "Nuova Caledonia",
+        "ko": "뉴칼레도니아",
+        "nl": "Nieuw-Caledonië",
+        "pt-BR": "Nova Caledônia",
+        "th": "นิวแคลิโดเนีย",
+        "vi": "New Caledonia",
+        "zh-Hans": "新喀里多尼亚",
+        "zh-Hant": "新喀里多尼亞"
+      }
+    }
+  ]
+}

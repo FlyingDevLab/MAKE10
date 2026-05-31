@@ -1,0 +1,441 @@
+{
+  "gameId": "flagsAmericas",
+  "group": {
+    "ja": "はた",
+    "en": "Flags",
+    "de": "Flaggen",
+    "es": "Banderas",
+    "fr": "Drapeaux",
+    "hi": "झंडे",
+    "id": "Bendera",
+    "it": "Bandiere",
+    "ko": "국기",
+    "nl": "Vlaggen",
+    "pt-BR": "Bandeiras",
+    "th": "ธงชาติ",
+    "vi": "Cờ",
+    "zh-Hans": "旗帜",
+    "zh-Hant": "旗幟"
+  },
+  "title": {
+    "ja": "アメリカ大陸の旗",
+    "en": "Americas Flags",
+    "de": "Flaggen der Amerikas",
+    "es": "Banderas de las Américas",
+    "fr": "Drapeaux des Amériques",
+    "hi": "अमेरिका के झंडे",
+    "id": "Bendera Amerika",
+    "it": "Bandiere delle Americhe",
+    "ko": "아메리카 국기",
+    "nl": "Vlaggen van Amerika",
+    "pt-BR": "Bandeiras das Américas",
+    "th": "ธงทวีปอเมริกา",
+    "vi": "Cờ châu Mỹ",
+    "zh-Hans": "美洲国旗",
+    "zh-Hant": "美洲國旗"
+  },
+  "icon": "🌎",
+  "displayStyle": "emoji",
+  "items": [
+    {
+      "display": "🇺🇸",
+      "name": {
+        "ja": "あめりか",
+        "en": "USA",
+        "de": "USA",
+        "es": "EE. UU.",
+        "fr": "États-Unis",
+        "hi": "संयुक्त राज्य",
+        "id": "Amerika Serikat",
+        "it": "Stati Uniti",
+        "ko": "미국",
+        "nl": "Verenigde Staten",
+        "pt-BR": "Estados Unidos",
+        "th": "สหรัฐอเมริกา",
+        "vi": "Hoa Kỳ",
+        "zh-Hans": "美国",
+        "zh-Hant": "美國"
+      }
+    },
+    {
+      "display": "🇨🇦",
+      "name": {
+        "ja": "かなだ",
+        "en": "Canada",
+        "de": "Kanada",
+        "es": "Canadá",
+        "fr": "Canada",
+        "hi": "कनाडा",
+        "id": "Kanada",
+        "it": "Canada",
+        "ko": "캐나다",
+        "nl": "Canada",
+        "pt-BR": "Canadá",
+        "th": "แคนาดา",
+        "vi": "Canada",
+        "zh-Hans": "加拿大",
+        "zh-Hant": "加拿大"
+      }
+    },
+    {
+      "display": "🇲🇽",
+      "name": {
+        "ja": "めきしこ",
+        "en": "Mexico",
+        "de": "Mexiko",
+        "es": "México",
+        "fr": "Mexique",
+        "hi": "मेक्सिको",
+        "id": "Meksiko",
+        "it": "Messico",
+        "ko": "멕시코",
+        "nl": "Mexico",
+        "pt-BR": "México",
+        "th": "เม็กซิโก",
+        "vi": "Mexico",
+        "zh-Hans": "墨西哥",
+        "zh-Hant": "墨西哥"
+      }
+    },
+    {
+      "display": "🇧🇷",
+      "name": {
+        "ja": "ぶらじる",
+        "en": "Brazil",
+        "de": "Brasilien",
+        "es": "Brasil",
+        "fr": "Brésil",
+        "hi": "ब्राजील",
+        "id": "Brasil",
+        "it": "Brasile",
+        "ko": "브라질",
+        "nl": "Brazilië",
+        "pt-BR": "Brasil",
+        "th": "บราซิล",
+        "vi": "Brasil",
+        "zh-Hans": "巴西",
+        "zh-Hant": "巴西"
+      }
+    },
+    {
+      "display": "🇦🇷",
+      "name": {
+        "ja": "あるぜんちん",
+        "en": "Argentina",
+        "de": "Argentinien",
+        "es": "Argentina",
+        "fr": "Argentine",
+        "hi": "अर्जेंटीना",
+        "id": "Argentina",
+        "it": "Argentina",
+        "ko": "아르헨티나",
+        "nl": "Argentinië",
+        "pt-BR": "Argentina",
+        "th": "อาร์เจนตินา",
+        "vi": "Argentina",
+        "zh-Hans": "阿根廷",
+        "zh-Hant": "阿根廷"
+      }
+    },
+    {
+      "display": "🇨🇱",
+      "name": {
+        "ja": "ちり",
+        "en": "Chile",
+        "de": "Chile",
+        "es": "Chile",
+        "fr": "Chili",
+        "hi": "चिली",
+        "id": "Chili",
+        "it": "Cile",
+        "ko": "칠레",
+        "nl": "Chili",
+        "pt-BR": "Chile",
+        "th": "ชิลี",
+        "vi": "Chile",
+        "zh-Hans": "智利",
+        "zh-Hant": "智利"
+      }
+    },
+    {
+      "display": "🇨🇴",
+      "name": {
+        "ja": "ころんびあ",
+        "en": "Colombia",
+        "de": "Kolumbien",
+        "es": "Colombia",
+        "fr": "Colombie",
+        "hi": "कोलंबिया",
+        "id": "Kolombia",
+        "it": "Colombia",
+        "ko": "콜롬비아",
+        "nl": "Colombia",
+        "pt-BR": "Colômbia",
+        "th": "โคลอมเบีย",
+        "vi": "Colombia",
+        "zh-Hans": "哥伦比亚",
+        "zh-Hant": "哥倫比亞"
+      }
+    },
+    {
+      "display": "🇵🇪",
+      "name": {
+        "ja": "ぺるー",
+        "en": "Peru",
+        "de": "Peru",
+        "es": "Perú",
+        "fr": "Pérou",
+        "hi": "पेरू",
+        "id": "Peru",
+        "it": "Perù",
+        "ko": "페루",
+        "nl": "Peru",
+        "pt-BR": "Peru",
+        "th": "เปรู",
+        "vi": "Peru",
+        "zh-Hans": "秘鲁",
+        "zh-Hant": "秘魯"
+      }
+    },
+    {
+      "display": "🇻🇪",
+      "name": {
+        "ja": "べねずえら",
+        "en": "Venezuela",
+        "de": "Venezuela",
+        "es": "Venezuela",
+        "fr": "Venezuela",
+        "hi": "वेनेजुएला",
+        "id": "Venezuela",
+        "it": "Venezuela",
+        "ko": "베네수엘라",
+        "nl": "Venezuela",
+        "pt-BR": "Venezuela",
+        "th": "เวเนซุเอลา",
+        "vi": "Venezuela",
+        "zh-Hans": "委内瑞拉",
+        "zh-Hant": "委內瑞拉"
+      }
+    },
+    {
+      "display": "🇨🇺",
+      "name": {
+        "ja": "きゅーば",
+        "en": "Cuba",
+        "de": "Kuba",
+        "es": "Cuba",
+        "fr": "Cuba",
+        "hi": "क्यूबा",
+        "id": "Kuba",
+        "it": "Cuba",
+        "ko": "쿠바",
+        "nl": "Cuba",
+        "pt-BR": "Cuba",
+        "th": "คิวบา",
+        "vi": "Cuba",
+        "zh-Hans": "古巴",
+        "zh-Hant": "古巴"
+      }
+    },
+    {
+      "display": "🇯🇲",
+      "name": {
+        "ja": "じゃまいか",
+        "en": "Jamaica",
+        "de": "Jamaika",
+        "es": "Jamaica",
+        "fr": "Jamaïque",
+        "hi": "जमैका",
+        "id": "Jamaika",
+        "it": "Giamaica",
+        "ko": "자메이카",
+        "nl": "Jamaica",
+        "pt-BR": "Jamaica",
+        "th": "จาเมกา",
+        "vi": "Jamaica",
+        "zh-Hans": "牙买加",
+        "zh-Hant": "牙買加"
+      }
+    },
+    {
+      "display": "🇵🇦",
+      "name": {
+        "ja": "ぱなま",
+        "en": "Panama",
+        "de": "Panama",
+        "es": "Panamá",
+        "fr": "Panama",
+        "hi": "पनामा",
+        "id": "Panama",
+        "it": "Panama",
+        "ko": "파나마",
+        "nl": "Panama",
+        "pt-BR": "Panamá",
+        "th": "ปานามา",
+        "vi": "Panama",
+        "zh-Hans": "巴拿马",
+        "zh-Hant": "巴拿馬"
+      }
+    },
+    {
+      "display": "🇨🇷",
+      "name": {
+        "ja": "こすたりか",
+        "en": "Costa Rica",
+        "de": "Costa Rica",
+        "es": "Costa Rica",
+        "fr": "Costa Rica",
+        "hi": "कोस्टा रिका",
+        "id": "Kosta Rika",
+        "it": "Costa Rica",
+        "ko": "코스타리카",
+        "nl": "Costa Rica",
+        "pt-BR": "Costa Rica",
+        "th": "คอสตาริกา",
+        "vi": "Costa Rica",
+        "zh-Hans": "哥斯达黎加",
+        "zh-Hant": "哥斯大黎加"
+      }
+    },
+    {
+      "display": "🇬🇹",
+      "name": {
+        "ja": "ぐあてまら",
+        "en": "Guatemala",
+        "de": "Guatemala",
+        "es": "Guatemala",
+        "fr": "Guatemala",
+        "hi": "ग्वाटेमाला",
+        "id": "Guatemala",
+        "it": "Guatemala",
+        "ko": "과테말라",
+        "nl": "Guatemala",
+        "pt-BR": "Guatemala",
+        "th": "กัวเตมาลา",
+        "vi": "Guatemala",
+        "zh-Hans": "危地马拉",
+        "zh-Hant": "瓜地馬拉"
+      }
+    },
+    {
+      "display": "🇪🇨",
+      "name": {
+        "ja": "えくあどる",
+        "en": "Ecuador",
+        "de": "Ecuador",
+        "es": "Ecuador",
+        "fr": "Équateur",
+        "hi": "इक्वाडोर",
+        "id": "Ekuador",
+        "it": "Ecuador",
+        "ko": "에콰도르",
+        "nl": "Ecuador",
+        "pt-BR": "Equador",
+        "th": "เอกวาดอร์",
+        "vi": "Ecuador",
+        "zh-Hans": "厄瓜多尔",
+        "zh-Hant": "厄瓜多"
+      }
+    },
+    {
+      "display": "🇧🇴",
+      "name": {
+        "ja": "ぼりびあ",
+        "en": "Bolivia",
+        "de": "Bolivien",
+        "es": "Bolivia",
+        "fr": "Bolivie",
+        "hi": "बोलीविया",
+        "id": "Bolivia",
+        "it": "Bolivia",
+        "ko": "볼리비아",
+        "nl": "Bolivia",
+        "pt-BR": "Bolívia",
+        "th": "โบลิเวีย",
+        "vi": "Bolivia",
+        "zh-Hans": "玻利维亚",
+        "zh-Hant": "玻利維亞"
+      }
+    },
+    {
+      "display": "🇵🇾",
+      "name": {
+        "ja": "ぱらぐあい",
+        "en": "Paraguay",
+        "de": "Paraguay",
+        "es": "Paraguay",
+        "fr": "Paraguay",
+        "hi": "पैराग्वे",
+        "id": "Paraguay",
+        "it": "Paraguay",
+        "ko": "파라과이",
+        "nl": "Paraguay",
+        "pt-BR": "Paraguai",
+        "th": "ปารากวัย",
+        "vi": "Paraguay",
+        "zh-Hans": "巴拉圭",
+        "zh-Hant": "巴拉圭"
+      }
+    },
+    {
+      "display": "🇺🇾",
+      "name": {
+        "ja": "うるぐあい",
+        "en": "Uruguay",
+        "de": "Uruguay",
+        "es": "Uruguay",
+        "fr": "Uruguay",
+        "hi": "उरुग्वे",
+        "id": "Uruguay",
+        "it": "Uruguay",
+        "ko": "우루과이",
+        "nl": "Uruguay",
+        "pt-BR": "Uruguai",
+        "th": "อุรุกวัย",
+        "vi": "Uruguay",
+        "zh-Hans": "乌拉圭",
+        "zh-Hant": "烏拉圭"
+      }
+    },
+    {
+      "display": "🇭🇹",
+      "name": {
+        "ja": "はいち",
+        "en": "Haiti",
+        "de": "Haiti",
+        "es": "Haití",
+        "fr": "Haïti",
+        "hi": "हैती",
+        "id": "Haiti",
+        "it": "Haiti",
+        "ko": "아이티",
+        "nl": "Haïti",
+        "pt-BR": "Haiti",
+        "th": "เฮติ",
+        "vi": "Haiti",
+        "zh-Hans": "海地",
+        "zh-Hant": "海地"
+      }
+    },
+    {
+      "display": "🇩🇴",
+      "name": {
+        "ja": "どみにかきょうわこく",
+        "en": "Dominican Republic",
+        "de": "Dominikanische Republik",
+        "es": "República Dominicana",
+        "fr": "République dominicaine",
+        "hi": "डोमिनिकन गणराज्य",
+        "id": "Republik Dominika",
+        "it": "Repubblica Dominicana",
+        "ko": "도미니카 공화국",
+        "nl": "Dominicaanse Republiek",
+        "pt-BR": "República Dominicana",
+        "th": "สาธารณรัฐโดมินิกัน",
+        "vi": "Cộng hòa Dominica",
+        "zh-Hans": "多米尼加共和国",
+        "zh-Hant": "多明尼加"
+      }
+    }
+  ]
+}
