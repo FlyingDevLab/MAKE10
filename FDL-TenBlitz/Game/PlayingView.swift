@@ -8,6 +8,21 @@
 // ゲームプレイ中の画面を構成するViewファイル。
 // 問題カード・タイルグリッド・コンボリアクション・正誤マークを重ねて表示する。
 // 各UIパーツはサブViewとして独立させ、PlayingViewはレイアウトのみを担う。
+//
+// ★ このファイルの構成 ★
+//   PlayingView（親）
+//     ├ ProblemCardView … 問題番号・次の問題・タイムゲージをまとめたカード
+//     │   └ InlineGaugeView … タイムゲージの横バー
+//     ├ TileButton       … 数字タイル（4枚）
+//     │   └ TileButtonStyle … タップ時の拡大エフェクト（ButtonStyle）
+//     ├ AnswerMarkView    … 正解⭕️ / 不正解❌ のフィードバック
+//     └ ReactionView      … コンボ時に浮かぶ絵文字リアクション
+//
+// ★ なぜサブViewに分割するのか ★
+//   1つの body に全部書くと再描画の範囲が広がり、パフォーマンスが悪化します。
+//   また、コードが長くなって「どこが何の役割か」がわかりにくくなります。
+//   サブViewに切り出すことで「このViewは○○だけを担当する」という
+//   責任の分離が明確になります。
 
 import SwiftUI
 
@@ -17,13 +32,17 @@ struct PlayingView: View {
     var viewModel: GameViewModel
 
     // タイルを2列グリッドで並べる定義。列間隔はEmojiQuizHomeViewと統一している
+    // GridItem(.flexible()) = 利用可能な横幅を均等に分割する列
     let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
 
     var body: some View {
+        // ZStack でカード・タイル・リアクション・正誤マークを重ねる
+        // 奥から手前の順に: VStack（カード+タイル）→ リアクション → 正誤マーク
         ZStack {
             VStack(spacing: 0) {
 
-                // 問題カード：現在の問題番号・次の問題番号・タイムゲージを表示する
+                // ── 問題カード ────────────────────────────────
+                // 現在の問題番号・次の問題番号・タイムゲージを表示する
                 ProblemCardView(
                     questionNumber:     viewModel.questionNumber,
                     nextQuestionNumber: viewModel.nextQuestionNumber,
@@ -36,7 +55,8 @@ struct PlayingView: View {
                 .padding(.top, 12)
                 .padding(.bottom, 20)
 
-                // タイルグリッド（絵文字クイズと同じ幅・間隔）
+                // ── タイルグリッド（4枚）────────────────────
+                // LazyVGrid: グリッドレイアウト（Lazy = 表示されたものだけ描画）
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(0..<4, id: \.self) { index in
                         TileButton(value: viewModel.tiles[index]) {
@@ -44,9 +64,15 @@ struct PlayingView: View {
                                 viewModel.answer(viewModel.tiles[index])
                             }
                         }
-                        // "tile-{index}-{value}"形式のIDでSwiftUIに新旧タイルを区別させ、
-                        // 正解後に新しい数字が上からスライドインするトランジションを確実に発火させる
+                        // ★ .id("tile-{index}-{value}") の役割 ★
+                        //   SwiftUI は .id() が変わったとき「別のView」として扱います。
+                        //   正解後にタイルの数字が変わると、古いViewが消えて新しいViewが
+                        //   .transition で指定したアニメーションで出現します。
+                        //   .id() がなければ「同じViewの値が変わっただけ」と判断されて
+                        //   トランジションが発火しません。
                         .id("tile-\(index)-\(viewModel.tiles[index])")
+                        // asymmetric: 出現と消去に別々のアニメーションを指定する
+                        // .scale(0.4) = 小さいサイズから等倍に拡大して現れる（ポップイン）
                         .transition(.asymmetric(
                             insertion: .scale(scale: 0.4).combined(with: .opacity),
                             removal:   .scale(scale: 0.4).combined(with: .opacity)
@@ -58,14 +84,18 @@ struct PlayingView: View {
                 Spacer()
             }
 
-            // コンボリアクション：コンボ達成時に右上から浮かび上がる絵文字。
-            // 各ReactionViewはアニメーション完了後にonFinishedコールバックで自身をViewModelから削除する
+            // ── コンボリアクション絵文字 ──────────────────────
+            // viewModel.reactions の各要素を ReactionView として表示する。
+            // ReactionView はアニメーション完了後に onFinished コールバックで
+            // reactions 配列から自分自身を削除するよう通知する（自己完結型）
             ForEach(viewModel.reactions) { r in
                 ReactionView(reaction: r) { viewModel.removeReaction(id: r.id) }
             }
 
-            // 正誤マーク（問題カードとタイルの隙間に表示）
-            // allowsHitTesting(false)でタッチをすり抜けさせ、マーク表示中もタイルを操作できるようにする
+            // ── 正誤マーク ──────────────────────────────────
+            // viewModel.answerMark が nil でないとき（= 正解か不正解のとき）だけ表示する。
+            // allowsHitTesting(false) でタッチをすり抜けさせ、
+            // マーク表示中もタイルをタップできるようにしている
             if let mark = viewModel.answerMark {
                 AnswerMarkView(mark: mark)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
@@ -75,18 +105,22 @@ struct PlayingView: View {
                         removal:   .scale(scale: 1.3).combined(with: .opacity)   // 等倍→大でポップアウト
                     ))
                     .allowsHitTesting(false)
-                    .zIndex(30)
+                    .zIndex(30)  // タイルより手前・紙吹雪より奥に表示
             }
         }
-        // answerMarkの変化をトリガーに正誤マークのトランジションをスプリングで動かす
+        // answerMark の変化をトリガーに正誤マークのトランジションをスプリングで動かす
+        // ★ .animation(value:) とは？ ★
+        //   指定した値が変化したときだけアニメーションを適用するモディファイア。
+        //   値を指定しない .animation() は「すべての変化」に適用されて意図しない
+        //   アニメーションが起きやすいため、値を絞るこちらの形が推奨されています。
         .animation(.spring(response: 0.25, dampingFraction: 0.6), value: viewModel.answerMark)
     }
 }
 
 // MARK: - Problem Card View
 
-// 現在の問題番号・次の問題番号・タイムゲージを1枚のカードにまとめて表示するView。
-// 高さを180ptに固定して、EmojiQuizHomeViewのQuizQuestionCardと高さを揃えている。
+/// 現在の問題番号・次の問題番号・タイムゲージを1枚のカードにまとめて表示するView。
+/// 高さを180ptに固定して、EmojiQuizHomeViewのQuizQuestionCardと高さを揃えている。
 struct ProblemCardView: View {
     let questionNumber:     Int
     let nextQuestionNumber: Int
@@ -95,7 +129,8 @@ struct ProblemCardView: View {
     let warnThreshold:      Double
     let gameMode:           GameMode
 
-    // Blitzモードは赤系、通常モードは青系で問題番号とゲージを色分けする
+    /// Blitzモードは赤系、通常モードは青系で問題番号とゲージを色分けする。
+    /// 計算プロパティにすることで gameMode が変わると自動で追従する。
     private var mainColor: Color { gameMode == .blitz ? DS.blitzColor : DS.primary }
 
     var body: some View {
@@ -103,14 +138,17 @@ struct ProblemCardView: View {
         VStack(spacing: 0) {
             Spacer(minLength: 0)
 
-            // NEXT エリア：次の問題番号を薄く表示して予告する
-            // nextQuestionNumberが変わるたびに上からスライドインするトランジションを適用する
+            // ── NEXT エリア（次の問題番号の予告）────────────
+            // nextQuestionNumber が変わるたびに上からスライドインするトランジションを適用する
             HStack(alignment: .lastTextBaseline, spacing: 6) {
                 Text("playing_next_label")
                     .font(.system(size: 11, weight: .black, design: .rounded))
                     .foregroundStyle(mainColor.opacity(0.45))
-                    .tracking(1.0)
-                // .id(nextQuestionNumber)でSwiftUIに値の変化を伝え、トランジションを発火させる
+                    .tracking(1.0)  // 文字間隔を広げて「NEXT」の視認性を上げる
+
+                // ★ .id(nextQuestionNumber) の役割 ★
+                //   値が変化したとき SwiftUI に「別のViewが現れた」と認識させて
+                //   .transition のアニメーションを発火させるためのトリック。
                 Text("\(nextQuestionNumber)")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundStyle(mainColor.opacity(0.32))
@@ -120,7 +158,7 @@ struct ProblemCardView: View {
                         removal:   .move(edge: .bottom).combined(with: .opacity)
                     ))
                 Spacer()
-                // Blitzモードのときのみ右上にモードラベルを表示する
+                // Blitz モードのときのみ右上にモードラベルを表示する
                 if gameMode == .blitz {
                     Text("playing_blitz_mode_label")
                         .font(.system(size: 11, weight: .bold, design: .rounded))
@@ -129,8 +167,8 @@ struct ProblemCardView: View {
             }
             .padding(.horizontal, 20)
 
-            // メイン数字：現在の問題番号を大きく表示する
-            // questionNumberが変わると上からスライドインして、古い数字は下にスライドアウトする
+            // ── メイン数字（現在の問題番号）────────────────
+            // questionNumber が変わると上からスライドインして、古い数字は下にスライドアウトする
             Text("\(questionNumber)")
                 .font(.system(size: 80, weight: .bold, design: .rounded))
                 .foregroundStyle(mainColor)
@@ -143,7 +181,7 @@ struct ProblemCardView: View {
 
             Spacer(minLength: 0)
 
-            // タイムゲージ：残り時間を横バーで表現する
+            // ── タイムゲージ ──────────────────────────────
             InlineGaugeView(
                 timeRemaining: timeRemaining,
                 maxTime:       maxTime,
@@ -154,7 +192,10 @@ struct ProblemCardView: View {
         }
         .frame(height: 180)
         .background(DS.cardShadow())
-        // .clipShape + .clipped()でカードの角丸からコンテンツがはみ出さないようにする
+        // .clipShape でカードの角丸を適用し、.clipped() でコンテンツのはみ出しを防ぐ
+        // ★ なぜ両方必要か ★
+        //   .clipShape はこのViewの形を角丸にするが、子ビューが範囲外にレンダリングされる場合がある。
+        //   .clipped() を重ねることで確実に角丸の内側だけに表示を限定できる。
         .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
         .clipped()
     }
@@ -162,31 +203,39 @@ struct ProblemCardView: View {
 
 // MARK: - Inline Gauge View
 
-// 残り時間を横バーで表示するタイムゲージ。
-// timeRemainingがwarnThreshold以下になると色が警告色（赤系）に切り替わる。
+/// 残り時間を横バーで表示するタイムゲージ。
+/// timeRemaining が warnThreshold 以下になると色が警告色（赤系）に切り替わる。
 struct InlineGaugeView: View {
     let timeRemaining: Double
     let maxTime:       Double
     let warnThreshold: Double
 
-    // 残り時間をmaxTimeに対する比率（0.0〜1.0）に変換してバーの幅に使う
+    /// 残り時間を maxTime に対する比率（0.0〜1.0）に変換してバーの幅に使う。
+    /// 例: maxTime=30, timeRemaining=15 なら ratio=0.5（バーが半分の幅になる）
     private var ratio: CGFloat { CGFloat(timeRemaining / maxTime) }
-    // 残り時間が閾値以下になったら警告色（赤系）、それ以外は良好色（緑系）
+
+    /// 残り時間が閾値以下になったら警告色（赤系）、それ以外は良好色（緑系）に切り替える
     private var color: Color   { timeRemaining <= warnThreshold ? DS.gaugeWarn : DS.gaugeFull }
 
     var body: some View {
+        // GeometryReader でこのViewが表示される実際の幅を取得する。
+        // ★ GeometryReader とは？ ★
+        //   親View が割り当てた実際のサイズ（幅・高さ）を取得できるコンテナ。
+        //   ここでは geo.size.width を使ってゲージバーの幅を計算している。
         GeometryReader { geo in
             ZStack(alignment: .leading) {
-                // ゲージの背景トラック（薄いグレーの全幅バー）
+                // 背景トラック（薄いグレーの全幅バー）
                 RoundedRectangle(cornerRadius: DS.gaugeRadius)
                     .fill(DS.gaugeBg)
                     .frame(height: 13)
-                // 残り時間に比例した幅の前景バー。max(0, ...)で負の幅にならないよう保護する
+
+                // 前景バー（残り時間に比例した幅）
+                // max(0, ...) で幅が負にならないよう保護する（わずかな誤差でクラッシュしないため）
                 RoundedRectangle(cornerRadius: DS.gaugeRadius)
                     .fill(color)
                     .frame(width: max(0, geo.size.width * ratio), height: 13)
-                    // タイマー更新間隔（0.01秒）に合わせて短いアニメーション時間を設定することで
-                    // 滑らかな減少に見せる
+                    // タイマー更新間隔（0.01秒）に合わせた短いアニメーション時間で
+                    // 滑らかな減少に見せる（0.01秒より長くすると「ガクガク」感が出る）
                     .animation(.linear(duration: 0.01), value: ratio)
             }
         }
@@ -196,8 +245,9 @@ struct InlineGaugeView: View {
 
 // MARK: - Tile Button
 
-// 数字を表示するタップ可能なタイル。4枚がグリッドに並び、正解タイルをタップするとスコアが増える。
-// タップ時のスケールアップはTileButtonStyleが担い、TileButton自身はコンテンツとレイアウトのみを持つ。
+/// 数字を表示するタップ可能なタイル。4枚がグリッドに並び、正解タイルをタップするとスコアが増える。
+/// タップ時のスケールアップは TileButtonStyle が担い、
+/// TileButton 自身はコンテンツとレイアウトのみを持つ（責任の分離）。
 struct TileButton: View {
     let value:  Int
     let action: () -> Void
@@ -219,12 +269,16 @@ struct TileButton: View {
     }
 }
 
-// タイルボタン専用のButtonStyle。押下中に1.07倍に拡大してタップ感を演出する。
-// .buttonStyle()として切り出すことで、スケールエフェクトをコンテンツのアニメーションと
-// 干渉させずに適用できる
+/// タイルボタン専用の ButtonStyle。押下中に1.07倍に拡大してタップ感を演出する。
+/// ★ ButtonStyle として切り出す理由 ★
+///   SwiftUI の Button は内部でタッチアニメーションを持っており、
+///   .scaleEffect を直接書くとそれと干渉することがあります。
+///   ButtonStyle の makeBody 内で scaleEffect を適用することで
+///   干渉を避けつつ確実に押し込みアニメーションを実現できます。
 struct TileButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
+            // configuration.isPressed: 指が触れている間だけ true になる
             .scaleEffect(configuration.isPressed ? 1.07 : 1.0)
             .animation(.easeInOut(duration: 0.11), value: configuration.isPressed)
     }
@@ -232,13 +286,13 @@ struct TileButtonStyle: ButtonStyle {
 
 // MARK: - Answer Mark View
 
-// 正解・不正解に対応する大きな絵文字マークを表示するView。
-// GameViewModelのanswerMarkがセットされたときにPlayingViewのZStack上に重なって表示され、
-// 0.5秒後にnilに戻ることで自動的に消える
+/// 正解・不正解に対応する大きな絵文字マークを表示するView。
+/// GameViewModel の answerMark がセットされたときに PlayingView の ZStack 上に重なって表示され、
+/// 0.5秒後に nil に戻ることで自動的に消える（消す処理は GameViewModel 側の didSet で行う）。
 struct AnswerMarkView: View {
     let mark: AnswerMark
 
-    // 正解は⭕️、不正解は❌で直感的に伝える
+    /// 正解は⭕️、不正解は❌。絵文字で直感的に結果を伝える。
     private var emoji: String { mark == .correct ? "⭕️" : "❌" }
 
     var body: some View {
@@ -248,44 +302,56 @@ struct AnswerMarkView: View {
 
 // MARK: - Reaction View
 
-// コンボ達成時に右上から浮かび上がり、フェードアウトして消える絵文字リアクションView。
-// 表示・アニメーション・削除通知をすべてこのView内で完結させる自己完結型のコンポーネント。
+/// コンボ達成時に右上から浮かび上がり、フェードアウトして消える絵文字リアクションView。
+/// 表示・アニメーション・削除通知をすべてこのView内で完結させる自己完結型のコンポーネント。
+///
+/// ★ 自己完結型とは？ ★
+///   親View（PlayingView）はこのViewを ForEach で並べるだけでよく、
+///   「いつ動かすか」「いつ消すか」をこのView自身が管理します。
+///   親がアニメーションの詳細を知る必要がないため、コードがシンプルになります。
 struct ReactionView: View {
     let reaction:   Reaction
-
-    // アニメーション完了後に呼ばれる。親（PlayingView）はこれを受けてreactions配列から削除する
+    /// アニメーション完了後に呼ばれるコールバック。
+    /// 親（PlayingView）はこれを受けて reactions 配列から該当要素を削除する。
     let onFinished: () -> Void
 
-    // 上方向への移動量。onAppearでアニメーションが開始されると0 → -travelに変化する
+    /// 上方向への移動量（ポイント）。onAppear でアニメーションが開始されると 0 → -travel に変化する。
     @State private var offsetY: CGFloat = 0
     @State private var opacity: Double  = 1.0
 
-    private let duration: Double  = 2.0   // アニメーション全体の所要時間
+    private let duration: Double  = 2.0   // アニメーション全体の所要時間（秒）
     private let travel:   CGFloat = 150   // 浮かび上がる縦移動距離（ポイント）
 
     var body: some View {
         Text(reaction.emoji)
             .font(.system(size: 24))
-            .offset(y: offsetY)
-            .opacity(opacity)
-            // 右端を基準に、xOffsetで各リアクションの横位置を少しずらして重なりを避ける
+            .offset(y: offsetY)   // 上方向にずれるアニメーション値
+            .opacity(opacity)     // フェードアウトするアニメーション値
+            // 右端を基準に、xOffset で各リアクションの横位置を少しずらして重なりを避ける
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
             .padding(.top, 140 + reaction.xOffset * 0.5)
             .padding(.trailing, 44)
-            // タッチイベントをすり抜けさせて、リアクション表示中もタイル操作を妨げない
+            // タッチイベントをすり抜けさせてタイル操作を妨げない
             .allowsHitTesting(false)
             .onAppear {
-                // 上方向への移動アニメーション（duration秒かけて150pt浮き上がる）
+                // ── 上方向への移動アニメーション ──────────────
+                // duration 秒かけて 150pt 浮き上がる（easeOut = 最初は速く、徐々に遅くなる）
                 withAnimation(.easeOut(duration: duration)) {
                     offsetY = -travel
                 }
-                // 全体の60%が経過したタイミングからフェードアウト開始（残り40%で消える）
+
+                // ── フェードアウト（60%経過後から開始）────────
+                // 最初の 60% は不透明なまま浮き上がり、残り 40% でゆっくり消える。
+                // 最初から消え始めると存在感が薄くなるため、あえて遅らせている。
                 DispatchQueue.main.asyncAfter(deadline: .now() + duration * 0.6) {
                     withAnimation(.easeIn(duration: duration * 0.4)) {
                         opacity = 0.0
                     }
                 }
-                // アニメーション完了後に少し余裕を持たせてから親に削除を通知する
+
+                // ── 削除通知（アニメーション完了後）────────────
+                // duration + 0.1 秒（少し余裕を持たせる）後に親へ削除を依頼する。
+                // reactions 配列から削除されると SwiftUI がこの View を画面から取り除く。
                 DispatchQueue.main.asyncAfter(deadline: .now() + duration + 0.1) {
                     onFinished()
                 }
