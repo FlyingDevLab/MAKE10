@@ -747,6 +747,7 @@
       }
     },
     "Choose a Game" : {
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
@@ -11065,6 +11066,7 @@
     },
     "title_mode_other_games_label" : {
       "comment" : "Label for the other games button on the title screen.",
+      "extractionState" : "stale",
       "localizations" : {
         "de" : {
           "stringUnit" : {
