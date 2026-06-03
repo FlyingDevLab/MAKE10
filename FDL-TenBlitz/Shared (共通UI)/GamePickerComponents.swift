@@ -26,6 +26,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case maze
     case pinball
     case coinDrop
+    case janken
 
     var icon: String {
         switch self {
@@ -36,6 +37,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .maze:       return "🗺️"
         case .pinball:    return "🎱"
         case .coinDrop:   return "💰"
+        case .janken:     return "✊"
         }
     }
 
@@ -48,6 +50,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .maze:       return "Maze"
         case .pinball:    return "Pinball"
         case .coinDrop:   return "CoinDrop"
+        case .janken:     return "janken_title"
         }
     }
 
@@ -60,6 +63,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .maze:       return .green
         case .pinball:    return .red
         case .coinDrop:   return DS.gold
+        case .janken:     return .teal
         }
     }
 }

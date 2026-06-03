@@ -47,11 +47,13 @@ struct TitleView: View {
     /// ゲームタイルの並び順を管理する（UserDefaults に永続化）
     @State private var rankManager = GameRankManager()
     /// 末尾送り演出中のタイルのフライオフセット（キー: ゲーム、値: 飛ぶ方向）
-    /// .zero 以外のとき、そのタイルはフリック方向に飛び出してグリッド外に消える
     @State private var flyOffsets: [GamePickerSelection: CGSize] = [:]
 
     /// フリックと判定する最低速度（pt/s）
     private let flickSpeedThreshold: CGFloat = 300
+
+    /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する
+    @State private var demoGeneration: Int = 0
 
     // MARK: - Body
 
@@ -121,8 +123,6 @@ struct TitleView: View {
             }
 
             // ── ゲーム選択グリッド ────────────────────────────
-            // blitz は isBlitzUnlocked が true のときだけ visibleGames に含める。
-            // 解放時はアニメーション付きでグリッドに出現する。
             LazyVGrid(
                 columns: [GridItem(.flexible()), GridItem(.flexible())],
                 spacing: 12
@@ -143,33 +143,121 @@ struct TitleView: View {
                     }
                 }
             }
-            // visibleGames が変わるたびにスプリングアニメーションでグリッドを再配置する
-            // blitz 解放時もアニメーション付きで自然にタイルが出現する
-            .animation(.spring(response: 0.4, dampingFraction: 0.8), value: visibleGames)
+            // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
+            .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
             .padding(.horizontal, 20)
             .padding(.bottom, 24)
         }
         .onAppear {
             loopGeneration += 1
             runTitleLoop(generation: loopGeneration)
+
+            // ← 変更可：初回デモ開始までの待機時間（秒）
+            scheduleDemo(delay: 2.5)
         }
     }
 
     // MARK: - Visible Games
 
-    /// 現在表示すべきゲームリスト。
-    /// blitz は isBlitzUnlocked が true のときのみ含める。
-    // 表示上限は6枚（3行×2列）。7枚目以降は末尾送り操作で循環させる。
     private var visibleGames: [GamePickerSelection] {
         let all = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
         return Array(all.prefix(6))
     }
 
+    // MARK: - Demo Animation
+
+    /// デモを（再）スケジュールする。
+    /// 手動操作後も delay 秒の無操作が続けば自動デモが再開される。
+    /// demoGeneration をインクリメントすることで古い世代のコールバックを無効化する。
+    private func scheduleDemo(delay: Double) {
+        demoGeneration += 1
+        let gen = demoGeneration
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            runDemoLoop(generation: gen)
+        }
+    }
+
+    /// スワップデモとフライデモをランダムで切り替えながらループする。
+    private func runDemoLoop(generation: Int) {
+        guard generation == demoGeneration else { return }
+        guard visibleGames.count >= 2     else { return }
+
+        if Bool.random() {
+            runDemoSwap(generation: generation)
+        } else {
+            runDemoFly(generation: generation)
+        }
+    }
+
+    /// 右下2枚を入れ替えて戻すデモ。
+    /// swap → 1.4秒後に swap back → 4秒後に次のデモへ。
+    private func runDemoSwap(generation: Int) {
+        let games      = visibleGames
+        let lastGame   = games[games.count - 1]
+        let secondLast = games[games.count - 2]
+
+        guard let si = rankManager.sortedGames.firstIndex(of: lastGame),
+              let sj = rankManager.sortedGames.firstIndex(of: secondLast) else { return }
+
+        // ← 変更可：デモスワップ速度（response: 0.70 = 手動の半速）
+        withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
+            rankManager.swap(at: si, with: sj)
+        }
+
+        // ← 変更可：swap back までの待機時間（秒）
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
+            guard generation == self.demoGeneration else { return }
+            guard let si2 = self.rankManager.sortedGames.firstIndex(of: lastGame),
+                  let sj2 = self.rankManager.sortedGames.firstIndex(of: secondLast) else { return }
+            withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
+                self.rankManager.swap(at: si2, with: sj2)
+            }
+            // ← 変更可：次のデモまでの待機時間（秒）
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                self.runDemoLoop(generation: generation)
+            }
+        }
+    }
+
+    /// 右下タイルを画面外に飛ばして末尾送りするデモ。
+    /// 隠しゲームがあれば新タイルがスライドインして「入れ替わり」を見せられる。
+    private func runDemoFly(generation: Int) {
+        let games    = visibleGames
+        let lastGame = games[games.count - 1]
+
+        // ← 変更可：デモフライ方向（右端タイルなので右へ）
+        let flyDir = CGSize(width: 600, height: 0)
+
+        // ← 変更可：デモフライ速度（duration: 0.44 = 手動の半速）
+        withAnimation(.easeIn(duration: 0.44)) {
+            flyOffsets[lastGame] = flyDir
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
+            guard generation == self.demoGeneration else { return }
+
+            let allVisible    = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
+            let hasHiddenGame = allVisible.count > 6
+
+            flyOffsets.removeValue(forKey: lastGame)
+            if hasHiddenGame {
+                // ← 変更可：新タイルのスライドイン速度（response: 0.80 = 手動の半速）
+                withAnimation(.spring(response: 0.80, dampingFraction: 0.75)) {
+                    rankManager.throwToBottom(lastGame)
+                }
+            } else {
+                rankManager.throwToBottom(lastGame)
+            }
+
+            // ← 変更可：フライ後、次のデモまでの待機時間（秒）
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                self.runDemoLoop(generation: generation)
+            }
+        }
+    }
+
     // MARK: - Flick Handling
 
-    /// フリックジェスチャーを受け取り、「隣と入れ替え」か「末尾に送る」かを判定する。
-    /// visibleGames のインデックスを使って隣を探し、
-    /// sortedGames のインデックスに変換して rankManager に渡す。
     private func handleFlick(
         game:         GamePickerSelection,
         visibleIndex: Int,
@@ -178,6 +266,10 @@ struct TitleView: View {
     ) {
         let speed = sqrt(velocity.width * velocity.width + velocity.height * velocity.height)
         guard speed > flickSpeedThreshold else { return }
+
+        // 手動操作でデモを一時停止し、5秒後に再開する
+        // ← 変更可：無操作からデモ再開までの待機時間（秒）
+        scheduleDemo(delay: 5.0)
 
         let isHorizontal = abs(translation.width) > abs(translation.height)
         let count        = visibleGames.count
@@ -194,48 +286,40 @@ struct TitleView: View {
         }
 
         if let nvi = neighborVI {
-            // 隣のタイルと入れ替え
-            // visibleGames のインデックス → sortedGames のインデックスに変換してから swap する
             let neighborGame = visibleGames[nvi]
             if let si = rankManager.sortedGames.firstIndex(of: game),
                let sj = rankManager.sortedGames.firstIndex(of: neighborGame) {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.75)) {
+                // ← 変更可：スワップアニメ速度（response: 0.70 = 旧 0.35 の半速）
+                withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
                     rankManager.swap(at: si, with: sj)
                 }
             }
         } else {
-            // グリッド端 → フリック方向に飛び出して末尾に送る
-            // フリック方向をそのまま飛び出し方向にする（上フリックは上へ、右フリックは右へ）
-            // 上端タイルを上フリックするとアニメカードを通過して画面外に消える（意図的な仕様）
             let flyDir: CGSize
             if isHorizontal {
                 flyDir = translation.width > 0
-                    ? CGSize(width: 600, height: 0)   // 右へ飛び出す
-                    : CGSize(width: -600, height: 0)  // 左へ飛び出す
+                    ? CGSize(width: 600, height: 0)
+                    : CGSize(width: -600, height: 0)
             } else {
                 flyDir = translation.height > 0
-                    ? CGSize(width: 0, height: 600)   // 下へ飛び出す
-                    : CGSize(width: 0, height: -600)  // 上へ飛び出す（アニメカードを通過）
+                    ? CGSize(width: 0, height: 600)
+                    : CGSize(width: 0, height: -600)
             }
 
             SoundManager.shared.vibrate()
-            withAnimation(.easeIn(duration: 0.22)) {
+            // ← 変更可：飛び出しアニメ速度（duration: 0.44 = 旧 0.22 の半速）
+            withAnimation(.easeIn(duration: 0.44)) {
                 flyOffsets[game] = flyDir
             }
-            // flyOffset アニメーション完了後にグリッドを再配置する
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
-                // 7枚目以降が控えているか確認する。
-                // 控えがある → スプリングで新タイルを滑り込ませる。
-                // 6枚丁度 → アニメなしで即座に並び替える。
-                // （スプリングをかけると末尾送りしたタイルが「入れ替わる」ように見えるため）
-                let allVisible = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
+            // flyOffset 完了後にグリッド再配置（待機時間も飛び出し速度に合わせて延長）
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
+                let allVisible  = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
                 let hasHiddenGame = allVisible.count > 6
 
-                // flyOffset と throwToBottom を同一レンダリングフレームで処理し、
-                // タイルが元位置に一瞬戻るフラッシュを防ぐ
                 flyOffsets.removeValue(forKey: game)
                 if hasHiddenGame {
-                    withAnimation(.spring(response: 0.4, dampingFraction: 0.75)) {
+                    // ← 変更可：throwToBottom 後のグリッド再配置速度（response: 0.80 = 旧 0.40 の半速）
+                    withAnimation(.spring(response: 0.80, dampingFraction: 0.75)) {
                         rankManager.throwToBottom(game)
                     }
                 } else {
