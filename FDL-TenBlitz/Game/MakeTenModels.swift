@@ -44,15 +44,17 @@ enum UDKey {
     static let questionCorrects    = "questionCorrects"    // 問題番号ごとの正解回数（内部統計）
     static let quizMode            = "quizMode"            // 絵文字クイズの選択モード
     static let totalCorrectAllTime = "totalCorrectAllTime" // シール用：累計正解数
-    static let stickers            = "stickers"            // シール用：位置データ
-    static let isTrashUnlocked     = "isTrashUnlocked"     // シール用：ゴミ箱解放フラグ
-    static let mazeHighScore       = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア
-    static let pinballHighScore    = "fdl_pinball_hi"               // ピンボールの歴代最高スコア
-    static let whackHighScore      = "flyingdevlab_mogura_highscore" // モグラ叩きの歴代最高スコア
-    static let coinDropHighScore   = "fdl_coindrop_hi"               // コインドロップの歴代最高スコア
-    static let jankenBestTimeEasy      = "janken_bestTime_easy"      // 指令じゃんけん：かんたんのベストタイム
-    static let jankenBestTimeHard      = "janken_bestTime_hard"      // 指令じゃんけん：むずかしいのベストタイム
-    static let jankenBestTimeChallenge = "janken_bestTime_challenge" // 指令じゃんけん：挑戦のベストタイム
+    static let stickers            = "stickers"            // シール用：ゲームモード位置データ（既存キー維持）
+    static let storageEmojis       = "storageEmojis"       // シール用：ストレージ絵文字リスト
+    static let playStickers        = "playStickers"        // シール用：シール画面位置データ
+    static let playBoardBackground = "playBoardBackground" // シール用：シール画面背景色インデックス
+    static let mazeHighScore          = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア
+    static let pinballHighScore       = "fdl_pinball_hi"               // ピンボールの歴代最高スコア
+    static let whackHighScore         = "flyingdevlab_mogura_highscore" // モグラ叩きの歴代最高スコア
+    static let coinDropHighScore      = "fdl_coindrop_hi"               // コインドロップの歴代最高スコア
+    static let jankenBestTimeEasy     = "janken_best_time_easy"         // じゃんけん：Easyベストタイム
+    static let jankenBestTimeHard     = "janken_best_time_hard"         // じゃんけん：Hardベストタイム
+    static let jankenBestTimeChallenge = "janken_best_time_challenge"   // じゃんけん：Challengeベストタイム
 }
 
 /// 正解時に画面右下から浮かび上がる絵文字リアクションのモデル

@@ -7,6 +7,7 @@
 
 // ゲーム終了時に表示する結果画面と、シールチップのドラッグUIを定義するファイル。
 // スコア表示・ハイスコア更新・Blitzモード解放バナー・シール獲得バナーを状況に応じて表示する。
+// ゲームボードが満杯（50枚以上）のとき、新規シールはストレージへ送出され別バナーで通知する。
 
 import SwiftUI
 
@@ -20,8 +21,12 @@ struct FinishedView: View {
     // 誤タップ防止フラグ。アニメーション完了後（1秒後）にtrueになりボタンが有効化される
     @State private var canTap:  Bool    = false
 
-    // 今回のゲームで獲得したシールの絵文字リスト。バナーに表示し、ドラッグで配置できる
+    // 今回のゲームで獲得したシールの絵文字リスト（ゲームボード行き）
+    // バナーに表示し、ドラッグで配置できる
     @State private var newStickerEmojis: [String] = []
+
+    // ストレージへ送出されたシール枚数。0より大きいときにストレージ通知バナーを表示する
+    @State private var storageSentCount: Int = 0
 
     /// バナー内の各絵文字チップのグローバル座標（index → CGPoint）
     // ドラッグしなかった場合の自動配置のために、チップの表示位置を記録しておく
@@ -119,7 +124,30 @@ struct FinishedView: View {
                 .transition(.scale.combined(with: .opacity))
             }
 
-            // 新着シールバナー。獲得シールがある場合のみスプリングアニメーションで表示する
+            // ストレージ送出バナー。ゲームボードが満杯でシールがストレージへ送られたときに表示する。
+            // ドラッグ配置UIは不要。メッセージのみで通知する。
+            if storageSentCount > 0 {
+                HStack(spacing: 10) {
+                    Text("📦")
+                        .font(.system(size: 28))
+                    Text("sticker_sent_to_storage")
+                        .font(.system(size: 15, weight: .black, design: .rounded))
+                        .foregroundStyle(DS.primary)
+                }
+                .padding(.vertical, 14)
+                .padding(.horizontal, 20)
+                .frame(maxWidth: .infinity)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.sectionRadius)
+                        .fill(DS.card)
+                        .shadow(color: DS.primary.opacity(0.12), radius: 10, x: 0, y: 4)
+                )
+                .padding(.horizontal, 28)
+                .padding(.bottom, 16)
+                .transition(.scale(scale: 0.85).combined(with: .opacity))
+            }
+
+            // 新着シールバナー。ゲームボード行きのシールがある場合のみ表示する。
             if !newStickerEmojis.isEmpty {
                 VStack(spacing: 8) {
                     // 獲得枚数に応じてメッセージを単数形・複数形で切り替える
@@ -224,11 +252,23 @@ struct FinishedView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 canTap = true
             }
-            // 未配置のシールがあればバナーをスプリングアニメーションで表示する
-            if !StickerStore.shared.pendingStickers.isEmpty {
+
+            let store = StickerStore.shared
+
+            // ゲームボード行きのシールがあればバナーをスプリングアニメーションで表示する
+            if !store.pendingStickers.isEmpty {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
-                    newStickerEmojis = StickerStore.shared.pendingStickers
+                    newStickerEmojis = store.pendingStickers
                 }
+            }
+
+            // ストレージへ送出されたシールがあれば枚数を記録してバナーを表示する。
+            // 読み取り後すぐにリセットし、次回表示への持ち越しを防ぐ
+            if store.pendingStorageCount > 0 {
+                withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
+                    storageSentCount = store.pendingStorageCount
+                }
+                store.clearPendingStorage()
             }
         }
         .onDisappear {
@@ -256,7 +296,7 @@ struct FinishedView: View {
             }
         }
         // 配置処理完了後にローカル状態をクリアして二重配置を防ぐ
-        newStickerEmojis = []
+        newStickerEmojis  = []
         capturedPositions = [:]
     }
 }

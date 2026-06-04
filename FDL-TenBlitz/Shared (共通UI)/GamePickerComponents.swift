@@ -2,7 +2,7 @@
 //  GamePickerComponents.swift
 //  FDL-TenBlitz
 //
-//  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/06/02.
+//  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/08.
 //
 
 // タイトル画面のゲーム選択グリッドで使用する共有コンポーネント群。
@@ -19,51 +19,55 @@ import SwiftUI
 // MARK: - GamePickerSelection
 
 enum GamePickerSelection: String, CaseIterable, Hashable {
-    case normal     // MAKE10 30びょうモード
-    case blitz      // MAKE10 10びょうモード（解放後のみ表示）
+    case normal         // MAKE10 30びょうモード
+    case blitz          // MAKE10 10びょうモード（解放後のみ表示）
     case quiz
     case whackAMole
     case maze
     case pinball
     case coinDrop
     case janken
+    case stickerStorage // シール管理・遊ぶ画面
 
     var icon: String {
         switch self {
-        case .normal:     return "⏱️"
-        case .blitz:      return "⚡"
-        case .quiz:       return "🎯"
-        case .whackAMole: return "🔨"
-        case .maze:       return "🗺️"
-        case .pinball:    return "🎱"
-        case .coinDrop:   return "💰"
-        case .janken:     return "✊"
+        case .normal:          return "🔟"
+        case .blitz:           return "⚡"
+        case .quiz:            return "🗺️"
+        case .whackAMole:      return "🔨"
+        case .maze:            return "🧀"
+        case .pinball:         return "🎱"
+        case .coinDrop:        return "💰"
+        case .janken:          return "✊"
+        case .stickerStorage:  return "🖼️"
         }
     }
 
     var label: LocalizedStringKey {
         switch self {
-        case .normal:     return "title_mode_normal_label"
-        case .blitz:      return "title_mode_blitz_label"
-        case .quiz:       return "Quiz"
-        case .whackAMole: return "Whack-a-Mole"
-        case .maze:       return "Maze"
-        case .pinball:    return "Pinball"
-        case .coinDrop:   return "CoinDrop"
-        case .janken:     return "janken_title"
+        case .normal:          return "title_mode_normal_label"
+        case .blitz:           return "title_mode_blitz_label"
+        case .quiz:            return "quiz_home_title"
+        case .whackAMole:      return "whack_a_mole_title"
+        case .maze:            return "maze_title"
+        case .pinball:         return "pinball_title"
+        case .coinDrop:        return "coindrop_title"
+        case .janken:          return "janken_title"
+        case .stickerStorage:  return "sticker_storage_title"
         }
     }
 
     var color: Color {
         switch self {
-        case .normal:     return DS.primary
-        case .blitz:      return DS.blitzColor
-        case .quiz:       return .purple
-        case .whackAMole: return .orange
-        case .maze:       return .green
-        case .pinball:    return .red
-        case .coinDrop:   return DS.gold
-        case .janken:     return .teal
+        case .normal:          return DS.primary
+        case .blitz:           return DS.blitzColor
+        case .quiz:            return .purple
+        case .whackAMole:      return .orange
+        case .maze:            return .green
+        case .pinball:         return .red
+        case .coinDrop:        return DS.gold
+        case .janken:          return .teal
+        case .stickerStorage:  return .pink
         }
     }
 }
@@ -111,22 +115,10 @@ final class GameRankManager {
 }
 
 // MARK: - GamePickerTile
-//
-// ゲーム選択グリッドの1つのタイル。
-// タップとフリックを1つの DragGesture で判別する。
-//
-// ★ flyOffset について ★
-//   末尾送り演出でタイルをフリック方向に飛ばすためのオフセット値。
-//   .zero のときは通常表示。非ゼロのとき、easeIn アニメーションで
-//   フリック方向に移動しながら画面外に消える。
-//   LazyVGrid 内では offset はレイアウトに影響しないため、
-//   タイルが飛び去っても空白スロットが一瞬残るが、
-//   直後の throwToBottom によるグリッド再配置で自然に埋まる。
 
 struct GamePickerTile: View {
 
     let game:      GamePickerSelection
-    /// フリック方向への飛び出しオフセット（.zero = 通常表示）
     let flyOffset: CGSize
     let onTap:     () -> Void
     let onFlick:   (_ translation: CGSize, _ velocity: CGSize) -> Void
@@ -148,13 +140,8 @@ struct GamePickerTile: View {
             game.color.opacity(0.1),
             in: RoundedRectangle(cornerRadius: DS.tagRadius)
         )
-        // flyOffset が非ゼロのとき easeIn でフリック方向に飛び出す
-        // isPressed のスケールと合成し、flyOffset 中はスケール 1.0 に固定する
         .scaleEffect(isPressed && flyOffset == .zero ? 0.94 : 1.0)
         .offset(flyOffset)
-        // flyOffset のアニメーションは TitleView.handleFlick 内の withAnimation で制御する。
-        // ここに .animation(value: flyOffset) を書くとリセット時（→ .zero）にも
-        // アニメーションが適用されて残像が発生するため、あえて省略している。
         .animation(.easeInOut(duration: 0.1), value: isPressed)
         .gesture(
             DragGesture(minimumDistance: 0)

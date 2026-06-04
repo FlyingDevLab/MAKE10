@@ -7,12 +7,15 @@
 //  約100ポイント獲得ごとに絵文字シールを1つ獲得。
 //  ポイントは難易度・モードに応じて変動（1.1pt〜2.6pt/問）するため
 //  実際の問題数は難易度によって異なる。
-//  シールの位置はUserDefaultsに保存され、次回起動後も保持される。
-//  7個以降はゴミ箱機能が解放され、ドラッグで削除できる。
+//
+//  【3エリア管理】
+//  ゲームモード（stickers）  : 全件保持・画面表示は先頭50枚のみ
+//  ストレージ（storageEmojis）: 絵文字リストのみ・無制限
+//  シール画面（playStickers） : 位置情報あり・上限100枚
 
 // 絵文字シールの状態管理・永続化・ライフサイクル制御を担うシングルトン。
-// ポイント蓄積 → pendingStickers → ボード配置という3段階の流れで
-// シールの獲得からボード反映までを管理する。
+// ポイント蓄積 → pending（またはストレージ直送）→ ボード配置という流れで管理する。
+// ゲームボードが満杯（50枚以上）のときは新規シールをストレージへ直接送出する。
 
 import SwiftUI
 
@@ -27,7 +30,7 @@ final class StickerStore {
     // MARK: - Sticker Model
 
     // ボード上のシール1枚分のデータ。位置は画面サイズに依存しない比率で保持する。
-    // Codableでシリアライズし、UserDefaultsにJSON形式で保存・復元する
+    // Codable でシリアライズし、UserDefaults に JSON 形式で保存・復元する
     struct Sticker: Codable, Identifiable {
         var id: UUID = UUID()
         let emoji: String
@@ -37,27 +40,33 @@ final class StickerStore {
 
     // MARK: - State
 
-    // ボード上に配置済みのシール一覧。外部からの直接変更はpublic APIを通じて行う
+    // ゲームモード用。全件保持するが StickerBoardView は prefix(50) のみ表示する
     private(set) var stickers: [Sticker] = []
 
-    // 累積ポイント。nextMilestone（100pt）を超えるたびに0にリセットしてシールを1枚発行する
-    private(set) var totalCorrect: Double = 0
+    // ストレージ用。絵文字リストのみ・位置情報なし・無制限
+    private(set) var storageEmojis: [String] = []
 
-    /// ゲーム終了時のリザルト画面で表示・確定するシール群（まだボードには追加されていない）
-    // リザルト画面がこの配列を読み取ってバナーに表示し、ドラッグ or 自動配置でボードに移す
+    // シール画面用。位置情報あり・上限 100 枚
+    private(set) var playStickers: [Sticker] = []
+
+    // リザルト画面でゲームボードへ配置するシール一時保持用
     private(set) var pendingStickers: [String] = []
 
-    /// 7個以上になったら解放。一度解放したら進捗リセット以外で消えない。
-    // didSetでUserDefaultsに即時保存し、次回起動後も解放状態を維持する
-    private(set) var isTrashUnlocked: Bool = false {
-        didSet { UserDefaults.standard.set(isTrashUnlocked, forKey: UDKey.isTrashUnlocked) }
-    }
+    // リザルト画面でストレージへ送出されたシール枚数。
+    // FinishedView がメッセージ表示の判断に使う。表示後に clearPendingStorage() でリセットする
+    private(set) var pendingStorageCount: Int = 0
 
-    // ポイントがこの値に達したらシールを1枚発行する閾値
-    private let nextMilestone: Double = 100.0
+    // 累積ポイント。nextMilestone（100pt）に達するたびに 0 にリセットしてシールを1枚発行する
+    private(set) var totalCorrect: Double = 0
 
-    // MARK: - シールの絵文字プール（ランダムに1つ選ばれる）
-    // 🌸が複数・☁️が3つなど出現確率に重みを持たせている（多いほど出やすい）
+    // MARK: - 上限定数
+
+    private let gameDisplayLimit: Int    = 50    // ← 変更可：ゲームボードの表示上限
+    private let playLimit:        Int    = 100   // ← 変更可：シール画面の上限
+    private let nextMilestone:    Double = 100.0 // ← 変更可：シール獲得に必要なポイント
+
+    // MARK: - 絵文字プール（ランダムに1つ選ばれる）
+    // 🌸 が複数・☁️ が3つなど出現確率に重みを持たせている（多いほど出やすい）
     private static let palette: [String] = [
         "😄","🥹","☺️","😊","😋",
         "🦁","🐧","🦊","🌊",
@@ -71,133 +80,229 @@ final class StickerStore {
 
     // MARK: - Init
 
-    // 外部からの直接初期化を禁止し、shared経由のみを強制する。
-    // 起動時にUserDefaultsからシール・ポイント・ゴミ箱状態を復元する
+    // 外部からの直接初期化を禁止し、shared 経由のみを強制する
     private init() { load() }
 
-    // MARK: - Public API
+    // MARK: - Public API（獲得・pending 管理）
 
-    /// 正解時に呼ぶ。累積ポイントが nextMilestone（100pt）に達したら pendingSticker にセットする。
-    /// 実際のボード追加はリザルト画面の confirmPendingSticker() で行う。
-    /// points は難易度・モードに応じて変動（例：Blitz正解=2.6pt、通常正解=1.1pt）。
+    /// 正解時に呼ぶ。ゲームボードが満杯なら新規シールをストレージへ直接送出する。
+    /// points は難易度・モードに応じて変動（例：Blitz 正解=2.6pt、通常正解=1.1pt）。
     func recordCorrect(points: Double = 1.0) {
         totalCorrect += points
         UserDefaults.standard.set(totalCorrect, forKey: UDKey.totalCorrectAllTime)
-        if totalCorrect >= nextMilestone {
-            let emoji = Self.palette.randomElement()!
-            // ポイントをリセットし、次のシール獲得に向けてカウントを再スタートする
-            totalCorrect = 0
-            UserDefaults.standard.set(0, forKey: UDKey.totalCorrectAllTime)
-            pendingStickers.append(emoji)   // リザルト画面が引き取るまで保持
+        guard totalCorrect >= nextMilestone else { return }
+
+        let emoji = Self.palette.randomElement()!
+        totalCorrect = 0
+        UserDefaults.standard.set(0, forKey: UDKey.totalCorrectAllTime)
+
+        if stickers.count >= gameDisplayLimit {
+            // ゲームボード満杯 → ストレージへ直接送出
+            storageEmojis.append(emoji)
+            pendingStorageCount += 1
+            saveStorage()
+        } else {
+            // 通常ルート → リザルト画面のバナーに表示してから配置
+            pendingStickers.append(emoji)
         }
     }
 
-    /// 全問正解ボーナスなど、ポイント外でステッカーを1枚追加する。
-    // EmojiQuizViewModelのadvance()からpct == 1.0のときに呼ばれる
+    /// 全問正解ボーナスなど、ポイント外でシールを1枚追加する。
+    // EmojiQuizViewModel の advance() から pct == 1.0 のときに呼ばれる
     func addBonusSticker() {
-        pendingStickers.append(Self.palette.randomElement()!)
+        let emoji = Self.palette.randomElement()!
+        if stickers.count >= gameDisplayLimit {
+            storageEmojis.append(emoji)
+            pendingStorageCount += 1
+            saveStorage()
+        } else {
+            pendingStickers.append(emoji)
+        }
     }
 
-    /// リザルト画面の onAppear で呼ぶ。pending を全て正式にボードへ追加する。
-    /// ドラッグ配置されなかった残りのシールをデフォルト位置に一括追加するフォールバック用。
-    // spawnSticker()が螺旋状の座標計算でボード下部に分散配置する
+    /// リザルト画面での表示完了後に呼ぶ。ストレージ送出カウントをリセットする。
+    func clearPendingStorage() {
+        pendingStorageCount = 0
+    }
+
+    /// リザルト画面でユーザーが絵文字をドラッグして配置したときに呼ぶ。
+    // firstIndex(of:) で同じ絵文字が複数あっても先頭の1つだけを消費する
+    func placePendingSticker(emoji: String, xRatio: Double, yRatio: Double) {
+        if let idx = pendingStickers.firstIndex(of: emoji) {
+            pendingStickers.remove(at: idx)
+        }
+        stickers.append(Sticker(emoji: emoji, xRatio: xRatio, yRatio: yRatio))
+        saveGame()
+    }
+
+    /// ドラッグ配置されなかった残りの pending を自動配置するフォールバック。
+    // リザルト画面の onDisappear やボタン操作時に呼ばれる
     func confirmPendingStickers() {
         let toAdd = pendingStickers
         pendingStickers = []
         for emoji in toAdd { spawnSticker(emoji: emoji) }
     }
 
-    /// リザルト画面でユーザーが絵文字を直接ドラッグして配置したときに呼ぶ。
-    /// pendingStickers から該当絵文字を1つ消費してボードへ追加する。
-    // firstIndex(of:)で同じ絵文字が複数あっても先頭の1つだけを消費する
-    func placePendingSticker(emoji: String, xRatio: Double, yRatio: Double) {
-        if let idx = pendingStickers.firstIndex(of: emoji) {
-            pendingStickers.remove(at: idx)
-        }
-        stickers.append(Sticker(emoji: emoji, xRatio: xRatio, yRatio: yRatio))
-        // 配置後に7枚以上になったらゴミ箱を解放する
-        if stickers.count >= 7 { isTrashUnlocked = true }
-        save()
-    }
+    // MARK: - Public API（ゲームモード操作）
 
-    /// ドラッグ終了後に位置を更新・保存する。
-    // idで対象シールを特定し、比率座標を更新してUserDefaultsに永続化する
+    /// ドラッグ終了後にゲームモードのシール位置を更新・保存する。
     func updatePosition(id: UUID, xRatio: Double, yRatio: Double) {
         guard let idx = stickers.firstIndex(where: { $0.id == id }) else { return }
         stickers[idx].xRatio = xRatio
         stickers[idx].yRatio = yRatio
-        save()
+        saveGame()
     }
 
-    /// ドラッグ開始時に最前面に持ってくる（配列末尾 = 最前面）
-    // ZStackはインデックス順に重なるため、配列末尾のシールが画面最前面に表示される
+    /// ドラッグ開始時にゲームモードのシールを最前面へ（配列末尾 = 最前面）。
     func bringToFront(id: UUID) {
         guard let idx = stickers.firstIndex(where: { $0.id == id }) else { return }
         let sticker = stickers.remove(at: idx)
         stickers.append(sticker)
-        save()
+        saveGame()
     }
 
-    /// ゴミ箱にドロップしてシールを削除する。
-    func deleteSticker(id: UUID) {
-        stickers.removeAll { $0.id == id }
-        save()
+    // MARK: - Public API（ストレージ ↔ ゲームモード）
+
+    /// ストレージ → ゲームモードへ1枚移動。満杯（50枚以上）のときは何もしない。
+    /// - Returns: 移動成功なら true、満杯なら false
+    @discardableResult
+    func moveStorageToGame(emoji: String) -> Bool {
+        guard stickers.count < gameDisplayLimit else { return false }
+        if let idx = storageEmojis.firstIndex(of: emoji) {
+            storageEmojis.remove(at: idx)
+        }
+        spawnSticker(emoji: emoji)
+        saveStorage()
+        return true
     }
 
-    /// ゴミ箱の長押しで全シールをまとめて削除する。
-    /// 進捗（totalCorrect）とゴミ箱解放状態（isTrashUnlocked）は保持する。
-    // シールをすべて消してもゴミ箱の解放状態は維持するのがresetとの違い
-    func deleteAllStickers() {
-        stickers = []
-        save()
+    /// ゲームモード → ストレージへ1枚移動。常に成功する。
+    func moveGameToStorage(id: UUID) {
+        guard let idx = stickers.firstIndex(where: { $0.id == id }) else { return }
+        let emoji = stickers[idx].emoji
+        stickers.remove(at: idx)
+        storageEmojis.append(emoji)
+        saveGame()
+        saveStorage()
     }
 
-    /// 進捗リセット時にシールもまとめてクリアする。
-    // deleteAllStickersと違い、totalCorrectとisTrashUnlockedも含めて完全にリセットする
+    // MARK: - Public API（ストレージ ↔ シール画面）
+
+    /// ストレージ → シール画面へ1枚移動。満杯（100枚以上）のときは何もしない。
+    /// - Returns: 移動成功なら true、満杯なら false
+    @discardableResult
+    func moveStorageToPlay(emoji: String) -> Bool {
+        guard playStickers.count < playLimit else { return false }
+        if let idx = storageEmojis.firstIndex(of: emoji) {
+            storageEmojis.remove(at: idx)
+        }
+        spawnPlaySticker(emoji: emoji)
+        saveStorage()
+        return true
+    }
+
+    /// シール画面 → ストレージへ1枚移動。常に成功する。
+    func movePlayToStorage(id: UUID) {
+        guard let idx = playStickers.firstIndex(where: { $0.id == id }) else { return }
+        let emoji = playStickers[idx].emoji
+        playStickers.remove(at: idx)
+        storageEmojis.append(emoji)
+        savePlay()
+        saveStorage()
+    }
+
+    // MARK: - Public API（シール画面操作）
+
+    /// ドラッグ終了後にシール画面のシール位置を更新・保存する。
+    func updatePlayPosition(id: UUID, xRatio: Double, yRatio: Double) {
+        guard let idx = playStickers.firstIndex(where: { $0.id == id }) else { return }
+        playStickers[idx].xRatio = xRatio
+        playStickers[idx].yRatio = yRatio
+        savePlay()
+    }
+
+    /// ドラッグ開始時にシール画面のシールを最前面へ（配列末尾 = 最前面）。
+    func bringPlayToFront(id: UUID) {
+        guard let idx = playStickers.firstIndex(where: { $0.id == id }) else { return }
+        let sticker = playStickers.remove(at: idx)
+        playStickers.append(sticker)
+        savePlay()
+    }
+
+    // MARK: - Public API（リセット）
+
+    /// 進捗リセット時に全データをまとめてクリアする。
     func reset() {
-        stickers = []
-        totalCorrect = 0
-        isTrashUnlocked = false
-        pendingStickers = []
-        // UserDefaultsのデータもまとめて削除し、次回起動時の誤復元を防ぐ
+        stickers            = []
+        storageEmojis       = []
+        playStickers        = []
+        totalCorrect        = 0
+        pendingStickers     = []
+        pendingStorageCount = 0
         UserDefaults.standard.removeObject(forKey: UDKey.stickers)
+        UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
+        UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
-        UserDefaults.standard.removeObject(forKey: UDKey.isTrashUnlocked)
     }
 
     // MARK: - Private
 
-    // confirmPendingStickers()のフォールバック配置で使われる座標計算メソッド。
+    /// ゲームボードへ螺旋状に自動配置する（pending フォールバック・ストレージ移動時）。
     // 黄金角（約137.5°= 2.399rad）ベースの螺旋配置でシールを均等に散らばせる。
-    // ボード下部（yRatio 0.83〜0.90）に収めるよう縦方向の振れ幅を0.2倍に抑えている
+    // ボード下部（yRatio 0.83〜0.90）に収めるよう縦方向の振れ幅を 0.2 倍に抑えている
     private func spawnSticker(emoji: String) {
-        let angle = Double(stickers.count) * 2.399  // 黄金角ベースで螺旋状に分散させる
-        let r = 0.10 + Double(stickers.count % 4) * 0.04  // 半径を0〜3枚周期で少しずつ広げる
-        let x = max(0.08, min(0.75, 0.42 + r * cos(angle)))
-        let y = max(0.83, min(0.90, 0.87 + r * sin(angle) * 0.2))
-
+        let angle = Double(stickers.count) * 2.399
+        let r     = 0.10 + Double(stickers.count % 4) * 0.04
+        let x     = max(0.08, min(0.75, 0.42 + r * cos(angle)))
+        let y     = max(0.83, min(0.90, 0.87 + r * sin(angle) * 0.2))
         stickers.append(Sticker(emoji: emoji, xRatio: x, yRatio: y))
-        // 自動配置でも7枚以上になったらゴミ箱を解放する
-        if stickers.count >= 7 { isTrashUnlocked = true }
-        save()
+        saveGame()
     }
 
-    // stickers配列をJSONエンコードしてUserDefaultsに保存する。
-    // エンコード失敗時は何もせずリターンし、既存データを上書きしない
-    private func save() {
+    /// シール画面へ螺旋状に自動配置する（ストレージからの移動時）。
+    // 全画面キャンバスを活かして中央から広がる螺旋配置にする
+    private func spawnPlaySticker(emoji: String) {
+        let angle = Double(playStickers.count) * 2.399
+        let r     = 0.10 + Double(playStickers.count % 5) * 0.06
+        let x     = max(0.08, min(0.92, 0.50 + r * cos(angle)))
+        let y     = max(0.10, min(0.90, 0.50 + r * sin(angle)))
+        playStickers.append(Sticker(emoji: emoji, xRatio: x, yRatio: y))
+        savePlay()
+    }
+
+    // MARK: - Save / Load
+
+    private func saveGame() {
         guard let data = try? JSONEncoder().encode(stickers) else { return }
         UserDefaults.standard.set(data, forKey: UDKey.stickers)
     }
 
-    // 起動時にUserDefaultsから全状態を復元する。
-    // stickersのデコード失敗時はreturnして初期値（空配列）のままにする
+    private func saveStorage() {
+        guard let data = try? JSONEncoder().encode(storageEmojis) else { return }
+        UserDefaults.standard.set(data, forKey: UDKey.storageEmojis)
+    }
+
+    private func savePlay() {
+        guard let data = try? JSONEncoder().encode(playStickers) else { return }
+        UserDefaults.standard.set(data, forKey: UDKey.playStickers)
+    }
+
+    /// 起動時に UserDefaults から全状態を復元する。
+    // 各配列のデコード失敗時は初期値（空配列）のままにする
     private func load() {
-        totalCorrect    = UserDefaults.standard.double(forKey: UDKey.totalCorrectAllTime)
-        isTrashUnlocked = UserDefaults.standard.bool(forKey: UDKey.isTrashUnlocked)
-        guard
-            let data = UserDefaults.standard.data(forKey: UDKey.stickers),
-            let decoded = try? JSONDecoder().decode([Sticker].self, from: data)
-        else { return }
-        stickers = decoded
+        totalCorrect = UserDefaults.standard.double(forKey: UDKey.totalCorrectAllTime)
+
+        if let data    = UserDefaults.standard.data(forKey: UDKey.stickers),
+           let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
+            stickers = decoded
+        }
+        if let data    = UserDefaults.standard.data(forKey: UDKey.storageEmojis),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            storageEmojis = decoded
+        }
+        if let data    = UserDefaults.standard.data(forKey: UDKey.playStickers),
+           let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
+            playStickers = decoded
+        }
     }
 }
