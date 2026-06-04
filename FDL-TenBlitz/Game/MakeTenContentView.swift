@@ -5,37 +5,9 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/08.
 //
 
-// アプリ全体のルートViewであり、画面遷移の司令塔。
-// SharedFrameを1つだけ最上位に保ち、表示するコンテンツだけをscreen/gameStateの変化で差し替える。
-// 同意画面・MAKE10・クイズホーム・クイズプレイ中・モグラ叩き・迷路・ピンボールを管理する。
-//
-// ★ このファイルの全体像 ★
-//   アプリ起動後にまず表示されるルートViewです。
-//   「今どの画面にいるか」を Screen 型で管理し、
-//   SharedFrame という共通の枠の中でコンテンツだけを差し替えます。
-//
-//   構造:
-//     MakeTenContentView（ルート）
-//       ├ ConsentView         … 初回同意画面（同意済みなら非表示）
-//       └ gameRootView        … 同意後のメイン画面
-//           ├ SharedFrame     … 共通フレーム（ヘッダー・設定など）
-//           │   └ 各ゲームのコンテンツ（Screen 型で切り替え）
-//           ├ StickerBoardView … シールボード（一部ゲーム中は非表示）
-//           └ ConfettiView    … 紙吹雪エフェクト
-//
-// ★ ゲーム選択について ★
-//   旧バージョンではボトムシートでゲームを選択していたが、
-//   タイトル画面に統一グリッドを表示する方式に変更した。
-//   TitleView が onSelectGame コールバックを受け取り、
-//   MakeTenContentView が画面遷移を担う。
-
 import SwiftUI
 
 // MARK: - Screen
-//
-// アプリが今どの画面を表示しているかを表す列挙型。
-// MAKE10 内部のゲーム進行（タイトル/プレイ中/終了）は GameViewModel が別途管理しており、
-// この enum はアプリレベルの「どのゲームにいるか」だけを担う。
 
 private enum Screen {
     case make10
@@ -46,6 +18,7 @@ private enum Screen {
     case pinball
     case coinDrop
     case janken
+    case stickerStorage
 }
 
 // MARK: - MakeTenContentView
@@ -111,6 +84,9 @@ struct MakeTenContentView: View {
                 case .janken:
                     JankenView()
                         .transition(.opacity)
+                case .stickerStorage:
+                    StickerStorageView()
+                        .transition(.opacity)
                 }
             }
             .animation(.easeInOut(duration: 0.3), value: screenID)
@@ -142,8 +118,11 @@ struct MakeTenContentView: View {
 
     private var stickerBoardVisible: Bool {
         switch screen {
-        case .whackAMole, .maze, .pinball, .coinDrop, .janken: return false
-        default:                                       return true
+        case .whackAMole, .maze, .pinball, .coinDrop,
+             .janken, .stickerStorage:
+            return false
+        default:
+            return true
         }
     }
 
@@ -159,6 +138,7 @@ struct MakeTenContentView: View {
         case .pinball:             return String(localized: "pinball_title")
         case .coinDrop:            return String(localized: "coindrop_title")
         case .janken:              return String(localized: "janken_title")
+        case .stickerStorage:      return String(localized: "sticker_storage_title")
         }
     }
 
@@ -177,7 +157,8 @@ struct MakeTenContentView: View {
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
-        case .whackAMole, .maze, .pinball, .coinDrop, .janken:
+        case .whackAMole, .maze, .pinball, .coinDrop,
+             .janken, .stickerStorage:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
@@ -191,8 +172,9 @@ struct MakeTenContentView: View {
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
-        case .quizPlaying: return nil
-        case .whackAMole, .maze, .pinball, .coinDrop, .janken: return nil
+        case .quizPlaying:                                               return nil
+        case .whackAMole, .maze, .pinball, .coinDrop,
+             .janken, .stickerStorage:                                   return nil
         }
     }
 
@@ -206,6 +188,7 @@ struct MakeTenContentView: View {
         case .pinball:             return "pinball"
         case .coinDrop:            return "coinDrop"
         case .janken:              return "janken"
+        case .stickerStorage:      return "stickerStorage"
         }
     }
 
@@ -218,17 +201,17 @@ struct MakeTenContentView: View {
             TitleView(
                 viewModel: viewModel,
                 onSelectGame: { selected in
-                    // GamePickerSelection の各ケースを画面遷移またはゲーム開始に振り分ける
                     withAnimation(.easeInOut(duration: 0.3)) {
                         switch selected {
-                        case .normal:     viewModel.startGame(mode: .normal)
-                        case .blitz:      viewModel.startGame(mode: .blitz)
-                        case .quiz:       screen = .quizHome
-                        case .whackAMole: screen = .whackAMole
-                        case .maze:       screen = .maze
-                        case .pinball:    screen = .pinball
-                        case .coinDrop:   screen = .coinDrop
-                        case .janken:     screen = .janken
+                        case .normal:         viewModel.startGame(mode: .normal)
+                        case .blitz:          viewModel.startGame(mode: .blitz)
+                        case .quiz:           screen = .quizHome
+                        case .whackAMole:     screen = .whackAMole
+                        case .maze:           screen = .maze
+                        case .pinball:        screen = .pinball
+                        case .coinDrop:       screen = .coinDrop
+                        case .janken:         screen = .janken
+                        case .stickerStorage: screen = .stickerStorage
                         }
                     }
                 }
