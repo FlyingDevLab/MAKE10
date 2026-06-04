@@ -17,6 +17,7 @@
 // ★ このファイルの構成 ★
 //   TitleView（親）
 //     ├ アニメーションカード … 「n + (10-n) = 10」をループアニメで表示
+//     │                        5ループごとに FDL ロゴスプラッシュを挟む
 //     ├ ハイスコア表示       … isHighScoreUnlocked が true のときのみ表示
 //     └ ゲーム選択グリッド   … GamePickerTile を LazyVGrid で2列に並べる
 
@@ -55,6 +56,13 @@ struct TitleView: View {
     /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する
     @State private var demoGeneration: Int = 0
 
+    // MARK: - Logo Splash State
+
+    // ← 変更可：何ループごとにロゴを挟むか（現在：5回）
+    @State private var loopCount:      Int    = 0
+    @State private var showLogoSplash: Bool   = false
+    @State private var ringAngle:      Double = 0
+
     // MARK: - Body
 
     var body: some View {
@@ -64,7 +72,30 @@ struct TitleView: View {
             ZStack {
                 DS.cardShadow()
                 ZStack {
-                    if showTen {
+                    if showLogoSplash {
+                        // ── FDL ロゴスプラッシュ ──────────────
+                        ZStack {
+                            Image("fdl-logo-mark")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 165, height: 165)   // ← 変更可
+                            Image("fdl-logo-ring")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 175, height: 175)   // ← 変更可
+                                .blendMode(.multiply)             // 白を透過
+                                .rotationEffect(.degrees(ringAngle))
+                                .onAppear {
+                                    withAnimation(
+                                        .linear(duration: 11)     // ← 変更可：回転速度（秒/周）
+                                        .repeatForever(autoreverses: false)
+                                    ) { ringAngle = -360 }        // 負値 = 左回転
+                                }
+                                .onDisappear { ringAngle = 0 }
+                        }
+                        .transition(.opacity)
+
+                    } else if showTen {
                         Text("10")
                             .font(.system(size: 130, weight: .bold, design: .rounded))
                             .foregroundStyle(DS.primary)
@@ -368,10 +399,32 @@ struct TitleView: View {
                             self.showTen = false; self.resetState()
                         }
                         DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                            self.runTitleLoop(generation: generation)
+                            self.loopCount += 1
+                            // ← 変更可：何ループごとにロゴを挟むか（現在：5回）
+                            if self.loopCount % 5 == 0 {
+                                self.runLogoSplash(generation: generation)
+                            } else {
+                                self.runTitleLoop(generation: generation)
+                            }
                         }
                     }
                 }
+            }
+        }
+    }
+
+    // MARK: - Logo Splash
+
+    private func runLogoSplash(generation: Int) {
+        guard generation == loopGeneration else { return }
+        withAnimation(.easeInOut(duration: 0.5)) { showLogoSplash = true }
+
+        // ← 変更可：ロゴ表示時間（秒）
+        DispatchQueue.main.asyncAfter(deadline: .now() + 13.0) {
+            guard generation == self.loopGeneration else { return }
+            withAnimation(.easeInOut(duration: 0.5)) { self.showLogoSplash = false }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                self.runTitleLoop(generation: generation)
             }
         }
     }
