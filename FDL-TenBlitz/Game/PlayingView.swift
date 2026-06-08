@@ -59,7 +59,14 @@ struct PlayingView: View {
                 // LazyVGrid: グリッドレイアウト（Lazy = 表示されたものだけ描画）
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(0..<4, id: \.self) { index in
-                        TileButton(value: viewModel.tiles[index]) {
+                        TileButton(
+                            value:          viewModel.tiles[index],
+                            // tappedTileValue がこのタイルの値と一致するとき answerMark を渡す。
+                            // 一致しないタイルは nil のまま（通常色）で表示される。
+                            // タイルが切り替わると値が変わり自然にハイライトが消える
+                            highlightState: viewModel.tappedTileValue == viewModel.tiles[index]
+                                            ? viewModel.answerMark : nil
+                        ) {
                             withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
                                 viewModel.answer(viewModel.tiles[index])
                             }
@@ -246,26 +253,82 @@ struct InlineGaugeView: View {
 // MARK: - Tile Button
 
 /// 数字を表示するタップ可能なタイル。4枚がグリッドに並び、正解タイルをタップするとスコアが増える。
-/// タップ時のスケールアップは TileButtonStyle が担い、
-/// TileButton 自身はコンテンツとレイアウトのみを持つ（責任の分離）。
+/// クイズの QuizChoiceButton と同じ視覚スタイルを踏襲する：
+///   - 背景：薄い色（opacity 0.15）
+///   - 枠線：DS.gaugeFull（正解）/ DS.gaugeWarn（不正解）のカラーボーダー
+///   - アイコン：右上に checkmark / xmark
+///   - スケール：正解時のみ 1.03 に拡大
+/// タップ時の押し込みスケールは TileButtonStyle が担う（責任の分離）。
 struct TileButton: View {
     let value:  Int
+    /// 正解=緑 / 不正解=赤 / nil=通常。GameViewModelの tappedTileValue と answerMark から決まる
+    var highlightState: AnswerMark? = nil
     let action: () -> Void
+
+    // stateに応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う
+    private var bgColor: Color {
+        switch highlightState {
+        case .correct: return DS.gaugeFull.opacity(0.15)
+        case .wrong:   return DS.gaugeWarn.opacity(0.15)
+        case nil:      return DS.choiceFill
+        }
+    }
+
+    // stateに応じた枠線色。正解・不正解のみ色付き枠線を表示する
+    private var borderColor: Color {
+        switch highlightState {
+        case .correct: return DS.gaugeFull
+        case .wrong:   return DS.gaugeWarn
+        case nil:      return DS.muted.opacity(0.15)
+        }
+    }
 
     var body: some View {
         Button(action: action) {
-            Text("\(value)")
-                .font(.system(size: 40, weight: .bold, design: .rounded))
-                .foregroundStyle(DS.textPrimary)
-                .frame(maxWidth: .infinity)
-                .frame(height: 76)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.btnRadius)
-                        .fill(DS.choiceFill)
-                        .shadow(color: .black.opacity(0.07), radius: 6, x: 0, y: 3)
-                )
+            ZStack {
+                // ── 背景 + 枠線 ──────────────────────────────
+                RoundedRectangle(cornerRadius: DS.btnRadius)
+                    .fill(bgColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: DS.btnRadius)
+                            .stroke(borderColor, lineWidth: 1.8)
+                    )
+                    // 回答前のみシャドウを表示してタップ可能感を演出する
+                    .shadow(
+                        color: .black.opacity(highlightState == nil ? 0.07 : 0),
+                        radius: 6, x: 0, y: 3
+                    )
+
+                // ── 数字 ────────────────────────────────────
+                Text("\(value)")
+                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+                    .frame(maxWidth: .infinity)
+
+                // ── 正解アイコン（右上） ──────────────────────
+                if highlightState == .correct {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(DS.gaugeFull)
+                        .font(.system(size: 18, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(8)
+                }
+
+                // ── 不正解アイコン（右上） ────────────────────
+                if highlightState == .wrong {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(DS.gaugeWarn)
+                        .font(.system(size: 18, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(8)
+                }
+            }
+            .frame(height: 76)
         }
         .buttonStyle(TileButtonStyle())
+        // 正解ボタンのみわずかに拡大して正解を視覚的に強調する（クイズと同じ 1.03）
+        .scaleEffect(highlightState == .correct ? 1.03 : 1.0)  // ← 変更可
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: highlightState)
     }
 }
 

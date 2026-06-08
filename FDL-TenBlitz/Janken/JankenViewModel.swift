@@ -117,14 +117,16 @@ final class JankenViewModel {
 
     // MARK: - Published State
 
-    var phase:              Phase            = .idle
-    var difficulty:         JankenDifficulty = .easy
-    var cpuHand:            JankenHand       = .rock
+    var phase:              Phase             = .idle
+    var difficulty:         JankenDifficulty  = .easy
+    var cpuHand:            JankenHand        = .rock
     var currentInstruction: JankenInstruction = .win
     var currentRound:       Int              = 0      // 完了済み手数（次の手のindexを兼ねる）
     var missCount:          Int              = 0
     var elapsed:            TimeInterval     = 0.0
     var flash:              Flash?           = nil
+    /// タップされた手。ボタンの色変化トリガーとして使う。flashと同じタイミングでクリアされる。
+    var tappedHand:         JankenHand?      = nil
     var isNewBest:          Bool             = false
 
     // MARK: - Derived
@@ -194,6 +196,7 @@ final class JankenViewModel {
         missCount       = 0
         elapsed         = 0.0
         flash           = nil
+        tappedHand      = nil  // ボタンフィードバック状態をリセット
         isNewBest       = false
         isTapLocked     = false
         phase           = .countdown(0)
@@ -217,6 +220,7 @@ final class JankenViewModel {
         gameTimer      = nil
         countdownTimer = nil
         isTimerRunning = false
+        tappedHand     = nil  // ボタンフィードバック状態をリセット
         phase          = .idle
     }
 
@@ -224,6 +228,7 @@ final class JankenViewModel {
     func tap(_ playerHand: JankenHand) {
         guard case .playing = phase, !isTapLocked else { return }
         isTapLocked = true
+        tappedHand  = playerHand  // タップした手を記録（ボタン色変化のトリガー）
 
         // 勝敗判定（あいこ=不正解）
         let isCorrect: Bool = {
@@ -259,6 +264,7 @@ final class JankenViewModel {
         DispatchQueue.main.asyncAfter(deadline: .now() + C.flashDuration) { [weak self] in
             guard let self else { return }
             self.flash       = nil
+            self.tappedHand  = nil  // ボタンフィードバックをクリア
             self.isTapLocked = false
 
             if isDone {

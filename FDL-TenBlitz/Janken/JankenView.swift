@@ -212,6 +212,91 @@ private struct JankenPhaseTransitionView: View {
     }
 }
 
+// MARK: - Hand Button State
+
+/// じゃんけんボタンの表示状態。QuizChoiceButtonStateと同じ設計思想で実装している。
+/// normal：回答前 / correct：正解で選んだ手 / wrong：不正解で選んだ手
+private enum JankenHandButtonState: Equatable { case normal, correct, wrong }
+
+// MARK: - JankenHandButton
+
+/// じゃんけんの手（✊✌️🖐️）を表示するボタン。
+/// クイズの QuizChoiceButton と同じ視覚スタイルを踏襲する：
+///   - 背景：薄い色（opacity 0.15）
+///   - 枠線：DS.gaugeFull（正解）/ DS.gaugeWarn（不正解）のカラーボーダー
+///   - アイコン：右上に checkmark / xmark
+///   - スケール：正解時のみ 1.03 に拡大
+private struct JankenHandButton: View {
+    let hand:   JankenHand
+    let state:  JankenHandButtonState
+    let action: () -> Void
+
+    // stateに応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う
+    private var bgColor: Color {
+        switch state {
+        case .normal:  return DS.choiceFill
+        case .correct: return DS.gaugeFull.opacity(0.15)
+        case .wrong:   return DS.gaugeWarn.opacity(0.15)
+        }
+    }
+
+    // stateに応じた枠線色。正解・不正解のみ色付き枠線を表示する
+    private var borderColor: Color {
+        switch state {
+        case .normal:  return DS.muted.opacity(0.15)
+        case .correct: return DS.gaugeFull
+        case .wrong:   return DS.gaugeWarn
+        }
+    }
+
+    var body: some View {
+        Button(action: action) {
+            ZStack {
+                // ── 背景 + 枠線 ──────────────────────────────
+                RoundedRectangle(cornerRadius: DS.cardRadius)
+                    .fill(bgColor)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: DS.cardRadius)
+                            .stroke(borderColor, lineWidth: 1.8)
+                    )
+                    // 回答前のみシャドウを表示してタップ可能感を演出する
+                    .shadow(
+                        color: .black.opacity(state == .normal ? 0.06 : 0),
+                        radius: 5, x: 0, y: 2
+                    )
+
+                // ── 絵文字 ──────────────────────────────────
+                Text(hand.emoji)
+                    .font(.system(size: 52))   // ← 変更可
+                    .padding(.vertical, 16)    // ← 変更可
+
+                // ── 正解アイコン（右上） ──────────────────────
+                if state == .correct {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(DS.gaugeFull)
+                        .font(.system(size: 18, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(8)
+                }
+
+                // ── 不正解アイコン（右上） ────────────────────
+                if state == .wrong {
+                    Image(systemName: "xmark.circle.fill")
+                        .foregroundStyle(DS.gaugeWarn)
+                        .font(.system(size: 18, weight: .bold))
+                        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
+                        .padding(8)
+                }
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.plain)
+        // 正解ボタンのみわずかに拡大して正解を視覚的に強調する（クイズと同じ 1.03）
+        .scaleEffect(state == .correct ? 1.03 : 1.0)  // ← 変更可
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: state)
+    }
+}
+
 // MARK: - JankenPlayingView（メインゲーム画面）
 
 private struct JankenPlayingView: View {
@@ -289,21 +374,15 @@ private struct JankenPlayingView: View {
                 Spacer()
 
                 // ── プレイヤーの手ボタン（3択）────────────────
+                // クイズの QuizChoiceButton と同じ視覚スタイルを使う
                 HStack(spacing: 12) {
                     ForEach(JankenHand.allCases, id: \.self) { hand in
-                        Button {
+                        JankenHandButton(
+                            hand:   hand,
+                            state:  handButtonState(for: hand)
+                        ) {
                             viewModel.tap(hand)
-                        } label: {
-                            Text(hand.emoji)
-                                .font(.system(size: 52))   // ← 変更可
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)    // ← 変更可
-                                .background(
-                                    DS.choiceFill,
-                                    in: RoundedRectangle(cornerRadius: DS.cardRadius)
-                                )
                         }
-                        .buttonStyle(.plain)
                     }
                 }
                 .padding(.horizontal, 20)
@@ -344,6 +423,19 @@ private struct JankenPlayingView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {  // ← 変更可
                 showPenaltyText = false
             }
+        }
+    }
+
+    // MARK: - Helpers
+
+    /// タップされた手のボタン状態を返す。
+    /// tappedHand と一致するボタンだけ correct / wrong になり、他は normal のまま。
+    private func handButtonState(for hand: JankenHand) -> JankenHandButtonState {
+        guard viewModel.tappedHand == hand else { return .normal }
+        switch viewModel.flash {
+        case .correct: return .correct
+        case .wrong:   return .wrong
+        case nil:      return .normal  // フラッシュ終了の瞬間は normal に戻す
         }
     }
 }

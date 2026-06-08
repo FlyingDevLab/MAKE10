@@ -41,6 +41,7 @@ final class GameViewModel {
 
     private enum C {
         static let answerMarkDuration: Double = 0.5   // 正解/不正解マークの表示時間（秒）
+        static let tileAdvanceDelay:   Double = 0.3   // 正解後にタイルを切り替えるまでの遅延（秒）← 変更可
         static let wrongPenalty:       Double = 1.0   // 不正解ペナルティ（秒）
         static let unlockThreshold:    Int    = 100   // Blitzモード解放・ハイスコア解放の正解数閾値
         static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数
@@ -118,6 +119,8 @@ final class GameViewModel {
     var showConfetti:     Bool        = false
     /// 正解/不正解のフィードバックアイコン。0.5秒後に nil に戻る
     var answerMark:       AnswerMark? = nil
+    /// タップされたタイルの数値。フィードバック色の表示に使う。0.5秒後に nil に戻る
+    var tappedTileValue:  Int?        = nil
     /// Blitzモード解放バナーの表示フラグ（解放直後のゲーム終了画面で1度だけ表示）
     var showUnlockBanner: Bool        = false
     /// 今回が Blitz 歴代最高スコアかどうか（リザルト画面の「New Record!」表示に使う）
@@ -193,6 +196,7 @@ final class GameViewModel {
         confettiGeneration  += 1   // 前セッションの紙吹雪タイマーを世代番号で無効化する
         showConfetti         = false
         answerMark       = nil
+        tappedTileValue  = nil     // タイルフィードバック状態をリセット
         isNewHighScore   = false
         showUnlockBanner = false
         gameState        = .playing
@@ -209,8 +213,9 @@ final class GameViewModel {
     /// タイマーを止めてタイトル画面に戻る。answerMark も消して UI を初期状態にする。
     func returnToTitle() {
         stopTimer()
-        answerMark = nil
-        gameState  = .title
+        answerMark      = nil
+        tappedTileValue = nil  // タイルフィードバック状態をリセット
+        gameState       = .title
     }
 
     // MARK: バックグラウンド対応
@@ -309,7 +314,10 @@ final class GameViewModel {
     // MARK: 回答処理
 
     /// タイルがタップされたときに呼ばれる。正解か不正解かを判定して各ハンドラに振り分ける。
+    /// フィードバック表示中（tappedTileValue != nil）は二重タップを無視する。
     func answer(_ value: Int) {
+        guard tappedTileValue == nil else { return }  // フィードバック表示中は入力を無視
+        tappedTileValue = value                        // タップしたタイルを記録（色変化のトリガー）
         if value == 10 - questionNumber {
             handleCorrect()
         } else {
@@ -362,7 +370,22 @@ final class GameViewModel {
             showUnlockBanner = true
         }
 
-        // 先読みしておいた次の問題に即座に切り替える
+        // 緑フラッシュを見せてから tiles を更新する（C.tileAdvanceDelay 秒後）
+        // タイルが変わると tappedTileValue との一致がなくなり、自然にハイライトが消える
+        DispatchQueue.main.asyncAfter(deadline: .now() + C.tileAdvanceDelay) { [weak self] in
+            self?.advanceTiles()
+        }
+        // answerMark と同じタイミングで tappedTileValue をクリアする（念のための後始末）
+        DispatchQueue.main.asyncAfter(deadline: .now() + C.answerMarkDuration) { [weak self] in
+            self?.tappedTileValue = nil
+        }
+    }
+
+    /// 正解後の問題切り替え処理。
+    /// handleCorrect() から直接呼ばず asyncAfter 経由で呼ぶことで遅延を実現する。
+    /// 先読みしておいた次の問題に切り替え、さらに次の問題を先読みする。
+    private func advanceTiles() {
+        tappedTileValue    = nil
         questionNumber     = nextQuestionNumber
         nextQuestionNumber = randomQuestion(excluding: questionNumber)
         tiles              = buildTiles(for: questionNumber)
@@ -389,6 +412,11 @@ final class GameViewModel {
             endGame()          // ペナルティで時間切れになった場合はそのままゲーム終了
         } else {
             resetTimerBase()   // 時間を変えたので基準をリセット
+        }
+
+        // answerMark と同じタイミングで tappedTileValue をクリアし、赤ハイライトを消す
+        DispatchQueue.main.asyncAfter(deadline: .now() + C.answerMarkDuration) { [weak self] in
+            self?.tappedTileValue = nil
         }
     }
 
