@@ -7,7 +7,6 @@
 
 // MAKE10のゲーム全体を制御するメインViewModel。
 // ゲーム状態・タイマー・スコア・コンボ・問題生成・回答処理・Blitzモード解放をすべて管理する。
-// UserDefaultsへの永続化もこのクラスが責務を持つ。
 //
 // ★ このファイルの全体像 ★
 //   MAKE10（30秒 / 10秒 Blitz モード）の頭脳にあたるクラスです。
@@ -20,7 +19,7 @@
 //     - 正解・不正解の処理（スコア・コンボ・ペナルティ）
 //     - 問題の生成（重複しないランダム選択）
 //     - Blitz モードの解放判定
-//     - UserDefaults への永続化
+//     - UserDefaults への永続化（解放フラグ・統計のみ。スコアは ScoreBoard が担う）
 //     - シールポイントの付与
 
 import SwiftUI
@@ -52,10 +51,11 @@ final class GameViewModel {
         static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）
     }
 
-    // MARK: UserDefaults 永続化
+    // MARK: UserDefaults 永続化（解放フラグ・統計）
     //
-    // didSetで変更のたびにUserDefaultsへ即時書き込む。
-    // アプリが強制終了されても最後の状態が保持される。
+    // ★ blitzHighScore はここで管理しない ★
+    //   スコアの読み書きは ScoreBoard に一元化されている。
+    //   blitzHighScore は下の「計算プロパティ」として UD から直接読む。
     //
     // ★ なぜ didSet で保存するのか ★
     //   「保存する処理」を呼び出し側のあちこちに書く必要がなくなります。
@@ -72,11 +72,6 @@ final class GameViewModel {
         didSet { UserDefaults.standard.set(isHighScoreUnlocked, forKey: UDKey.isHighScoreUnlocked) }
     }
 
-    /// Blitzモードの歴代最高スコア（正解数）
-    var blitzHighScore: Int {
-        didSet { UserDefaults.standard.set(blitzHighScore,      forKey: UDKey.blitzHighScore) }
-    }
-
     // 問題ごとの出題回数・正解回数（内部統計・ユーザー非公開）
     // インデックスは問題番号（1〜9）に対応。index 0 は使用しない
     //
@@ -90,6 +85,18 @@ final class GameViewModel {
     private var questionCorrects: [Int] {
         didSet { UserDefaults.standard.set(questionCorrects, forKey: UDKey.questionCorrects) }
     }
+
+    // MARK: Blitz ハイスコア（ScoreBoard 経由）
+    //
+    // ★ なぜ計算プロパティにするのか ★
+    //   ScoreBoard がスコアの永続化を担うため、ここでは保存せず読むだけにします。
+    //   ゲーム終了時に ScoreBoard.saveIfBetter() で保存し、
+    //   このプロパティは常に最新の UD 値を返します。
+    //   isNewHighScore（@Observable な stored property）が変化するたびに
+    //   View が再描画され、そのタイミングで最新値が読まれるため表示のズレは起きません。
+
+    /// Blitzモードの歴代最高スコア（正解数）。ScoreBoard から読み取る。
+    var blitzHighScore: Int { ScoreBoard.highScore(for: UDKey.blitzHighScore) }
 
     // MARK: ゲーム中の状態
     //
@@ -138,7 +145,7 @@ final class GameViewModel {
     /// ★ 世代番号パターンとは？ ★
     ///   「タイマーを開始したときの番号」と「タイマーが発火したときの番号」を比較し、
     ///   一致しなければ無効なタイマー（古いゲームのもの）として無視します。
-    private var confettiGeneration:  Int        = 0
+    private var confettiGeneration: Int = 0
 
     /// ゲームモードに応じた制限時間（blitz = 10秒 / normal = 30秒）
     /// ★ 計算プロパティ = 保存せず毎回 gameMode から計算する
@@ -153,12 +160,12 @@ final class GameViewModel {
     // MARK: 初期化
 
     /// UserDefaultsから保存済みの値を復元して初期化する。
+    /// blitzHighScore は ScoreBoard 経由の計算プロパティのため、ここでは読み込まない。
     /// questionAttempts / Corrects は要素数10固定。
     /// 壊れたデータが保存されていた場合（要素数が10でない）はゼロリセットする。
     init() {
         self.isBlitzUnlocked     = UserDefaults.standard.bool(forKey: UDKey.isBlitzUnlocked)
         self.isHighScoreUnlocked = UserDefaults.standard.bool(forKey: UDKey.isHighScoreUnlocked)
-        self.blitzHighScore      = UserDefaults.standard.integer(forKey: UDKey.blitzHighScore)
 
         // UserDefaults から配列を取り出す。
         // array(forKey:) は Any? を返すため、as? [Int] でキャストしてオプショナルにする
@@ -188,18 +195,18 @@ final class GameViewModel {
     /// confettiGeneration をインクリメントして前世代のタイマーを無効化してから、
     /// タイマーを新規起動する。
     func startGame(mode: GameMode = .normal) {
-        gameMode         = mode
-        score            = 0
-        combo            = 0
-        timeRemaining    = maxTime
-        reactions        = []
+        gameMode            = mode
+        score               = 0
+        combo               = 0
+        timeRemaining       = maxTime
+        reactions           = []
         confettiGeneration  += 1   // 前セッションの紙吹雪タイマーを世代番号で無効化する
-        showConfetti         = false
-        answerMark       = nil
-        tappedTileValue  = nil     // タイルフィードバック状態をリセット
-        isNewHighScore   = false
-        showUnlockBanner = false
-        gameState        = .playing
+        showConfetti        = false
+        answerMark          = nil
+        tappedTileValue     = nil  // タイルフィードバック状態をリセット
+        isNewHighScore      = false
+        showUnlockBanner    = false
+        gameState           = .playing
         questionNumber     = Int.random(in: 1...9)
         // 次の問題を先読みしておくことで、正解後の問題切り替えを瞬時に行える
         // （正解した瞬間に「次の問題を考える時間」が発生しないようにする）
@@ -466,11 +473,9 @@ final class GameViewModel {
         if gameMode == .blitz {
             // Blitz で100問達成かつ未解放ならハイスコア表示を解放する
             if score >= C.unlockThreshold && !isHighScoreUnlocked { isHighScoreUnlocked = true }
-            // 今回のスコアが歴代最高を上回ればハイスコアを更新する
-            if score > blitzHighScore {
-                blitzHighScore = score
-                isNewHighScore = true
-            }
+            // 今回のスコアが歴代最高を上回れば ScoreBoard に保存し、新記録フラグを立てる
+            // saveIfBetter は保存に成功した（= 新記録）場合に true を返す
+            isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: UDKey.blitzHighScore)
         }
 
         // ── 紙吹雪の処理 ──────────────────────────────────
@@ -495,26 +500,27 @@ final class GameViewModel {
 
     // MARK: リセット
 
-    /// ハイスコアのみをリセットする（開発・デバッグ用途を想定）。
+    /// Blitz ハイスコアのみをリセットする（開発・デバッグ用途を想定）。
+    /// ScoreBoard の全リセットではなく、Blitz キーだけを削除する。
     func resetHighScore() {
-        blitzHighScore = 0
+        UserDefaults.standard.removeObject(forKey: UDKey.blitzHighScore)
         isNewHighScore = false
     }
 
     /// 全進捗をリセットする（設定画面からの「最初からはじめる」操作）。
-    /// タイマー停止・紙吹雪停止・フラグ全リセット・統計ゼロクリア・シールデータ削除を行う。
+    /// タイマー停止・紙吹雪停止・フラグ全リセット・統計ゼロクリア・全スコア削除・シールデータ削除を行う。
     func resetProgress() {
         stopTimer()
         confettiGeneration  += 1   // 実行中の紙吹雪タイマーを世代番号で無効化する
         showConfetti         = false
         isBlitzUnlocked     = false
         isHighScoreUnlocked = false
-        blitzHighScore      = 0
         isNewHighScore      = false
         showUnlockBanner    = false
         // Array(repeating:count:) でゼロ埋め配列を作り直して統計をクリア
         questionAttempts    = Array(repeating: 0, count: 10)
         questionCorrects    = Array(repeating: 0, count: 10)
+        ScoreBoard.resetAll()        // 全ゲームのスコア・ベストタイムを一括削除
         StickerStore.shared.reset()  // シールデータもリセット（こちらは StickerStore が責任を持つ）
         gameState           = .title
     }

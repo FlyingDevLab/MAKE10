@@ -138,10 +138,10 @@ private struct JankenTitleView: View {
         .buttonStyle(.plain)
     }
 
-    /// UserDefaultsからベストタイムを読み取って表示文字列を返す
+    /// ScoreBoard 経由でベストタイムを取得し、表示文字列を返す。
+    /// 未記録の場合は nil を返すのでボタン内の表示ブロックが自動的に非表示になる。
     private func bestTimeText(for difficulty: JankenDifficulty) -> String? {
-        let v = UserDefaults.standard.double(forKey: difficulty.bestTimeKey)
-        guard v > 0 else { return nil }
+        guard let v = ScoreBoard.bestTime(for: difficulty.bestTimeKey) else { return nil }
         let m  = Int(v) / 60
         let s  = Int(v) % 60
         let cs = Int((v - Double(Int(v))) * 100)

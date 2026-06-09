@@ -201,12 +201,8 @@ final class CoinDropViewModel {
     /// ★ 計算プロパティ = 毎回 score から計算するだけ。保存する必要がない値に向く
     var isPerfect: Bool { score >= 10 }
 
-    /// UserDefaults から最高スコアを読み込む。
-    /// ★ UserDefaults はアプリを終了しても残る永続的なキー・バリューストア。
-    ///   integer(forKey:) はキーが存在しない場合 0 を返す（初プレイ時も安全）。
-    var highScore: Int {
-        UserDefaults.standard.integer(forKey: UDKey.coinDropHighScore)
-    }
+    /// 歴代最高スコア。ScoreBoard 経由で読み取る。
+    var highScore: Int { ScoreBoard.highScore(for: UDKey.coinDropHighScore) }
 
     // MARK: - Game Control
     //
@@ -255,24 +251,11 @@ final class CoinDropViewModel {
         // .playing 以外の状態（例: 既にリザルト表示中）では無視する（二重呼び出し防止）
         guard gameState == .playing else { return }
         gameOverReason = reason
-        // ハイスコアを確認・保存し、更新があれば isNewRecord = true にする
-        isNewRecord    = checkAndSaveHighScore(score)
+        // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
+        isNewRecord    = ScoreBoard.saveIfBetter(score: score, for: UDKey.coinDropHighScore)
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }
-    }
-
-    // MARK: - Private
-
-    /// 現在のスコアが過去最高を上回っていれば UserDefaults に保存して true を返す
-    /// - Parameter current: 今回のゲームのスコア
-    /// - Returns: 新記録なら true、そうでなければ false
-    private func checkAndSaveHighScore(_ current: Int) -> Bool {
-        let prev = UserDefaults.standard.integer(forKey: UDKey.coinDropHighScore)
-        // 更新がなければ保存せずに false を返す（UserDefaults への無駄な書き込みを防ぐ）
-        guard current > prev else { return false }
-        UserDefaults.standard.set(current, forKey: UDKey.coinDropHighScore)
-        return true
     }
 }
