@@ -23,7 +23,7 @@
 import SwiftUI
 
 // MARK: - App Settings
-// 音＆バイブを一括管理するシングルトン。
+// 音・バイブ・初回同意などのアプリ設定を一括管理するシングルトン。
 //
 // ★ @Observable とは？ ★
 //   このマクロを付けると、クラスのプロパティが変化したとき
@@ -44,13 +44,20 @@ final class AppSettings {
 
     // ★ didSet とは？ ★
     //   プロパティの値が変わった直後に自動で実行されるコードブロックです。
-    //   isSoundOn が変更されるたびに UserDefaults への保存が走るため、
+    //   値を変えるだけで自動的に UserDefaults へ保存されるため、
     //   「保存し忘れ」が構造的に起きません。
 
     /// サウンドのON/OFF状態。変更されるたびにUserDefaultsへ自動保存し、
     /// 次回起動時も設定が引き継がれるようにする。
     var isSoundOn: Bool {
         didSet { UserDefaults.standard.set(isSoundOn, forKey: UDKey.isSoundOn) }
+    }
+
+    /// 利用規約への同意済みフラグ。
+    /// true になるとアプリ全体で ConsentView が表示されなくなる。
+    /// View から直接 UserDefaults を触らず、ここ経由で読み書きする。
+    var hasAgreedToTerms: Bool {
+        didSet { UserDefaults.standard.set(hasAgreedToTerms, forKey: UDKey.hasAgreedToTerms) }
     }
 
     // ★ private init() とは？ ★
@@ -64,10 +71,12 @@ final class AppSettings {
     //   as? Bool でオプショナルな Bool にキャスト（型変換）します。
     //   キャストに失敗（= 未保存 = 初回起動）した場合は
     //   ?? true によってデフォルト値の true（音ON）が使われます。
+    //   hasAgreedToTerms は未保存時に false（= 未同意）をデフォルトとする。
 
     /// 外部からの直接初期化を禁止し、shared経由のアクセスのみを強制する。
-    /// UserDefaultsに保存済みの値があればそれを復元し、なければデフォルトでONとする。
+    /// UserDefaultsに保存済みの値があればそれを復元し、なければデフォルト値を使う。
     private init() {
-        self.isSoundOn = UserDefaults.standard.object(forKey: UDKey.isSoundOn) as? Bool ?? true
+        self.isSoundOn        = UserDefaults.standard.object(forKey: UDKey.isSoundOn) as? Bool ?? true
+        self.hasAgreedToTerms = UserDefaults.standard.bool(forKey: UDKey.hasAgreedToTerms)
     }
 }

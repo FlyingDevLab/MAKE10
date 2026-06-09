@@ -23,9 +23,8 @@ final class PinballViewModel {
     var ballsLeft:   Int       = 3
     var isNewRecord: Bool      = false
 
-    var highScore: Int {
-        UserDefaults.standard.integer(forKey: UDKey.pinballHighScore)
-    }
+    /// 歴代最高スコア。ScoreBoard 経由で読み取る。
+    var highScore: Int { ScoreBoard.highScore(for: UDKey.pinballHighScore) }
 
     // MARK: - Game Control
 
@@ -58,16 +57,10 @@ final class PinballViewModel {
     // MARK: - Private
 
     private func endGame() {
-        isNewRecord = checkAndSaveHighScore(score)
+        // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
+        isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.pinballHighScore)
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }
-    }
-
-    private func checkAndSaveHighScore(_ current: Int) -> Bool {
-        let prev = UserDefaults.standard.integer(forKey: UDKey.pinballHighScore)
-        guard current > prev else { return false }
-        UserDefaults.standard.set(current, forKey: UDKey.pinballHighScore)
-        return true
     }
 }

@@ -148,10 +148,9 @@ final class JankenViewModel {
         formatTime(elapsed)
     }
 
-    /// 難易度ごとのベストタイム（記録なしはnil）
+    /// 難易度ごとのベストタイム（記録なしはnil）。ScoreBoard 経由で読み取る。
     var bestTime: TimeInterval? {
-        let v = UserDefaults.standard.double(forKey: difficulty.bestTimeKey)
-        return v > 0 ? v : nil
+        ScoreBoard.bestTime(for: difficulty.bestTimeKey)
     }
 
     /// ベストタイムの表示文字列
@@ -352,7 +351,8 @@ final class JankenViewModel {
         gameTimer?.invalidate()
         gameTimer      = nil
         isTimerRunning = false
-        isNewBest      = checkAndSaveBestTime()
+        // 現在タイムが過去最速なら ScoreBoard が保存し true を返す
+        isNewBest      = ScoreBoard.saveIfFaster(time: elapsed, for: difficulty.bestTimeKey)
         awardStickers()
         SoundManager.shared.playTenClear()
         withAnimation(.easeInOut(duration: 0.3)) {
@@ -371,17 +371,6 @@ final class JankenViewModel {
         for _ in 0..<total {
             StickerStore.shared.addBonusSticker()
         }
-    }
-
-    // MARK: - Private: Best Time
-
-    /// 現在タイムが過去最速なら保存してtrueを返す
-    private func checkAndSaveBestTime() -> Bool {
-        let key  = difficulty.bestTimeKey
-        let prev = UserDefaults.standard.double(forKey: key)
-        guard elapsed < prev || prev == 0 else { return false }
-        UserDefaults.standard.set(elapsed, forKey: key)
-        return true
     }
 
     // MARK: - Private: Instructions Builder

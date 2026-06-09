@@ -25,23 +25,26 @@ private enum Screen {
 
 struct MakeTenContentView: View {
 
-    @State private var viewModel        = GameViewModel()
-    @State private var hasAgreedToTerms = UserDefaults.standard.bool(forKey: UDKey.hasAgreedToTerms)
-    @State private var screen: Screen   = .make10
+    @State private var viewModel      = GameViewModel()
+    @State private var screen: Screen = .make10
+    // hasAgreedToTerms は AppSettings.shared 経由で参照する。
+    // @Observable により body 内での参照が自動追跡され、値が変わると再描画される。
 
     var body: some View {
         Group {
-            if hasAgreedToTerms {
+            if AppSettings.shared.hasAgreedToTerms {
                 gameRootView
             } else {
                 ConsentView {
-                    UserDefaults.standard.set(true, forKey: UDKey.hasAgreedToTerms)
-                    withAnimation(.easeInOut(duration: 0.4)) { hasAgreedToTerms = true }
+                    withAnimation(.easeInOut(duration: 0.4)) {
+                        AppSettings.shared.hasAgreedToTerms = true
+                        // didSet が自動で UserDefaults に保存する
+                    }
                 }
                 .transition(.opacity)
             }
         }
-        .animation(.easeInOut(duration: 0.4), value: hasAgreedToTerms)
+        .animation(.easeInOut(duration: 0.4), value: AppSettings.shared.hasAgreedToTerms)
     }
 
     private var gameRootView: some View {
@@ -115,14 +118,18 @@ struct MakeTenContentView: View {
     }
 
     // MARK: - Sticker visibility
+    //
+    // ★ オプトイン設計にしている理由 ★
+    //   新しいゲームを Screen に追加したとき、意図せずステッカーボードが
+    //   表示されてしまう「追加し忘れバグ」を防ぐため。
+    //   表示したい画面を明示的に列挙する（デフォルト非表示）。
 
     private var stickerBoardVisible: Bool {
         switch screen {
-        case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .stickerStorage:
-            return false
-        default:
+        case .make10, .quizHome, .quizPlaying:
             return true
+        default:
+            return false
         }
     }
 

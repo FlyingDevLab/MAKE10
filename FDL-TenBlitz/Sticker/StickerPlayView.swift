@@ -17,6 +17,9 @@ struct StickerPlayView: View {
     @Environment(\.dismiss) private var dismiss
     private let store = StickerStore.shared
 
+    // お絵かき状態（DrawingStore.shared を参照）
+    @State private var drawingStore = DrawingStore.shared
+
     // 現在ドラッグ中のシール ID（nil = 何もドラッグしていない）
     @State private var draggingID: UUID? = nil
 
@@ -52,12 +55,21 @@ struct StickerPlayView: View {
             // シールキャンバス
             GeometryReader { geo in
                 ZStack {
+                    // ★ お絵かきレイヤー（最下層）
+                    // 描いた絵がステッカーの下になるよう ZStack の先頭に置く。
+                    // お絵かきモード時のみジェスチャーを受け付ける（DrawingCanvasView 内部で制御）。
+                    DrawingCanvasView()
+
+                    // ステッカー（お絵かきの上）
                     ForEach(store.playStickers) { sticker in
                         DraggablePlayStickerView(
                             sticker:    sticker,
                             bounds:     geo.size,
                             draggingID: $draggingID
                         )
+                        // ★ ステッカーモードのときだけドラッグ可能にする。
+                        //   お絵かきモード中は指の動きをすべて DrawingCanvasView に渡す。
+                        .allowsHitTesting(drawingStore.canvasMode == .sticker)
                     }
                 }
             }
@@ -70,12 +82,18 @@ struct StickerPlayView: View {
                     .padding(.top, 52)  // Safe Area 上端からの余白
                 Spacer()
 
-                // パレット（showPalette のとき下から表示）
+                // 背景色パレット（showPalette のとき下から表示）
                 if showPalette {
                     paletteBar
-                        .padding(.bottom, 32)
+                        .padding(.bottom, 10)  // DrawingToolbar との間隔
                         .transition(.move(edge: .bottom).combined(with: .opacity))
                 }
+
+                // ★ お絵かきツールバー（常時下部固定）
+                // モード切替・カラーパレット・消しゴム・全消去を提供する。
+                DrawingToolbarView()
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 32)  // Safe Area 下端からの余白 ← 変更可
             }
         }
         .ignoresSafeArea()

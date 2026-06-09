@@ -81,9 +81,8 @@ final class MazeGameModel: NSObject {
     var isNewRecord    = false
     var deliveredTimer = 0
 
-    var highScore: Int {
-        UserDefaults.standard.integer(forKey: UDKey.mazeHighScore)
-    }
+    /// 歴代最高スコア。ScoreBoard 経由で読み取る。
+    var highScore: Int { ScoreBoard.highScore(for: UDKey.mazeHighScore) }
 
     // ── Maze ──────────────────────────────────────────────────
     var grid: [[Int]] = []          // [row][col], 0=壁 1=通路
@@ -439,10 +438,7 @@ final class MazeGameModel: NSObject {
 
     private func triggerGameOver() {
         stopLoop()
-        let prev = UserDefaults.standard.integer(forKey: UDKey.mazeHighScore)
-        if score > prev {
-            isNewRecord = true
-            UserDefaults.standard.set(score, forKey: UDKey.mazeHighScore)
-        }
+        // 新記録なら ScoreBoard が保存し true を返す
+        isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
     }
 }
