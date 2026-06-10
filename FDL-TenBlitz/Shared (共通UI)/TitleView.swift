@@ -305,7 +305,19 @@ struct TitleView: View {
         }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
-            guard generation == self.demoGeneration else { return }
+            // ⚠️ 後始末（flyOffsets の除去）は世代に関係なく必ず行うこと。
+            //   guard の後に書くと、デモ中にユーザーが操作した場合（＝世代が進んだ場合）に
+            //   タイルが画面外へ取り残され、再起動するまでグリッドに空白が残るバグになる。
+            guard generation == self.demoGeneration else {
+                // デモ中断時: 飛ばしかけたタイルをスプリングで元の位置へ戻す
+                withAnimation(.spring(response: 0.40, dampingFraction: 0.80)) {
+                    // _ = で removeValue の戻り値（取り除いた値）を明示的に捨てる。
+                    // クロージャの中身が1式だけだと暗黙returnになり、
+                    // withAnimation がその値を返して「結果が未使用」警告になるため。
+                    _ = self.flyOffsets.removeValue(forKey: lastGame)
+                }
+                return
+            }
 
             // ⚠️ 変更注意: 「> 6」は visibleGames の prefix(6) と連動（詳細はそちらを参照）
             let allVisible    = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
