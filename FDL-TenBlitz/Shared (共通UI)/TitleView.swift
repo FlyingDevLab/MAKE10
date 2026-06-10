@@ -8,62 +8,88 @@
 // タイトル画面のルートビュー。
 // アニメーションカード・ハイスコア・ゲーム選択グリッドを管理する。
 //
-// ★ 旧バージョンからの変更点 ★
-//   「30びょう」「10びょう」の ModeButton と「その他ゲーム」ボタンを廃止し、
-//   全ゲームを統一サイズの GamePickerTile で2列グリッドに並べた。
-//   フリック操作で並び替えができ、並び順は GameRankManager が UserDefaults に永続化する。
-//   blitz（10びょう）は isBlitzUnlocked が true になるまで非表示にする。
-//
 // ★ このファイルの構成 ★
 //   TitleView（親）
 //     ├ アニメーションカード … 「n + (10-n) = 10」をループアニメで表示
 //     │                        5ループごとに FDL ロゴスプラッシュを挟む
 //     ├ ハイスコア表示       … isHighScoreUnlocked が true のときのみ表示
 //     └ ゲーム選択グリッド   … GamePickerTile を LazyVGrid で2列に並べる
+//
+// 役割分担:
+//   - GamePickerTile (GamePickerComponents.swift) : タップ/フリックの「判定」
+//   - TitleView（このファイル）                    : フリックの「処理」（スワップ・吹き飛ばし・デモ）
+//   - GameRankManager                              : 並び順の永続化
+//   - MakeTenContentView                           : タイル選択後の画面遷移・ゲーム開始
+//
+// ★ 旧バージョンからの変更点 ★
+//   「30びょう」「10びょう」の ModeButton と「その他ゲーム」ボタンを廃止し、
+//   全ゲームを統一サイズの GamePickerTile で2列グリッドに並べた。
+//   フリック操作で並び替えができ、並び順は GameRankManager が UserDefaults に永続化する。
+//   blitz（10びょう）は isBlitzUnlocked が true になるまで非表示にする。
+//
+// このファイルでは「世代番号パターン」を多用している（loopGeneration / demoGeneration）。
+// パターンの解説は GameViewModel.swift を参照。
 
 import SwiftUI
 
+// MARK: - TitleView
+
 struct TitleView: View {
+
+    // MARK: 依存（呼び出し側から渡すパラメータ）
+
     var viewModel:    GameViewModel
     /// タイルがタップされたときに呼ばれるコールバック。
     /// MakeTenContentView が画面遷移・ゲーム開始を担う。
     var onSelectGame: (GamePickerSelection) -> Void
 
+    /// 流れてくる数字の初期X位置（画面外左）。resetState() で毎ループここに戻す。
     private let offScreenLeading: CGFloat = -220
 
-    // MARK: - Animation State
+    // MARK: アニメーション状態
 
+    /// 中央に表示する数字（1〜9のランダム）。
     @State private var centerNumber:    Int     = Int.random(in: 1...9)
+    /// 左から流れてくる相方の数字（10 - centerNumber）。0 のときは非表示。
     @State private var incomingNumber:  Int     = 0
+    /// 流れてくる数字の現在X位置。-220（画面外）→ 0（定位置）へアニメする。
     @State private var incomingOffsetX: CGFloat = -220
+    /// 「+」記号の表示フラグ。数字が定位置に着いてから表示する。
     @State private var showPlus:        Bool    = false
+    /// 「10」の表示フラグ。true の間は数式の代わりに大きな10を表示する。
     @State private var showTen:         Bool    = false
+    /// 「10」のパルス演出用スケール（1.0 → 1.08 → 1.0）。
     @State private var tenScale:        CGFloat = 1.0
+    /// ✨の不透明度。「10」の登場と同時に光って、上昇しながら消える。
     @State private var sparkOpacity:    Double  = 0.0
+    /// ✨のY方向オフセット。0 → -28 へ上昇する。
     @State private var sparkOffsetY:    CGFloat = 0
+    /// タイトルループの世代番号。画面再表示時に古いループのコールバックを無効化する。
     @State private var loopGeneration:  Int     = 0
 
-    // MARK: - Game Grid State
+    // MARK: ゲームグリッド状態
 
-    /// ゲームタイルの並び順を管理する（UserDefaults に永続化）
+    /// ゲームタイルの並び順を管理する（UserDefaults に永続化）。
     @State private var rankManager = GameRankManager()
-    /// 末尾送り演出中のタイルのフライオフセット（キー: ゲーム、値: 飛ぶ方向）
+    /// 末尾送り演出中のタイルのフライオフセット（キー: ゲーム、値: 飛ぶ方向）。
     @State private var flyOffsets: [GamePickerSelection: CGSize] = [:]
 
-    /// フリックと判定する最低速度（pt/s）
-    private let flickSpeedThreshold: CGFloat = 300
+    /// フリックと判定する最低速度（pt/s）。
+    private let flickSpeedThreshold: CGFloat = 300   // ← 変更可
 
-    /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する
+    /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する。
     @State private var demoGeneration: Int = 0
 
-    // MARK: - Logo Splash State
+    // MARK: ロゴスプラッシュ状態
 
-    // ← 変更可：何ループごとにロゴを挟むか（現在：5回）
+    /// タイトルループの累計回数。5の倍数のときロゴスプラッシュを挟む。
     @State private var loopCount:      Int    = 0
+    /// ロゴスプラッシュの表示フラグ。
     @State private var showLogoSplash: Bool   = false
+    /// ロゴ外周リングの回転角度（度）。表示中は左回転し続ける。
     @State private var ringAngle:      Double = 0
 
-    // MARK: - Body
+    // MARK: body
 
     var body: some View {
         VStack(spacing: 0) {
@@ -83,7 +109,9 @@ struct TitleView: View {
                                 .resizable()
                                 .scaledToFit()
                                 .frame(width: 175, height: 175)   // ← 変更可
-                                .blendMode(.multiply)             // 白を透過
+                                // blendMode(.multiply): 重なった色を「掛け算」で合成するモード。
+                                // 白(1.0)を掛けても下の色が変わらないため、リング画像の白背景が透過して見える
+                                .blendMode(.multiply)
                                 .rotationEffect(.degrees(ringAngle))
                                 .onAppear {
                                     withAnimation(
@@ -96,6 +124,7 @@ struct TitleView: View {
                         .transition(.opacity)
 
                     } else if showTen {
+                        // ── 完成形「10」とキラキラ ─────────────
                         Text("10")
                             .font(.system(size: 130, weight: .bold, design: .rounded))
                             .foregroundStyle(DS.primary)
@@ -105,6 +134,7 @@ struct TitleView: View {
                             .offset(x: 74, y: -62 + sparkOffsetY)
                             .opacity(sparkOpacity)
                     } else {
+                        // ── 数式「n + (10-n)」の組み立て ───────
                         Text("\(centerNumber)")
                             .font(.system(size: 130, weight: .bold, design: .rounded))
                             .foregroundStyle(DS.primary)
@@ -154,6 +184,11 @@ struct TitleView: View {
             }
 
             // ── ゲーム選択グリッド ────────────────────────────
+            // ★ LazyVGrid とは？ ★
+            //   格子状にViewを並べるコンテナです。columns で列の定義を渡し、
+            //   ここでは .flexible() ×2 で「等幅2列」を作っています。
+            //   "Lazy" は「画面に見える分だけ生成する」という意味で、
+            //   タイル数が増えてもパフォーマンスが落ちにくい仕組みです。
             LazyVGrid(
                 columns: [GridItem(.flexible()), GridItem(.flexible())],
                 spacing: 12
@@ -188,14 +223,19 @@ struct TitleView: View {
         }
     }
 
-    // MARK: - Visible Games
+    // MARK: 表示ゲームの算出
 
+    /// グリッドに表示するゲーム一覧。blitz は解放前は除外し、先頭6つ（2列×3行）に絞る。
+    ///
+    /// ⚠️ 変更注意: prefix(6) の「6」は handleFlick / runDemoFly 内の
+    ///   「allVisible.count > 6」と連動している。表示数を変えるときは
+    ///   3箇所すべてを同じ値に揃えること（ずれると隠しゲームの判定が壊れる）。
     private var visibleGames: [GamePickerSelection] {
         let all = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
         return Array(all.prefix(6))
     }
 
-    // MARK: - Demo Animation
+    // MARK: 自動デモアニメ
 
     /// デモを（再）スケジュールする。
     /// 手動操作後も delay 秒の無操作が続けば自動デモが再開される。
@@ -267,6 +307,7 @@ struct TitleView: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
             guard generation == self.demoGeneration else { return }
 
+            // ⚠️ 変更注意: 「> 6」は visibleGames の prefix(6) と連動（詳細はそちらを参照）
             let allVisible    = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
             let hasHiddenGame = allVisible.count > 6
 
@@ -287,14 +328,24 @@ struct TitleView: View {
         }
     }
 
-    // MARK: - Flick Handling
+    // MARK: フリック処理
 
+    /// フリックの方向と速度から「隣とスワップ」か「画面外へ飛ばして末尾送り」かを決めて実行する。
+    ///
+    /// ★ 2列グリッドの座標の考え方 ★
+    ///   visibleIndex はグリッド上の通し番号で、2列なので:
+    ///     0 1      ・偶数 = 左列 / 奇数 = 右列
+    ///     2 3      ・+1 / -1 = 左右の隣
+    ///     4 5      ・+2 / -2 = 上下の隣
+    ///   フリック方向の隣が存在すればスワップ、存在しなければ（端から外へ向かう
+    ///   フリックなら）タイルを画面外へ飛ばして末尾送りにする。
     private func handleFlick(
         game:         GamePickerSelection,
         visibleIndex: Int,
         translation:  CGSize,
         velocity:     CGSize
     ) {
+        // 三平方の定理で速度ベクトルの大きさを求め、しきい値未満は無視する
         let speed = sqrt(velocity.width * velocity.width + velocity.height * velocity.height)
         guard speed > flickSpeedThreshold else { return }
 
@@ -302,21 +353,25 @@ struct TitleView: View {
         // ← 変更可：無操作からデモ再開までの待機時間（秒）
         scheduleDemo(delay: 5.0)
 
+        // 移動量の大きい軸をフリック方向とみなす（横長なら左右、縦長なら上下）
         let isHorizontal = abs(translation.width) > abs(translation.height)
         let count        = visibleGames.count
         let neighborVI:  Int?
 
         if isHorizontal {
+            // 右フリック: 左列(偶数)で右隣が存在すれば +1 / 左フリック: 右列(奇数)なら -1
             neighborVI = translation.width > 0
                 ? ((visibleIndex % 2 == 0 && visibleIndex + 1 < count) ? visibleIndex + 1 : nil)
                 : ((visibleIndex % 2 == 1)                              ? visibleIndex - 1 : nil)
         } else {
+            // 下フリック: 下の行が存在すれば +2 / 上フリック: 上の行が存在すれば -2
             neighborVI = translation.height > 0
                 ? ((visibleIndex + 2 < count) ? visibleIndex + 2 : nil)
                 : ((visibleIndex >= 2)         ? visibleIndex - 2 : nil)
         }
 
         if let nvi = neighborVI {
+            // ── 隣が存在する → スワップ ──────────────────────
             let neighborGame = visibleGames[nvi]
             if let si = rankManager.sortedGames.firstIndex(of: game),
                let sj = rankManager.sortedGames.firstIndex(of: neighborGame) {
@@ -326,6 +381,8 @@ struct TitleView: View {
                 }
             }
         } else {
+            // ── 隣が存在しない（端の外向きフリック）→ 飛ばして末尾送り ──
+            // 600pt = どの端末でも画面外まで確実に出る距離
             let flyDir: CGSize
             if isHorizontal {
                 flyDir = translation.width > 0
@@ -344,6 +401,7 @@ struct TitleView: View {
             }
             // flyOffset 完了後にグリッド再配置（待機時間も飛び出し速度に合わせて延長）
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
+                // ⚠️ 変更注意: 「> 6」は visibleGames の prefix(6) と連動（詳細はそちらを参照）
                 let allVisible  = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
                 let hasHiddenGame = allVisible.count > 6
 
@@ -360,8 +418,20 @@ struct TitleView: View {
         }
     }
 
-    // MARK: - Title Animation
+    // MARK: タイトルアニメーション
 
+    /// 「n + (10-n) = 10」のループアニメを1周実行し、最後に自分自身を再帰呼び出しする。
+    ///
+    /// ★ このアニメの時間軸 ★（asyncAfter の深いネストを読む前にこの表を見てください）
+    ///   0.0秒   中央に n を配置（この時点では非表示）
+    ///   0.8秒   相方の数字 (10-n) が画面外左からスライドイン（1.0秒かけて）
+    ///   1.4秒   「+」がフェードイン
+    ///   1.95秒  数式が「10」に切り替わり、✨が光って上昇しながら消える
+    ///   2.1秒   「10」がパルス（1.0 → 1.08 → 1.0）
+    ///   3.15秒  「10」がフェードアウトして状態リセット
+    ///   3.6秒   ループ回数を加算し、5の倍数ならロゴスプラッシュへ、それ以外は次のループへ
+    ///   ※ 各ステップの guard generation == loopGeneration は、画面遷移などで
+    ///     新しいループが始まったとき、古いループの続きを止めるための世代チェック
     private func runTitleLoop(generation: Int) {
         guard generation == loopGeneration else { return }
         resetState()
@@ -413,8 +483,9 @@ struct TitleView: View {
         }
     }
 
-    // MARK: - Logo Splash
+    // MARK: ロゴスプラッシュ
 
+    /// FDL ロゴ（家マーク＋回転リング）を一定時間表示してからタイトルループに戻る。
     private func runLogoSplash(generation: Int) {
         guard generation == loopGeneration else { return }
         withAnimation(.easeInOut(duration: 0.5)) { showLogoSplash = true }
@@ -429,6 +500,9 @@ struct TitleView: View {
         }
     }
 
+    // MARK: 状態リセット
+
+    /// アニメーション用の状態を全てループ開始前の初期値に戻す。
     private func resetState() {
         incomingOffsetX = offScreenLeading; showPlus = false; showTen = false
         tenScale = 1.0; sparkOpacity = 0.0; sparkOffsetY = 0; incomingNumber = 0

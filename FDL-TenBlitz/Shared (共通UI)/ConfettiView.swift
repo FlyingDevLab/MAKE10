@@ -4,19 +4,28 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/08.
 //
-//  紙吹雪エフェクト。結果画面で好成績時に表示する。
 
-// 物理ベースの紙吹雪アニメーションをSwiftUI Canvasで実現するView群。
+// 物理ベースの紙吹雪アニメーションを SwiftUI Canvas で実現するView群。
 // 粒子の生成・移動・消滅をタイマー駆動で更新し、画面左右下部から噴き上げる演出を行う。
+// 結果画面で好成績時に表示され、isSpecial = true のときは金・銀・白の特別カラーで粒子数も増える。
+//
+// ★ このファイルの構成 ★
+//   ConfettiParticle … 紙吹雪の粒子1個分のデータモデル（位置・速度・色・透明度）
+//   ConfettiView     … 粒子の生成・更新・Canvas描画を行うView本体
+//
+// ★ Canvas とは？ ★
+//   SwiftUI で「自由に図形を描く」ための低レベル描画View です。
+//   通常のViewツリーで粒子を1個ずつ View として並べると、
+//   数十〜数百個の更新で再レイアウトが多発しパフォーマンスが落ちますが、
+//   Canvas は1枚のキャンバスに直接描くため大量の粒子も軽く描画できます。
 
 import SwiftUI
 import Combine
 
-// MARK: - Confetti
-// isSpecial = true（100問以上）のときは金・銀・白の特別カラーで粒子数も多い。
+// MARK: - ConfettiParticle
 
-// 紙吹雪の粒子1個分のデータモデル。
-// Canvas上での描画位置・速度・色・透明度を保持し、フレームごとに更新される。
+/// 紙吹雪の粒子1個分のデータモデル。
+/// Canvas上での描画位置・速度・色・透明度を保持し、フレームごとに更新される。
 struct ConfettiParticle: Identifiable {
     let id = UUID()
     var x:       CGFloat  // 粒子の現在X座標
@@ -27,26 +36,40 @@ struct ConfettiParticle: Identifiable {
     var opacity: Double = 1.0  // 透明度。毎フレーム減少し、0以下になると粒子を削除する
 }
 
+// MARK: - ConfettiView
+
 struct ConfettiView: View {
-    // 呼び出し元から渡される。trueのとき金・銀・白の特別演出になる
+
+    // MARK: 設定項目（呼び出し側から渡すパラメータ）
+
+    /// 呼び出し元から渡される。true のとき金・銀・白の特別演出になる（100問以上の好成績時）。
     let isSpecial: Bool
 
-    // 現在画面上に存在する全粒子のリスト。フレームごとに状態が更新される
+    // MARK: ローカル状態
+
+    /// 現在画面上に存在する全粒子のリスト。フレームごとに状態が更新される。
     @State private var particles:        [ConfettiParticle] = []
 
-    // タイマーの購読を保持する。onDisappear時にキャンセルしてメモリリークを防ぐ
+    /// タイマーの購読を保持する。onDisappear 時にキャンセルしてメモリリークを防ぐ。
+    /// AnyCancellable の解説は GameViewModel.swift を参照。
     @State private var timerCancellable: AnyCancellable?
 
+    // MARK: body
+
     var body: some View {
+        // ★ GeometryReader とは？ ★
+        //   「親から与えられた領域のサイズ」を読み取れるコンテナView です。
+        //   geo.size に実際の画面サイズが入るため、
+        //   「画面の左端・右端・高さの80%」のようなサイズ依存の計算ができます。
+        //   紙吹雪はどの端末サイズでも画面の両端から噴き上げたいため使用しています。
         GeometryReader { geo in
-            // 大量の粒子を効率よく描画するためにCanvasを使用。
-            // 通常のViewツリーでは粒子数が多いときのパフォーマンスに難があるため。
+            // 大量の粒子を効率よく描画するために Canvas を使用（解説はファイル冒頭を参照）
             Canvas { context, _ in
                 for p in particles {
                     var ctx = context
                     ctx.opacity = p.opacity
-                    // isSpecialのときは粒子をやや大きく描画して存在感を強調する
-                    let size: CGFloat = isSpecial ? 12 : 10
+                    // isSpecial のときは粒子をやや大きく描画して存在感を強調する
+                    let size: CGFloat = isSpecial ? 12 : 10   // ← 変更可（粒子の直径pt）
                     ctx.fill(
                         Path(ellipseIn: CGRect(
                             x: p.x, y: p.y,
@@ -60,8 +83,9 @@ struct ConfettiView: View {
             .onAppear {
                 // 表示と同時に粒子を生成し、アニメーションループを開始する
                 spawnParticles(in: geo.size)
-                // 50fps（0.02秒間隔）でフレーム更新。メインスレッドでUIを安全に操作する
-                timerCancellable = Timer.publish(every: 0.02, on: .main, in: .common)
+                // 50fps（0.02秒間隔）でフレーム更新。メインスレッドでUIを安全に操作する。
+                // Timer.publish（Combine のタイマー）の解説は GameViewModel.swift を参照。
+                timerCancellable = Timer.publish(every: 0.02, on: .main, in: .common)  // ← 変更可（更新間隔秒）
                     .autoconnect()
                     .sink { _ in updateParticles() }
             }
@@ -73,23 +97,28 @@ struct ConfettiView: View {
         }
     }
 
-    // 画面左端・右端の下部から、粒子を左右対称に噴き上げる形で初期配置する。
-    // isSpecialに応じて色パレットと総粒子数を切り替える。
+    // MARK: 粒子の生成
+
+    /// 画面左端・右端の下部から、粒子を左右対称に噴き上げる形で初期配置する。
+    /// isSpecial に応じて色パレットと総粒子数を切り替える。
     private func spawnParticles(in size: CGSize) {
-        // isSpecialなら金・銀・白のリッチなカラーで、通常は虹色の7色
+        // isSpecial なら金・銀・白のリッチなカラーで、通常は虹色の7色
         let colors: [Color] = isSpecial
             ? [Color(red: 1.0, green: 0.84, blue: 0.0), .white,
                Color(red: 0.75, green: 0.75, blue: 0.75)]
             : [.red, .blue, .green, .yellow, .pink, .purple, .orange]
 
-        // isSpecialは通常の2.5倍の粒子数で豪華な演出にする
-        let count = isSpecial ? 150 : 60
+        // isSpecial は通常の2.5倍の粒子数で豪華な演出にする
+        let count = isSpecial ? 150 : 60   // ← 変更可（片側あたりの粒子数）
 
         for _ in 0..<count {
+            // colors は上で定義した空でない配列のため、randomElement() が nil を返すことはなく
+            // 強制アンラップ（!）しても安全（このコメントがある箇所以外で ! は使わない方針）
+            //
             // 左端から右上方向にランダムな速度で噴き上げる粒子
             particles.append(ConfettiParticle(
                 x: 0,          y: size.height * 0.8, color: colors.randomElement()!,
-                vx: .random(in: 2...15),   vy: .random(in: -28...(-10))
+                vx: .random(in: 2...15),   vy: .random(in: -28...(-10))   // ← 変更可（噴き上げ速度の範囲）
             ))
             // 右端から左上方向にランダムな速度で噴き上げる粒子（左右対称の演出）
             particles.append(ConfettiParticle(
@@ -99,14 +128,16 @@ struct ConfettiView: View {
         }
     }
 
-    // 毎フレーム（約50fps）呼ばれ、全粒子の位置・速度・透明度を更新する。
-    // 透明度が0以下になった粒子は配列から除去することで、使い終わった粒子を自動解放する。
+    // MARK: 粒子の更新
+
+    /// 毎フレーム（約50fps）呼ばれ、全粒子の位置・速度・透明度を更新する。
+    /// 透明度が0以下になった粒子は配列から除去することで、使い終わった粒子を自動解放する。
     private func updateParticles() {
         for i in 0..<particles.count {
             particles[i].x       += particles[i].vx
             particles[i].y       += particles[i].vy
-            particles[i].vy      += 0.5    // 重力加速度
-            particles[i].opacity -= 0.008  // 徐々に透明化
+            particles[i].vy      += 0.5    // ← 変更可（重力加速度。大きいほど早く落ちる）
+            particles[i].opacity -= 0.008  // ← 変更可（透明化の速さ。大きいほど早く消える）
         }
         // 完全に透明になった粒子を削除してメモリを解放する
         particles.removeAll { $0.opacity <= 0 }
