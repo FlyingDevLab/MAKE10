@@ -16,24 +16,15 @@
 //   こうすることで「青を少し濃くしたい」ときに DS.primary の1行だけを
 //   変えればアプリ全体に反映されます（マジックナンバーの排除）。
 //
-// ★ なぜ class / struct ではなく enum を使うのか ★
-//   case のない enum はインスタンスを生成できません。
-//   DS() と書いてもコンパイルエラーになるため、
-//   「値の入れ物」ではなく「名前空間」として安全に使えます。
-//   static let のみで構成する場合、Swift では enum が慣用的な選択肢です。
+// case のない enum を「名前空間」として使う理由は ScoreBoard.swift 冒頭を参照。
 
 import SwiftUI
 
-// MARK: - Design System
-// アプリ全体の色・角丸・シャドウをここで一元管理する。
-// "DS." のプレフィックスで各所から参照する。
-// ここだけ変更すればアプリ全体のデザインが変わる。
+// MARK: - DS
 
-// インスタンスを持たない純粋なトークン集として列挙型を使用している。
-// classやstructではなくenumにすることで誤ってインスタンス化されることを防ぐ。
 enum DS {
 
-    // MARK: - Background & Card
+    // MARK: 背景・カード
     //
     // 背景・カード・入力欄など、コンテンツを「受け皿」として支える色群。
     // bg よりも card の方がわずかに明るく、階層（奥←→手前）を感じさせる。
@@ -49,7 +40,7 @@ enum DS {
     /// 設定画面の行背景色（bg に近いが少し明るめ）
     static let settingsBg = Color(red: 0.97, green: 0.96, blue: 0.93)
 
-    // MARK: - Brand Colors
+    // MARK: ブランドカラー
     //
     // ブランドカラーは3色体系。
     // primary（青系）とaccent（紫系）はグラデーションにも使用する。
@@ -68,7 +59,7 @@ enum DS {
     /// 10秒モード（Blitz）専用の強調色（赤系。緊張感・スピード感を演出）
     static let blitzColor = Color(red: 0.82, green: 0.30, blue: 0.30)
 
-    // MARK: - Gauge & Status
+    // MARK: ゲージ・状態色
     //
     // ゲージの色は「良好／警告」の2段階のみ。
     // 中間状態（黄色など）は設けず、シンプルに保つ。
@@ -84,7 +75,7 @@ enum DS {
     /// ゲージ自体の背景（塗りつぶされていない部分の色）
     static let gaugeBg    = Color(red: 0.86, green: 0.84, blue: 0.80)
 
-    // MARK: - Text Colors
+    // MARK: テキスト色
     //
     // テキスト色は用途別に4段階（textPrimary → textBody → textDark → muted）。
     // 微妙なコントラストの差によって、情報の重要度を視覚的に区別する。
@@ -105,12 +96,12 @@ enum DS {
     /// ミュート（補足情報・非アクティブ状態。最も薄くて控えめ）
     static let muted       = Color(red: 0.52, green: 0.52, blue: 0.54)
 
-    // MARK: - Special Colors
+    // MARK: 特別色
 
     /// ゴールド（ハイスコア・★・金メダル・$1 完成など特別な達成を祝う色）
     static let gold        = Color(red: 0.85, green: 0.62, blue: 0.10)
 
-    // MARK: - Corner Radius
+    // MARK: 角丸
     //
     // 角丸は要素の大きさ・重要度に比例して数値を大きくする体系。
     // 同じ画面に複数の角丸を混在させるときは、隣接する要素との差が4以上になるよう選ぶ。
@@ -127,6 +118,8 @@ enum DS {
 
     /// チェックボックスなど極小要素（6pt）
     static let smallRadius:    CGFloat = 6
+    /// タイムゲージ（7pt。細長い形状なので小さめ）
+    static let gaugeRadius:    CGFloat = 7
     /// アイコンボタン・コピーボタン（8pt）
     static let iconRadius:     CGFloat = 8
     /// リスト行・選択肢行（10pt）
@@ -143,23 +136,21 @@ enum DS {
     static let cardRadius:     CGFloat = 22
     /// ボタン（大）（22pt。cardRadius と同値で揃えている）
     static let btnRadius:      CGFloat = 22
-    /// タイムゲージ（7pt。細長い形状なので小さめ）
-    static let gaugeRadius:    CGFloat = 7
     /// シート・サブダイアログ（24pt）
     static let sheetRadius:    CGFloat = 24
     /// メインダイアログ（28pt。最も大きな要素なので最大の角丸）
     static let dialogRadius:   CGFloat = 28
 
-    // MARK: - Helpers
+    // MARK: ヘルパー
 
     /// カード背景（白塗り＋影）を返すヘルパー。
     /// 複数箇所で同一のカードスタイルを使うため、重複をなくすために切り出している。
     /// 呼び出し側は .background(DS.cardShadow()) と書くだけでよい。
-    //
-    // ★ some View とは？ ★
-    //   「何らかの View 型を返す」という意味です（不透明型）。
-    //   RoundedRectangle に .fill や .shadow を付けると型が複雑になりますが、
-    //   some View にすることで呼び出し側がその複雑な型を知らなくて済みます。
+    ///
+    /// ★ some View とは？ ★
+    ///   「何らかの View 型を返す」という意味です（不透明型）。
+    ///   RoundedRectangle に .fill や .shadow を付けると型が複雑になりますが、
+    ///   some View にすることで呼び出し側がその複雑な型を知らなくて済みます。
     static func cardShadow() -> some View {
         RoundedRectangle(cornerRadius: DS.cardRadius)
             .fill(DS.card)

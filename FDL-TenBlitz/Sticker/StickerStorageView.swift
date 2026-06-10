@@ -136,8 +136,6 @@ struct StickerStorageView: View {
                         .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
                     }
                     .buttonStyle(.plain)
-                    .disabled(store.playStickers.isEmpty)
-                    .opacity(store.playStickers.isEmpty ? 0.4 : 1.0)
                     .padding(.bottom, 20)
                 }
 
