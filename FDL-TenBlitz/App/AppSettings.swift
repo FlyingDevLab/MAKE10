@@ -22,17 +22,20 @@
 
 import SwiftUI
 
-// MARK: - App Settings
-// 音・バイブ・初回同意などのアプリ設定を一括管理するシングルトン。
-//
+// MARK: - AppSettings
+
 // ★ @Observable とは？ ★
 //   このマクロを付けると、クラスのプロパティが変化したとき
 //   それを参照している SwiftUI のビューが自動で再描画されます。
 //   たとえば設定画面でサウンドをOFFにした瞬間、
 //   他の画面のスピーカーアイコンも自動で更新されます。
+//   （以前の ObservableObject + @Published の組み合わせを簡略化した、
+// 　 iOS 17 から使える新しい仕組みです）
 
 @Observable
 final class AppSettings {
+
+    // MARK: シングルトン
 
     // ★ static let とは？ ★
     //   インスタンスではなく「型そのもの」に属するプロパティです。
@@ -41,6 +44,8 @@ final class AppSettings {
 
     /// アプリ内どこからでも同一インスタンスにアクセスできるよう、シングルトンとして公開。
     static let shared = AppSettings()
+
+    // MARK: 設定値（変更すると UserDefaults へ自動保存）
 
     // ★ didSet とは？ ★
     //   プロパティの値が変わった直後に自動で実行されるコードブロックです。
@@ -60,6 +65,8 @@ final class AppSettings {
         didSet { UserDefaults.standard.set(hasAgreedToTerms, forKey: UDKey.hasAgreedToTerms) }
     }
 
+    // MARK: 初期化
+
     // ★ private init() とは？ ★
     //   init() を private にすることで、このクラスを外部から
     //   AppSettings() と書いて直接インスタンス化できなくなります。
@@ -71,7 +78,13 @@ final class AppSettings {
     //   as? Bool でオプショナルな Bool にキャスト（型変換）します。
     //   キャストに失敗（= 未保存 = 初回起動）した場合は
     //   ?? true によってデフォルト値の true（音ON）が使われます。
-    //   hasAgreedToTerms は未保存時に false（= 未同意）をデフォルトとする。
+    //
+    // ★ なぜ2つのプロパティで読み方が違うのか？ ★
+    //   UserDefaults.bool(forKey:) は未保存のとき自動的に false を返します。
+    //   - hasAgreedToTerms: 初回は「未同意 = false」が正しいので bool() で十分
+    //   - isSoundOn       : 初回は「音ON = true」にしたいので、bool() は使えず
+    //                       object() + as? + ?? true でデフォルトを自分で指定する
+    //   「未保存時に何をデフォルトにしたいか」で読み方を選んでいます。
 
     /// 外部からの直接初期化を禁止し、shared経由のアクセスのみを強制する。
     /// UserDefaultsに保存済みの値があればそれを復元し、なければデフォルト値を使う。

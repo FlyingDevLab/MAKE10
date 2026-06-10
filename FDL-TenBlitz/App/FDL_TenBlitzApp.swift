@@ -22,6 +22,8 @@
 
 import SwiftUI
 
+// MARK: - FDL_TenBlitzApp
+
 // ★ @main とは？ ★
 //   この struct がアプリの起動点であることを Swift コンパイラに伝えるアノテーションです。
 //   SwiftUI 以前は UIApplicationDelegate を実装した AppDelegate クラスが必要でしたが、
@@ -34,6 +36,8 @@ import SwiftUI
 
 @main
 struct FDL_TenBlitzApp: App {
+
+    // MARK: body
 
     // ★ some Scene とは？ ★
     //   SwiftUI における「アプリの画面の枠組み」を表す型です。

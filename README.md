@@ -1,4 +1,6 @@
-# MAKE10 / 10をつくろう
+# MAKE10
+
+**Kids Game Collection** — safe, offline, and ad-free.
 
 **English** | [日本語](#日本語)
 
@@ -20,8 +22,9 @@ Included games:
 - **Maze (Cheese Quest)** — guide the mouse through the maze
 - **Pinball** — classic pinball action
 - **Emoji Quiz** — guess from emoji clues
-- **Coin Drop** — drop coins and aim for the target
-- **Sticker Board** — collect stickers as rewards
+- **Coin Drop** — drop and merge coins to make $10
+- **Command Janken** — rock-paper-scissors with a twist: follow the command to win *or* lose on purpose
+- **Stickers & Drawing** — collect reward stickers, decorate your own canvas, and draw freely with crayons
 
 ### Why This Code Is Public
 
@@ -35,6 +38,13 @@ You can read every line of code to verify that this app:
 - Includes no links to external websites
 
 We believe parents and caregivers deserve to see exactly what a children's app does under the hood.
+
+And openness here is not only for parents. It is for fellow developers who want a reference, for learners who want to read real production code — and for ourselves. By publishing everything we can about MAKE10, we make sure we never stray from the path we promised to walk.
+
+### Learning from This Code
+
+The source code is annotated with beginner-friendly commentary (e.g. *"★ What is @Observable? ★"*) so that Swift / SwiftUI learners can read it like a textbook.  
+Our commenting conventions are documented in [docs/COMMENT_STYLE.md](docs/COMMENT_STYLE.md).
 
 ### Our Pledge to Children 🐘
 
@@ -55,7 +65,7 @@ If it doesn't, we don't do it. No exceptions. Money will never come before the s
 ### Tech Stack
 
 - Swift / SwiftUI / SpriteKit
-- All data stored locally via UserDefaults
+- All data stored locally on the device (UserDefaults and local JSON files) — nothing ever leaves the device
 - No third-party libraries or SDKs
 
 ### License
@@ -69,6 +79,7 @@ See [LICENSE](LICENSE) for details.
 
 ### App Store
 
+Published as **"Kids Game Collection"**:  
 [Download on the App Store](https://apps.apple.com/app/id6760253962)
 
 ### Developer
@@ -81,7 +92,7 @@ See [LICENSE](LICENSE) for details.
 
 ### 概要
 
-**10をつくろう**は、こども向けの無料マルチゲームコレクションです。安心・オフライン・広告なし。
+**MAKE10**は、こども向けの無料マルチゲームコレクションです。安心・オフライン・広告なし。
 
 収録ゲーム：
 - **MAKE10** — 数字カードをタップして合計10をつくろう
@@ -89,8 +100,9 @@ See [LICENSE](LICENSE) for details.
 - **迷路（チーズクエスト）** — ネズミを迷路のゴールへ導こう
 - **ピンボール** — クラシックなピンボール
 - **絵文字クイズ** — 絵文字のヒントから答えを当てよう
-- **コインドロップ** — コインを落としてターゲットを狙おう
-- **シールボード** — ご褒美のシールを集めよう
+- **コインドロップ** — コインを落として合体させ、$10をめざそう
+- **指令じゃんけん** — 「勝って！」「負けて！」の指令どおりに出せるかな？
+- **シール＆おえかき** — ごほうびシールを集めて、自分のキャンバスに貼ったり、クレヨンで自由にお絵かき
 
 ### なぜコードを公開しているのか
 
@@ -104,6 +116,13 @@ See [LICENSE](LICENSE) for details.
 - 外部サイトへのリンクがない
 
 子ども向けアプリが内部で何をしているか、保護者の方が確認できるべきだと考えています。
+
+そして、この公開は保護者の方のためだけではありません。参考にしたい開発者のため、実際のコードで学びたい学習者のため——そして私たち自身のためでもあります。MAKE10に関して公開できるすべてを公開することで、自分たちが約束した道を踏み外さないようにしています。
+
+### このコードで学ぶ
+
+ソースコードには、Swift / SwiftUI の初学者がそのまま教材として読めるよう、「★ @Observable とは？ ★」のような解説コメントを整備しています。  
+コメントの書き方の規約は [docs/COMMENT_STYLE.md](docs/COMMENT_STYLE.md) にまとめています。
 
 ### こどもたちへの誓い 🐘
 
@@ -124,7 +143,7 @@ See [LICENSE](LICENSE) for details.
 ### 技術スタック
 
 - Swift / SwiftUI / SpriteKit
-- データはすべてUserDefaultsでローカル保存
+- データはすべて端末内にローカル保存（UserDefaultsおよびローカルJSONファイル）— 端末の外には一切送信しません
 - サードパーティライブラリ・SDKなし
 
 ### ライセンス
@@ -138,6 +157,7 @@ MITライセンス — このコードは自由に使ってください。
 
 ### App Store
 
+App Storeでは **「MAKE10 - Kids Game Collection」** として公開しています：  
 [App Storeでダウンロード](https://apps.apple.com/app/id6760253962)
 
 ### 開発者

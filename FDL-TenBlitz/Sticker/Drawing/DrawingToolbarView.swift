@@ -188,7 +188,7 @@ struct DrawingToolbarView: View {
                           : Color.clear)
                     .frame(width: toolButtonSize, height: toolButtonSize)
 
-                Text("🧹")
+                Text("🪄")
                     .font(.system(size: 20))
             }
             .frame(width: toolButtonSize + 8, height: toolButtonSize + 8)
