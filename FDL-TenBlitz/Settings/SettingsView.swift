@@ -4,46 +4,77 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/08.
 //
-//  設定画面。音・ハプティクスのトグル、ハイスコア/進捗リセット、
-//  プライバシーポリシー表示を提供する。
-//  viewModel が nil の場合（クイズ画面から開いた場合等）はリセット項目を非表示にする。
 
-// SharedFrameから呼ばれるオーバーレイ型の設定パネルと、リセット確認ダイアログを定義するファイル。
-// 設定パネルはZStackで背景を暗くしてダイアログ風に表示し、背景タップで閉じられる。
+// SharedFrame から呼ばれるオーバーレイ型の設定パネルと、リセット確認ダイアログを定義するファイル。
+// 音・ハプティクスのトグル、ハイスコア/進捗リセット、プライバシーポリシー表示を提供する。
+// 設定パネルは ZStack で背景を暗くしてダイアログ風に表示し、背景タップで閉じられる。
+//
+// ★ このファイルの構成 ★
+//   SettingsView     … 設定パネル本体（SharedFrame が zIndex 100 でオーバーレイ表示する）
+//   ResetConfirmView … リセット操作の最終確認ダイアログ
+//   ※ リセット対象を表す ResetTarget enum は MakeTenModels.swift に定義されている
+//
+// 役割分担:
+//   viewModel が nil の場合（クイズ画面から開いた場合等）はリセット項目を非表示にする。
+//   実際のリセット処理は GameViewModel 側（resetHighScore / resetProgress）が担い、
+//   この画面は「確認を取って呼ぶ」ことに専念する。
 
 import SwiftUI
 
+// MARK: - SettingsView
+
 struct SettingsView: View {
 
-    // 設定パネルの表示状態を親View（SharedFrame）と共有する
+    // MARK: 依存（親・共有オブジェクト）
+
+    // ★ @Binding とは？ ★
+    //   親View が持つ @State を「共有」して読み書きするための仕組みです。
+    //   ここでは SharedFrame の showSettings を受け取っており、
+    //   この画面側で isPresented = false にすると親の showSettings も false になり、
+    //   パネルが閉じます。値のコピーではなく「同じ変数への参照」だと考えると理解しやすいです。
+
+    /// 設定パネルの表示状態を親View（SharedFrame）と共有する。
     @Binding var isPresented: Bool
 
-    // MAKE10のGameViewModel。nilのとき（クイズ画面からの呼び出しなど）はリセット項目を非表示にする
+    /// MAKE10 の GameViewModel。nil のとき（クイズ画面からの呼び出しなど）はリセット項目を非表示にする。
     var viewModel: GameViewModel? = nil
 
-    // AppSettings.sharedへの@Bindableバインディング。トグルの変更が即座にUserDefaultsに反映される
+    // ★ @Bindable とは？ ★
+    //   @Observable なクラス（ここでは AppSettings）のプロパティから
+    //   $settings.isSoundOn のような Binding を取り出せるようにする仕組みです（iOS 17〜）。
+    //   これにより Toggle に直接バインドでき、スイッチを切り替えた瞬間に
+    //   AppSettings の didSet が走って UserDefaults へ自動保存されます。
+    //   （@Observable の解説は AppSettings.swift 冒頭を参照）
+
+    /// AppSettings.shared へのバインディング。トグルの変更が即座に UserDefaults に反映される。
     @Bindable var settings = AppSettings.shared
 
-    // リセット確認ダイアログの対象。nilのときはダイアログ非表示、セットされると確認ダイアログが出現する
+    // MARK: ローカル状態
+
+    /// リセット確認ダイアログの対象。nil のときはダイアログ非表示、セットされると確認ダイアログが出現する。
     @State private var confirmTarget: ResetTarget? = nil
 
-    // ポリシーシートの表示フラグ
+    /// ポリシーシートの表示フラグ。
     @State private var showPolicy:    Bool         = false
 
-    // Blitzモードかつハイスコア解放済みのときのみハイスコアリセットボタンを表示する
+    // MARK: 表示条件
+
+    /// Blitzモードかつハイスコア解放済みのときのみハイスコアリセットボタンを表示する。
     private var showHighScoreReset: Bool {
         viewModel?.isHighScoreUnlocked ?? false
     }
 
-    // Blitzモード解放済みのときのみ進捗リセットボタンを表示する
+    /// Blitzモード解放済みのときのみ進捗リセットボタンを表示する。
     private var showProgressReset: Bool {
         viewModel?.isBlitzUnlocked ?? false
     }
 
+    // MARK: body
+
     var body: some View {
         ZStack {
             // 背景の暗幕。タップで設定パネルを閉じる
-            Color.black.opacity(0.22)
+            Color.black.opacity(0.22)   // ← 変更可（暗幕の濃さ 0.0〜1.0）
                 .ignoresSafeArea()
                 .onTapGesture { isPresented = false }
 
@@ -52,8 +83,8 @@ struct SettingsView: View {
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.primary)
 
-                // 音＆バイブ トグル
-                // AppSettings.sharedに直接バインドし、変更がUserDefaultsに即時保存される
+                // ── 音＆バイブ トグル ──────────────────────
+                // AppSettings.shared に直接バインドし、変更が UserDefaults に即時保存される
                 VStack(spacing: 0) {
                     settingRow(
                         icon:  "speaker.wave.2.fill",
@@ -66,12 +97,12 @@ struct SettingsView: View {
                         .fill(DS.settingsBg)
                 )
 
-                // リセットボタン（viewModel がある場合のみ）
+                // ── リセットボタン（viewModel がある場合のみ）──
                 // 解放状況に応じてハイスコアリセット・進捗リセットを条件付きで表示する
                 if showHighScoreReset || showProgressReset {
                     VStack(spacing: 10) {
                         if showHighScoreReset {
-                            // タップするとconfirmTargetを.highScoreにセットして確認ダイアログを出す
+                            // タップすると confirmTarget を .highScore にセットして確認ダイアログを出す
                             resetButton(
                                 icon:  "trophy",
                                 label: "settings_reset_high_score",
@@ -79,7 +110,7 @@ struct SettingsView: View {
                             ) { confirmTarget = .highScore }
                         }
                         if showProgressReset {
-                            // タップするとconfirmTargetを.progressにセットして確認ダイアログを出す
+                            // タップすると confirmTarget を .progress にセットして確認ダイアログを出す
                             resetButton(
                                 icon:  "arrow.counterclockwise",
                                 label: "settings_reset_progress",
@@ -89,8 +120,9 @@ struct SettingsView: View {
                     }
                 }
 
-                // プライバシーポリシー
-                // Safariや外部リンクは使わず、PolicyViewをsheetで表示するアプリ内閲覧方式
+                // ── プライバシーポリシー ────────────────────
+                // Safariや外部リンクは使わず、PolicyView を sheet で表示するアプリ内閲覧方式
+                // （外部リンクを使わない理由は ConsentView.swift 冒頭を参照）
                 Button { showPolicy = true } label: {
                     HStack(spacing: 10) {
                         Image(systemName: "doc.text")
@@ -113,7 +145,7 @@ struct SettingsView: View {
                 }
                 .buttonStyle(.plain)
 
-                // 設定パネルを閉じるボタン
+                // ── 閉じるボタン ────────────────────────────
                 Button { isPresented = false } label: {
                     Text("settings_close_button")
                         .font(.system(size: 18, weight: .semibold, design: .rounded))
@@ -132,8 +164,9 @@ struct SettingsView: View {
             )
             .padding(.horizontal, 36)
 
-            // リセット確認ダイアログ。confirmTargetがセットされたときだけZStack上に重なって表示する。
-            // 確認後はonConfirmでViewModelのリセットメソッドを呼び、confirmTargetをnilに戻す
+            // ── リセット確認ダイアログ ──────────────────────
+            // confirmTarget がセットされたときだけ ZStack 上に重なって表示する。
+            // 確認後は onConfirm で ViewModel のリセットメソッドを呼び、confirmTarget を nil に戻す
             if let target = confirmTarget {
                 ResetConfirmView(target: target) {
                     switch target {
@@ -151,8 +184,10 @@ struct SettingsView: View {
         }
     }
 
-    // 設定行を生成するヘルパー。アイコン・ラベル・トグルを横並びにしたレイアウトを返す。
-    // 現在は音＆バイブのみだが、設定項目が増えた場合も同じメソッドで追加できる
+    // MARK: サブビュー生成ヘルパー
+
+    /// 設定行を生成するヘルパー。アイコン・ラベル・トグルを横並びにしたレイアウトを返す。
+    /// 現在は音＆バイブのみだが、設定項目が増えた場合も同じメソッドで追加できる。
     private func settingRow(icon: String, label: LocalizedStringKey, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
@@ -169,8 +204,8 @@ struct SettingsView: View {
         .padding(.vertical, 16)
     }
 
-    // リセットボタンを生成するヘルパー。アイコン・ラベル・色を引数で受け取り、
-    // ハイスコートと進捗の2種類のボタンを同じスタイルで生成する
+    /// リセットボタンを生成するヘルパー。アイコン・ラベル・色を引数で受け取り、
+    /// ハイスコアと進捗の2種類のボタンを同じスタイルで生成する。
     private func resetButton(
         icon: String, label: LocalizedStringKey, color: Color, action: @escaping () -> Void
     ) -> some View {
@@ -198,30 +233,40 @@ struct SettingsView: View {
     }
 }
 
-// MARK: - Reset Confirm View
+// MARK: - ResetConfirmView
 
-// リセット操作の最終確認を求めるダイアログ。
-// targetに応じてタイトルと本文を切り替え、「実行」と「キャンセル」の2択を提供する。
-// 誤操作を防ぐため、リセットボタンを直接実行するのではなくこのダイアログを経由する設計にしている
+/// リセット操作の最終確認を求めるダイアログ。
+/// target に応じてタイトルと本文を切り替え、「実行」と「キャンセル」の2択を提供する。
+/// 誤操作を防ぐため、リセットボタンを直接実行するのではなくこのダイアログを経由する設計にしている。
 struct ResetConfirmView: View {
-    let target:    ResetTarget  // ハイスコートリセットか進捗リセットかを識別する
-    let onConfirm: () -> Void   // 「実行」タップ時のコールバック
-    let onCancel:  () -> Void   // 「キャンセル」タップ時のコールバック
 
-    // targetに応じて確認ダイアログのタイトルを切り替える
+    // MARK: 設定項目（呼び出し側から渡すパラメータ）
+
+    /// ハイスコアリセットか進捗リセットかを識別する。
+    let target:    ResetTarget
+    /// 「実行」タップ時のコールバック。
+    let onConfirm: () -> Void
+    /// 「キャンセル」タップ時のコールバック。
+    let onCancel:  () -> Void
+
+    // MARK: 表示文言
+
+    /// target に応じて確認ダイアログのタイトルを切り替える。
     private var titleKey: LocalizedStringKey {
         target == .highScore ? "reset_confirm_high_score_title" : "reset_confirm_progress_title"
     }
 
-    // targetに応じて確認ダイアログの本文を切り替える
+    /// target に応じて確認ダイアログの本文を切り替える。
     private var bodyKey: LocalizedStringKey {
         target == .highScore ? "reset_confirm_high_score_body" : "reset_confirm_progress_body"
     }
 
+    // MARK: body
+
     var body: some View {
         ZStack {
-            // 背景の暗幕。設定パネルより暗くして「さらに前面にある」ことを視覚的に伝える
-            Color.black.opacity(0.30).ignoresSafeArea()
+            // 背景の暗幕。設定パネル(0.22)より暗くして「さらに前面にある」ことを視覚的に伝える
+            Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ 0.0〜1.0）
 
             VStack(spacing: 20) {
                 Text(titleKey)
