@@ -26,13 +26,14 @@
 
 import SwiftUI
 
-// MARK: - Playing View
+// MARK: - PlayingView
 
 struct PlayingView: View {
     var viewModel: GameViewModel
 
-    // タイルを2列グリッドで並べる定義。列間隔はEmojiQuizHomeViewと統一している
-    // GridItem(.flexible()) = 利用可能な横幅を均等に分割する列
+    /// タイルを2列グリッドで並べる定義。列間隔は EmojiQuizHomeView と統一している。
+    /// GridItem(.flexible()) = 利用可能な横幅を均等に分割する列。
+    /// （LazyVGrid 自体の解説は TitleView.swift を参照）
     let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
 
     var body: some View {
@@ -56,7 +57,6 @@ struct PlayingView: View {
                 .padding(.bottom, 20)
 
                 // ── タイルグリッド（4枚）────────────────────
-                // LazyVGrid: グリッドレイアウト（Lazy = 表示されたものだけ描画）
                 LazyVGrid(columns: columns, spacing: 12) {
                     ForEach(0..<4, id: \.self) { index in
                         TileButton(
@@ -124,7 +124,7 @@ struct PlayingView: View {
     }
 }
 
-// MARK: - Problem Card View
+// MARK: - ProblemCardView
 
 /// 現在の問題番号・次の問題番号・タイムゲージを1枚のカードにまとめて表示するView。
 /// 高さを180ptに固定して、EmojiQuizHomeViewのQuizQuestionCardと高さを揃えている。
@@ -153,9 +153,8 @@ struct ProblemCardView: View {
                     .foregroundStyle(mainColor.opacity(0.45))
                     .tracking(1.0)  // 文字間隔を広げて「NEXT」の視認性を上げる
 
-                // ★ .id(nextQuestionNumber) の役割 ★
-                //   値が変化したとき SwiftUI に「別のViewが現れた」と認識させて
-                //   .transition のアニメーションを発火させるためのトリック。
+                // .id(nextQuestionNumber): 値の変化で .transition を発火させるためのトリック
+                // （.id() の詳しい役割は PlayingView のタイルグリッドの解説を参照）
                 Text("\(nextQuestionNumber)")
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundStyle(mainColor.opacity(0.32))
@@ -208,7 +207,7 @@ struct ProblemCardView: View {
     }
 }
 
-// MARK: - Inline Gauge View
+// MARK: - InlineGaugeView
 
 /// 残り時間を横バーで表示するタイムゲージ。
 /// timeRemaining が warnThreshold 以下になると色が警告色（赤系）に切り替わる。
@@ -225,10 +224,9 @@ struct InlineGaugeView: View {
     private var color: Color   { timeRemaining <= warnThreshold ? DS.gaugeWarn : DS.gaugeFull }
 
     var body: some View {
-        // GeometryReader でこのViewが表示される実際の幅を取得する。
-        // ★ GeometryReader とは？ ★
-        //   親View が割り当てた実際のサイズ（幅・高さ）を取得できるコンテナ。
-        //   ここでは geo.size.width を使ってゲージバーの幅を計算している。
+        // GeometryReader でこのViewが表示される実際の幅を取得し、
+        // geo.size.width を使ってゲージバーの幅を計算する
+        // （GeometryReader の解説は ConfettiView.swift を参照）
         GeometryReader { geo in
             ZStack(alignment: .leading) {
                 // 背景トラック（薄いグレーの全幅バー）
@@ -250,7 +248,7 @@ struct InlineGaugeView: View {
     }
 }
 
-// MARK: - Tile Button
+// MARK: - TileButton
 
 /// 数字を表示するタップ可能なタイル。4枚がグリッドに並び、正解タイルをタップするとスコアが増える。
 /// クイズの QuizChoiceButton と同じ視覚スタイルを踏襲する：
@@ -265,7 +263,7 @@ struct TileButton: View {
     var highlightState: AnswerMark? = nil
     let action: () -> Void
 
-    // stateに応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う
+    /// state に応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う。
     private var bgColor: Color {
         switch highlightState {
         case .correct: return DS.gaugeFull.opacity(0.15)
@@ -274,7 +272,7 @@ struct TileButton: View {
         }
     }
 
-    // stateに応じた枠線色。正解・不正解のみ色付き枠線を表示する
+    /// state に応じた枠線色。正解・不正解のみ色付き枠線を表示する。
     private var borderColor: Color {
         switch highlightState {
         case .correct: return DS.gaugeFull
@@ -332,6 +330,8 @@ struct TileButton: View {
     }
 }
 
+// MARK: - TileButtonStyle
+
 /// タイルボタン専用の ButtonStyle。押下中に1.07倍に拡大してタップ感を演出する。
 /// ★ ButtonStyle として切り出す理由 ★
 ///   SwiftUI の Button は内部でタッチアニメーションを持っており、
@@ -342,12 +342,12 @@ struct TileButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             // configuration.isPressed: 指が触れている間だけ true になる
-            .scaleEffect(configuration.isPressed ? 1.07 : 1.0)
+            .scaleEffect(configuration.isPressed ? 1.07 : 1.0)   // ← 変更可（押下時の拡大率）
             .animation(.easeInOut(duration: 0.11), value: configuration.isPressed)
     }
 }
 
-// MARK: - Answer Mark View
+// MARK: - AnswerMarkView
 
 /// 正解・不正解に対応する大きな絵文字マークを表示するView。
 /// GameViewModel の answerMark がセットされたときに PlayingView の ZStack 上に重なって表示され、
@@ -363,7 +363,7 @@ struct AnswerMarkView: View {
     }
 }
 
-// MARK: - Reaction View
+// MARK: - ReactionView
 
 /// コンボ達成時に右上から浮かび上がり、フェードアウトして消える絵文字リアクションView。
 /// 表示・アニメーション・削除通知をすべてこのView内で完結させる自己完結型のコンポーネント。
@@ -382,8 +382,8 @@ struct ReactionView: View {
     @State private var offsetY: CGFloat = 0
     @State private var opacity: Double  = 1.0
 
-    private let duration: Double  = 2.0   // アニメーション全体の所要時間（秒）
-    private let travel:   CGFloat = 150   // 浮かび上がる縦移動距離（ポイント）
+    private let duration: Double  = 2.0   // アニメーション全体の所要時間（秒）← 変更可
+    private let travel:   CGFloat = 150   // 浮かび上がる縦移動距離（ポイント）← 変更可
 
     var body: some View {
         Text(reaction.emoji)

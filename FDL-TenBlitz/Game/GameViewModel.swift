@@ -25,12 +25,19 @@
 import SwiftUI
 import Combine
 
-// MARK: - Game View Model
+// MARK: - GameViewModel
+
+// @Observable の解説は AppSettings.swift 冒頭を参照。
 
 @Observable
 final class GameViewModel {
 
-    // MARK: 定数
+    // MARK: ⚙️ 調整パラメータ（ここだけ触ればOK）
+    //
+    // ┌─────────────────────────────────────────────┐
+    // │  MAKE10 のゲームバランスに関わる数値定数を集約。 │
+    // │  難易度や演出を変えたいときはここだけ編集する。   │
+    // └─────────────────────────────────────────────┘
     //
     // ★ なぜ private enum C にまとめるのか ★
     //   マジックナンバー（コード中に直接書かれた意味不明な数値）を排除するためです。
@@ -39,16 +46,16 @@ final class GameViewModel {
     //   private にすることでこのクラス内だけで使う定数であることも明示できます。
 
     private enum C {
-        static let answerMarkDuration: Double = 0.5   // 正解/不正解マークの表示時間（秒）
+        static let answerMarkDuration: Double = 0.5   // 正解/不正解マークの表示時間（秒）← 変更可
         static let tileAdvanceDelay:   Double = 0.3   // 正解後にタイルを切り替えるまでの遅延（秒）← 変更可
-        static let wrongPenalty:       Double = 1.0   // 不正解ペナルティ（秒）
-        static let unlockThreshold:    Int    = 100   // Blitzモード解放・ハイスコア解放の正解数閾値
-        static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数
-        static let reactionLimit:      Int    = 15    // 画面上のリアクション絵文字の上限数
-        static let stickerPointNormal: Double = 1.1   // normalモードの正解1問あたりのシールポイント
-        static let stickerPointBlitz:  Double = 5.6   // blitzモードの正解1問あたりのシールポイント
-        static let confettiDuration:   Double = 3.5   // 通常の紙吹雪表示時間（秒）
-        static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）
+        static let wrongPenalty:       Double = 1.0   // 不正解ペナルティ（秒）← 変更可
+        static let unlockThreshold:    Int    = 100   // Blitz/ハイスコア解放の正解数閾値 ← 変更可（説明文の「100」表記とも整合させること）
+        static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数 ← 変更可
+        static let reactionLimit:      Int    = 15    // 画面上のリアクション絵文字の上限数 ← 変更可
+        static let stickerPointNormal: Double = 1.1   // normalモードの正解1問あたりのシールポイント ← 変更可
+        static let stickerPointBlitz:  Double = 5.6   // blitzモードの正解1問あたりのシールポイント ← 変更可
+        static let confettiDuration:   Double = 3.5   // 通常の紙吹雪表示時間（秒）← 変更可
+        static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）← 変更可
     }
 
     // MARK: UserDefaults 永続化（解放フラグ・統計）
@@ -57,10 +64,7 @@ final class GameViewModel {
     //   スコアの読み書きは ScoreBoard に一元化されている。
     //   blitzHighScore は下の「計算プロパティ」として UD から直接読む。
     //
-    // ★ なぜ didSet で保存するのか ★
-    //   「保存する処理」を呼び出し側のあちこちに書く必要がなくなります。
-    //   プロパティの値を変えるだけで自動的に永続化されるため、
-    //   「変えたのに保存を忘れた」というバグが構造的に起きません。
+    // didSet による自動保存パターンの解説は AppSettings.swift を参照。
 
     /// Blitzモード（10秒モード）の解放状態。通常モードで100問正解すると true になる
     var isBlitzUnlocked: Bool {
@@ -149,13 +153,17 @@ final class GameViewModel {
 
     /// ゲームモードに応じた制限時間（blitz = 10秒 / normal = 30秒）
     /// ★ 計算プロパティ = 保存せず毎回 gameMode から計算する
+    ///
+    /// ⚠️ 変更注意: 10.0 / 30.0 は「10びょう」「30びょう」というモード名の
+    ///   表記（Localizable.xcstrings の15言語分の文言）と連動している。
+    ///   秒数を変えるなら全言語の文言も合わせて変えること。
     var maxTime: Double { gameMode == .blitz ? 10.0 : 30.0 }
 
     /// 残り時間がこの値を下回るとゲージを警告色（赤系）に変える閾値
-    var gaugeWarnThreshold: Double { gameMode == .blitz ? 3.0 : 6.0 }
+    var gaugeWarnThreshold: Double { gameMode == .blitz ? 3.0 : 6.0 }   // ← 変更可
 
     /// コンボ時に画面に浮かぶリアクション絵文字のプール（ランダムに1つ選ばれる）
-    private let reactionEmojis = ["❤️","👍","✨","🎉","🌟","😊","👏","🎈","🎂","🎁","🎊"]
+    private let reactionEmojis = ["❤️","👍","✨","🎉","🌟","😊","👏","🎈","🎂","🎁","🎊"]   // ← 変更可
 
     // MARK: 初期化
 
@@ -337,9 +345,9 @@ final class GameViewModel {
     ///   残り時間が多いときに大きなボーナスを与えると簡単になりすぎるため、
     ///   追い詰められているほど有利になる「カムバック補正」として機能させています。
     private var comboBonusTime: Double {
-        if timeRemaining <= 5.0  { return 1.2 }  // 残り5秒以下：1.2秒加算（最大補正）
-        if timeRemaining >= 20.0 { return 0.8 }  // 残り20秒以上：0.8秒加算（最小補正）
-        return 1.0                                // それ以外：1.0秒加算（標準）
+        if timeRemaining <= 5.0  { return 1.2 }  // 残り5秒以下：1.2秒加算（最大補正）← 変更可
+        if timeRemaining >= 20.0 { return 0.8 }  // 残り20秒以上：0.8秒加算（最小補正）← 変更可
+        return 1.0                                // それ以外：1.0秒加算（標準）← 変更可
     }
 
     /// 正解時の処理。スコア・コンボ更新、シールポイント付与、問題の切り替えなどを行う。
@@ -441,7 +449,9 @@ final class GameViewModel {
         }
         for _ in 0..<count {
             reactions.append(Reaction(
-                emoji:   reactionEmojis.randomElement()!,  // プールからランダムに1つ選ぶ
+                // reactionEmojis は空にならない固定配列のため、randomElement() が nil を
+                // 返すことはなく強制アンラップ（!）しても安全（方針は ConfettiView.swift を参照）
+                emoji:   reactionEmojis.randomElement()!,
                 xOffset: .random(in: 16...72)              // 横位置をランダムにしてバラけさせる
             ))
         }
@@ -529,10 +539,7 @@ final class GameViewModel {
 
     /// スコアの範囲に応じたローカライズ済みの称賛テキストを返す。
     /// FinishedView が結果カードに表示する。スコアが高いほど派手な表現になる。
-    /// ★ LocalizedStringKey とは？ ★
-    ///   Localizable.xcstrings に登録されたキーを表す型です。
-    ///   "praise_score_0" というキーを返すと、SwiftUI が自動で
-    ///   端末の言語設定に合った翻訳テキストに変換して表示します。
+    /// LocalizedStringKey の解説は GamePickerComponents.swift を参照。
     var praiseText: LocalizedStringKey {
         switch score {
         case 0:         return "praise_score_0"
