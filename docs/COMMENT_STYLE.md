@@ -210,8 +210,26 @@ print("⚠️ <型名>: <何に失敗したか>: \(error.localizedDescription)")
 | case のない enum（名前空間） | ScoreBoard.swift |
 | @discardableResult とは | ScoreBoard.swift |
 | デザイントークン / CGFloat / some View | DesignSystem.swift |
-| AnyCancellable とは | GameViewModel.swift |
-| 世代番号パターン | GameViewModel.swift |
+| ジェネリクス / @ViewBuilder / @State | SharedFrame.swift |
+| アプリ全体の zIndex 階層表 | SharedFrame.swift |
+| Canvas / GeometryReader | ConfettiView.swift |
+| LocalizedStringKey / Codable・try? | GamePickerComponents.swift |
+| タップとフリックの1ジェスチャ判定 | GamePickerComponents.swift |
+| 新しいゲームの追加手順 | GamePickerComponents.swift |
+| @Environment(\.dismiss) / String(localized:) | ConsentView.swift |
+| 外部リンクを使わない設計の理由 | ConsentView.swift |
+| @Binding / @Bindable | SettingsView.swift |
+| LazyVGrid / 2列グリッドの座標 | TitleView.swift |
+| UserDefaultsキー文字列の変更禁止ルール | MakeTenModels.swift |
+| ⚙️ 調整パラメータブロック（private enum C） | GameViewModel.swift |
+| AnyCancellable / 世代番号パターン | GameViewModel.swift |
+| [weak self] / repeat-while / タイマーの基準時刻方式 | GameViewModel.swift |
+| 関連値付き enum | MakeTenContentView.swift |
+| onReceive / NotificationCenter | MakeTenContentView.swift |
+| .animation(value:) に渡すための String 変換 | MakeTenContentView.swift |
+| .id() によるトランジション発火 / .animation(value:) | PlayingView.swift |
+| ButtonStyle / 自己完結型コンポーネント | PlayingView.swift |
+| 見えない背景での座標取得 / 座標の比率保存 | FinishedView.swift |
 | SpriteKit 入門(ノード/物理) | CoinDropScene.swift |
 | didMove 二重呼び出しガード | PinballScene.swift |
 
