@@ -16,15 +16,24 @@
 // JSONファイルからクイズカテゴリを読み込み、アプリ内モデルに変換するローダー。
 // 初回読み込み結果をクラス変数にキャッシュし、2回目以降はJSONアクセスを省略する。
 // カテゴリの追加・言語の追加はJSONファイルの変更のみで完結し、Swiftコードの変更は不要。
+//
+// ★ このファイルの構成 ★
+//   CategoryJSON       … カテゴリ1件分のJSONデコード用モデル（private）
+//   L10nString         … 任意の言語コード辞書を読むローカライズ文字列（private）
+//   ItemJSON           … アイテム1件分のJSONデコード用モデル（private）
+//   QuizCategoryLoader … ロードとキャッシュを担う本体
+//
+// Codable（JSONEncoder / JSONDecoder）の解説は GamePickerComponents.swift を参照。
 
 import Foundation
 
-// MARK: - Private JSON Models
-// JSONのデコード専用の内部モデル。このファイル外には公開しない。
-// アプリ内で使うQuizCategory/QuizItemへの変換はbuild()メソッドが担う。
+// MARK: - CategoryJSON
 
-// カテゴリ1件分のJSONをデコードするモデル。
-// composedOfがnilなら独立カテゴリ、配列があれば他カテゴリを結合した合成カテゴリを表す
+// JSONのデコード専用の内部モデル群。このファイル外には公開しない。
+// アプリ内で使う QuizCategory / QuizItem への変換は build() メソッドが担う。
+
+/// カテゴリ1件分のJSONをデコードするモデル。
+/// composedOf が nil なら独立カテゴリ、配列があれば他カテゴリを結合した合成カテゴリを表す。
 private struct CategoryJSON: Codable {
     let gameId:      String
     let group:       L10nString   // 表示グループ名（多言語対応）
@@ -35,9 +44,18 @@ private struct CategoryJSON: Codable {
     let items:       [ItemJSON]?  // 独立カテゴリのアイテムリスト。合成カテゴリはnil
 }
 
-// 任意の言語コードをキーとするローカライズ文字列。
-// JSONの {"ja": "...", "en": "...", "de": "..."} 形式を辞書として読み込む。
-// 新言語の追加はJSONへのキー追加のみで完結し、Swiftコードの変更は不要。
+// MARK: - L10nString
+
+/// 任意の言語コードをキーとするローカライズ文字列。
+/// JSONの {"ja": "...", "en": "...", "de": "..."} 形式を辞書として読み込む。
+/// 新言語の追加はJSONへのキー追加のみで完結し、Swiftコードの変更は不要。
+///
+/// ★ カスタムデコード（init(from:)）とは？ ★
+///   通常の Codable はプロパティ名とJSONのキー名を1対1で対応させますが、
+///   ここではキーが「言語コード」で固定されていません（ja / en / de / ... と可変）。
+///   そこで init(from:) を自分で書き、singleValueContainer で
+///   値全体を [String: String] の辞書として丸ごと読み込んでいます。
+///   「キーが事前に決まらないJSON」を読むときの定番テクニックです。
 private struct L10nString: Codable {
 
     private let translations: [String: String]
@@ -83,29 +101,37 @@ private struct L10nString: Codable {
     }
 }
 
-// アイテム1件分のJSONをデコードするモデル。
-// displayは絵文字・コード・テキストなど表示形式に依存した文字列
+// MARK: - ItemJSON
+
+/// アイテム1件分のJSONをデコードするモデル。
+/// display は絵文字・コード・テキストなど表示形式に依存した文字列。
 private struct ItemJSON: Codable {
     let display: String     // 問題として表示する文字列（絵文字 or コード or テキスト）
     let name:    L10nString // 選択肢・正解表示に使う名称（多言語対応）
 }
 
-// MARK: - Loader
+// MARK: - QuizCategoryLoader
 
-// クイズカテゴリのロードとキャッシュを担う静的クラス。
-// インスタンス化を想定していないため、すべてのメンバーをstaticで定義する
+/// クイズカテゴリのロードとキャッシュを担う静的クラス。
+/// インスタンス化を想定していないため、すべてのメンバーを static で定義する。
 final class QuizCategoryLoader {
 
-    // ロード済みカテゴリのキャッシュ。nilのときはまだロードされていない状態を表す
+    /// ロード済みカテゴリのキャッシュ。nil のときはまだロードされていない状態を表す。
     private static var _cache: [QuizCategory]? = nil
 
-    /// 全カテゴリをロード（初回のみJSONを読む。以後はキャッシュ）
+    /// 全カテゴリをロード（初回のみJSONを読む。以後はキャッシュ）。
     static func loadAll() -> [QuizCategory] {
         // キャッシュが存在すればJSONアクセスを省略して即返す
         if let cached = _cache { return cached }
 
-        // quiz_categories.jsonからカテゴリIDの配列を取得する。
-        // このファイルがカテゴリの表示順序のマニフェストを兼ねる
+        // quiz_categories.json からカテゴリIDの配列を取得する。
+        // このファイルがカテゴリの表示順序のマニフェストを兼ねる。
+        //
+        // ★ assertionFailure とは？ ★
+        //   デバッグビルド（開発中）でのみアプリを停止させて問題を知らせる関数です。
+        //   リリースビルドでは何もせず素通りするため、万一ファイルが欠けていても
+        //   ユーザーのアプリはクラッシュせず、空のカテゴリ一覧として安全に動き続けます。
+        //   「開発中は気づきたい・本番では落としたくない」エラーに使います。
         guard
             let url  = Bundle.main.url(forResource: "quiz_categories", withExtension: "json"),
             let data = try? Data(contentsOf: url),
@@ -115,41 +141,41 @@ final class QuizCategoryLoader {
             return []
         }
 
-        // Step1: 全JSONをロード
-        // IDをキーにしたDictionaryに格納し、後段のビルドで参照しやすくする
+        // ── Step1: 全JSONをロード ───────────────────────────
+        // IDをキーにした Dictionary に格納し、後段のビルドで参照しやすくする
         var jsonByID: [String: CategoryJSON] = [:]
         for id in ids {
             if let json = loadJSON(id: id) { jsonByID[id] = json }
         }
 
-        // Step2: composedOf を持たないカテゴリを先にビルド
+        // ── Step2: composedOf を持たないカテゴリを先にビルド ──
         // 合成カテゴリは独立カテゴリのアイテムを参照するため、依存先を先に解決する必要がある
         var builtByID: [String: QuizCategory] = [:]
         for (id, json) in jsonByID where json.composedOf == nil {
             builtByID[id] = build(from: json, builtSoFar: [:])
         }
 
-        // Step3: composedOf を持つカテゴリをビルド（依存先が解決済み前提）
-        // Step2で独立カテゴリがすべてbuiltByIDに入っているため、ここでflatMapで結合できる
+        // ── Step3: composedOf を持つカテゴリをビルド ──────────
+        // Step2で独立カテゴリがすべて builtByID に入っているため、ここで flatMap で結合できる
         for (id, json) in jsonByID where json.composedOf != nil {
             builtByID[id] = build(from: json, builtSoFar: builtByID)
         }
 
-        // Step4: マニフェストの順序を維持して返す
-        // Dictionaryは順序を保証しないため、元のids配列の順番でcompactMapして順序を復元する
+        // ── Step4: マニフェストの順序を維持して返す ──────────
+        // Dictionary は順序を保証しないため、元の ids 配列の順番で compactMap して順序を復元する
         let result = ids.compactMap { builtByID[$0] }
         _cache = result
         return result
     }
 
-    /// キャッシュをクリア（テスト・プレビュー用）
-    // 本番コードからは呼ばない。Previewや単体テストでクリーンな状態を作るために使用する
+    /// キャッシュをクリア（テスト・プレビュー用）。
+    /// 本番コードからは呼ばない。Preview や単体テストでクリーンな状態を作るために使用する。
     static func clearCache() { _cache = nil }
 
-    // MARK: Private helpers
+    // MARK: 内部ヘルパー
 
-    // 指定したIDのJSONファイルをBundleから読み込み、CategoryJSONにデコードして返す。
-    // ファイルが見つからない・デコード失敗の場合はnilを返す（呼び出し元でスキップされる）
+    /// 指定したIDのJSONファイルをBundleから読み込み、CategoryJSON にデコードして返す。
+    /// ファイルが見つからない・デコード失敗の場合は nil を返す（呼び出し元でスキップされる）。
     private static func loadJSON(id: String) -> CategoryJSON? {
         guard
             let url  = Bundle.main.url(forResource: id, withExtension: "json"),
@@ -158,19 +184,19 @@ final class QuizCategoryLoader {
         return try? JSONDecoder().decode(CategoryJSON.self, from: data)
     }
 
-    // CategoryJSONをアプリ内モデルのQuizCategoryに変換する。
-    // 合成カテゴリの場合はbuiltSoFarから依存先のアイテムを取得してflatMapで結合する
+    /// CategoryJSON をアプリ内モデルの QuizCategory に変換する。
+    /// 合成カテゴリの場合は builtSoFar から依存先のアイテムを取得して flatMap で結合する。
     private static func build(
         from json: CategoryJSON,
         builtSoFar: [String: QuizCategory]
     ) -> QuizCategory {
 
         // デバイスの優先言語コードを取得する。
-        // preferredLocalizationsはアプリのサポート言語と照合済みのリストを返す。
+        // preferredLocalizations はアプリのサポート言語と照合済みのリストを返す。
         // 対応言語がない場合は "en" にフォールバックする。
         let langCode = Bundle.main.preferredLocalizations.first ?? "en"
 
-        // JSON文字列からDisplayStyle列挙型に変換する。未知の値は.emojiにフォールバックする
+        // JSON文字列から DisplayStyle 列挙型に変換する。未知の値は .emoji にフォールバックする
         let displayStyle: DisplayStyle
         switch json.displayStyle {
         case "emoji": displayStyle = .emoji
@@ -182,10 +208,10 @@ final class QuizCategoryLoader {
         let items: [QuizItem]
         if let composed = json.composedOf {
             // 合成カテゴリ：依存先のアイテムをフラットに結合
-            // compactMapで存在しない依存先IDをスキップし、flatMapで全アイテムを1つの配列にまとめる
+            // compactMap で存在しない依存先IDをスキップし、flatMap で全アイテムを1つの配列にまとめる
             items = composed.compactMap { builtSoFar[$0] }.flatMap { $0.items }
         } else {
-            // 独立カテゴリ：JSONのitemsをQuizItemにマッピングする
+            // 独立カテゴリ：JSONの items を QuizItem にマッピングする
             items = (json.items ?? []).map { item in
                 QuizItem(
                     emoji: item.display,

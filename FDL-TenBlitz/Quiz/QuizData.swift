@@ -6,35 +6,48 @@
 //
 
 // 絵文字クイズで使うデータモデルをすべて定義するファイル。
-// DisplayStyle・QuizMode・QuizCategory・QuizItem・QuizQuestionの5つで
-// 「カテゴリ → 問題 → 選択肢」の階層構造を表現する。
+// 「カテゴリ → 問題 → 選択肢」の階層構造を5つの型で表現する。
+//
+// ★ このファイルの構成 ★
+//   DisplayStyle … 問題・選択肢の表示形式（絵文字 / コード / テキスト）
+//   QuizMode     … 出題方向（絵文字→名前 / 名前→絵文字）
+//   QuizCategory … カテゴリ1件（QuizCategoryLoader がJSONから生成）
+//   QuizItem     … 問題アイテム1件（正解にも選択肢にもなる）
+//   QuizQuestion … 1問分（正解1つ＋選択肢4つ）
 
 import Foundation
 
-// MARK: - Display Style
-// クイズの選択肢・問題文の表示形式を定義する。
-// .emoji: 絵文字表示（動物・国旗など）
-// .code:  等幅テキスト（空港コードなど）
-// .text:  丸ゴシックテキスト（漢字・英単語など）
+// MARK: - DisplayStyle
 
-// QuizCategoryごとに1つのDisplayStyleを持ち、問題カードと選択肢グリッドの描画を切り替える。
-// QuizMode × DisplayStyle の組み合わせでUIラベルも変わるため、QuizModeのメソッドにも渡される
+/// クイズの選択肢・問題文の表示形式を定義する。
+/// - .emoji: 絵文字表示（動物・国旗など）
+/// - .code:  等幅テキスト（空港コードなど）
+/// - .text:  丸ゴシックテキスト（漢字・英単語など）
+///
+/// QuizCategory ごとに1つの DisplayStyle を持ち、問題カードと選択肢グリッドの描画を切り替える。
+/// QuizMode × DisplayStyle の組み合わせでUIラベルも変わるため、QuizMode のメソッドにも渡される。
 enum DisplayStyle {
     case emoji
     case code
     case text
 }
 
-// MARK: - Quiz Mode
+// MARK: - QuizMode
 
-// クイズの出題方向を表す列挙型。rawValueはUserDefaultsへの永続化キーとして使われる。
-// CaseIterableに準拠することでホーム画面のモード選択行をForEachで生成できる
+/// クイズの出題方向を表す列挙型。rawValue は UserDefaults への永続化キーとして使われる。
+/// CaseIterable に準拠することでホーム画面のモード選択行を ForEach で生成できる。
 enum QuizMode: String, CaseIterable {
     case emojiToText = "emojiToText"  // 絵文字（またはコード・テキスト）を見て名前を答える
     case textToEmoji = "textToEmoji"  // 名前を見て絵文字（またはコード・テキスト）を答える
 
-    // ホーム画面のモード選択行に表示する主ラベル。
-    // QuizMode × DisplayStyle の6通りに対応するローカライズ文字列を返す
+    // ★ タプルでの switch とは？ ★
+    //   switch (self, style) のように複数の値をタプルにまとめて分岐すると、
+    //   「モード2種 × 表示形式3種 = 6通り」の組み合わせを1つの switch で書けます。
+    //   if 文の入れ子より見通しが良く、ケースが足りないとコンパイルエラーに
+    //   なるため、組み合わせの書き漏らしを構造的に防げます。
+
+    /// ホーム画面のモード選択行に表示する主ラベル。
+    /// QuizMode × DisplayStyle の6通りに対応するローカライズ文字列を返す。
     func primaryLabel(for style: DisplayStyle) -> String {
         switch (self, style) {
         case (.emojiToText, .emoji): return String(localized: "quiz_mode_emoji_to_text")
@@ -46,7 +59,7 @@ enum QuizMode: String, CaseIterable {
         }
     }
 
-    // ホーム画面のモード選択行に表示する補足説明ラベル（primaryLabelの下に小さく表示）
+    /// ホーム画面のモード選択行に表示する補足説明ラベル（primaryLabel の下に小さく表示）。
     func descriptionLabel(for style: DisplayStyle) -> String {
         switch (self, style) {
         case (.emojiToText, .emoji): return String(localized: "quiz_desc_emoji_to_text")
@@ -58,8 +71,8 @@ enum QuizMode: String, CaseIterable {
         }
     }
 
-    // 問題カード下部に表示する「なにをこたえる？」の誘導テキスト。
-    // primaryLabelより短く、プレイ中に視線が自然に流れる位置に表示される
+    /// 問題カード下部に表示する「なにをこたえる？」の誘導テキスト。
+    /// primaryLabel より短く、プレイ中に視線が自然に流れる位置に表示される。
     func questionLabel(for style: DisplayStyle) -> String {
         switch (self, style) {
         case (.emojiToText, .emoji): return String(localized: "quiz_question_emoji_to_text")
@@ -72,10 +85,15 @@ enum QuizMode: String, CaseIterable {
     }
 }
 
-// MARK: - Quiz Category
+// MARK: - QuizCategory
 
-// カテゴリ1件のデータモデル。QuizCategoryLoaderがJSONから生成して返す。
-// Equatableの==はidのみで比較する。itemsの内容が異なっても同じIDなら同一カテゴリとみなす
+/// カテゴリ1件のデータモデル。QuizCategoryLoader がJSONから生成して返す。
+///
+/// ★ なぜ Equatable の == を自分で書くのか ★
+///   標準の自動実装は「全プロパティが等しいか」を比較しますが、
+///   ここでは id のみで比較する独自実装にしています。
+///   items の中身が多少違っても「同じ ID = 同じカテゴリ」とみなす方が、
+///   画面遷移アニメーションのトリガー判定などで都合が良いためです。
 struct QuizCategory: Identifiable, Equatable {
     let id: String          // JSONのgameIdと一致する一意な識別子
     let group: String       // カテゴリグループ名（ホーム画面のセクション見出しに使用）
@@ -89,22 +107,23 @@ struct QuizCategory: Identifiable, Equatable {
     }
 }
 
-// MARK: - Quiz Item
-// id は UUID() で常にユニーク。buildQuestions() で choices 配列に correct の
-// 同一インスタンスが含まれるため、id 比較で正誤判定が成立する。
+// MARK: - QuizItem
 
-// 絵文字クイズの問題1件を構成するアイテム。正解としても選択肢としても使われる。
-// UUIDによるidで同じ絵文字や同じ名前のアイテムが複数存在しても区別できる
+/// 絵文字クイズの問題1件を構成するアイテム。正解としても選択肢としても使われる。
+///
+/// id は UUID() で常にユニーク。buildQuestions() で choices 配列に correct の
+/// 「同一インスタンス」が含まれるため、id 比較で正誤判定が成立する。
+/// 同じ絵文字や同じ名前のアイテムが複数存在しても UUID で区別できる。
 struct QuizItem: Identifiable, Equatable {
     let id    = UUID()
     let emoji: String   // 表示用（絵文字 / コード / テキスト）
     let name:  String   // よみかた / 空港名 / 意味など
 }
 
-// MARK: - Quiz Question
+// MARK: - QuizQuestion
 
-// 1問分の問題データ。正解アイテム1つとシャッフル済みの選択肢4つを持つ。
-// EmojiQuizViewModelのbuildQuestions()で生成され、セッション中は変更されない
+/// 1問分の問題データ。正解アイテム1つとシャッフル済みの選択肢4つを持つ。
+/// EmojiQuizViewModel の buildQuestions() で生成され、セッション中は変更されない。
 struct QuizQuestion {
     let correct: QuizItem    // 正解のアイテム。choices配列の中にも含まれている
     let choices: [QuizItem]  // 正解1つ＋不正解3つをシャッフルした選択肢リスト

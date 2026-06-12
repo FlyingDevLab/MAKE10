@@ -8,31 +8,50 @@
 // 絵文字クイズ終了後に表示する結果画面。
 // スコア・メッセージ・円形ゲージで結果を視覚的に伝え、
 // 獲得したシールのバナー表示とドラッグ配置への誘導も担う。
+//
+// 役割分担:
+//   - EmojiQuizViewModel        : スコア・総問題数の算出元（この画面は表示するだけ）
+//   - EmojiQuizResultView       : 結果の視覚表現とシールバナー
+//   - DraggablePendingStickerChip : シールチップ（FinishedView.swift で定義された共用部品）
+//
+// シールがこの画面に届くまでの流れは FinishedView.swift 冒頭の解説を参照
+// （あちらは MAKE10 の結果画面、こちらはクイズの結果画面で、同じ仕組みを共用している）。
 
 import SwiftUI
 
+// MARK: - EmojiQuizResultView
+
 struct EmojiQuizResultView: View {
+
+    // MARK: 依存
+
     var viewModel: EmojiQuizViewModel
 
-    // 今回のクイズで新たに獲得したシールの絵文字リスト。
-    // onAppearでStickerStore.pendingStickersから取得し、バナーに表示する
+    // MARK: ローカル状態
+
+    /// 今回のクイズで新たに獲得したシールの絵文字リスト。
+    /// onAppear で StickerStore.pendingStickers から取得し、バナーに表示する。
     @State private var newStickerEmojis: [String] = []
 
-    /// バナー内の各絵文字チップのグローバル座標（index → CGPoint）
-    // ドラッグせずに「もう一度」を押した場合に、バナー上の表示位置へシールを自動配置するために使う
+    /// バナー内の各絵文字チップのグローバル座標（index → CGPoint）。
+    /// ドラッグせずに「もう一度」を押した場合に、バナー上の表示位置へシールを自動配置するために使う。
     @State private var capturedPositions: [Int: CGPoint] = [:]
 
-    // placeRemainingStickers内で座標をスクリーン比率に変換するために使用する
+    /// placeRemainingStickers 内で座標をスクリーン比率に変換するために使用する。
     private var screenSize: CGSize { UIScreen.main.bounds.size }
 
-    // 正解数を総問題数で割った正答率（0〜100の整数）。
-    // 各表示要素（絵文字・メッセージ・色）の分岐条件として使われる
+    // MARK: 表示の算出
+
+    /// 正解数を総問題数で割った正答率（0〜100の整数）。
+    /// 各表示要素（絵文字・メッセージ・色）の分岐条件として使われる。
     private var percentage: Int {
         guard viewModel.totalCount > 0 else { return 0 }
         return Int(Double(viewModel.score) / Double(viewModel.totalCount) * 100)
     }
 
-    // 正答率に応じた結果絵文字を返す。100%なら🏆、以降スコアが下がるにつれ控えめな絵文字になる
+    /// 正答率に応じた結果絵文字を返す。100%なら🏆、以降スコアが下がるにつれ控えめな絵文字になる。
+    /// ⚠️ 変更注意: 閾値（100 / 90 / 70 / 50 / 30）は下の resultMessage と揃えること。
+    ///   片方だけ変えると「🎉なのにメッセージは普通」のような不一致が起きる。
     private var resultEmoji: String {
         switch percentage {
         case 100:       return "🏆"
@@ -45,8 +64,8 @@ struct EmojiQuizResultView: View {
         }
     }
 
-    // 正答率に応じたローカライズ済みの結果メッセージを返す。
-    // percentageの閾値はresultEmojiと揃えて一貫性を保っている
+    /// 正答率に応じたローカライズ済みの結果メッセージを返す。
+    /// ⚠️ 変更注意: 閾値は上の resultEmoji と揃えること（詳細はそちらを参照）。
     private var resultMessage: String {
         switch percentage {
         case 100:       return String(localized: "quiz_result_perfect")
@@ -59,21 +78,24 @@ struct EmojiQuizResultView: View {
         }
     }
 
-    // 正答率に応じてスコア数字と円形ゲージの色を変える。
-    // 80%以上は緑（良好）、50%以上は金、それ以外はプライマリカラー
+    /// 正答率に応じてスコア数字と円形ゲージの色を変える。
+    /// 80%以上は緑（良好）、50%以上は金、それ以外はプライマリカラー。
     private var scoreColor: Color {
         switch percentage {
-        case 80...: return DS.gaugeFull
-        case 50...: return DS.gold
+        case 80...: return DS.gaugeFull   // ← 変更可（色の閾値）
+        case 50...: return DS.gold        // ← 変更可（色の閾値）
         default:    return DS.primary
         }
     }
+
+    // MARK: body
 
     var body: some View {
         VStack(spacing: 0) {
             Spacer()
 
-            // 結果カード：絵文字＋メッセージ＋円形スコアゲージをまとめたメインコンテンツ
+            // ── 結果カード ──────────────────────────────────
+            // 絵文字＋メッセージ＋円形スコアゲージをまとめたメインコンテンツ
             VStack(spacing: 20) {
                 VStack(spacing: 8) {
                     // 正答率に連動した結果絵文字。フォントサイズ72ptで画面の主役として表示する
@@ -85,14 +107,19 @@ struct EmojiQuizResultView: View {
                 }
                 Divider()
 
-                // 円形スコアゲージ。正答率をパーセントに変換してCircle.trimで弧の長さを表現する
+                // ── 円形スコアゲージ ──────────────────────────
+                // ★ Circle.trim で円形ゲージを作る ★
+                //   trim(from: 0, to: 0.7) は「円周の 0%〜70% の部分だけを描く」という
+                //   意味で、これで弧（円グラフの一部分）が表現できます。
+                //   ただし SwiftUI の円は「3時の方向」から描き始めるため、
+                //   rotationEffect(-90度) で回転させて「12時の方向」スタートに補正します。
+                //   円形プログレスバーを作るときの定番の組み合わせです。
                 ZStack {
                     // ゲージの背景トラック（薄いグレーの全円）
                     Circle()
                         .stroke(DS.gaugeBg, lineWidth: 12)
 
-                    // 正答率ぶんだけ弧を描く前景トラック。
-                    // -90度回転して12時方向からスタートするよう補正している
+                    // 正答率ぶんだけ弧を描く前景トラック
                     Circle()
                         .trim(from: 0, to: CGFloat(percentage) / 100)
                         .stroke(scoreColor, style: StrokeStyle(lineWidth: 12, lineCap: .round))
@@ -108,7 +135,9 @@ struct EmojiQuizResultView: View {
                                 colors: [scoreColor, DS.accent],
                                 startPoint: .top, endPoint: .bottom
                             ))
-                        // 「/ 10問」形式で総問題数を小さく添える
+                        // 「/ 10問」形式で総問題数を小さく添える。
+                        // String(format: String(localized:), ...) = 「%lld もん」のような
+                        // 引数付きのローカライズ文字列に値を埋め込む書き方
                         Text(String(format: String(localized: "quiz_result_total_count"), viewModel.totalCount))
                             .font(.system(size: 14, weight: .medium, design: .rounded))
                             .foregroundStyle(DS.muted)
@@ -127,7 +156,8 @@ struct EmojiQuizResultView: View {
 
             Spacer()
 
-            // 新着シールバナー。獲得シールがある場合のみスプリングアニメーションで表示する。
+            // ── 新着シールバナー ──────────────────────────────
+            // 獲得シールがある場合のみスプリングアニメーションで表示する。
             // ドラッグして盤面に置くか、ドラッグしなかった場合は「もう一度」タップ時に自動配置される
             if !newStickerEmojis.isEmpty {
                 VStack(spacing: 8) {
@@ -138,7 +168,7 @@ struct EmojiQuizResultView: View {
 
                     HStack(spacing: 4) {
                         ForEach(Array(newStickerEmojis.enumerated()), id: \.offset) { idx, emoji in
-                            // DraggablePendingStickerChip：ドラッグで盤面に配置できるシールチップ
+                            // ドラッグで盤面に配置できるシールチップ（FinishedView.swift で定義）。
                             // ドラッグ完了コールバックで配列から該当シールを削除する
                             DraggablePendingStickerChip(emoji: emoji) {
                                 if let i = newStickerEmojis.firstIndex(of: emoji) {
@@ -148,8 +178,8 @@ struct EmojiQuizResultView: View {
                                     }
                                 }
                             }
-                            // チップが画面上のどこに表示されているかをGeometryReaderで取得し、
-                            // capturedPositionsに記録する。ドラッグしなかった場合の自動配置に使う
+                            // チップの画面上の中心座標を記録する（ドラッグしなかった場合の自動配置に使う）
+                            // 見えない背景で座標を取得するテクニックの解説は FinishedView.swift を参照
                             .background(
                                 GeometryReader { chipGeo in
                                     Color.clear.onAppear {
@@ -179,7 +209,8 @@ struct EmojiQuizResultView: View {
                 .transition(.scale(scale: 0.85).combined(with: .opacity))
             }
 
-            // 「もう一度」ボタン。タップ前に残留シールを自動配置してからViewModelをリセットする
+            // ── 「もう一度」ボタン ────────────────────────────
+            // タップ前に残留シールを自動配置してから ViewModel をリセットする
             Button {
                 placeRemainingStickers()
                 viewModel.restart()
@@ -200,8 +231,8 @@ struct EmojiQuizResultView: View {
             .padding(.bottom, 16)
         }
         .onAppear {
-            // 画面表示時にStickerStoreから未配置のシールを取得してバナーに渡す。
-            // pendingStickersが空のときはバナー自体を表示しない
+            // 画面表示時に StickerStore から未配置のシールを取得してバナーに渡す。
+            // pendingStickers が空のときはバナー自体を表示しない
             if !StickerStore.shared.pendingStickers.isEmpty {
                 withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
                     newStickerEmojis = StickerStore.shared.pendingStickers
@@ -215,9 +246,13 @@ struct EmojiQuizResultView: View {
         }
     }
 
+    // MARK: シール配置
+
     /// ドラッグされなかった残りのシールを、バナー上の表示位置にそのまま配置する。
-    // 座標はスクリーンサイズに対する比率（0.0〜1.0）に変換し、画面端への飛び出しを防ぐため
-    // 8%〜92%の範囲にクランプしてからStickerStoreに渡す。
+    /// 座標を比率で保存する理由の解説は FinishedView.swift を参照。
+    ///
+    /// ⚠️ 変更注意: クランプ範囲 0.08〜0.92 は FinishedView.placeRemainingStickers と
+    ///   DraggablePendingStickerChip.onEnded の同じ値と揃えること（計3箇所）。
     private func placeRemainingStickers() {
         for (idx, emoji) in newStickerEmojis.enumerated() {
             if let pos = capturedPositions[idx] {
