@@ -230,6 +230,14 @@ print("⚠️ <型名>: <何に失敗したか>: \(error.localizedDescription)")
 | .id() によるトランジション発火 / .animation(value:) | PlayingView.swift |
 | ButtonStyle / 自己完結型コンポーネント | PlayingView.swift |
 | 見えない背景での座標取得 / 座標の比率保存 | FinishedView.swift |
+| タプルでの switch | QuizData.swift |
+| Equatable の == を自分で書く理由 | QuizData.swift |
+| カスタムデコード（init(from:)） | QuizCategoryLoader.swift |
+| assertionFailure とは | QuizCategoryLoader.swift |
+| @MainActor とは | EmojiQuizViewModel.swift |
+| Task（Swift Concurrency）/ キャンセル | EmojiQuizViewModel.swift |
+| Circle.trim で円形ゲージ | EmojiQuizResultView.swift |
+| @AppStorage / .task / 出現順ユニーク化 | EmojiQuizHomeView.swift |
 | SpriteKit 入門(ノード/物理) | CoinDropScene.swift |
 | didMove 二重呼び出しガード | PinballScene.swift |
 
