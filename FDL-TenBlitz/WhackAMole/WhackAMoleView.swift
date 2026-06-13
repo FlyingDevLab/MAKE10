@@ -9,6 +9,23 @@
 // MakeTenContentView の SharedFrame 内のコンテンツとして表示される。
 // SharedFrame のバックボタンが押されると onDisappear → stopGame() が呼ばれる。
 //
+// ★ このファイルの構成 ★
+//   WhackAMoleView … ルートView（gameState で3画面を切り替え）
+//     ├ WAMTitleView   … タイトル画面（遊び方・ハイスコア・スタート）
+//     ├ WAMPlayingView … ゲームプレイ画面（ステータスバー＋3×3グリッド）
+//     ├ WAMResultView  … リザルト画面（スコア・新記録・ボタン群）
+//     └ MoleHoleView   … 穴1マス（モグラの出現アニメーション）
+//
+// 役割分担:
+//   - View（このファイル）   : 画面切り替え・見た目・タップ判定
+//   - WhackAMoleViewModel    : タイマー・スポーン制御・スコア・ハイスコア
+//
+// ⚠️ 変更注意: このファイルの "How to Play" "Start Game" などの英語文字列は、
+//   そのまま Localizable.xcstrings の「翻訳キー」になっている
+//   （Text(リテラル) は LocalizedStringKey 扱い。解説は GamePickerComponents.swift 参照）。
+//   文字列を書き換えるとキーが変わり、15言語の翻訳がすべて外れるので変更しないこと
+//   （変更するなら xcstrings 側のキーと全言語の翻訳も合わせて移行する）。
+//
 // 主な調整ポイント:
 //   モグラの外観  → MoleHoleView 内の各パーツ
 //   穴の外観      → MoleHoleView の地面・楕円
@@ -31,7 +48,7 @@ struct WhackAMoleView: View {
             }
         }
         .transition(.opacity)
-        // 画面切り替えトランジション時間 ← 変更可
+        // ← 変更可：画面切り替えトランジション時間
         .animation(.easeInOut(duration: 0.3), value: viewModel.gameState)
         // SharedFrame の戻るボタン・画面離脱でゲームを止める
         .onDisappear { viewModel.stopGame() }
@@ -48,7 +65,7 @@ private struct WAMTitleView: View {
             Spacer()
 
             // ── 遊び方カード ──────────────────────────────────
-            // 説明文を変えたいときはここを編集する
+            // 説明文を変えたいときは xcstrings 側のキーごと移行する（ヘッダの ⚠️ 参照）
             VStack(alignment: .leading, spacing: 12) {
                 Label("How to Play", systemImage: "questionmark.circle.fill")
                     .font(.system(size: 16, weight: .bold, design: .rounded))
@@ -56,6 +73,7 @@ private struct WAMTitleView: View {
 
                 HStack(alignment: .top, spacing: 8) {
                     Text("⏱️").font(.system(size: 18))
+                    // ⚠️「30 seconds」は WAMConfig.gameDuration と連動（VM側の ⚠️ を参照）
                     Text("Hit as many moles as you can in 30 seconds!")
                         .font(.system(size: 15, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.textPrimary)
@@ -80,7 +98,7 @@ private struct WAMTitleView: View {
                         .font(.system(size: 16, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)
                     Text("\(viewModel.highScore)")
-                        .font(.system(size: 24, weight: .black, design: .rounded))  // ← 数値サイズ
+                        .font(.system(size: 24, weight: .black, design: .rounded))  // ← 変更可（数値サイズ）
                         .foregroundStyle(DS.accent)
                 }
                 .padding(.horizontal, 20)
@@ -97,10 +115,10 @@ private struct WAMTitleView: View {
                 withAnimation { viewModel.startGame() }
             } label: {
                 Text("Start Game")
-                    .font(.system(size: 26, weight: .black, design: .rounded))  // ← ボタン文字サイズ
+                    .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)                                      // ← ボタン縦パディング
+                    .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
                     .background(
                         RoundedRectangle(cornerRadius: DS.btnRadius)
                             .fill(DS.primary)
@@ -119,7 +137,9 @@ private struct WAMTitleView: View {
 private struct WAMPlayingView: View {
     var viewModel: WhackAMoleViewModel
 
-    // ← count: 3 で3列。変えるときは holeCount も合わせて変更する
+    /// 3列グリッドの定義（LazyVGrid の解説は TitleView.swift を参照）。
+    /// ⚠️ 変更注意: count: 3 は WAMConfig.holeCount（9 = 3×3）および
+    ///   下の ForEach(0..<9) と連動している。変えるときは3箇所すべてを揃えること。
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
 
     var body: some View {
@@ -134,10 +154,10 @@ private struct WAMPlayingView: View {
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)
                     Text("\(viewModel.score)")
-                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← スコア数値サイズ
+                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（スコア数値サイズ）
                         .foregroundStyle(DS.primary)
                         .contentTransition(.numericText())
-                        .animation(.spring(duration: 0.2), value: viewModel.score)  // ← スコア増加アニメ速度
+                        .animation(.spring(duration: 0.2), value: viewModel.score)  // ← 変更可（スコア増加アニメ速度）
                 }
                 .frame(maxWidth: .infinity)
 
@@ -147,7 +167,7 @@ private struct WAMPlayingView: View {
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)
                     Text("\(viewModel.timeLeft)")
-                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← タイマー数値サイズ
+                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（タイマー数値サイズ）
                         // 警告しきい値以下になると gaugeWarn 色に変わる（しきい値は WAMConfig.warningThreshold）
                         .foregroundStyle(viewModel.isTimerWarning ? DS.gaugeWarn : DS.textPrimary)
                         .contentTransition(.numericText())
@@ -156,11 +176,12 @@ private struct WAMPlayingView: View {
                 .frame(maxWidth: .infinity)
             }
             .padding(.horizontal, 24)
-            .padding(.vertical, 16)  // ← ステータスバーの上下余白
+            .padding(.vertical, 16)  // ← 変更可（ステータスバーの上下余白）
             .background(DS.card)
 
             // ── モグラグリッド（3×3）──────────────────────────
-            LazyVGrid(columns: columns, spacing: 12) {  // ← spacing でマス間隔を調整
+            LazyVGrid(columns: columns, spacing: 12) {  // ← 変更可（spacing でマス間隔を調整）
+                // ⚠️ 変更注意: 9 は WAMConfig.holeCount と揃えること（columns の ⚠️ も参照）
                 ForEach(0..<9, id: \.self) { index in
                     MoleHoleView(
                         state:   viewModel.moles[index],
@@ -169,7 +190,7 @@ private struct WAMPlayingView: View {
                     .aspectRatio(1, contentMode: .fit)  // 正方形を維持
                 }
             }
-            .padding(16)   // ← グリッド外周の余白 ← 変更可
+            .padding(16)   // ← 変更可（グリッド外周の余白）
             .background(DS.bg)
 
             Spacer()
@@ -206,7 +227,7 @@ private struct WAMResultView: View {
                     .font(.system(size: 15, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
                 Text("\(viewModel.score)")
-                    .font(.system(size: 72, weight: .black, design: .rounded))  // ← スコア数値サイズ
+                    .font(.system(size: 72, weight: .black, design: .rounded))  // ← 変更可（スコア数値サイズ）
                     .foregroundStyle(DS.primary)
             }
             .padding(.vertical, 20)
@@ -293,6 +314,7 @@ private struct MoleHoleView: View {
     let onWhack: () -> Void
 
     var body: some View {
+        // GeometryReader の解説は ConfettiView.swift を参照
         GeometryReader { geo in
             // size = セルの一辺のビューpx サイズ（正方形なので width = height）
             let size = geo.size.width
@@ -300,17 +322,14 @@ private struct MoleHoleView: View {
             ZStack(alignment: .bottom) {
 
                 // ── 地面（穴の周りの土）──────────────────────
-                // ← cornerRadius: 12 で丸みを調整できる
-                // ← opacity(0.25) で土の濃さを調整できる
-                RoundedRectangle(cornerRadius: 12)
-                    .fill(Color(red: 0.55, green: 0.38, blue: 0.20).opacity(0.25))  // ← 土の色・濃さ
+                RoundedRectangle(cornerRadius: 12)   // ← 変更可（角の丸み）
+                    .fill(Color(red: 0.55, green: 0.38, blue: 0.20).opacity(0.25))  // ← 変更可（土の色・濃さ）
 
                 // ── 穴（暗い楕円）────────────────────────────
-                // ← size の倍率で穴のサイズを変えられる（幅 0.72 / 高さ 0.28）
                 Ellipse()
-                    .fill(Color(red: 0.18, green: 0.10, blue: 0.04))  // ← 穴の色
-                    .frame(width: size * 0.72, height: size * 0.28)    // ← 穴のサイズ倍率
-                    .padding(.bottom, 6)                                // ← 穴の下端余白
+                    .fill(Color(red: 0.18, green: 0.10, blue: 0.04))  // ← 変更可（穴の色）
+                    .frame(width: size * 0.72, height: size * 0.28)    // ← 変更可（穴のサイズ倍率）
+                    .padding(.bottom, 6)                                // ← 変更可（穴の下端余白）
 
                 // ── モグラ + 叩き演出（穴の上だけ表示）────────
                 // .clipped() で穴より下の部分が見えないようにカットする
@@ -318,25 +337,25 @@ private struct MoleHoleView: View {
                     // 叩かれた瞬間：⭐ が弾けて消える演出
                     if state.isHit {
                         Text("⭐")
-                            .font(.system(size: size * 0.28))      // ← ⭐ サイズ（size の倍率）
-                            .offset(y: -size * 0.05)               // ← ⭐ の縦オフセット
+                            .font(.system(size: size * 0.28))      // ← 変更可（⭐ サイズ・size の倍率）
+                            .offset(y: -size * 0.05)               // ← 変更可（⭐ の縦オフセット）
                             .transition(.scale(scale: 0.3).combined(with: .opacity))
                     }
 
-                    // モグラ本体（絵文字）
-                    // ← 絵文字を変えるとモグラの見た目が変わる
+                    // モグラ本体（画像アセット "mole"）
+                    // ← 変更可：Assets の "mole" 画像を差し替えると見た目が変わる
                     Image("mole")
                         .resizable()
-                            .scaledToFit()
-                            .frame(width: size * 1.52, height: size * 1.52)  // ← サイズは絵文字と同じ倍率
-                        .offset(y: moleOffsetY(size: size))         // ← 状態に応じたY位置
+                        .scaledToFit()
+                        .frame(width: size * 1.52, height: size * 1.52)  // ← 変更可（モグラのサイズ倍率）
+                        .offset(y: moleOffsetY(size: size))         // 状態に応じたY位置
                         // isVisible が変わったとき（出現・消滅）のアニメ
-                        // ← duration / bounce を変えると飛び出し感が変わる
+                        // ← 変更可：duration / bounce を変えると飛び出し感が変わる
                         .animation(.spring(duration: 0.25, bounce: 0.3), value: state.isVisible)
                         // isHit が変わったとき（叩かれた瞬間）のアニメ
                         .animation(.spring(duration: 0.12),              value: state.isHit)
                 }
-                // ← height: size * 0.9 でクリップ高さを調整（大きくするとモグラが多く見える）
+                // ← 変更可：height: size * 0.9 でクリップ高さを調整（大きくするとモグラが多く見える）
                 .frame(width: size, height: size * 0.9)
                 .clipped()
             }
@@ -353,14 +372,12 @@ private struct MoleHoleView: View {
     /// モグラの縦オフセットを状態に応じて返す。
     /// オフセットが大きい（正の値）ほどモグラが下に隠れる。
     ///
-    ///   isHit    → 叩かれたら即引っ込む（0.55 = ほぼ穴の中）
+    ///   isHit     → 叩かれたら即引っ込む（0.55 = ほぼ穴の中）
     ///   isVisible → 穴から顔を出す（0.10 = 少しだけ出ている）
     ///   非表示    → 穴の下に完全に隠れる（0.90 = ほぼ見えない）
-    ///
-    /// ← 値を変えるとモグラの出っ張り具合が変わる
     private func moleOffsetY(size: CGFloat) -> CGFloat {
-        if state.isHit     { return size * 0.55 }  // ← 叩かれた後の引っ込み量
-        if state.isVisible { return size * 0.10 }  // ← 出現時の顔の出し量（小さいほど多く見える）
-        return size * 0.90                          // ← 非表示時の隠れ量（大きいほど深く隠れる）
+        if state.isHit     { return size * 0.55 }  // ← 変更可（叩かれた後の引っ込み量）
+        if state.isVisible { return size * 0.10 }  // ← 変更可（出現時の顔の出し量・小さいほど多く見える）
+        return size * 0.90                          // ← 変更可（非表示時の隠れ量・大きいほど深く隠れる）
     }
 }
