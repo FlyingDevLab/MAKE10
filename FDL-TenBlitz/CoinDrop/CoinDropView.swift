@@ -22,6 +22,7 @@
 //    このゲームは物理演算（コインの落下・衝突）に SpriteKit を使い、
 //    スコア表示・ボタンなどの UI は SwiftUI で重ねて描いています。
 //    SpriteView が SpriteKit シーンを SwiftUI の世界に埋め込む橋渡し役です。
+//    （同じ SpriteView の説明を PinballView.swift にも書いてしまっています。重複ごめんなさい🙇）
 
 import SwiftUI
 import SpriteKit

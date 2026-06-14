@@ -109,6 +109,7 @@ enum CoinDropTuning {
 //   1 << 2 = 0b100（床）
 //   AND 演算で共通ビットがあれば「関係あり」と判定されます。
 //   こうすることで大量のオブジェクトの衝突判定を高速に処理できます。
+//   （同じ説明を PinballScene.swift にも書いてしまっています。重複ごめんなさい🙇）
 
 private struct Cat {
     /// コイン同士の衝突カテゴリ
@@ -240,6 +241,7 @@ final class CoinDropScene: SKScene, SKPhysicsContactDelegate {
         // SKNode は「目には見えないが物理だけ持つ透明な点」として使える
         let floor = SKNode()
         // edgeFrom:to: → 2点を結ぶ無限に薄い「辺」の物理ボディを作る（コインは通り抜けない）
+        // （PinballScene.swift にも同じ edgeFrom の説明を書いてしまっています。重複ごめんなさい🙇）
         let fBody = SKPhysicsBody(edgeFrom: CGPoint(x: 0, y: 0), to: CGPoint(x: W, y: 0))
         fBody.categoryBitMask = Cat.floor  // 「床カテゴリ」として登録
         fBody.friction = CoinDropTuning.friction
