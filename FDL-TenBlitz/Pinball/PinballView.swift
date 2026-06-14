@@ -4,19 +4,33 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/04/13.
 //
-
-// PinballViewModel の gameState に応じて
-//   .title    → SwiftUI タイトル画面
-//   .playing  → SpriteKit ゲーム画面 (SpriteView)
-//   .finished → SwiftUI リザルト画面
-// を切り替えるルートView。
-// SharedFrame 内のコンテンツとして表示される。
+//  ① 一言サマリ
+//  ピンボールのルートView。PinballViewModel の gameState に応じて
+//    .title    → SwiftUI タイトル画面
+//    .playing  → SpriteKit ゲーム画面 (SpriteView)
+//    .finished → SwiftUI リザルト画面
+//  を切り替える。SharedFrame 内のコンテンツとして表示される。
+//
+//  ② 役割分担
+//    - View（このファイル）  : 画面切り替えと、SpriteKit シーンの生成・保持・リセット
+//    - ViewModel (PinballViewModel): スコア・残機・状態の保持
+//    - Scene (PinballScene)  : 物理シミュレーション本体
+//
+//  ★ SpriteView とは？ ★
+//    SwiftUI の中に SpriteKit のシーン(SKScene)を埋め込むための橋渡しView。
+//    このファイルでは scene を @State で保持し、初回に1つ作って使い回す。
+//    再スタート時は作り直さず resetGame() で中身だけ戻し、画面を離れるときは
+//    isPaused で物理を止める（毎回作り直すと重く、状態も失われるため）。
+//
+//  ★ SpriteKit そのもの（ノード・物理）の入門解説は CoinDropScene.swift を参照 ★
+//  ★ @Binding の解説は SettingsView.swift / GeometryReader は ConfettiView.swift 参照 ★
 
 import SwiftUI
 import SpriteKit
 
 // MARK: - PinballView
 
+/// gameState を見て3画面を出し分けるルート。SpriteKit シーンの生存管理もここが持つ。
 struct PinballView: View {
 
     @State private var viewModel = PinballViewModel()
@@ -32,12 +46,13 @@ struct PinballView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.gameState)
-        .onDisappear { scene?.isPaused = true }
+        .onDisappear { scene?.isPaused = true }   // 画面を離れたら物理を一時停止
     }
 }
 
 // MARK: - PBTitleView（タイトル画面）
 
+/// タイトル画面。遊び方カード・ハイスコア・スタートボタンを縦に並べる。
 private struct PBTitleView: View {
     var viewModel: PinballViewModel
 
@@ -118,6 +133,7 @@ private struct PBTitleView: View {
 
 // MARK: - PBPlayingView（ゲーム画面）
 
+/// SpriteKit シーンを表示するプレイ画面。シーンの生成・再利用・コールバック接続を担う。
 private struct PBPlayingView: View {
     var viewModel: PinballViewModel
     @Binding var scene: PinballScene?
@@ -131,13 +147,14 @@ private struct PBPlayingView: View {
         }
         .onAppear {
             if let existing = scene {
-                // 再スタート時はリセット
+                // 再スタート時はリセット（シーンは作り直さず中身だけ初期化）
                 existing.isPaused = false
                 existing.resetGame(ballsLeft: viewModel.ballsLeft)
             } else {
                 // 新規作成
                 let newScene = PinballScene(size: CGSize(width: 390, height: 700))
                 newScene.scaleMode = .aspectFit
+                // Scene → ViewModel への通知をつなぐ（スコア更新・ボール落下）
                 newScene.onScoreChanged = { viewModel.updateScore($0) }
                 newScene.onBallDrained  = {
                     viewModel.ballDrained()
@@ -155,6 +172,7 @@ private struct PBPlayingView: View {
         }
     }
 
+    /// SpriteView を組み立てて返す。scene が未生成の場合の保険として一時シーンを渡す。
     @MainActor
     private func makeSpriteView(sceneSize: CGSize, viewSize: CGSize) -> some View {
         SpriteView(
@@ -167,6 +185,7 @@ private struct PBPlayingView: View {
 
 // MARK: - PBResultView（リザルト画面）
 
+/// ゲームオーバー画面。新記録バナー・スコア・ハイスコアと、もう一度／タイトルへ戻るボタン。
 private struct PBResultView: View {
     var viewModel: PinballViewModel
     @Binding var scene: PinballScene?
@@ -196,7 +215,7 @@ private struct PBResultView: View {
                 Text("\(viewModel.score)")
                     .font(.system(size: 60, weight: .black, design: .rounded))
                     .foregroundStyle(DS.primary)
-                    .minimumScaleFactor(0.5)
+                    .minimumScaleFactor(0.5)   // 桁が多いときは自動で縮小して枠内に収める
             }
             .padding(.vertical, 20).frame(maxWidth: .infinity)
             .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
@@ -240,7 +259,7 @@ private struct PBResultView: View {
                 // タイトルへ
                 Button {
                     SoundManager.shared.vibrate()
-                    scene?.isPaused = true
+                    scene?.isPaused = true   // 物理を止めてからシーンを破棄
                     scene = nil
                     withAnimation(.easeInOut(duration: 0.3)) {
                         viewModel.returnToTitle()

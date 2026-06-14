@@ -5,21 +5,42 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/04/13.
 //
 
-// game.js の物理エンジン・描画システムを SpriteKit で再実装。
-// 座標系: Canvas は Y 下向き(origin左上)、SpriteKit は Y 上向き(origin左下)。
-// 変換: sk_y = CH - canvas_y  (CH = 700)
+//  ① 一言サマリ
+//  ピンボールの心臓部。game.js の物理エンジン・描画を SpriteKit で再実装したシーン。
+//  壁・アーチ・バンパー・スリング・ターゲット・フリッパーを配置し、毎フレーム物理を回して
+//  ボールを動かし、衝突に応じて得点・演出・残機処理を行う。
 //
-// 主な対応関係:
-//   requestAnimationFrame → update(_:)
-//   resolveSegment/Circle/Rect → SKPhysicsBody + SKPhysicsContactDelegate
-//   localStorage → UserDefaults (PinballViewModel で管理)
-//   Canvas drawXxx → SKShapeNode
+//  ② 役割分担
+//    - Scene（このファイル）: 物理シミュレーション・描画・衝突処理・スコア発生
+//    - VM (PinballViewModel): スコア集計・残機・画面遷移（コールバックで受け取る）
+//    - View (PinballView)   : シーンの生成・表示
+//
+//  ★ このファイルを読むのに必要な前提 ★
+//    - 座標系: Canvas は Y 下向き(原点左上)、SpriteKit は Y 上向き(原点左下)。
+//      変換: sk_y = CH - canvas_y  (CH = 700)。コメント中の「canvas … → SK …」はこの換算。
+//    - 元 game.js との対応:
+//        requestAnimationFrame → update(_:)
+//        resolveSegment/Circle/Rect → SKPhysicsBody + SKPhysicsContactDelegate
+//        localStorage → UserDefaults (PinballViewModel で管理)
+//        Canvas drawXxx → SKShapeNode
+//    - コード内の `// TODO(整形)` は、後から追加した機能でインデントがずれている箇所。
+//      動作には影響しないため、コメント整備とは分けて次回の整形パスでまとめて直す。
+//
+//  ★ SpriteKit（ノード・物理）の入門解説は CoinDropScene.swift を参照 ★
 
 import SpriteKit
 import UIKit
 
-// MARK: - Physics Categories
+// MARK: - 物理カテゴリ（衝突判定のビットマスク）
 
+/// 物体の種類を表す「衝突カテゴリ」。各ビットを1種類に割り当てている。
+/// ★ ビットマスクとは？ ★
+///   1 << 0 = 0b000001、1 << 1 = 0b000010 …のように、種類ごとに別々のビットを立てる。
+///   こうすると「ボールは壁とバンパーに当たる」のような組み合わせを OR( | ) でまとめられる
+///   （launchBall の collisionBitMask 参照）。物理ボディには3種類のマスクがある:
+///   - categoryBitMask   : 自分が何者か
+///   - collisionBitMask  : 物理的に跳ね返る相手
+///   - contactTestBitMask: 接触を didBegin で「通知してほしい」相手（跳ね返りとは別物）
 private struct Cat {
     static let ball:    UInt32 = 1 << 0
     static let wall:    UInt32 = 1 << 1
@@ -88,6 +109,7 @@ private enum Tuning {
     /// ターゲット消灯→点灯までの秒数。短いほど連打しやすい
     static let targetRestoreSec:  TimeInterval = 4.0
     /// 2倍スコアタイムの継続秒数
+    // TODO(整形): 下行のインデントが他の定数(4スペース)とずれている。動作影響なし。次回の整形パスで揃える。
         static let doubleScoreDuration: TimeInterval = 10.0
     // ── フリッパー ────────────────────────────────────────────
     /// フリッパーの反発係数 (低めが自然)
@@ -119,6 +141,10 @@ private enum Tuning {
 }
 
 // MARK: - PinballScene
+//
+// SKScene を継承した物理シーン本体。SKPhysicsContactDelegate を実装し、
+// 衝突の瞬間を didBegin(_:) で受け取って得点・演出につなげる。
+// ★ SpriteKit（ノード・物理ボディ）の入門解説は CoinDropScene.swift を参照 ★
 
 final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
@@ -177,6 +203,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     // バンパー: 3つ（flash タイマー）
     private var bumperFlash: [TimeInterval] = [0, 0, 0]
     // 2倍スコアタイム残り秒数（0以下 = 無効）
+    // TODO(整形): 下行のインデントが周囲(4スペース)とずれている。動作影響なし。次回まとめて整形する。
         private var doubleScoreTimer: TimeInterval = 0
     // スコアポップアップ
     private struct Popup { var node: SKLabelNode; var vy: CGFloat = 80; var alpha: CGFloat = 1.0 }
@@ -212,8 +239,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         launchBall()
     }
 
-    // MARK: - Wall Setup
+    // MARK: - 壁の設置
 
+    /// 外周・ガイド・スリング周りの壁（エッジ）をまとめて設置する。
     private func setupWalls() {
         // 左右の壁（画面外まで延長してすり抜け防止）
         addWallEdge(from: CGPoint(x: 0,   y: -200), to: CGPoint(x: 0,   y: 800))
@@ -239,6 +267,8 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addWallEdge(from: CGPoint(x: 296.4, y: 166.8), to: CGPoint(x: 335.4, y: 166.8))
     }
 
+    /// 2点 a→b を結ぶ「線（エッジ）」の壁を1枚追加する（物理ボディ＋描画）。
+    /// ★ edgeFrom: は厚みのない線分の当たり判定。動かない静的な壁に向く（内部に入れない） ★
     private func addWallEdge(from a: CGPoint, to b: CGPoint, lineWidth: CGFloat = 5) {
         let node = SKNode()
         let body = SKPhysicsBody(edgeFrom: a, to: b)
@@ -259,8 +289,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addChild(shape)
     }
 
-    // MARK: - Arch Setup
+    // MARK: - アーチ（上部の半円）の設置
 
+    /// 上部の半円アーチを多角形近似のエッジチェーンで設置する。
     private func setupArch() {
         // アーチ(上部半円境界): canvas ARCH_CX=195, ARCH_CY=230, ARCH_R=210
         // SK: center=(195, 470), radius=210
@@ -294,8 +325,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addChild(archShape)
     }
 
-    // MARK: - Slingshot Setup
+    // MARK: - スリングショットの設置
 
+    /// 左右のスリングショット（強く弾く斜め壁）を設置する。
     private func setupSlingshots() {
         // スリングショット本体（ボールに強い反発を与える斜め壁）
         // canvas: makeSeg(0.14, 0.22, 0.24, 0.14)
@@ -325,8 +357,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Bumper Setup
+    // MARK: - バンパーの設置
 
+    /// 3つのバンパー（当たると弾んで得点する円）を設置する。
     private func setupBumpers() {
         // バンパー配置 (SpriteKit 座標)
         // sc(0.50, 0.78) = (195, 620*0.22) = (195, 136.4) → SK (195, 563.6)
@@ -375,8 +408,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Target Setup
+    // MARK: - ターゲットの設置
 
+    /// 4つのターゲット（当たると消灯し一定時間後に復活）を設置する。
     private func setupTargets() {
         // ターゲット配置 (SpriteKit 座標)
         // sc(0.25, 0.47) = (97.5, 620*0.53) = (97.5, 328.6) → SK (97.5, 371.4)
@@ -422,8 +456,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Flipper Setup
+    // MARK: - フリッパーの設置
 
+    /// 左右のフリッパーを生成し、休止角で配置する。
     private func setupFlippers() {
         lFlipNode = makeFlipperNode(pivotX: LPX, dir: 1)
         rFlipNode = makeFlipperNode(pivotX: RPX, dir: -1)
@@ -472,8 +507,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         return node
     }
 
-    // MARK: - HUD Setup
+    // MARK: - HUD（スコア・残機表示）の設置
 
+    /// スコア・残機・2倍タイマーなどの画面表示（HUD）を組み立てる。
     private func setupHUD() {
         // ── スコアパネル（上部中央・目立つデザイン）──────────────
         // 半透明の背景パネル
@@ -535,13 +571,14 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addChild(doubleScoreLabel)
     }
 
+    /// 残機ドット（●○）を現在の残数に合わせて更新する。
     private func refreshBallsHUD(ballsLeft: Int) {
         var s = ""
         for i in 0..<MAX_BALLS { s += i < ballsLeft ? "●" : "○" }
         ballsLabel.text = s
     }
 
-    // MARK: - Ball Launch
+    // MARK: - ボールの発射
 
     func launchBall() {
         ballNode?.removeFromParent()
@@ -583,8 +620,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         body.velocity = CGVector(dx: vx, dy: vy)
     }
 
-    // MARK: - Game Loop (update)
+    // MARK: - ゲームループ（update）
 
+    /// 毎フレーム呼ばれるゲームループ。各タイマー更新・演出・ドレイン判定を行う。
     override func update(_ currentTime: TimeInterval) {
         let dt: CGFloat = lastUpdateTime == 0 ? 0 : min(CGFloat(currentTime - lastUpdateTime), 1.0/30)
         lastUpdateTime = currentTime
@@ -617,7 +655,8 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
-        // ⚠️ 追加: 2倍スコアタイマー
+        // 2倍スコアタイマー（後から追加した機能）の残り秒数を減らし、表示を更新する
+        // TODO(整形): このブロックは周囲より深くインデントされている。動作影響なし。次回8スペースに揃える。
                 if doubleScoreTimer > 0 {
                     doubleScoreTimer -= Double(dt)
                     if doubleScoreTimer <= 0 {
@@ -648,7 +687,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Flipper Angle Update
+    // MARK: - フリッパー角度の更新
 
     /// フリッパーを目標角度に向けて滑らかに回転させる
     private func updateFlipperAngle(
@@ -669,8 +708,10 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         isRaising = raised && abs(node.zRotation - activeAngle) > 0.05
     }
 
-    // MARK: - Contact Detection
+    // MARK: - 衝突検出（didBegin）
 
+    /// 2つの物体が接触した瞬間に SpriteKit が呼ぶ（contactTestBitMask を立てた組のみ）。
+    /// ★ どちらが「ボール」かは分からないので、まず ball 側を特定し、相手の種類で分岐する ★
     func didBegin(_ contact: SKPhysicsContact) {
         let bodyA = contact.bodyA, bodyB = contact.bodyB
 
@@ -698,6 +739,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    /// バンパー衝突時：最低速度を保証して弾き返し、発光と加点を行う。
     private func handleBumperHit(ballBody: SKPhysicsBody, bumperNode: SKNode?) {
         guard let bNode = bumperNode as? SKShapeNode,
               let bIdx  = bumperNodes.firstIndex(of: bNode) else { return }
@@ -723,6 +765,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addScore(100, at: bNode.position)
     }
 
+    /// スリング衝突時：法線方向に追加インパルスを与えて強く弾く。
     private func handleSlingHit(ballBody: SKPhysicsBody, contact: SKPhysicsContact) {
         // スリングは restitution=1.1 で自動反射 + 法線方向に追加インパルス
         let norm = contact.contactNormal
@@ -734,6 +777,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addScore(500, at: contact.contactPoint)
     }
 
+    /// ターゲット衝突時：消灯させ、必要なら2倍タイム発動、加点する。
     private func handleTargetHit(ballBody: SKPhysicsBody, targetNode: SKNode?) {
         guard let tNode = targetNode as? SKShapeNode,
               let tIdx  = targetNodes.firstIndex(of: tNode),
@@ -742,7 +786,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
         deactivateTarget(at: tIdx)
 
-        // 10000pt ターゲット → 追加ボール（マルチボール）は省略（残機管理が複雑になるため）代替として10000ptターゲット(index 3)ヒット → 2倍スコアタイム発動
+        // 10000pt ターゲット(index 3)に当たったら 2倍スコアタイムを発動する。
+        // （マルチボール案は残機管理が複雑になるため見送り、2倍タイムで代替している）
+        // TODO(整形): 下の if 本体のインデントが深すぎる(20スペース)。動作影響なし。次回12スペースに揃える。
         if targetPoints[tIdx] == 10000 {
                     doubleScoreTimer = Tuning.doubleScoreDuration
                     doubleScoreLabel.text   = "×2  \(Int(Tuning.doubleScoreDuration))s"
@@ -751,6 +797,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addScore(targetPoints[tIdx], at: tNode.position)
     }
 
+    /// フリッパー衝突時：上昇中ならスラップブースト（追加加速）を与える。
     private func handleFlipperHit(ballBody: SKPhysicsBody, flipperNode: SKNode?) {
         guard let fNode = flipperNode else { return }
         // スラップブースト: フリッパーが上昇中にヒットした場合のみ追加加速
@@ -765,8 +812,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Target State
+    // MARK: - ターゲットの状態
 
+    /// ターゲットを消灯状態にする（物理ボディを外し色を暗くする）。
     private func deactivateTarget(at index: Int) {
         targetStates[index].active  = false
         targetStates[index].restore = Tuning.targetRestoreSec
@@ -780,10 +828,12 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
+    /// ターゲットを点灯状態に戻す（物理ボディを付け直し色を明るくする）。
     private func activateTarget(at index: Int) {
         targetStates[index].active  = true
         targetStates[index].restore = Tuning.targetRestoreSec
         let node = targetNodes[index]
+        // TODO(整形): 下の body.* 行のインデントが深い(12スペース→本来8)。動作影響なし。次回の整形パスで揃える。
         let body = SKPhysicsBody(rectangleOf: CGSize(width: TW, height: TH))
             body.isDynamic          = false
             body.categoryBitMask    = Cat.target
@@ -800,8 +850,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Bumper Appearance
+    // MARK: - バンパーの見た目
 
+    /// バンパーの発光（ヒット直後だけ白く光らせる）を反映する。
     private func updateBumperAppearance(at index: Int) {
         let node = bumperNodes[index]
         let fl   = bumperFlash[index] > 0
@@ -813,8 +864,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Score
+    // MARK: - スコア加算
 
+    /// 得点を加算し（2倍タイム中は倍）、その場にポップアップ演出を出す。
     private func addScore(_ pts: Int, at pos: CGPoint) {
         let actual = doubleScoreTimer > 0 ? pts * 2 : pts
         internalScore += actual
@@ -833,8 +885,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         popups.append(Popup(node: popup))
     }
 
-    // MARK: - Speed Clamp
+    // MARK: - 速度上限
 
+    /// ボール速度に上限を設ける（バンパー連打などによる無限加速を防止）。
     private func clampBallSpeed(ballBody: SKPhysicsBody) {
         // ボール最高速度の上限クランプ（バンパー連打による無限加速防止）
         let maxSpeed: CGFloat = Tuning.maxSpeed
@@ -845,7 +898,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
     }
 
-    // MARK: - Touch Input
+    // MARK: - タッチ入力
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         for touch in touches {
@@ -862,6 +915,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         lFlipRaised = false; rFlipRaised = false
     }
 
+    /// 現在押されているタッチから左右フリッパーの上げ下げ状態を再計算する。
     private func syncFlipperState(touches: Set<UITouch>?) {
         var hasLeft = false, hasRight = false
         for t in touches ?? [] {
@@ -873,7 +927,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         rFlipRaised = hasRight
     }
 
-    // MARK: - Reset
+    // MARK: - リセット
 
     /// 外部から呼ばれるゲームリセット（再スタート時）
     func resetGame(ballsLeft: Int) {
@@ -883,6 +937,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         lFlipRaised = false; rFlipRaised = false
 
         // 2倍タイムをリセット
+        // TODO(整形): 下2行のインデントが深い(16スペース→本来8)。動作影響なし。次回の整形パスで揃える。
                 doubleScoreTimer = 0
                 doubleScoreLabel.isHidden = true
         // ターゲット・バンパーを初期状態に
