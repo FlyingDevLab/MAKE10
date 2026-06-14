@@ -4,23 +4,32 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/06/03.
 //
-
-// 指令じゃんけんのUI全体を担うファイル。
-// JankenViewがルートとなり、ViewModel.phaseに応じて以下の画面を切り替える。
-//   idle             → JankenTitleView（難易度選択）
-//   countdown        → JankenCountdownView（3→2→1カウントダウン）
-//   phaseTransition  → JankenPhaseTransitionView（挑戦モードのフェーズ切替テロップ）
-//   playing          → JankenPlayingView（メインゲーム）
-//   finished         → JankenResultView（リザルト画面・別ファイル）
+//  ① 一言サマリ
+//  指令じゃんけん（Command Janken）のUI全体を担うファイル。
+//  JankenView がルートとなり、ViewModel.phase に応じて以下の画面を切り替える。
+//    idle             → JankenTitleView（難易度選択）
+//    countdown        → JankenCountdownView（3→2→1カウントダウン）
+//    phaseTransition  → JankenPhaseTransitionView（挑戦モードのフェーズ切替テロップ）
+//    playing          → JankenPlayingView（メインゲーム）
+//    finished         → JankenResultView（リザルト画面・別ファイル）
 //
-// SharedFrameのバックボタン・画面離脱でstopGame()が呼ばれる。
+//  ② 役割分担
+//    - View（このファイル）  : 画面の描画と、手のタップを ViewModel へ渡すこと
+//    - ViewModel (JankenViewModel): 状態・タイマー・勝敗判定・シール報酬
+//  SharedFrame のバックボタン・画面離脱で stopGame() が呼ばれる。
+//
+//  ★ .animation(value:) は Equatable な値が必要（Phase: Equatable）。仕組みは PlayingView.swift 参照 ★
+//  ★ .id() でアニメをリセットする手法、ButtonStyle・自己完結コンポーネントは PlayingView.swift 参照 ★
+//  ★ GeometryReader の解説は ConfettiView.swift 参照 ★
 
 import SwiftUI
 
 // MARK: - JankenView（ルート）
 
+/// 指令じゃんけんのルートView。viewModel.phase を見て5画面を出し分けるだけの薄いハブ。
 struct JankenView: View {
 
+    /// このView階層が持つゲーム本体。子Viewには参照を渡す。
     @State private var viewModel = JankenViewModel()
 
     var body: some View {
@@ -44,13 +53,15 @@ struct JankenView: View {
             }
         }
         // ← duration 変更可
+        // value に渡す Phase は Equatable なので、変化したときだけアニメが走る（仕組みは PlayingView 参照）
         .animation(.easeInOut(duration: 0.3), value: viewModel.phase)
-        .onDisappear { viewModel.stopGame() }
+        .onDisappear { viewModel.stopGame() }   // 画面を離れたらタイマーを止める
     }
 }
 
 // MARK: - JankenTitleView（難易度選択）
 
+/// タイトル画面。遊び方カードと、3つの難易度ボタン（ベストタイム付き）を並べる。
 private struct JankenTitleView: View {
 
     var viewModel: JankenViewModel
@@ -151,6 +162,7 @@ private struct JankenTitleView: View {
 
 // MARK: - JankenCountdownView（カウントダウン）
 
+/// 開始前の「3 → 2 → 1」カウントダウン表示。数字ごとにポップするアニメを付ける。
 private struct JankenCountdownView: View {
 
     let count: Int
@@ -168,6 +180,8 @@ private struct JankenCountdownView: View {
                     .foregroundStyle(DS.primary)
                     .scaleEffect(scale)
                     .opacity(opacity)
+                    // .id() で数字が変わるたびに「別View」とみなし、onAppear からアニメを再生する
+                    // （.id() を使ったアニメ再発火の解説は PlayingView.swift 参照）
                     .id(count)  // countが変わるたびに別Viewとして扱いアニメをリセット
                     .onAppear {
                         scale   = 0.4
@@ -184,6 +198,7 @@ private struct JankenCountdownView: View {
 
 // MARK: - JankenPhaseTransitionView（フェーズ切替テロップ・挑戦モードのみ）
 
+/// 挑戦モードで「勝て→負けろ→交互」へ切り替わる節目に出すテロップ表示。
 private struct JankenPhaseTransitionView: View {
 
     let telopKey: String
@@ -212,7 +227,7 @@ private struct JankenPhaseTransitionView: View {
     }
 }
 
-// MARK: - Hand Button State
+// MARK: - 手ボタンの状態（JankenHandButtonState）
 
 /// じゃんけんボタンの表示状態。QuizChoiceButtonStateと同じ設計思想で実装している。
 /// normal：回答前 / correct：正解で選んだ手 / wrong：不正解で選んだ手
@@ -226,6 +241,7 @@ private enum JankenHandButtonState: Equatable { case normal, correct, wrong }
 ///   - 枠線：DS.gaugeFull（正解）/ DS.gaugeWarn（不正解）のカラーボーダー
 ///   - アイコン：右上に checkmark / xmark
 ///   - スケール：正解時のみ 1.03 に拡大
+/// ★ 状態を引数で受け取るだけの「自己完結コンポーネント」の考え方は PlayingView.swift 参照 ★
 private struct JankenHandButton: View {
     let hand:   JankenHand
     let state:  JankenHandButtonState
@@ -299,6 +315,7 @@ private struct JankenHandButton: View {
 
 // MARK: - JankenPlayingView（メインゲーム画面）
 
+/// プレイ中の画面。プログレス・CPUの手・指示・3つの手ボタン・タイマー・フラッシュ演出を縦に組む。
 private struct JankenPlayingView: View {
 
     var viewModel: JankenViewModel
@@ -306,6 +323,7 @@ private struct JankenPlayingView: View {
     // ミス時の「+5秒」テキスト表示フラグ
     @State private var showPenaltyText = false
 
+    /// 指示の色（勝て＝青 / 負けろ＝赤）。指示テキストとフェーズ表示で共有する。
     private var instructionColor: Color {
         viewModel.currentInstruction == .win ? DS.primary : DS.blitzColor
     }
@@ -321,6 +339,7 @@ private struct JankenPlayingView: View {
 
                 // ── プログレスバー ────────────────────────────
                 VStack(spacing: 4) {
+                    // GeometryReader で得た幅に progress(0〜1)を掛けて、塗り幅を出す（解説は ConfettiView 参照）
                     GeometryReader { geo in
                         ZStack(alignment: .leading) {
                             RoundedRectangle(cornerRadius: DS.gaugeRadius)
@@ -392,7 +411,7 @@ private struct JankenPlayingView: View {
                 Text(viewModel.elapsedFormatted)
                     .font(.system(size: 32, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(DS.textPrimary)
-                    .monospacedDigit()
+                    .monospacedDigit()   // 数字の幅を固定し、桁が変わっても横揺れしないようにする
                     .padding(.bottom, 28)
             }
 
@@ -401,7 +420,7 @@ private struct JankenPlayingView: View {
                 color
                     .opacity(0.35)                    // ← 変更可
                     .ignoresSafeArea()
-                    .allowsHitTesting(false)
+                    .allowsHitTesting(false)          // 演出なのでタップは透過させる
                     .transition(.opacity)
             }
 
@@ -426,7 +445,7 @@ private struct JankenPlayingView: View {
         }
     }
 
-    // MARK: - Helpers
+    // MARK: - ヘルパー
 
     /// タップされた手のボタン状態を返す。
     /// tappedHand と一致するボタンだけ correct / wrong になり、他は normal のまま。

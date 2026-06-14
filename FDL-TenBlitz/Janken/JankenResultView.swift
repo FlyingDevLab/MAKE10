@@ -4,15 +4,24 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/06/03.
 //
-
-// 指令じゃんけんのリザルト画面。
-// クリアタイム・ベストタイム更新・正解率・シール獲得バナーを表示する。
-// FinishedView と同じポップインアニメーション・シールドラッグ操作を踏襲している。
+//  ① 一言サマリ
+//  指令じゃんけん（Command Janken）のリザルト画面。
+//  クリアタイム・ベストタイム更新・正解率・シール獲得バナーを表示し、
+//  獲得シールをその場でドラッグ配置できる。
+//
+//  ② 役割分担
+//    - View（このファイル）  : 結果の表示と、獲得シールの配置操作
+//    - ViewModel (JankenViewModel): タイム・正解率・新記録などの結果データを提供
+//    - StickerStore          : 獲得シール（pending）の保持・配置確定
+//
+//  ★ ポップインアニメ・シールのドラッグ配置・「見えない背景での座標取得＋比率保存」は
+//     FinishedView.swift と同じ仕組み。詳しい解説は FinishedView.swift を参照 ★
 
 import SwiftUI
 
 // MARK: - JankenResultView
 
+/// じゃんけんのリザルト画面。結果カード → シール獲得バナー → ボタン群を縦に並べる。
 struct JankenResultView: View {
 
     var viewModel: JankenViewModel
@@ -28,8 +37,10 @@ struct JankenResultView: View {
     @State private var newStickerEmojis: [String] = []
 
     // バナー内の各絵文字チップのグローバル座標（自動配置のために記録）
+    // ★ 見えない背景Viewで frame(in: .global) を読む手法は FinishedView.swift 参照 ★
     @State private var capturedPositions: [Int: CGPoint] = [:]
 
+    /// 画面サイズ。シール位置を「画面に対する比率」へ変換するときの分母に使う。
     private var screenSize: CGSize { UIScreen.main.bounds.size }
 
     // 正解率の表示文字列（例：8/10 (80%)）
@@ -67,7 +78,7 @@ struct JankenResultView: View {
                                 endPoint: .bottom
                             )
                         )
-                        .monospacedDigit()
+                        .monospacedDigit()   // 数字幅を固定して横揺れを防ぐ
                         .shadow(color: DS.primary.opacity(0.2), radius: 6, x: 0, y: 3)
                 }
 
@@ -107,6 +118,7 @@ struct JankenResultView: View {
             .background(DS.cardShadow())
             .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
             .padding(.horizontal, 28)
+            // ポップイン：onAppear で scale/opacity を変化させて拡大フェードインする
             .scaleEffect(scale)
             .opacity(opacity)
 
@@ -122,6 +134,7 @@ struct JankenResultView: View {
                     HStack(spacing: 4) {
                         ForEach(Array(newStickerEmojis.enumerated()), id: \.offset) { idx, emoji in
                             DraggablePendingStickerChip(emoji: emoji) {
+                                // ドラッグで配置確定されたチップはバナーから取り除く
                                 if let i = newStickerEmojis.firstIndex(of: emoji) {
                                     withAnimation(.easeIn(duration: 0.15)) {
                                         newStickerEmojis.remove(at: i)
@@ -129,6 +142,8 @@ struct JankenResultView: View {
                                     }
                                 }
                             }
+                            // 透明な背景Viewでチップの中心グローバル座標を記録しておく
+                            // （未ドラッグのシールを後でこの位置に自動配置するため）
                             .background(
                                 GeometryReader { chipGeo in
                                     Color.clear.onAppear {
@@ -219,13 +234,16 @@ struct JankenResultView: View {
             }
         }
         .onDisappear {
+            // 画面を離れる際、未配置のシールも取りこぼさず確定する
             placeRemainingStickers()
         }
     }
 
-    // MARK: - Sticker Placement
+    // MARK: - シール配置
 
-    /// ドラッグされなかった残りのシールをバナー上の位置に自動配置する
+    /// ドラッグされなかった残りのシールをバナー上の位置に自動配置する。
+    /// 座標は screenSize で割って「画面に対する比率(0.08〜0.92)」に変換して保存する
+    /// （端末サイズが変わっても同じ相対位置に再現できるようにするため。手法は FinishedView 参照）。
     private func placeRemainingStickers() {
         for (idx, emoji) in newStickerEmojis.enumerated() {
             if let pos = capturedPositions[idx] {

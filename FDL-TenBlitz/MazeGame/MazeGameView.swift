@@ -4,24 +4,35 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/04/13.
 //
-
-// Cheese Quest の3画面（タイトル/ゲーム/リザルト）を SwiftUI で実装。
-// ゲーム画面は Canvas + TimelineView で 60fps 描画する。
+//  ① 一言サマリ
+//  迷路ゲーム「Cheese Quest（チーズクエスト）」の画面（View）。
+//  タイトル / プレイ / リザルトの3画面を切り替え、プレイ画面は Canvas に毎フレーム描画する。
 //
-// 操作:
-//   ドラッグ → チーズを移動（壁スライド判定は MazeGameModel.slideMove が担う）
-//   タップ（移動量 < TAP_THRESHOLD px）→ 衝撃波発射
+//  ② 役割分担
+//    - View（このファイル）: 画面の描画と、ドラッグ／タップ入力を Model へ渡すこと
+//    - Model (MazeGameModel): ゲームのロジック・状態（移動・衝突・敵AI・スコア・60fpsループ）
+//  「描くのは View、考えるのは Model」。View は model の値を読むだけで、自分では計算しない。
 //
-// 描画座標系:
-//   論理座標: 0〜BASE(570) の正方形。model はこの座標で計算する。
-//   ビュー座標: GeometryReader で取得した正方形サイズに scale(s) 倍して変換。
-//   変換式: view_px = logical_px * s   (s = viewSide / BASE)
+//  操作:
+//    ドラッグ → プレイヤー（白ネズミ）を移動（壁ずりの判定は MazeGameModel.slideMove が担当）
+//    タップ（移動量 < TAP_THRESHOLD px）→ 衝撃波を発射
+//
+//  ★ 座標系（このファイルの肝）★
+//    論理座標 : 0〜BASE(570) の正方形。Model はすべてこの座標で計算する。
+//    ビュー座標: GeometryReader で得た実際の正方形サイズ（端末によって変わる）。
+//    変換式   : view_px = logical_px * s   （s = 表示する正方形の一辺 / BASE）
+//    各 draw 関数はこの係数 s を受け取り、論理座標に s を掛けて画面に描く。
+//
+//  ★ Canvas / GeometryReader の解説は ConfettiView.swift を参照 ★
+//  ★ 1ジェスチャでタップとドラッグを判別する手法は GamePickerComponents.swift を参照 ★
 
 import SwiftUI
 
 // MARK: - MazeGameView（ルートView・画面切り替え）
 
+/// Maze ゲームのルートView。model.gameState を見て3画面を出し分けるだけの薄いハブ。
 struct MazeGameView: View {
+    /// このView階層が持つゲーム本体。@State で生成し、子Viewには参照を渡す。
     @State private var model = MazeGameModel()
 
     var body: some View {
@@ -37,14 +48,17 @@ struct MazeGameView: View {
         }
         .transition(.opacity)
         // 画面切り替えトランジション時間 ← 変更可
+        // .animation(value:) には Equatable な値を渡す必要がある（仕組みは PlayingView.swift 参照）。
+        // ここでは gameState を Bool 比較に変換して渡している。
         .animation(.easeInOut(duration: 0.3), value: model.gameState == .playing)
-        // SharedFrame の戻るボタンや画面離脱時にループを止める
+        // SharedFrame の戻るボタンや画面離脱時にループを止める（CADisplayLink を残さない）
         .onDisappear { model.stopLoop() }
     }
 }
 
 // MARK: - MazeTitleView（タイトル画面）
 
+/// タイトル画面。遊び方カード・ハイスコア・スタートボタンを縦に並べる。
 private struct MazeTitleView: View {
     var model: MazeGameModel
 
@@ -59,6 +73,7 @@ private struct MazeTitleView: View {
                     .font(.system(size: 16, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.muted)
 
+                // 絵文字と説明文のペア。LocalizedStringKey なので15言語に翻訳される。
                 let instructions: [(String, LocalizedStringKey)] = [
                     ("🐭", "Drag to move the white mouse"),
                     ("🧀", "Collect all 3 cheeses in the corners to advance!"),
@@ -121,30 +136,43 @@ private struct MazeTitleView: View {
 
 // MARK: - MazePlayView（ゲームプレイ画面）
 
+/// プレイ画面。Canvas をゲーム盤として、TimelineView で毎フレーム描き直す。
+/// ドラッグ＝移動、軽いタップ＝衝撃波、という1つのジェスチャで2操作を兼ねる。
 private struct MazePlayView: View {
     var model: MazeGameModel
 
-    // ── ドラッグ状態管理 ──────────────────────────────────────
-    @State private var lastTranslation: CGSize = .zero
-    @State private var dragStart: CGPoint      = .zero   // タップ判定用の開始論理座標
-    @State private var totalDragDist: CGFloat  = 0       // ドラッグ総移動量（タップ判定に使う）
-    @State private var canvasScale: CGFloat    = 1.0     // view px / logical px
+    // MARK: 状態（ドラッグ管理）
 
-    // タップ判定しきい値: これ未満の移動量ならタップとみなして衝撃波を発射する（論理 px）
-    // ← 大きくするとドラッグ中でも衝撃波が発射されやすくなる
+    /// 直前フレームの translation（差分移動量を出すために保持）
+    @State private var lastTranslation: CGSize = .zero
+    /// タップ判定用の開始論理座標
+    @State private var dragStart: CGPoint      = .zero
+    /// ドラッグ総移動量（タップ判定に使う）
+    @State private var totalDragDist: CGFloat  = 0
+    /// view px / logical px の変換係数
+    @State private var canvasScale: CGFloat    = 1.0
+
+    /// タップ判定しきい値: これ未満の移動量ならタップとみなして衝撃波を発射する（論理 px）
+    /// ← 大きくするとドラッグ中でも衝撃波が発射されやすくなる
     private let TAP_THRESHOLD: CGFloat = 10
+
+    // MARK: body
 
     var body: some View {
         GeometryReader { geo in
             // 画面に収まる最大の正方形サイズ
             let side  = min(geo.size.width, geo.size.height)
-            // 論理座標 → ビュー座標の変換係数
+            // 論理座標 → ビュー座標の変換係数（view_px = logical_px * scale）
             let scale = side / model.BASE
 
             VStack {
                 Spacer(minLength: 0)
 
-                // TimelineView で 60fps ループをトリガーし Canvas に描画する
+                // ★ TimelineView(.animation) とは？ ★
+                //   画面のリフレッシュ（約60fps）に合わせて中身を再評価し続けるView。
+                //   ここでは「毎フレーム Canvas を描き直す」ためのトリガーとして使う。
+                //   ＝ Model 側の CADisplayLink が「状態を進める」担当、
+                //      この TimelineView が「進んだ状態を描く」担当、という二人三脚の関係。
                 TimelineView(.animation) { _ in
                     Canvas { ctx, size in
                         drawAll(ctx: ctx, size: size, model: model)
@@ -163,7 +191,10 @@ private struct MazePlayView: View {
 
     // MARK: ジェスチャー
 
+    /// ドラッグ＝移動 / 軽いタップ＝衝撃波、を1つの DragGesture で判別して Model に伝える。
+    /// （1ジェスチャでタップとドラッグを見分ける考え方は GamePickerComponents.swift を参照）
     private func makeDragGesture(scale: CGFloat) -> some Gesture {
+        // minimumDistance: 0 にすることで、指を動かさない「タップ」も onChanged で拾える
         DragGesture(minimumDistance: 0)
             .onChanged { value in
                 guard model.gameState == .playing else { return }
@@ -182,7 +213,7 @@ private struct MazePlayView: View {
                 // フレーム差分を論理座標に変換してチーズを移動
                 let dx = (value.translation.width  - lastTranslation.width)  / scale
                 let dy = (value.translation.height - lastTranslation.height) / scale
-                totalDragDist += hypot(dx, dy)
+                totalDragDist += hypot(dx, dy)   // 総移動量を積算（タップ/ドラッグ判定に使う）
                 model.moveCheese(dx: dx, dy: dy)
                 lastTranslation = value.translation
             }
@@ -227,6 +258,7 @@ private func drawAll(ctx: GraphicsContext, size: CGSize, model: MazeGameModel) {
 
 // MARK: drawMaze（壁の描画）
 
+/// grid の壁タイル（値が 0 のマス）を茶色の四角で塗る。
 private func drawMaze(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     let T  = model.T * s   // タイル1辺のビューpx サイズ
     let GW = model.GW      // グリッド辺の総タイル数
@@ -246,6 +278,7 @@ private func drawMaze(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
 
 // MARK: drawCheeses（収集チーズの描画）
 
+/// 収集チーズ3個を描く。未回収＝黄色いチーズ（穴つき）、回収済み＝薄いグレーの跡。
 private func drawCheeses(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     let T = model.T * s
 
@@ -255,6 +288,7 @@ private func drawCheeses(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat)
 
         if cheese.collected {
             // 回収済み：薄いグレーのチーズ跡を小さく表示
+            // ★ GraphicsContext は値型 ★ コピー(c)に opacity を設定しても元の ctx には影響しない
             var c = ctx; c.opacity = 0.25
             var path = Path()
             path.move(to:    CGPoint(x: cx,           y: cy - r * 0.9))
@@ -280,7 +314,8 @@ private func drawCheeses(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat)
                                                 width: hr * 2, height: hr * 2)),
                          with: .color(Color(red: 0.475, green: 0.333, blue: 0.282)))
             }
-            // ← T * 0.55 で絵文字サイズを調整できる
+            // 三角形のシェイプで描くため、絵文字はサイズ 0（非表示）にしてある。
+            // 絵文字で描き直したい場合は size を T * 0.55 などに変える。
             ctx.draw(Text("🧀").font(.system(size: T * 0.0)),  // 形で描くので絵文字は非表示
                      at: CGPoint(x: cx, y: cy))
         }
@@ -289,17 +324,22 @@ private func drawCheeses(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat)
 
 // MARK: drawPlayer（プレイヤー＝白ネズミの描画）
 
+/// プレイヤー（白ネズミ）を、進行方向へ回転させて描く。ダメージ中は点滅させる。
 private func drawPlayer(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     let x  = model.cheeseX * s, y = model.cheeseY * s
     let r  = model.CHEESE_R * s   // プレイヤー当たり判定半径を流用
     let hp = model.cheeseHp
 
     // ── ダメージ点滅 ──────────────────────────────────────────
+    // cheeseFlash が残っている間、sin で明滅させる（0.2〜1.0 の範囲）
     var alpha: CGFloat = 1.0
     if model.cheeseFlash > 0 {
         alpha = abs(sin(CGFloat(model.cheeseFlash) * 0.35)) * 0.8 + 0.2
     }
 
+    // ★ GraphicsContext は値型 ★
+    //   コピー(c)に対して透明度・平行移動・回転を設定し、その c で描くことで、
+    //   「このネズミだけ」を原点に移動＆回転して描ける（元の ctx は変わらない）。
     var c = ctx
     c.opacity = Double(alpha)
     // プレイヤーの向きに回転して描画
@@ -341,9 +381,11 @@ private func drawPlayer(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) 
 
 // MARK: drawMice（敵ネズミの描画・ダークグレー）
 
+/// 全敵ネズミを、プレイヤーの方を向くように回転させて描く。
 private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     for m in model.mice {
         var c = ctx
+        // 敵はプレイヤーの方向を向く（描画上の向きだけ。移動ロジックは Model 側）
         let angle = atan2(model.cheeseY - m.y, model.cheeseX - m.x)
         let mx = m.x * s, my = m.y * s
         let r  = model.MOUSE_R * s
@@ -383,6 +425,7 @@ private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
 
 // MARK: drawShockwave（衝撃波リングの描画）
 
+/// 広がる衝撃波を、外縁ほど薄く・細くなるリングとして描く。
 private func drawShockwave(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     guard model.shockwave.active else { return }
     let sw     = model.shockwave
@@ -407,6 +450,7 @@ private func drawShockwave(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 
 // MARK: drawParticles（ネズミ撃破パーティクルの描画）
 
+/// 飛散パーティクルを、残り寿命に応じて小さく・薄くしながら丸で描く。
 private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     for p in model.particles {
         // 残りライフ比率（1.0=生成直後 / 0.0=消滅）
@@ -430,6 +474,7 @@ private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 //   右下:  ハイスコア、anchor:.trailing で右端固定
 //   ※ 左右エリアの境界は画面中央（285px）付近に自然に空白ができる
 
+/// HUD（残りHPの三角アイコン・スコア・衝撃波チャージバー・ハイスコア）を描く。
 private func drawHUD(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat, size: CGSize) {
     let T  = model.T * s
     let hp = model.cheeseHp
@@ -471,6 +516,7 @@ private func drawHUD(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat, siz
     // 右上: ブラストチャージバー
     // ══════════════════════════════════════
     let ready = model.shockwave.cool == 0
+    // チャージ進捗 0.0〜1.0（クールダウン残りから逆算）
     let fill  = ready
         ? CGFloat(1)
         : CGFloat(1) - CGFloat(model.shockwave.cool) / CGFloat(model.SW_COOL)
@@ -520,6 +566,7 @@ private func drawHUD(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat, siz
 
 // MARK: drawDelivered（ゴール到達演出）
 
+/// ステージクリア時の緑オーバーレイと「All Collected! / Next Stage…」メッセージを描く。
 private func drawDelivered(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat, size: CGSize) {
     let timer = model.deliveredTimer  // 残りフレーム数（110→0）
 
@@ -547,6 +594,7 @@ private func drawDelivered(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 
 // MARK: - MazeResultView（リザルト画面）
 
+/// ゲームオーバー画面。スコア・ハイスコア・新記録バナー・もう一度／タイトルへ戻るボタン。
 private struct MazeResultView: View {
     var model: MazeGameModel
 

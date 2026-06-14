@@ -240,5 +240,17 @@ print("⚠️ <型名>: <何に失敗したか>: \(error.localizedDescription)")
 | @AppStorage / .task / 出現順ユニーク化 | EmojiQuizHomeView.swift |
 | SpriteKit 入門(ノード/物理) | CoinDropScene.swift |
 | didMove 二重呼び出しガード | PinballScene.swift |
+| CaseIterable とは（CoinType） | CoinDropViewModel.swift |
+| CADisplayLink / 60fpsループ | MazeGameModel.swift |
+| NSObject継承の理由 / @objc / #selector | MazeGameModel.swift |
+| 再帰的バックトラック法（迷路生成） | MazeGameModel.swift |
+| 1セル=3×3タイルのグリッド設計（GW=MC*3+1） | MazeGameModel.swift |
+| 円 vs 壁タイルの当たり判定（最近接点） | MazeGameModel.swift |
+| トンネリング対策のサブステップ移動 | MazeGameModel.swift |
+| TimelineView(.animation) / 60fps描画ループ | MazeGameView.swift |
+| 論理座標 ⇄ ビュー座標のスケール変換 | MazeGameView.swift |
+| GraphicsContext は値型（コピーして局所変形） | MazeGameView.swift |
+| タイマーの毎tick加算による計時方式 | JankenViewModel.swift |
+| 即時実行クロージャ {...}() で値を確定 | JankenViewModel.swift |
 
 > このマップは、コメント整備の進行に合わせて随時更新します。
