@@ -4,19 +4,30 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/06/03.
 //
-
-// 指令じゃんけんのゲームロジック・状態管理・タイマーを担うViewModel。
-// 難易度に応じた指示列を生成し、タップ判定・ペナルティ・フェーズ切替・シール報酬を一括管理する。
+//  ① 一言サマリ
+//  指令じゃんけん（Command Janken）のゲームロジック・状態・タイマー担当ViewModel。
+//  「勝て／負けろ」という指示に対し、正しい手をタップして10手（挑戦モードは30手）を
+//  最速で答えるゲーム。難易度ごとの指示列生成・勝敗判定・ミスペナルティ・
+//  フェーズ切替・シール報酬まで、ロジックをすべてここに集約する。
 //
-// ★ 調整ポイント（C enum） ★
+//  ② 役割分担
+//    - ViewModel（このファイル）: 状態・タイマー・判定・指示列生成・シール付与
+//    - View (JankenView)       : 状態を表示し、手のタップを ViewModel へ渡す
+//    - JankenResultView        : 終了後のタイム・正解率・新記録を表示する
+//
+//  ★ 調整ポイント（private enum C）★
 //   penaltySec    … ミス時に加算するペナルティ秒数
 //   flashDuration … 正解/不正解フラッシュの表示時間
 //   phaseDuration … フェーズ切替テロップの表示時間（挑戦モードのみ）
 //   timerInterval … 経過時間タイマーの更新間隔
+//   （この「private enum C に数値を集約する」パターンの解説は GameViewModel.swift 参照）
+//
+//  ★ @Observable の解説は AppSettings.swift 冒頭を参照 ★
+//  ★ タイマー内クロージャの [weak self] の解説は GameViewModel.swift 参照 ★
 
 import SwiftUI
 
-// MARK: - Top-level Enums
+// MARK: - JankenDifficulty（難易度）
 
 /// ゲームの難易度。出題内容・手数・シール倍率を決定する。
 enum JankenDifficulty {
@@ -24,6 +35,7 @@ enum JankenDifficulty {
     case hard       // むずかしい：10回負けろ
     case challenge  // 挑戦：勝て×10→負けろ×10→交互×10
 
+    /// この難易度の総手数（プログレスや指示列の長さに使う）
     var totalRounds: Int {
         switch self {
         case .easy, .hard: return 10
@@ -31,6 +43,7 @@ enum JankenDifficulty {
         }
     }
 
+    /// クリア時に獲得するシール枚数の倍率（難しいほど多く貰える）
     var stickerMultiplier: Int {
         switch self {
         case .easy:      return 1  // ← 変更可
@@ -39,6 +52,7 @@ enum JankenDifficulty {
         }
     }
 
+    /// ベストタイムの保存に使う UserDefaults キー（難易度ごとに別管理）
     var bestTimeKey: String {
         switch self {
         case .easy:      return UDKey.jankenBestTimeEasy
@@ -47,6 +61,7 @@ enum JankenDifficulty {
         }
     }
 
+    /// 画面表示用のローカライズキー（15言語に翻訳される）
     var labelKey: LocalizedStringKey {
         switch self {
         case .easy:      return "janken_difficulty_easy"
@@ -56,10 +71,14 @@ enum JankenDifficulty {
     }
 }
 
+// MARK: - JankenHand（手）
+
 /// じゃんけんの手。emoji・勝敗判定を持つ。
+/// ★ CaseIterable の解説は CoinDropViewModel.swift（CoinType）を参照 ★
 enum JankenHand: CaseIterable {
     case rock, scissors, paper
 
+    /// 画面に表示する手の絵文字
     var emoji: String {
         switch self {
         case .rock:     return "✊"
@@ -69,6 +88,7 @@ enum JankenHand: CaseIterable {
     }
 
     /// selfがotherに勝つか（あいこはfalse）
+    /// タプルで (自分の手, 相手の手) を一気にパターンマッチして判定する。
     func beats(_ other: JankenHand) -> Bool {
         switch (self, other) {
         case (.rock, .scissors), (.scissors, .paper), (.paper, .rock): return true
@@ -77,6 +97,8 @@ enum JankenHand: CaseIterable {
     }
 }
 
+// MARK: - JankenInstruction（指示）
+
 /// 現在の指示。勝て／負けろを表す。
 enum JankenInstruction {
     case win   // 勝て
@@ -84,11 +106,19 @@ enum JankenInstruction {
 }
 
 // MARK: - JankenViewModel
+//
+// ゲームの状態とロジックを一元管理するクラス。
+// View はこのクラスのプロパティを表示するだけで、値を変える処理はすべてここに集まる。
+//
+// ★ @Observable の解説は AppSettings.swift 冒頭を参照 ★
 
 @Observable
 final class JankenViewModel {
 
-    // MARK: - Tunable Parameters
+    // MARK: - ⚙️ 調整パラメータ（ここだけ触ればOK）
+    //
+    // ゲームの手触りを決める数値を private enum C に集約している。
+    // （この集約パターンそのものの解説は GameViewModel.swift 参照）
 
     private enum C {
         static let penaltySec:     Double = 5.0   // ← 変更可：ミス時のペナルティ秒数
@@ -98,9 +128,10 @@ final class JankenViewModel {
         static let countdownTotal: Int    = 5     // ← 変更可：カウントダウン総秒数
     }
 
-    // MARK: - Nested Types
+    // MARK: - 入れ子の型（Phase / Flash）
 
     /// ゲームの状態。Viewの表示切り替えに使う。
+    /// ★ enum に Equatable を付けると、各 case（関連値含む）の一致比較が自動生成される ★
     enum Phase: Equatable {
         case idle                       // 難易度選択前
         case countdown(Int)             // カウントダウン中（0=空白, 1, 2, 3）
@@ -115,22 +146,32 @@ final class JankenViewModel {
         case wrong    // 不正解：赤
     }
 
-    // MARK: - Published State
+    // MARK: - 表示状態（@Observable で View に反映される）
+    //
+    // ここの var はすべて監視対象。値が変わると参照している View が自動で再描画される。
 
+    /// 現在の画面状態（待機 / カウントダウン / 切替 / プレイ中 / 終了）
     var phase:              Phase             = .idle
+    /// 選択中の難易度
     var difficulty:         JankenDifficulty  = .easy
+    /// 現在のCPUの手（プレイヤーはこれに勝つ／負ける手を出す）
     var cpuHand:            JankenHand        = .rock
+    /// 現在の指示（勝て／負けろ）
     var currentInstruction: JankenInstruction = .win
     var currentRound:       Int              = 0      // 完了済み手数（次の手のindexを兼ねる）
     var missCount:          Int              = 0
+    /// 経過時間（秒）。ミス時はペナルティ秒が加算される。
     var elapsed:            TimeInterval     = 0.0
+    /// 正解/不正解フラッシュ（nil=非表示）
     var flash:              Flash?           = nil
     /// タップされた手。ボタンの色変化トリガーとして使う。flashと同じタイミングでクリアされる。
     var tappedHand:         JankenHand?      = nil
+    /// 今回のプレイで自己ベストを更新したか
     var isNewBest:          Bool             = false
 
-    // MARK: - Derived
+    // MARK: - 計算プロパティ（状態から導出）
 
+    /// この難易度の総手数（difficulty から導出）
     var totalRounds: Int { difficulty.totalRounds }
 
     /// プログレスバー用（0.0〜1.0）
@@ -177,15 +218,20 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private State
+    // MARK: - 内部状態（非公開）
 
+    /// 生成済みの指示列。currentRound 番目を順に出題していく。
     private var instructions:   [JankenInstruction] = []
+    /// 経過時間タイマー
     private var gameTimer:      Timer?               = nil
+    /// 開始前カウントダウン用タイマー
     private var countdownTimer: Timer?               = nil
+    /// 経過タイマーを進めてよいか（フェーズ切替中は止める）
     private var isTimerRunning: Bool                 = false
+    /// 連打防止ロック（フラッシュ表示中は次のタップを受け付けない）
     private var isTapLocked:    Bool                 = false
 
-    // MARK: - Public API
+    // MARK: - 公開API
 
     /// 難易度を指定してゲームを開始する
     func start(difficulty: JankenDifficulty) {
@@ -230,6 +276,7 @@ final class JankenViewModel {
         tappedHand  = playerHand  // タップした手を記録（ボタン色変化のトリガー）
 
         // 勝敗判定（あいこ=不正解）
+        // ★ 即時実行クロージャ {...}() で「判定結果の Bool」をその場で計算して isCorrect に入れている
         let isCorrect: Bool = {
             switch currentInstruction {
             case .win:  return playerHand.beats(cpuHand)
@@ -242,6 +289,7 @@ final class JankenViewModel {
             SoundManager.shared.playCorrect()
             SoundManager.shared.vibrate()
         } else {
+            // ミスはタイムにペナルティ秒を直接加算する（＝遅いほど不利になる）
             flash     = .wrong
             elapsed  += C.penaltySec
             missCount += 1
@@ -251,6 +299,7 @@ final class JankenViewModel {
         currentRound += 1
 
         let isDone       = currentRound >= totalRounds
+        // 挑戦モードで10手目・20手目を終えた瞬間はフェーズ切替テロップを挟む
         let isTransition = difficulty == .challenge
                            && (currentRound == 10 || currentRound == 20)
 
@@ -260,6 +309,7 @@ final class JankenViewModel {
         }
 
         // フラッシュ終了後の後処理
+        // ★ [weak self] でタイマー/遅延クロージャの循環参照を防ぐ（解説は GameViewModel.swift 参照）
         DispatchQueue.main.asyncAfter(deadline: .now() + C.flashDuration) { [weak self] in
             guard let self else { return }
             self.flash       = nil
@@ -277,7 +327,7 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: Countdown
+    // MARK: - カウントダウン
 
     /// 5秒カウントダウン。5・4は表示せず、3→2→1のみ表示する。
     private func beginCountdown() {
@@ -303,14 +353,21 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: Play
+    // MARK: - プレイ開始・経過タイマー
 
+    /// 最初の問題をセットしてプレイ状態に入り、経過タイマーを回し始める
     private func beginPlaying() {
         nextRound()  // 最初の問題をセット
         phase = .playing
         startElapsedTimer()
     }
 
+    /// 経過時間タイマーを開始する。
+    /// ★ このゲームの計時方式 ★
+    ///   timerInterval ごとに elapsed へ間隔を「加算」していく素朴な方式。
+    ///   実時間との微小な誤差は許容し、代わりにミスのペナルティ秒を
+    ///   elapsed に直接足せる手軽さを取っている。
+    ///   （より正確な「基準時刻からの差分」方式は GameViewModel.swift を参照）
     private func startElapsedTimer() {
         isTimerRunning = true
         gameTimer?.invalidate()
@@ -331,7 +388,7 @@ final class JankenViewModel {
         currentInstruction = instructions[currentRound]
     }
 
-    // MARK: - Private: Phase Transition（挑戦モードのみ）
+    // MARK: - フェーズ切替（挑戦モードのみ）
 
     /// タイマーを止めてテロップを表示し、終了後にゲームを再開する
     private func showPhaseTransition(_ telopKey: String) {
@@ -345,8 +402,9 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: End Game
+    // MARK: - 終了処理
 
+    /// ゲーム終了。タイマーを止め、ベストタイム更新判定とシール付与を行う。
     private func endGame() {
         gameTimer?.invalidate()
         gameTimer      = nil
@@ -360,7 +418,7 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: Sticker Award
+    // MARK: - シール報酬
 
     /// クリア枚数×難易度倍率を計算してStickerStoreに追加
     private func awardStickers() {
@@ -373,9 +431,10 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: Instructions Builder
+    // MARK: - 指示列の生成
 
     /// 難易度に応じた指示列を生成する
+    /// easy=勝て×10 / hard=負けろ×10 / challenge=勝て×10→負けろ×10→交互×10
     private static func buildInstructions(
         for difficulty: JankenDifficulty
     ) -> [JankenInstruction] {
@@ -394,8 +453,9 @@ final class JankenViewModel {
         }
     }
 
-    // MARK: - Private: Formatter
+    // MARK: - 時間フォーマット
 
+    /// 秒数を mm:ss.cc（分:秒.1/100秒）の文字列に整形する
     private func formatTime(_ t: TimeInterval) -> String {
         let m  = Int(t) / 60
         let s  = Int(t) % 60
