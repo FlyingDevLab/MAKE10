@@ -44,7 +44,7 @@ struct StickerPlayView: View {
         ("Gray",      Color(red: 0.91, green: 0.91, blue: 0.94)), // #E8E8F0 ← 変更可
     ]
 
-    // MARK: - Body
+    // MARK: - body
 
     var body: some View {
         ZStack(alignment: .top) {
@@ -100,7 +100,7 @@ struct StickerPlayView: View {
         .animation(.spring(response: 0.3, dampingFraction: 0.75), value: showPalette)
     }
 
-    // MARK: - Header Bar
+    // MARK: - ヘッダーバー
 
     // 戻るボタン・タイトル・パレットボタンを横並びにする。
     // 背景色が何色でも見えるよう、半透明白パネル＋ダーク固定でコントラストを確保する。
@@ -152,7 +152,7 @@ struct StickerPlayView: View {
         .padding(.horizontal, 20)
     }
 
-    // MARK: - Palette Bar
+    // MARK: - パレットバー
 
     // 10色のカラーサークルを横並びで表示する。
     // 選択中は枠線と影で強調し、選択後すぐ UserDefaults に保存する。

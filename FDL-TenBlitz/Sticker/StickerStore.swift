@@ -19,7 +19,7 @@
 
 import SwiftUI
 
-// MARK: - Sticker Store
+// MARK: - StickerStore
 
 @Observable
 final class StickerStore {
@@ -27,7 +27,7 @@ final class StickerStore {
     // アプリ内どこからでも同一インスタンスにアクセスできるシングルトン
     static let shared = StickerStore()
 
-    // MARK: - Sticker Model
+    // MARK: - Sticker モデル
 
     // ボード上のシール1枚分のデータ。位置は画面サイズに依存しない比率で保持する。
     // Codable でシリアライズし、UserDefaults に JSON 形式で保存・復元する
@@ -38,7 +38,7 @@ final class StickerStore {
         var yRatio: Double   // コンテナ高さに対する比率 (0.0–1.0)
     }
 
-    // MARK: - State
+    // MARK: - 状態
 
     // ゲームモード用。全件保持するが StickerBoardView は prefix(50) のみ表示する
     private(set) var stickers: [Sticker] = []
@@ -78,12 +78,12 @@ final class StickerStore {
         "☁️","☁️","☁️","🏠","💩"
     ]
 
-    // MARK: - Init
+    // MARK: - 初期化
 
     // 外部からの直接初期化を禁止し、shared 経由のみを強制する
     private init() { load() }
 
-    // MARK: - Public API（獲得・pending 管理）
+    // MARK: - 公開API（獲得・pending 管理）
 
     /// 正解時に呼ぶ。ゲームボードが満杯なら新規シールをストレージへ直接送出する。
     /// points は難易度・モードに応じて変動（例：Blitz 正解=2.6pt、通常正解=1.1pt）。
@@ -143,7 +143,7 @@ final class StickerStore {
         for emoji in toAdd { spawnSticker(emoji: emoji) }
     }
 
-    // MARK: - Public API（ゲームモード操作）
+    // MARK: - 公開API（ゲームモード操作）
 
     /// ドラッグ終了後にゲームモードのシール位置を更新・保存する。
     func updatePosition(id: UUID, xRatio: Double, yRatio: Double) {
@@ -161,7 +161,7 @@ final class StickerStore {
         saveGame()
     }
 
-    // MARK: - Public API（ストレージ ↔ ゲームモード）
+    // MARK: - 公開API（ストレージ ↔ ゲームモード）
 
     /// ストレージ → ゲームモードへ1枚移動。満杯（50枚以上）のときは何もしない。
     /// - Returns: 移動成功なら true、満杯なら false
@@ -186,7 +186,7 @@ final class StickerStore {
         saveStorage()
     }
 
-    // MARK: - Public API（ストレージ ↔ シール画面）
+    // MARK: - 公開API（ストレージ ↔ シール画面）
 
     /// ストレージ → シール画面へ1枚移動。満杯（100枚以上）のときは何もしない。
     /// - Returns: 移動成功なら true、満杯なら false
@@ -211,7 +211,7 @@ final class StickerStore {
         saveStorage()
     }
 
-    // MARK: - Public API（シール画面操作）
+    // MARK: - 公開API（シール画面操作）
 
     /// ドラッグ終了後にシール画面のシール位置を更新・保存する。
     func updatePlayPosition(id: UUID, xRatio: Double, yRatio: Double) {
@@ -229,7 +229,7 @@ final class StickerStore {
         savePlay()
     }
 
-    // MARK: - Public API（リセット）
+    // MARK: - 公開API（リセット）
 
     /// 進捗リセット時に全データをまとめてクリアする。
     func reset() {
@@ -245,7 +245,7 @@ final class StickerStore {
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
     }
 
-    // MARK: - Private
+    // MARK: - 非公開
 
     /// ゲームボードへ螺旋状に自動配置する（pending フォールバック・ストレージ移動時）。
     // 黄金角（約137.5°= 2.399rad）ベースの螺旋配置でシールを均等に散らばせる。
@@ -270,7 +270,7 @@ final class StickerStore {
         savePlay()
     }
 
-    // MARK: - Save / Load
+    // MARK: - 保存／読み込み
 
     private func saveGame() {
         guard let data = try? JSONEncoder().encode(stickers) else { return }

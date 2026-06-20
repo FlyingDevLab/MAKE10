@@ -24,16 +24,16 @@ import SwiftUI
 @Observable
 final class DrawingStore {
 
-    // MARK: - Singleton
+    // MARK: - シングルトン
     // アプリ内どこからでも DrawingStore.shared と書くだけでアクセスできる。
     static let shared = DrawingStore()
 
-    // MARK: - Canvas Mode
+    // MARK: - キャンバスモード
     // デフォルトはステッカーモード（既存の操作体験を維持するため）。
     // お絵かきしたいときにユーザーがツールバーのボタンで切り替える。
     var canvasMode: StickerCanvasMode = .sticker
 
-    // MARK: - Drawing State
+    // MARK: - 描画状態
 
     /// 確定済みのストローク配列（画面に描かれた線の履歴）
     var strokes: [DrawingStroke] = []
@@ -49,17 +49,17 @@ final class DrawingStore {
     /// 消しゴムモードの ON/OFF
     var isEraserMode: Bool = false
 
-    // MARK: - Stroke Width
+    // MARK: - 線の太さ
     // ← 変更可：ペンと消しゴムの太さをここで調整する
     let penWidth:    CGFloat = 8   // ペンの太さ（pt）← 変更可
     let eraserWidth: CGFloat = 36  // 消しゴムの太さ（pt）← 変更可
 
-    // MARK: - Init
+    // MARK: - 初期化
     private init() {
         load()
     }
 
-    // MARK: - Drawing Operations
+    // MARK: - 描画操作
 
     /// ジェスチャー開始：新しいストロークを作成する。
     /// - Parameter point: 指を置いた座標
@@ -99,7 +99,7 @@ final class DrawingStore {
         save()
     }
 
-    // MARK: - Persistence
+    // MARK: - 永続化（保存／読み込み）
 
     /// 保存先 URL: Documents/drawing_canvas.json
     private var saveURL: URL {
@@ -116,6 +116,8 @@ final class DrawingStore {
             try data.write(to: saveURL, options: .atomic)
         } catch {
             // 保存エラーはデバッグログのみ（ユーザーへの通知は不要）
+            // TODO(書式): 次の print が規約 §7 の書式「⚠️ <型名>: <失敗内容>: ...」と不一致。
+            //             文字列＝コードのため今回は変更せず、次回まとめて統一する（動作影響なし）。
             print("DrawingStore: 保存エラー: \(error.localizedDescription)")
         }
     }

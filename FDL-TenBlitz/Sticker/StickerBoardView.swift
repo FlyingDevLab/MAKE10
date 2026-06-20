@@ -15,7 +15,7 @@
 
 import SwiftUI
 
-// MARK: - Sticker Board View
+// MARK: - StickerBoardView
 // MakeTenContentView の ZStack に重ねて使う全画面透明レイヤー。
 // シール以外の領域はタッチを透過させる。
 
@@ -46,7 +46,7 @@ struct StickerBoardView: View {
     }
 }
 
-// MARK: - Draggable Sticker View
+// MARK: - DraggableStickerView
 
 // 個々のシール1枚を表すビュー。ドラッグ操作・位置保存を自己完結で処理する。
 // ゴミ箱関連のロジックは廃止済み。

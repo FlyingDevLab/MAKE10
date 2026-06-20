@@ -58,14 +58,14 @@ struct DrawingCanvasView: View {
         .allowsHitTesting(drawingEnabled)
     }
 
-    // MARK: - Computed Properties
+    // MARK: - 計算プロパティ
 
     /// お絵かきモードが有効かどうか
     private var drawingEnabled: Bool {
         store.canvasMode == .drawing
     }
 
-    // MARK: - Gesture
+    // MARK: - ジェスチャー
 
     /// 指でなぞって線を描くジェスチャー。
     /// minimumDistance: 0 にすることでタップ（点）も記録できる。
@@ -87,7 +87,7 @@ struct DrawingCanvasView: View {
             }
     }
 
-    // MARK: - Drawing
+    // MARK: - 描画
 
     /// 1本のストロークを GraphicsContext に描画するヘルパー。
     /// - Parameters:

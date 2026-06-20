@@ -252,5 +252,9 @@ print("⚠️ <型名>: <何に失敗したか>: \(error.localizedDescription)")
 | GraphicsContext は値型（コピーして局所変形） | MazeGameView.swift |
 | タイマーの毎tick加算による計時方式 | JankenViewModel.swift |
 | 即時実行クロージャ {...}() で値を確定 | JankenViewModel.swift |
+| 物理カテゴリのビットマスク（category/collision/contactTest） | CoinDropScene.swift |
+| SpriteView（SwiftUIにSpriteKitを載せる） | CoinDropView.swift |
+| 座標系の変換（Canvas Y下 ↔ SpriteKit Y上） | PinballScene.swift |
+| SKPhysicsContactDelegate / didBegin での衝突仕分け | PinballScene.swift |
 
 > このマップは、コメント整備の進行に合わせて随時更新します。
