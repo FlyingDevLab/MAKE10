@@ -56,7 +56,7 @@ struct StickerStorageView: View {
     private let sideOpacity: Double  = 0.38 // ← 変更可：隣接絵文字の透明度
     private let farOpacity:  Double  = 0.20 // ← 変更可：遠方絵文字の透明度
 
-    // MARK: - Body
+    // MARK: - body
 
     var body: some View {
         GeometryReader { geo in
@@ -157,7 +157,7 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - Row View
+    // MARK: - 行ビュー
 
     private func rowView(
         label:     String,
@@ -204,7 +204,7 @@ struct StickerStorageView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 
-    // MARK: - Emoji Carousel
+    // MARK: - 絵文字カルーセル
 
     // 最大5スロット構成。個数に応じてスロットを中央から外側へ増やす。
     //   N=1: [🈳][🈳][①][🈳][🈳]
@@ -272,7 +272,7 @@ struct StickerStorageView: View {
         .clipped()
     }
 
-    // MARK: - Gesture Factory
+    // MARK: - ジェスチャー生成
 
     private enum RowKind { case game, storage, play }
 
@@ -304,7 +304,7 @@ struct StickerStorageView: View {
             }
     }
 
-    // MARK: - Horizontal Handler（絵文字選択）
+    // MARK: - 横スワイプ処理（絵文字選択）
 
     private func handleHorizontal(row: RowKind, dx: CGFloat) {
         guard abs(dx) >= hThreshold else { return }
@@ -329,7 +329,7 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - Vertical Handler（移動）
+    // MARK: - 縦スワイプ処理（移動）
 
     private func handleVertical(row: RowKind, dy: CGFloat, rowH: CGFloat) {
         guard abs(dy) >= vThreshold else { return }
@@ -386,7 +386,7 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - Fly Animation
+    // MARK: - 飛行アニメーション
 
     private func fly(emoji: String, fromY: CGFloat, toY: CGFloat, completion: @escaping () -> Void) {
         SoundManager.shared.vibrate()
@@ -404,7 +404,7 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - Block Message
+    // MARK: - ブロックメッセージ
 
     private func showBlock(_ msg: String) {
         SoundManager.shared.vibrate()
@@ -414,7 +414,7 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - Safe Helpers
+    // MARK: - 安全ヘルパー
 
     private var displayGameCount: Int { min(store.stickers.count, 50) }
 

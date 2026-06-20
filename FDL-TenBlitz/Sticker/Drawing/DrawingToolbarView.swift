@@ -98,7 +98,7 @@ struct DrawingToolbarView: View {
         }
     }
 
-    // MARK: - Mode Toggle Button
+    // MARK: - モード切替ボタン
 
     /// お絵かき ⇄ ステッカー の切り替えボタン
     private var modeToggleButton: some View {
@@ -124,7 +124,7 @@ struct DrawingToolbarView: View {
         }
     }
 
-    // MARK: - Color Button
+    // MARK: - カラーボタン
 
     /// パレットの1色ボタン
     @ViewBuilder
@@ -174,7 +174,7 @@ struct DrawingToolbarView: View {
         .accessibilityLabel(String(localized: String.LocalizationValue(drawingColor.nameKey)))
     }
 
-    // MARK: - Eraser Button
+    // MARK: - 消しゴムボタン
 
     /// 消しゴムボタン
     private var eraserButton: some View {
@@ -197,7 +197,7 @@ struct DrawingToolbarView: View {
         .accessibilityLabel(String(localized: "drawing_eraser_label"))
     }
 
-    // MARK: - Clear Button
+    // MARK: - 全消去ボタン
 
     /// 全消去ボタン（タップでアラートを表示）
     private var clearButton: some View {
