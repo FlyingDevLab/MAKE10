@@ -46,6 +46,7 @@ private enum Screen {
     case pinball
     case coinDrop
     case janken
+    case tenPuzzle
     case stickerStorage
 }
 
@@ -126,6 +127,9 @@ struct MakeTenContentView: View {
                 case .janken:
                     JankenView()
                         .transition(.opacity)
+                case .tenPuzzle:
+                    TenPuzzleView()
+                        .transition(.opacity)
                 case .stickerStorage:
                     StickerStorageView()
                         .transition(.opacity)
@@ -193,6 +197,7 @@ struct MakeTenContentView: View {
         case .pinball:             return String(localized: "pinball_title")
         case .coinDrop:            return String(localized: "coindrop_title")
         case .janken:              return String(localized: "janken_title")
+        case .tenPuzzle:           return "四則テンパズル"  // TODO: ローカライズ
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         }
     }
@@ -216,7 +221,7 @@ struct MakeTenContentView: View {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .stickerStorage:
+             .janken, .tenPuzzle, .stickerStorage:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
@@ -234,7 +239,7 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .stickerStorage:                                   return nil
+             .janken, .tenPuzzle, .stickerStorage:                       return nil
         }
     }
 
@@ -255,6 +260,7 @@ struct MakeTenContentView: View {
         case .pinball:             return "pinball"
         case .coinDrop:            return "coinDrop"
         case .janken:              return "janken"
+        case .tenPuzzle:           return "tenPuzzle"
         case .stickerStorage:      return "stickerStorage"
         }
     }
@@ -280,6 +286,7 @@ struct MakeTenContentView: View {
                         case .pinball:        screen = .pinball
                         case .coinDrop:       screen = .coinDrop
                         case .janken:         screen = .janken
+                        case .tenPuzzle:      screen = .tenPuzzle
                         case .stickerStorage: screen = .stickerStorage
                         }
                     }
