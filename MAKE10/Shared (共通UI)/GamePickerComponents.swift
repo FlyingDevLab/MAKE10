@@ -41,6 +41,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case pinball
     case coinDrop
     case janken
+    case tenPuzzle      // 四則演算テンパズル
     case stickerStorage // シール管理・遊ぶ画面
 
     /// タイルに表示する絵文字アイコン。
@@ -54,6 +55,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .pinball:         return "🎱"
         case .coinDrop:        return "💰"
         case .janken:          return "✊"
+        case .tenPuzzle:       return "🔢"
         case .stickerStorage:  return "🖼️"
         }
     }
@@ -74,6 +76,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .pinball:         return "pinball_title"
         case .coinDrop:        return "coindrop_title"
         case .janken:          return "janken_title"
+        case .tenPuzzle:       return "tenpuzzle_picker_label"
         case .stickerStorage:  return "sticker_storage_title"
         }
     }
@@ -89,6 +92,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .pinball:         return .red
         case .coinDrop:        return DS.gold
         case .janken:          return .teal
+        case .tenPuzzle:       return .indigo
         case .stickerStorage:  return .pink
         }
     }
