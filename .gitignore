@@ -16,3 +16,6 @@ build/
 # Playgrounds
 timeline.xctimeline
 playground.xcworkspace
+
+# 効果音ラボ音源（再配布不可のため除外）
+Sounds/
