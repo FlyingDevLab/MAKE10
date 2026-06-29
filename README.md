@@ -67,6 +67,7 @@ If it doesn't, we don't do it. No exceptions. Money will never come before the s
 - Swift / SwiftUI / SpriteKit
 - All data stored locally on the device (UserDefaults and local JSON files) — nothing ever leaves the device
 - No third-party libraries or SDKs
+- Sound effects by [効果音ラボ / Soundeffect-Lab](https://soundeffect-lab.info) — files not included in this repository (redistribution prohibited)
 
 ### License
 
@@ -145,6 +146,7 @@ Published as **"Kids Game Collection"**:
 - Swift / SwiftUI / SpriteKit
 - データはすべて端末内にローカル保存（UserDefaultsおよびローカルJSONファイル）— 端末の外には一切送信しません
 - サードパーティライブラリ・SDKなし
+- 効果音：[効果音ラボ](https://soundeffect-lab.info) — 再配布禁止のためファイルは同梱していません
 
 ### ライセンス
 

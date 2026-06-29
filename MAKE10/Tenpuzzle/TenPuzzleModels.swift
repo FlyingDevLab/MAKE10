@@ -48,12 +48,12 @@ enum TenPuzzleDifficulty: String, Codable {
 // MARK: - ゲームモード
 
 /// プレイヤーが選ぶ3つのゲームモード。
-/// モードAは解ける問題のみ、モードBはヒント/スキップあり、
-/// モードCは難問と不可能問題が混在する時間制限ありのチャレンジ。
+/// モードAは解ける問題のみ、モードBはヒントあり、
+/// モードCは難問と不可能問題が混在するチャレンジ。
 enum TenPuzzleMode: String, CaseIterable {
-    case modeA  // かんたん / ふつう問題のみ、時間制限なし
-    case modeB  // むずかしい問題のみ、ヒント / スキップあり
-    case modeC  // チャレンジ：難問 + 不可能問題、時間制限あり
+    case modeA  // かんたん / ふつう問題のみ
+    case modeB  // むずかしい問題のみ、ヒントあり
+    case modeC  // チャレンジ：難問 + 不可能問題が混在
 
     var icon: String {
         switch self {
@@ -75,9 +75,9 @@ enum TenPuzzleMode: String, CaseIterable {
     //   "subtitle" を使う。衝突するとprint(mode)で予期せぬ挙動が起きる。
     var subtitle: String {
         switch self {
-        case .modeA: return "10を作れる問題だけ。\n時間制限なし。"
-        case .modeB: return "解が少ない難問。\nヒントやスキップが使える。"
-        case .modeC: return "難問 + 作れない問題が混在。\n45秒以内に答えよう！"
+        case .modeA: return "10を作れる問題だけ。\nヒントを使いながら自分のペースで。"
+        case .modeB: return "解が少ない難問。\nわからなければヒントを見よう。"
+        case .modeC: return "難問 + 作れない問題が混在。\n「作れない！」と見破れたら正解。"
         }
     }
 
@@ -87,11 +87,6 @@ enum TenPuzzleMode: String, CaseIterable {
         case .modeB: return .orange
         case .modeC: return .red
         }
-    }
-
-    /// モードCのみ1問あたりの制限時間（秒）。nilは時間制限なし。
-    var timerSeconds: Double? {
-        self == .modeC ? 45.0 : nil  // ← 変更可
     }
 
     /// 1セッションあたりの出題数
@@ -294,6 +289,13 @@ enum TenPuzzleValidator {
             case .paren(let s): return s
             }
         }.joined()
+    }
+
+    /// 入力途中の式を部分評価する。構文が成立していれば現在の値を返し、不完全なら nil を返す。
+    /// ExpressionDisplay の「途中計算表示」に使用する（全数字を使い切っていなくてもよい）。
+    static func partialEvaluate(tokens: [ExprToken]) -> Double? {
+        guard !tokens.isEmpty else { return nil }
+        return ExprParser.evaluate(buildExprString(tokens))
     }
 }
 

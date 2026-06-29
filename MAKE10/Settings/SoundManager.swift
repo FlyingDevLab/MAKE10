@@ -11,15 +11,21 @@
 //
 // シングルトンパターンの解説は AppSettings.swift 冒頭を参照。
 //
-// ★ システムサウンドとは？ ★
-//   iOS に最初から内蔵されている短い効果音のことです。
-//   それぞれに番号（SystemSoundID）が振られていて、
-//   AudioServicesPlaySystemSound(番号) と呼ぶだけで再生できます。
-//   音声ファイルをアプリに同梱する必要がないため、
-//   このアプリには音声アセットが1つも入っていません（アプリが軽くなる利点もあります）。
+// ★ 音源ファイルについて ★
+//   Sounds/ フォルダに MP3 ファイルを配置することで、
+//   iOS 内蔵のシステムサウンドの代わりにカスタム効果音を再生します。
+//   ファイルが存在しない場合はシステムサウンド（番号指定）にフォールバックするため、
+//   ファイルが揃っていなくてもクラッシュしません。
+//   音源ファイルの詳細は docs/SOUND_ASSETS.md を参照してください。
+//
+// ★ AVAudioPlayer とは？ ★
+//   iOS 標準の音声再生クラスです。MP3・WAV などのファイルを再生できます。
+//   再生前に prepareToPlay() を呼んでおくと、初回再生時の遅延（レイテンシ）を
+//   抑えることができます。
 
 import UIKit
 import AudioToolbox
+import AVFoundation
 
 // MARK: - SoundManager
 
@@ -40,26 +46,83 @@ final class SoundManager {
     /// ハプティクス（バイブ）用のフィードバックジェネレーター。.light スタイルで軽めの振動。
     private let impactGenerator = UIImpactFeedbackGenerator(style: .light)
 
+    // MARK: 音声プレーヤーキャッシュ
+
+    // ★ キャッシュとは？ ★
+    //   一度読み込んだデータを手元に保持しておくことです。
+    //   効果音は頻繁に再生されるため、毎回ファイルを読み込むのではなく
+    //   あらかじめ AVAudioPlayer を生成して辞書に入れておきます。
+    //   こうすることで、再生時の遅延をなくすことができます。
+
+    /// ファイル名（拡張子なし）→ AVAudioPlayer のキャッシュ。init でプリロードする。
+    private var players: [String: AVAudioPlayer] = [:]
+
     // MARK: 初期化
 
     /// 外部からのインスタンス化を禁止する（シングルトンの「1つだけ」を保証）。
-    /// init で prepare() を呼ぶと振動モーターが待機状態になり、
-    /// 初回 vibrate() 呼び出し時の遅延（レイテンシ）を低減できる。
+    /// init でハプティクスの準備と音声ファイルのプリロードを行う。
     private init() {
         impactGenerator.prepare()
+        preloadPlayers()
+    }
+
+    // MARK: プリロード
+
+    /// Sounds/ フォルダ内の MP3 ファイルをすべて読み込み、players に格納する。
+    /// ファイルが存在しない場合はスキップする（フォールバックはシステムサウンドが担う）。
+    private func preloadPlayers() {
+
+        // プリロードするファイル名の一覧（拡張子なし）。  // ← 音源追加時はここに足す
+        let names = [
+            "tap", "correct", "wrong", "combo",
+            "gameover", "clear", "special", "unlock",
+            "coin_land", "coin_merge", "dollar"
+        ]
+
+        for name in names {
+            // Bundle.main はアプリ本体のパッケージを指す。
+            // Sounds/ サブフォルダを subdirectory で指定する。
+            guard let url = Bundle.main.url(
+                forResource: name,
+                withExtension: "mp3",
+                subdirectory: "Sounds"
+            ) else {
+                // ファイルが見つからなくても警告だけ出してスキップする。
+                // クラッシュさせないことが重要。
+                print("⚠️ SoundManager: \(name).mp3 が見つかりません（フォールバックします）")
+                continue
+            }
+
+            do {
+                let player = try AVAudioPlayer(contentsOf: url)
+                player.prepareToPlay()   // 初回再生のレイテンシを低減する
+                players[name] = player
+            } catch {
+                print("⚠️ SoundManager: \(name).mp3 の読み込みに失敗しました: \(error)")
+            }
+        }
     }
 
     // MARK: 再生の共通処理
 
-    /// システムサウンドをIDで再生する内部メソッド。
-    /// isSoundOn が false のときは即リターンして無音にする。
-    /// 公開メソッドはすべてこのメソッドを通じて再生する（消音チェックを1箇所に集約するため）。
-    private func play(_ id: SystemSoundID) {
+    /// MP3 ファイルを再生する内部メソッド。
+    /// ファイルが players に存在しない場合は fallback のシステムサウンドを鳴らす。
+    /// isSoundOn が false のときはどちらも無音にする。
+    private func playFile(_ name: String, fallback: SystemSoundID) {
         guard AppSettings.shared.isSoundOn else { return }
-        AudioServicesPlaySystemSound(id)
+
+        if let player = players[name] {
+            // 前の再生が終わっていない場合は頭に戻してから再生する。
+            // （連打されたときに音が重ならないようにする）
+            player.currentTime = 0
+            player.play()
+        } else {
+            // ファイルが存在しないときはシステムサウンドで代替する。
+            AudioServicesPlaySystemSound(fallback)
+        }
     }
 
-    /// ハプティクス（バイブ）を鳴らす。play() と同様に isSoundOn で無効化できる。
+    /// ハプティクス（バイブ）を鳴らす。playFile() と同様に isSoundOn で無効化できる。
     /// タイル選択・ボタンタップ・正誤フィードバックで呼ばれる。
     func vibrate() {
         guard AppSettings.shared.isSoundOn else { return }
@@ -68,22 +131,22 @@ final class SoundManager {
 
     // MARK: 効果音（各ゲームから呼ぶ公開メソッド）
 
-    // IDはiOSシステムサウンドの番号で、AudioServicesPlaySystemSoundに直接渡される。
-    // IDと音の対応はOS側の事情で変わる可能性があるため、コメントで聴感上の印象を残している。
-    // 別の音に差し替えたいときは ID の数字を変えるだけでよい。  // ← 変更可
+    // 第1引数はSounds/フォルダのファイル名（拡張子なし）。
+    // fallback はファイルが存在しないときに鳴らすシステムサウンドID。
+    // 音源を差し替えたいときはファイルを入れ替えるだけでよい。コード変更不要。
 
-    func playTap()      { play(1104) }  // タップ音（Tock）
-    func playCorrect()  { play(1000) }  // 正解（新着メール音）
-    func playWrong()    { play(1053) }  // 不正解（短いブザー音）
-    func playCombo5()   { play(1025) }  // 5コンボ（短いチャイム）
-    func playGameOver() { play(1010) }  // ゲーム終了（Beep-Beep）
-    func playTenClear() { play(1022) }  // 好成績クリア（Anticipate）
-    func playSpecial()  { play(1021) }  // 特別演出（Fanfare）
-    func playUnlock()   { play(1016) }  // アンロック（Tweet）
+    func playTap()      { playFile("tap",      fallback: 1104) }  // タップ音
+    func playCorrect()  { playFile("correct",  fallback: 1000) }  // 正解
+    func playWrong()    { playFile("wrong",    fallback: 1053) }  // 不正解
+    func playCombo5()   { playFile("combo",    fallback: 1025) }  // 5コンボ
+    func playGameOver() { playFile("gameover", fallback: 1010) }  // ゲーム終了
+    func playTenClear() { playFile("clear",    fallback: 1022) }  // 好成績クリア
+    func playSpecial()  { playFile("special",  fallback: 1021) }  // 特別演出
+    func playUnlock()   { playFile("unlock",   fallback: 1016) }  // アンロック
 
     // MARK: 効果音（CoinDrop専用）
 
-    func playCoinLand()   { play(1104) }  // コイン着地（Tock：軽いコツン音）
-    func playCoinMerge()  { play(1057) }  // 合体（Tink：チリンとした音）
-    func playDollarMade() { play(1025) }  // $1完成（短い派手なチャイム）
+    func playCoinLand()   { playFile("coin_land",  fallback: 1104) }  // コイン着地
+    func playCoinMerge()  { playFile("coin_merge", fallback: 1057) }  // 合体
+    func playDollarMade() { playFile("dollar",     fallback: 1025) }  // $1完成
 }
