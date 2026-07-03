@@ -85,7 +85,6 @@ final class SoundManager {
             guard let url = Bundle.main.url(
                 forResource: name,
                 withExtension: "mp3",
-                subdirectory: "Sounds"
             ) else {
                 // ファイルが見つからなくても警告だけ出してスキップする。
                 // クラッシュさせないことが重要。
