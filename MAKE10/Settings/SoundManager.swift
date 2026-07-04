@@ -22,10 +22,22 @@
 //   iOS 標準の音声再生クラスです。MP3・WAV などのファイルを再生できます。
 //   再生前に prepareToPlay() を呼んでおくと、初回再生時の遅延（レイテンシ）を
 //   抑えることができます。
+//
+// ★ パフォーマンス上の注意（ピンボール対応） ★
+//   ピンボールの効果音は SpriteKit の物理接触コールバック（didBegin）から
+//   呼ばれる。ここはメインスレッドのフレーム処理の真っ只中で、しかも
+//   バンパー連打時は1フレームに複数回発火することがある。
+//   そのため本クラスでは以下の対策を入れている:
+//     1. 同一音のクールダウン（0.06秒以内の再呼び出しはスキップ）
+//     2. 再生中のプレイヤーにだけ頭出し（currentTime = 0）を行う
+//        （停止中のプレイヤーへの不要なシーク処理を避ける）
+//     3. AVAudioSession を init で一度だけ設定
+//        （初回 play() 時に暗黙のセッション起動が走るのを防ぐ）
 
 import UIKit
 import AudioToolbox
 import AVFoundation
+import QuartzCore   // CACurrentMediaTime()（クールダウン計測用の単調時計）
 
 // MARK: - SoundManager
 
@@ -57,13 +69,53 @@ final class SoundManager {
     /// ファイル名（拡張子なし）→ AVAudioPlayer のキャッシュ。init でプリロードする。
     private var players: [String: AVAudioPlayer] = [:]
 
+    // MARK: クールダウン
+
+    // ★ クールダウンとは？ ★
+    //   同じ音が極端に短い間隔で連続要求されたとき、2回目以降をスキップする仕組み。
+    //   ピンボールでは物理接触が1フレームに複数回発生することがあり、そのたびに
+    //   MP3 の頭出し（シーク処理）を行うとフレーム落ちの原因になる。
+    //   0.06秒は「人間の操作では連打できないが、物理の多重発火は確実に遮断できる」長さ。
+    //   聴感上も同じ音が団子にならず、むしろ自然に聞こえる。
+
+    /// 同一音の再生を抑制する最小間隔（秒）。
+    private let cooldownInterval: TimeInterval = 0.06
+
+    /// ファイル名 → 最後に再生した時刻。CACurrentMediaTime() ベースの単調時計で記録する。
+    /// （Date() と違い、端末の時刻変更やスリープ復帰の影響を受けにくい）
+    private var lastPlayed: [String: TimeInterval] = [:]
+
     // MARK: 初期化
 
     /// 外部からのインスタンス化を禁止する（シングルトンの「1つだけ」を保証）。
-    /// init でハプティクスの準備と音声ファイルのプリロードを行う。
+    /// init でオーディオセッションの設定・ハプティクスの準備・音声ファイルのプリロードを行う。
     private init() {
+        setupAudioSession()
         impactGenerator.prepare()
         preloadPlayers()
+    }
+
+    // MARK: オーディオセッション
+
+    // ★ AVAudioSession とは？ ★
+    //   アプリの「音の振る舞い」を OS に宣言する仕組み。未設定のまま play() すると
+    //   初回再生時に暗黙のセッション起動が走り、プレイ開始直後の引っかかりの原因になる。
+    //   ここで明示的に一度だけ設定しておくことで、そのコストを起動時に前倒しする。
+    //
+    // ★ .ambient カテゴリを選んだ理由 ★
+    //   - マナースイッチ（消音スイッチ）を尊重する（サイレント時は鳴らない）
+    //   - 他アプリの音楽（BGM）を止めずに共存できる
+    //   子どもが音楽を聴きながら遊んでいても邪魔をしない、本アプリの方針に合う選択。
+
+    /// オーディオセッションを .ambient で一度だけ設定する。失敗しても警告のみでクラッシュさせない。
+    private func setupAudioSession() {
+        do {
+            let session = AVAudioSession.sharedInstance()
+            try session.setCategory(.ambient)
+            try session.setActive(true)
+        } catch {
+            print("⚠️ SoundManager: AVAudioSession の設定に失敗しました: \(error)")
+        }
     }
 
     // MARK: プリロード
@@ -76,15 +128,20 @@ final class SoundManager {
         let names = [
             "tap", "correct", "wrong", "combo",
             "gameover", "clear", "special", "unlock",
-            "coin_land", "coin_merge", "dollar"
+            "coin_land", "coin_merge", "dollar",
+            "maze_shot", "maze_hit", "maze_cheese",
+            "maze_clear", "maze_damage", "maze_gameover",
+            "bumper_hit", "sling_hit", "target_hit", "ball_drain"
         ]
 
         for name in names {
             // Bundle.main はアプリ本体のパッケージを指す。
-            // Sounds/ サブフォルダを subdirectory で指定する。
+            // Sounds/ は Xcode のグループ（黄色フォルダ）のため、ビルド時にファイルは
+            // バンドル直下へフラット化される。subdirectory: "Sounds" を指定すると
+            // 取得に失敗するので、あえて指定しない（詳細は docs/SOUND_ASSETS.md 参照）。
             guard let url = Bundle.main.url(
                 forResource: name,
-                withExtension: "mp3",
+                withExtension: "mp3"
             ) else {
                 // ファイルが見つからなくても警告だけ出してスキップする。
                 // クラッシュさせないことが重要。
@@ -107,13 +164,26 @@ final class SoundManager {
     /// MP3 ファイルを再生する内部メソッド。
     /// ファイルが players に存在しない場合は fallback のシステムサウンドを鳴らす。
     /// isSoundOn が false のときはどちらも無音にする。
+    /// 同一音がクールダウン間隔（0.06秒）以内に再要求された場合はスキップする。
     private func playFile(_ name: String, fallback: SystemSoundID) {
         guard AppSettings.shared.isSoundOn else { return }
 
+        // ── クールダウン判定 ──────────────────────────────────
+        // 物理接触の多重発火（1フレームに複数回）による無駄な再生処理を遮断する。
+        let now = CACurrentMediaTime()
+        if let last = lastPlayed[name], now - last < cooldownInterval {
+            return
+        }
+        lastPlayed[name] = now
+
         if let player = players[name] {
-            // 前の再生が終わっていない場合は頭に戻してから再生する。
-            // （連打されたときに音が重ならないようにする）
-            player.currentTime = 0
+            // 前の再生が終わっていない場合だけ頭に戻してから再生する。
+            // （停止中のプレイヤーは既に先頭にいるため、シーク処理そのものを省ける。
+            //   currentTime への代入は再生中だと内部でデコード位置の巻き戻しが走り、
+            //   メインスレッドのフレーム処理を圧迫することがある）
+            if player.isPlaying {
+                player.currentTime = 0
+            }
             player.play()
         } else {
             // ファイルが存在しないときはシステムサウンドで代替する。
@@ -148,4 +218,29 @@ final class SoundManager {
     func playCoinLand()   { playFile("coin_land",  fallback: 1104) }  // コイン着地
     func playCoinMerge()  { playFile("coin_merge", fallback: 1057) }  // 合体
     func playDollarMade() { playFile("dollar",     fallback: 1025) }  // $1完成
+
+    // MARK: 効果音（迷路 Cheese Quest 専用）
+
+    // 迷路ゲームの6イベント専用音。maze_ 接頭辞で他ゲームと区別する。
+    // ★ 発射音と撃破音を別ファイルにしている理由 ★
+    //   同じ AVAudioPlayer は再生のたびに頭出しされるため、同一音を連打すると前の音が切れる。
+    //   別ファイル＝別プレーヤーなら、発射（maze_shot）と撃破（maze_hit）を同フレームで
+    //   重ねても互いに切れず、「シュッ＋ポン」と鳴らせる。
+    func playMazeShot()     { playFile("maze_shot",     fallback: 1104) }  // 衝撃波発射
+    func playMazeHit()      { playFile("maze_hit",      fallback: 1057) }  // 敵撃破（発射音に重ねる）
+    func playMazeCheese()   { playFile("maze_cheese",   fallback: 1103) }  // チーズ獲得
+    func playMazeClear()    { playFile("maze_clear",    fallback: 1025) }  // ステージクリア
+    func playMazeDamage()   { playFile("maze_damage",   fallback: 1053) }  // 被弾
+    func playMazeGameOver() { playFile("maze_gameover", fallback: 1010) }  // ゲームオーバー
+
+    // MARK: 効果音（Pinball専用）
+
+    // ピンボールの衝突・ドレイン専用音。bumper/sling/target は接触判定(didBegin)から、
+    // ball_drain はボール落下検出(update内)から呼ぶ。ゲーム終了・新記録は既存の
+    // playGameOver() / playUnlock() を再利用する（他ゲームの結果画面と統一するため）。
+    // 高頻度発火への対策（クールダウン等）は playFile() 側で一括して行っている。
+    func playBumperHit() { playFile("bumper_hit", fallback: 1104) }  // バンパー衝突
+    func playSlingHit()  { playFile("sling_hit",  fallback: 1025) }  // スリングショット衝突
+    func playTargetHit() { playFile("target_hit", fallback: 1000) }  // ターゲット命中
+    func playBallDrain() { playFile("ball_drain", fallback: 1053) }  // ボール落下（毎回鳴る。最後の球は0.7秒後に結果音が重なる）
 }
