@@ -33,6 +33,16 @@ The reason for renaming is to keep source code readable and avoid potential file
 | `coin_land.mp3` | Coin landing (CoinDrop) |
 | `coin_merge.mp3` | Coin merge (CoinDrop) |
 | `dollar.mp3` | $1 completed (CoinDrop) |
+| `maze_shot.mp3` | Shockwave fire (Maze) |
+| `maze_hit.mp3` | Enemy defeated (Maze) |
+| `maze_cheese.mp3` | Cheese collected (Maze) |
+| `maze_clear.mp3` | Stage clear (Maze) |
+| `maze_damage.mp3` | Damage taken (Maze) |
+| `maze_gameover.mp3` | Game over (Maze) |
+| `bumper_hit.mp3` | Bumper collision (Pinball) |
+| `sling_hit.mp3` | Slingshot collision (Pinball) |
+| `target_hit.mp3` | Target hit (Pinball) |
+| `ball_drain.mp3` | Ball drained (Pinball) |
 
 ### Folder Structure
 
@@ -49,7 +59,17 @@ FDL-TenBlitz/
     ├── unlock.mp3
     ├── coin_land.mp3
     ├── coin_merge.mp3
-    └── dollar.mp3
+    ├── dollar.mp3
+    ├── maze_shot.mp3
+    ├── maze_hit.mp3
+    ├── maze_cheese.mp3
+    ├── maze_clear.mp3
+    ├── maze_damage.mp3
+    ├── maze_gameover.mp3
+    ├── bumper_hit.mp3
+    ├── sling_hit.mp3
+    ├── target_hit.mp3
+    └── ball_drain.mp3
 ```
 
 ### License
@@ -90,6 +110,16 @@ FDL-TenBlitz/
 | `coin_land.mp3` | コイン着地（コインドロップ） |
 | `coin_merge.mp3` | コイン合体（コインドロップ） |
 | `dollar.mp3` | $1完成（コインドロップ） |
+| `maze_shot.mp3` | 衝撃波発射（迷路） |
+| `maze_hit.mp3` | 敵撃破（迷路） |
+| `maze_cheese.mp3` | チーズ獲得（迷路） |
+| `maze_clear.mp3` | ステージクリア（迷路） |
+| `maze_damage.mp3` | 被弾（迷路） |
+| `maze_gameover.mp3` | ゲームオーバー（迷路） |
+| `bumper_hit.mp3` | バンパー衝突（ピンボール） |
+| `sling_hit.mp3` | スリングショット衝突（ピンボール） |
+| `target_hit.mp3` | ターゲット命中（ピンボール） |
+| `ball_drain.mp3` | ボール落下（ピンボール） |
 
 ### フォルダ構成
 
@@ -106,7 +136,17 @@ FDL-TenBlitz/
     ├── unlock.mp3
     ├── coin_land.mp3
     ├── coin_merge.mp3
-    └── dollar.mp3
+    ├── dollar.mp3
+    ├── maze_shot.mp3
+    ├── maze_hit.mp3
+    ├── maze_cheese.mp3
+    ├── maze_clear.mp3
+    ├── maze_damage.mp3
+    ├── maze_gameover.mp3
+    ├── bumper_hit.mp3
+    ├── sling_hit.mp3
+    ├── target_hit.mp3
+    └── ball_drain.mp3
 ```
 
 ### ライセンス

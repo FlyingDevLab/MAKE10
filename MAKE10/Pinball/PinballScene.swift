@@ -614,7 +614,8 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
         // ── 発射初速 ──────────────────────────────────────────
         // SpriteKit は Y 上向き正。dx で左右の振り分け、dy で上方向の打ち出し。
-        // 重力が -300 px/s² なので、dy は最低 300 以上ないと即落下する。
+        // 初速は Tuning.launchVX / launchVY で調整する。重力（Tuning.gravity）と
+        // セットでバランスを取ること（詳細は Tuning の定義コメント参照）。
         let vx: CGFloat = Bool.random() ? Tuning.launchVX : -Tuning.launchVX
         let vy: CGFloat = Tuning.launchVY
         body.velocity = CGVector(dx: vx, dy: vy)
@@ -683,6 +684,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
             ball.physicsBody?.isDynamic = false
             ball.removeFromParent()
             ballNode = nil
+            SoundManager.shared.playBallDrain()
             onBallDrained?()
         }
     }
@@ -761,6 +763,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         bumperFlash[bIdx] = Tuning.bumperFlashDur
         updateBumperAppearance(at: bIdx)
 
+        // 効果音
+        SoundManager.shared.playBumperHit()
+
         // スコア
         addScore(100, at: bNode.position)
     }
@@ -774,6 +779,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
             dy: ballBody.velocity.dy + norm.dy * Tuning.slingImpulse
         )
         clampBallSpeed(ballBody: ballBody)
+        SoundManager.shared.playSlingHit()
         addScore(500, at: contact.contactPoint)
     }
 
@@ -793,6 +799,10 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
                     doubleScoreTimer = Tuning.doubleScoreDuration
                     doubleScoreLabel.text   = "×2  \(Int(Tuning.doubleScoreDuration))s"
                     doubleScoreLabel.isHidden = false
+                    SoundManager.shared.playSpecial()  // 2倍タイム発動の特別演出音
+                    SoundManager.shared.vibrate()
+                } else {
+                    SoundManager.shared.playTargetHit()
                 }
         addScore(targetPoints[tIdx], at: tNode.position)
     }

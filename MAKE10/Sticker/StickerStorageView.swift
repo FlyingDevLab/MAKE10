@@ -7,9 +7,15 @@
 
 // ストレージ画面。3行レイアウトで MAKE10・ストレージ・シール画面のシールを管理する。
 //
+// 【表示方針】
+//   カルーセルは「1枚ずつ」ではなく「絵文字の種類ごと」にまとめて回す。
+//   同じ絵文字は1スロットに集約し、中央に「×N」バッジで枚数を表示する。
+//   これにより挿入順で散らばっていた重複がまとまり、目的の絵文字を探しやすくなる。
+//   まとめは初出順（その種類が最初に現れた順）で安定させ、枚数が減っても並びが動かない。
+//
 // 【操作】
-//   横フリック：各行の絵文字を選択（循環）
-//   縦フリック：選んだ絵文字を隣の行へ移動
+//   横フリック：各行の「絵文字の種類」を選択（循環）
+//   縦フリック：選んだ種類の絵文字を1枚だけ隣の行へ移動
 //     MAKE10行  下フリック → ストレージへ
 //     ストレージ 上フリック → MAKE10へ  /  下フリック → シール画面へ
 //     シール行  上フリック → ストレージへ
@@ -21,7 +27,7 @@ import SwiftUI
 struct StickerStorageView: View {
     private let store = StickerStore.shared
 
-    // 各行で現在選択中のインデックス
+    // 各行で現在選択中の「種類インデックス」（グループ配列に対するインデックス）
     @State private var gameIndex:    Int = 0
     @State private var storageIndex: Int = 0
     @State private var playIndex:    Int = 0
@@ -34,7 +40,6 @@ struct StickerStorageView: View {
     // 移動アニメーション
     @State private var flyEmoji:     String  = ""
     @State private var flyY:         CGFloat = 0
-    @State private var flyTargetY:   CGFloat = 0
     @State private var isFlying:     Bool    = false
 
     // 満杯・空メッセージ
@@ -56,6 +61,38 @@ struct StickerStorageView: View {
     private let sideOpacity: Double  = 0.38 // ← 変更可：隣接絵文字の透明度
     private let farOpacity:  Double  = 0.20 // ← 変更可：遠方絵文字の透明度
 
+    // ×N バッジの位置（中央絵文字の右下に重ねる）
+    private let badgeOffsetX: CGFloat =  6  // ← 変更可：バッジの水平位置
+    private let badgeOffsetY: CGFloat = -6  // ← 変更可：バッジの垂直位置
+
+    // MARK: - グループ型
+    // 絵文字1種類と、その枚数をまとめた表示用の値。
+    private struct EmojiGroup: Identifiable {
+        let emoji: String
+        let count: Int
+        var id: String { emoji }  // 種類ごとに一意なので絵文字そのものを ID にする
+    }
+
+    // MARK: - グループ計算（初出順・重複集約）
+
+    // フラットな絵文字配列を「初出順の [種類, 枚数]」へ集約する。
+    // 初出順を保つことで、枚数が増減してもスロット位置が動かず操作感が安定する。
+    private func grouped(_ emojis: [String]) -> [EmojiGroup] {
+        var order:  [String] = []          // 初めて出た順に絵文字を記録
+        var counts: [String: Int] = [:]    // 絵文字 → 枚数
+        for e in emojis {
+            if counts[e] == nil { order.append(e) }
+            counts[e, default: 0] += 1
+        }
+        // order の要素は直前のループで必ず counts に登録済みのため nil にならない
+        return order.map { EmojiGroup(emoji: $0, count: counts[$0]!) }
+    }
+
+    // 各行の表示に使うグループ配列（store の変化に追従する計算プロパティ）
+    private var gameGroups:    [EmojiGroup] { grouped(store.stickers.map { $0.emoji }) }
+    private var storageGroups: [EmojiGroup] { grouped(store.storageEmojis) }
+    private var playGroups:    [EmojiGroup] { grouped(store.playStickers.map { $0.emoji }) }
+
     // MARK: - body
 
     var body: some View {
@@ -67,7 +104,7 @@ struct StickerStorageView: View {
                     // 上行：MAKE10
                     rowView(
                         label:     String(localized: "title_game_name"),
-                        emojis:    store.stickers.map { $0.emoji },
+                        groups:    gameGroups,
                         index:     gameIndex,
                         countText: "\(displayGameCount) / 50",
                         dragX:     gameDragX,
@@ -82,7 +119,7 @@ struct StickerStorageView: View {
                     // 中行：ストレージ
                     rowView(
                         label:     String(localized: "sticker_storage_title"),
-                        emojis:    store.storageEmojis,
+                        groups:    storageGroups,
                         index:     storageIndex,
                         countText: "\(store.storageEmojis.count)",
                         dragX:     storageDragX,
@@ -97,7 +134,7 @@ struct StickerStorageView: View {
                     // 下行：シール画面
                     rowView(
                         label:     String(localized: "game_picker_sticker"),
-                        emojis:    store.playStickers.map { $0.emoji },
+                        groups:    playGroups,
                         index:     playIndex,
                         countText: "\(store.playStickers.count) / 100",
                         dragX:     playDragX,
@@ -161,7 +198,7 @@ struct StickerStorageView: View {
 
     private func rowView(
         label:     String,
-        emojis:    [String],
+        groups:    [EmojiGroup],
         index:     Int,
         countText: String,
         dragX:     CGFloat,
@@ -181,11 +218,11 @@ struct StickerStorageView: View {
                 Spacer()
 
                 // カルーセル
-                emojiCarousel(emojis: emojis, index: index, dragX: dragX)
+                emojiCarousel(groups: groups, index: index, dragX: dragX)
 
                 Spacer()
 
-                // 枚数
+                // 枚数（行全体の合計枚数）
                 Text(countText)
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(DS.primary)
@@ -206,15 +243,17 @@ struct StickerStorageView: View {
 
     // MARK: - 絵文字カルーセル
 
-    // 最大5スロット構成。個数に応じてスロットを中央から外側へ増やす。
+    // 最大5スロット構成。ここでの N は「絵文字の種類数」（＝グループ数）。
+    // 種類数に応じてスロットを中央から外側へ増やす。
     //   N=1: [🈳][🈳][①][🈳][🈳]
     //   N=2: [🈳][🈳][①][②][🈳]
     //   N=3: [🈳][③][①][②][🈳]
     //   N=4: [🈳][④][①][②][③]
     //   N≥5: [⑤][④][①][②][③]
+    // 中央スロットのみ、枚数が2以上のとき「×N」バッジを重ねる（1枚のときは非表示）。
     // dragX に応じて各スロットが異なる速度でスライドし、奥行き感を演出する。
-    private func emojiCarousel(emojis: [String], index: Int, dragX: CGFloat) -> some View {
-        let n = emojis.count
+    private func emojiCarousel(groups: [EmojiGroup], index: Int, dragX: CGFloat) -> some View {
+        let n = groups.count
 
         return ZStack {
             if n == 0 {
@@ -226,7 +265,7 @@ struct StickerStorageView: View {
 
                 // ── 遠方左 L2：N≥5 のとき表示 ──
                 if n >= 5 {
-                    Text(emojis[(i - 2 + n) % n])
+                    Text(groups[(i - 2 + n) % n].emoji)
                         .font(.system(size: farSize))
                         .opacity(farOpacity)
                         .offset(x: -farOffset + dragX * 0.65)
@@ -235,23 +274,21 @@ struct StickerStorageView: View {
 
                 // ── 隣接左 L1：N≥3 のとき表示 ──
                 if n >= 3 {
-                    Text(emojis[(i - 1 + n) % n])
+                    Text(groups[(i - 1 + n) % n].emoji)
                         .font(.system(size: sideSize))
                         .opacity(sideOpacity)
                         .offset(x: -sideOffset + dragX * 0.45)
                         .animation(.interactiveSpring(), value: dragX)
                 }
 
-                // ── 中央：常に表示 ──
-                Text(emojis[i])
-                    .font(.system(size: centerSize))
-                    .opacity(1.0)
+                // ── 中央：常に表示（枚数バッジ付き） ──
+                centerSlot(group: groups[i])
                     .offset(x: dragX * 0.20)
                     .animation(.interactiveSpring(), value: dragX)
 
                 // ── 隣接右 R1：N≥2 のとき表示 ──
                 if n >= 2 {
-                    Text(emojis[(i + 1) % n])
+                    Text(groups[(i + 1) % n].emoji)
                         .font(.system(size: sideSize))
                         .opacity(sideOpacity)
                         .offset(x: sideOffset + dragX * 0.45)
@@ -260,7 +297,7 @@ struct StickerStorageView: View {
 
                 // ── 遠方右 R2：N≥4 のとき表示 ──
                 if n >= 4 {
-                    Text(emojis[(i + 2) % n])
+                    Text(groups[(i + 2) % n].emoji)
                         .font(.system(size: farSize))
                         .opacity(farOpacity)
                         .offset(x: farOffset + dragX * 0.65)
@@ -270,6 +307,30 @@ struct StickerStorageView: View {
         }
         .frame(width: 210, height: centerSize + 8)
         .clipped()
+    }
+
+    // 中央スロット：大きい絵文字＋右下の枚数バッジ（2枚以上のときのみ）。
+    private func centerSlot(group: EmojiGroup) -> some View {
+        ZStack(alignment: .bottomTrailing) {
+            Text(group.emoji)
+                .font(.system(size: centerSize))
+
+            if group.count >= 2 {
+                countBadge(group.count)
+                    .offset(x: badgeOffsetX, y: badgeOffsetY)
+            }
+        }
+    }
+
+    // 「×N」バッジ。ブランドカラーのカプセルで枚数を示す。
+    private func countBadge(_ count: Int) -> some View {
+        Text("×\(count)")
+            .font(.system(size: 15, weight: .black, design: .rounded))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 8)
+            .padding(.vertical, 3)
+            .background(Capsule().fill(DS.primary))
+            .shadow(color: .black.opacity(0.15), radius: 2, x: 0, y: 1)
     }
 
     // MARK: - ジェスチャー生成
@@ -304,7 +365,7 @@ struct StickerStorageView: View {
             }
     }
 
-    // MARK: - 横スワイプ処理（絵文字選択）
+    // MARK: - 横スワイプ処理（種類選択）
 
     private func handleHorizontal(row: RowKind, dx: CGFloat) {
         guard abs(dx) >= hThreshold else { return }
@@ -313,23 +374,23 @@ struct StickerStorageView: View {
 
         switch row {
         case .game:
-            let n = store.stickers.count
+            let n = gameGroups.count
             guard n > 0 else { return }
             gameIndex = (gameIndex + (forward ? 1 : n - 1)) % n
 
         case .storage:
-            let n = store.storageEmojis.count
+            let n = storageGroups.count
             guard n > 0 else { return }
             storageIndex = (storageIndex + (forward ? 1 : n - 1)) % n
 
         case .play:
-            let n = store.playStickers.count
+            let n = playGroups.count
             guard n > 0 else { return }
             playIndex = (playIndex + (forward ? 1 : n - 1)) % n
         }
     }
 
-    // MARK: - 縦スワイプ処理（移動）
+    // MARK: - 縦スワイプ処理（移動：選択中の種類を1枚だけ動かす）
 
     private func handleVertical(row: RowKind, dy: CGFloat, rowH: CGFloat) {
         guard abs(dy) >= vThreshold else { return }
@@ -339,17 +400,18 @@ struct StickerStorageView: View {
         case .game:
             // 下フリックのみ有効：MAKE10 → ストレージ
             guard goDown else { return }
-            guard let id = safeGameID(),
-                  let emoji = store.stickers.first(where: { $0.id == id })?.emoji
+            guard let emoji = selectedGameEmoji(),
+                  // 同じ絵文字の先頭1枚を対象にする（位置・z順に影響しない閲覧用の集約なので先頭で良い）
+                  let id = store.stickers.first(where: { $0.emoji == emoji })?.id
             else { showBlock(String(localized: "sticker_game_empty")); return }
 
             fly(emoji: emoji, fromY: rowH * 0.5, toY: rowH * 1.5) {
                 store.moveGameToStorage(id: id)
-                clampIndex(&gameIndex, count: store.stickers.count)
+                clampIndex(&gameIndex, count: gameGroups.count)
             }
 
         case .storage:
-            guard let emoji = safeStorageEmoji()
+            guard let emoji = selectedStorageEmoji()
             else { showBlock(String(localized: "sticker_storage_empty")); return }
 
             if goDown {
@@ -359,7 +421,7 @@ struct StickerStorageView: View {
                 }
                 fly(emoji: emoji, fromY: rowH * 1.5, toY: rowH * 2.5) {
                     store.moveStorageToPlay(emoji: emoji)
-                    clampIndex(&storageIndex, count: store.storageEmojis.count)
+                    clampIndex(&storageIndex, count: storageGroups.count)
                 }
             } else {
                 // ストレージ → MAKE10
@@ -368,20 +430,20 @@ struct StickerStorageView: View {
                 }
                 fly(emoji: emoji, fromY: rowH * 1.5, toY: rowH * 0.5) {
                     store.moveStorageToGame(emoji: emoji)
-                    clampIndex(&storageIndex, count: store.storageEmojis.count)
+                    clampIndex(&storageIndex, count: storageGroups.count)
                 }
             }
 
         case .play:
             // 上フリックのみ有効：シール画面 → ストレージ
             guard !goDown else { return }
-            guard let id = safePlayID(),
-                  let emoji = store.playStickers.first(where: { $0.id == id })?.emoji
+            guard let emoji = selectedPlayEmoji(),
+                  let id = store.playStickers.first(where: { $0.emoji == emoji })?.id
             else { showBlock(String(localized: "sticker_play_empty")); return }
 
             fly(emoji: emoji, fromY: rowH * 2.5, toY: rowH * 1.5) {
                 store.movePlayToStorage(id: id)
-                clampIndex(&playIndex, count: store.playStickers.count)
+                clampIndex(&playIndex, count: playGroups.count)
             }
         }
     }
@@ -392,7 +454,6 @@ struct StickerStorageView: View {
         SoundManager.shared.vibrate()
         flyEmoji   = emoji
         flyY       = fromY
-        flyTargetY = toY
         isFlying   = true
 
         withAnimation(.easeInOut(duration: 0.32)) {
@@ -414,25 +475,27 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - 安全ヘルパー
+    // MARK: - 安全ヘルパー（選択中の種類 → 絵文字）
 
     private var displayGameCount: Int { min(store.stickers.count, 50) }
 
-    private func safeGameID() -> UUID? {
-        let arr = store.stickers
-        guard !arr.isEmpty else { return nil }
-        return arr[min(gameIndex, arr.count - 1)].id
+    // 各行で現在選択中のグループの絵文字を返す。空なら nil。
+    private func selectedGameEmoji() -> String? {
+        let g = gameGroups
+        guard !g.isEmpty else { return nil }
+        return g[min(gameIndex, g.count - 1)].emoji
     }
 
-    private func safeStorageEmoji() -> String? {
-        guard !store.storageEmojis.isEmpty else { return nil }
-        return store.storageEmojis[min(storageIndex, store.storageEmojis.count - 1)]
+    private func selectedStorageEmoji() -> String? {
+        let g = storageGroups
+        guard !g.isEmpty else { return nil }
+        return g[min(storageIndex, g.count - 1)].emoji
     }
 
-    private func safePlayID() -> UUID? {
-        let arr = store.playStickers
-        guard !arr.isEmpty else { return nil }
-        return arr[min(playIndex, arr.count - 1)].id
+    private func selectedPlayEmoji() -> String? {
+        let g = playGroups
+        guard !g.isEmpty else { return nil }
+        return g[min(playIndex, g.count - 1)].emoji
     }
 
     private func clampIndex(_ index: inout Int, count: Int) {

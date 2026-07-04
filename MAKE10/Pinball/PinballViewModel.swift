@@ -13,7 +13,8 @@
 //    - ViewModel（このファイル）: スコア・残機・画面状態の保持、終了判定、ハイスコア更新
 //    - Scene (PinballScene)     : 物理シミュレーション（衝突・得点発生・ボール落下）
 //    - View (PinballView)       : 状態に応じた画面切り替えと SpriteScene の生成
-//  Scene → ViewModel への通知は onScoreChanged / onBallDrained のコールバックで行う。
+//  Scene からの通知は onScoreChanged / onBallDrained のコールバックで View が受け取り、
+//  ViewModel へ転送する（次球の発射タイミング制御は View 側が担う）。
 //
 //  ★ @Observable の解説は AppSettings.swift 冒頭を参照 ★
 
@@ -77,6 +78,15 @@ final class PinballViewModel {
     private func endGame() {
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.pinballHighScore)
+
+        // 新記録ならアンロック風の祝福音、そうでなければ通常のゲームオーバー音
+        // （Scene 側で鳴らす ballDrain 音の余韻の後に、結果を告げる音として重ねる）
+        if isNewRecord {
+            SoundManager.shared.playUnlock()
+        } else {
+            SoundManager.shared.playGameOver()
+        }
+
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }

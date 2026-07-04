@@ -184,7 +184,7 @@ final class MazeGameModel: NSObject {
     /// 次の敵を出現させるまでの残りフレーム数（0 で1匹スポーン）
     var spawnTimer = 0
 
-    // MARK: - 内部参照（ループ・コールバック）
+    // MARK: - 内部参照（ループ）
 
     /// 60fps ループを駆動する CADisplayLink。
     /// ★ CADisplayLink とは？ ★
@@ -192,10 +192,6 @@ final class MazeGameModel: NSObject {
     ///   ゲームの「毎フレーム更新」に最適で、Timer よりも描画とズレにくい。
     ///   add(to:forMode:) で動き出し、invalidate() で止まる。
     private var displayLink: CADisplayLink?
-
-    /// ゲームオーバーが確定したとき View 側に知らせるためのコールバック。
-    /// （Model は画面遷移を直接触らず、通知だけして View に任せる）
-    var onGameOver: (() -> Void)?
 
     // MARK: - 難易度
 
@@ -298,6 +294,8 @@ final class MazeGameModel: NSObject {
         updateParticles()
 
         // チーズ回収判定：プレイヤーが未回収チーズに重なったら取得
+        // このフレームで1個でも取ったか（獲得音を鳴らすかどうかの判定に使う）
+        var didCollect = false
         for i in 0..<cheeses.count {
             guard !cheeses[i].collected else { continue }
             let dx = cheeseX - cheeses[i].x, dy = cheeseY - cheeses[i].y
@@ -306,13 +304,20 @@ final class MazeGameModel: NSObject {
                 score += 1
                 spawnParticles(cheeses[i].x, cheeses[i].y)
                 SoundManager.shared.vibrate()
+                didCollect = true
             }
         }
 
         // 全チーズ回収でステージクリア
+        // ★ 音の優先順位 ★
+        //   最後の1個を取った瞬間は「獲得」と「クリア」が同フレームで重なる。
+        //   2音が濁らないよう、クリアに達したらクリア音を優先し、獲得音は鳴らさない。
         if cheeses.allSatisfy({ $0.collected }) {
+            SoundManager.shared.playMazeClear()   // クリア音を優先
             deliveredTimer = 110
             gameState = .delivered
+        } else if didCollect {
+            SoundManager.shared.playMazeCheese()  // クリアに至らない獲得のみ獲得音
         }
     }
 
@@ -475,6 +480,13 @@ final class MazeGameModel: NSObject {
                                     cx: logicalPos.x, cy: logicalPos.y)
         SoundManager.shared.vibrate()
 
+        // この発射で1匹でも撃破したか。撃破音（maze_hit）を「1回だけ」重ねるために使う。
+        // ★ なぜ撃破ごとに鳴らさないのか？ ★
+        //   maze_hit は1つの AVAudioPlayer を共有するため、撃破ごとに呼ぶと前の音が頭出しで
+        //   切れ、結局1回ぶんしか鳴らない。そこで「1匹でも倒したか」だけを見て後で1回鳴らす。
+        //   発射音（maze_shot）は別ファイル＝別プレーヤーなので、撃破音と同時でも互いに切れず重なる。
+        var didKill = false
+
         // remove(at:) で配列を縮めるため、末尾から逆順に走査する（インデックスずれ防止）
         for i in (0..<mice.count).reversed() {
             let m = mice[i]
@@ -484,6 +496,7 @@ final class MazeGameModel: NSObject {
                 // 近い敵は撃破（破片を出して消す）
                 spawnParticles(m.x, m.y)
                 mice.remove(at: i)
+                didKill = true
             } else {
                 // 遠い敵は中心から外向きに吹き飛ばす（距離が近いほど強く）
                 let angle = atan2(m.y - logicalPos.y, m.x - logicalPos.x)
@@ -492,6 +505,12 @@ final class MazeGameModel: NSObject {
                 mice[i].vy = sin(angle) * force
                 mice[i].kb = 22   // ノックバック中フレーム数をセット
             }
+        }
+
+        // 発射音は常に鳴らし、撃破があれば撃破音を重ねる（別ファイルなので同時でも切れない）。
+        SoundManager.shared.playMazeShot()
+        if didKill {
+            SoundManager.shared.playMazeHit()
         }
     }
 
@@ -544,8 +563,13 @@ final class MazeGameModel: NSObject {
                 cheeseDmgCool = DMG_COOL
                 SoundManager.shared.vibrate()
                 if cheeseHp <= 0 {
+                    // とどめの一撃。被弾音は鳴らさず、ゲームオーバー音を優先する
+                    // （ゲームオーバー音は triggerGameOver 内で再生）。
                     gameState = .finished
                     triggerGameOver()
+                } else {
+                    // HP が残る被弾のみ、被弾音を鳴らす
+                    SoundManager.shared.playMazeDamage()
                 }
             }
         }
@@ -592,8 +616,10 @@ final class MazeGameModel: NSObject {
     // MARK: - ゲームオーバー
 
     /// ゲームオーバー確定時の後処理。ループを止め、ハイスコアを更新する。
+    /// （画面遷移は gameState の変更を @Observable 経由で View が検知して行う）
     private func triggerGameOver() {
         stopLoop()
+        SoundManager.shared.playMazeGameOver()   // ゲームオーバー音
         // 新記録なら ScoreBoard が保存し true を返す
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
     }
