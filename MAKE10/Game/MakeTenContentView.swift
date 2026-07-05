@@ -197,7 +197,7 @@ struct MakeTenContentView: View {
         case .pinball:             return String(localized: "pinball_title")
         case .coinDrop:            return String(localized: "coindrop_title")
         case .janken:              return String(localized: "janken_title")
-        case .tenPuzzle:           return "四則テンパズル"  // TODO: ローカライズ
+        case .tenPuzzle:           return String(localized: "tenpuzzle_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         }
     }

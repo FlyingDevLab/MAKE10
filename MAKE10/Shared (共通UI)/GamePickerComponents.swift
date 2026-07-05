@@ -76,7 +76,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .pinball:         return "pinball_title"
         case .coinDrop:        return "coindrop_title"
         case .janken:          return "janken_title"
-        case .tenPuzzle:       return "tenpuzzle_picker_label"
+        case .tenPuzzle:       return "tenpuzzle_title"
         case .stickerStorage:  return "sticker_storage_title"
         }
     }
