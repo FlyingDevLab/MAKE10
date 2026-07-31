@@ -171,7 +171,10 @@ struct DrawingToolbarView: View {
         .buttonStyle(.plain)
         .scaleEffect(isSelected ? 1.15 : 1.0)
         .animation(.spring(response: 0.25), value: isSelected)
-        .accessibilityLabel(String(localized: String.LocalizationValue(drawingColor.nameKey)))
+        // ★ LocalizedStringKey を直接渡すことで翻訳が引かれる。
+        //   以前は String.LocalizationValue に変換していたため自動抽出が効かず、
+        //   VoiceOver が「drawing_color_red」とキー名を読み上げていた。
+        .accessibilityLabel(drawingColor.name.key)
     }
 
     // MARK: - 消しゴムボタン

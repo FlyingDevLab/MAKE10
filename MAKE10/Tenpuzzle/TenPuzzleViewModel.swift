@@ -93,11 +93,29 @@ final class TenPuzzleViewModel {
     /// ヒントボタンを押したかどうか
     var hintShown: Bool = false
 
-    /// ヒントバナーに表示するテキスト。
-    /// 解ける問題なら解の例、不可能問題なら「作れません」メッセージ。
-    var hintBannerText: String? {
+    /// ヒントバナーに表示する内容。
+    /// 解ける問題なら解の例（式そのものなので翻訳不要）、
+    /// 不可能問題なら固定メッセージ（要翻訳）を返す。
+    ///
+    /// ★ enum で2種類を分けている理由 ★
+    ///   解の例（"0+0+1+9" など）は数式そのものであり、どの言語でも
+    ///   共通の文字列として表示すればよい（翻訳の必要がない）。
+    ///   一方「作れません」は言語ごとの文言が必要になる。
+    ///   これを1つの String? に混ぜて持たせると、View 側で
+    ///   「翻訳が要る文字列」と「要らない文字列」を区別できず、
+    ///   String のまま Text() に渡すしかなくなる（＝翻訳が効かない原因）。
+    ///   enum で分けることで、View は迷わず正しい Text() の呼び方を選べる。
+    enum HintBannerContent {
+        case example(String)           // 解の例（数式）。翻訳不要でそのまま表示。
+        case impossibleMessage         // 「この問題は10を作れません」。翻訳が必要。
+    }
+
+    var hintBannerContent: HintBannerContent? {
         guard hintShown else { return nil }
-        return currentProblem?.example ?? "この問題は10を作れません"
+        if let example = currentProblem?.example {
+            return .example(example)
+        }
+        return .impossibleMessage
     }
 
     // MARK: 途中計算

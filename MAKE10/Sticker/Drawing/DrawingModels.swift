@@ -95,7 +95,44 @@ struct DrawingStroke: Codable, Identifiable {
 // hex は "#RRGGBB" 形式の文字列で保持し、Color への変換は Color(hex:) を使う。
 
 struct DrawingColor {
-    let nameKey: String  // ローカライズキー（アクセシビリティ用）
+
+    // MARK: - ColorName（色の識別子）
+    //
+    // ★ なぜ String のキーではなく enum なのか ★
+    //   以前は nameKey: String にローカライズキーを直接持たせていたが、
+    //   これには2つの問題があった。
+    //     1. String のまま String.LocalizationValue に変換していたため、
+    //        Xcode のビルド時文字列抽出がキーを発見できず、翻訳が引けなかった
+    //        （VoiceOver が「drawing_color_red」と読み上げていた）。
+    //     2. 色の判別を $0.nameKey.contains("black") のような文字列マッチで
+    //        行っていたため、キー名を変えると静かに壊れる作りだった。
+    //   enum にすることで、key はリテラルを返して自動抽出の対象になり、
+    //   識別は == .black で型安全に書けるようになる。
+    enum ColorName {
+        case red, orange, yellow, lime, green, cyan
+        case blue, purple, pink, brown, black, white
+
+        /// VoiceOver 読み上げ用のローカライズキー。
+        /// ★ ここは必ずリテラルで書くこと（変数を返すと自動抽出されない）★
+        var key: LocalizedStringKey {
+            switch self {
+            case .red:    return "drawing_color_red"
+            case .orange: return "drawing_color_orange"
+            case .yellow: return "drawing_color_yellow"
+            case .lime:   return "drawing_color_lime"
+            case .green:  return "drawing_color_green"
+            case .cyan:   return "drawing_color_cyan"
+            case .blue:   return "drawing_color_blue"
+            case .purple: return "drawing_color_purple"
+            case .pink:   return "drawing_color_pink"
+            case .brown:  return "drawing_color_brown"
+            case .black:  return "drawing_color_black"
+            case .white:  return "drawing_color_white"
+            }
+        }
+    }
+
+    let name: ColorName  // 色の識別子（VoiceOver 用のキーは name.key）
     let hex: String
 
     // ★ 消しゴムの番兵値 ★
@@ -107,18 +144,18 @@ struct DrawingColor {
     // 子ども向けに定番の12色を選定。
     // hex 値はすべて ← 変更可。
     static let palette: [DrawingColor] = [
-        DrawingColor(nameKey: "drawing_color_red",    hex: "#FF3B30"),  // 赤 ← 変更可
-        DrawingColor(nameKey: "drawing_color_orange", hex: "#FF9500"),  // オレンジ ← 変更可
-        DrawingColor(nameKey: "drawing_color_yellow", hex: "#FFCC00"),  // 黄 ← 変更可
-        DrawingColor(nameKey: "drawing_color_lime",   hex: "#86E840"),  // 黄緑 ← 変更可
-        DrawingColor(nameKey: "drawing_color_green",  hex: "#34C759"),  // 緑 ← 変更可
-        DrawingColor(nameKey: "drawing_color_cyan",   hex: "#5AC8FA"),  // 水色 ← 変更可
-        DrawingColor(nameKey: "drawing_color_blue",   hex: "#007AFF"),  // 青 ← 変更可
-        DrawingColor(nameKey: "drawing_color_purple", hex: "#AF52DE"),  // 紫 ← 変更可
-        DrawingColor(nameKey: "drawing_color_pink",   hex: "#FF2D55"),  // ピンク ← 変更可
-        DrawingColor(nameKey: "drawing_color_brown",  hex: "#A2845E"),  // 茶 ← 変更可
-        DrawingColor(nameKey: "drawing_color_black",  hex: "#1C1C1E"),  // 黒 ← 変更可
-        DrawingColor(nameKey: "drawing_color_white",  hex: "#FFFFFF"),  // 白 ← 変更可
+        DrawingColor(name: .red,    hex: "#FF3B30"),  // 赤 ← 変更可
+        DrawingColor(name: .orange, hex: "#FF9500"),  // オレンジ ← 変更可
+        DrawingColor(name: .yellow, hex: "#FFCC00"),  // 黄 ← 変更可
+        DrawingColor(name: .lime,   hex: "#86E840"),  // 黄緑 ← 変更可
+        DrawingColor(name: .green,  hex: "#34C759"),  // 緑 ← 変更可
+        DrawingColor(name: .cyan,   hex: "#5AC8FA"),  // 水色 ← 変更可
+        DrawingColor(name: .blue,   hex: "#007AFF"),  // 青 ← 変更可
+        DrawingColor(name: .purple, hex: "#AF52DE"),  // 紫 ← 変更可
+        DrawingColor(name: .pink,   hex: "#FF2D55"),  // ピンク ← 変更可
+        DrawingColor(name: .brown,  hex: "#A2845E"),  // 茶 ← 変更可
+        DrawingColor(name: .black,  hex: "#1C1C1E"),  // 黒 ← 変更可
+        DrawingColor(name: .white,  hex: "#FFFFFF"),  // 白 ← 変更可
     ]
 }
 

@@ -187,9 +187,21 @@ struct MakeTenContentView: View {
     // MARK: ヘッダー構成（タイトル・戻る・閉じる）
 
     /// SharedFrame のヘッダー中央に出すタイトル。画面ごとのローカライズ済み文字列を返す。
+    ///
+    /// ★ .make10 だけ2種類のタイトルを出し分ける理由 ★
+    ///   .make10 は「アプリのタイトル画面（ゲーム選択）」と「MAKE10 のプレイ中・結果」を
+    ///   兼ねた1つのケースになっている。両方に同じキーを当てると、タイトル画面を
+    ///   アプリ名にした瞬間、MAKE10 のゲーム画面まで同じ名前になってしまう。
+    ///   そのため gameState を見て、タイトル画面ならアプリ名、
+    ///   プレイ中・結果ならゲーム名を返す。
+    ///     title_game_name … アプリ名（例: Kids Game Collection / キッズゲームコレクション）
+    ///     make10_title    … MAKE10 のゲーム名（例: MAKE10 / １０をつくろう）
     private var headerTitle: String? {
         switch screen {
-        case .make10:              return String(localized: "title_game_name")
+        case .make10:
+            return viewModel.gameState == .title
+                ? String(localized: "title_game_name")  // タイトル画面＝アプリ名
+                : String(localized: "make10_title")     // プレイ中・結果＝ゲーム名
         case .quizHome:            return String(localized: "quiz_home_title")
         case .quizPlaying(let vm): return vm.category.title
         case .whackAMole:          return String(localized: "whack_a_mole_title")
