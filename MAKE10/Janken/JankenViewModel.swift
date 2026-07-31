@@ -105,6 +105,33 @@ enum JankenInstruction {
     case lose  // 負けろ
 }
 
+// MARK: - JankenTelop（フェーズ切替テロップ）
+
+/// 挑戦モードでフェーズが切り替わる節目に、全画面で出すテロップの種別。
+///
+/// ★ なぜ String ではなく enum なのか ★
+///   ローカライズキーを String 型で持ち回ると、Xcode のビルド時文字列抽出
+///   （SWIFT_EMIT_LOC_STRINGS）がキーを発見できず、Localizable.xcstrings に
+///   登録されない。登録がないキーは翻訳が引けないため、画面にはキー文字列
+///   （"janken_telop_lose" など）がそのまま表示されてしまう。
+///
+///   戻り値の型を LocalizedStringKey にしてリテラルを直接書けば抽出対象になり、
+///   さらに enum で受け渡すことでキーの打ち間違いがコンパイルエラーになる。
+///   同じ書き方の先行例は JankenViewModel.challengePhaseKey を参照。
+enum JankenTelop: Equatable {
+    case toLose       // 10手目終了：「かって」→「まけて」へ切り替わる
+    case toAlternate  // 20手目終了：「まけて」→「交互」へ切り替わる
+
+    /// テロップに表示するローカライズキー。
+    /// ★ ここは必ずリテラルで書くこと（変数を返すと自動抽出されない）★
+    var key: LocalizedStringKey {
+        switch self {
+        case .toLose:      return "janken_telop_lose"
+        case .toAlternate: return "janken_telop_alternate"
+        }
+    }
+}
+
 // MARK: - JankenViewModel
 //
 // ゲームの状態とロジックを一元管理するクラス。
@@ -135,7 +162,7 @@ final class JankenViewModel {
     enum Phase: Equatable {
         case idle                       // 難易度選択前
         case countdown(Int)             // カウントダウン中（0=空白, 1, 2, 3）
-        case phaseTransition(String)    // フェーズ切替テロップ（ローカライズキー）
+        case phaseTransition(JankenTelop)  // フェーズ切替テロップ（挑戦モードのみ）
         case playing                    // プレイ中
         case finished                   // 終了
     }
@@ -319,10 +346,9 @@ final class JankenViewModel {
             if isDone {
                 self.endGame()
             } else if isTransition {
-                let key = self.currentRound == 10
-                    ? "janken_telop_lose"
-                    : "janken_telop_alternate"
-                self.showPhaseTransition(key)
+                // 10手目終了 →「まけて」フェーズへ / 20手目終了 →「交互」フェーズへ
+                let telop: JankenTelop = self.currentRound == 10 ? .toLose : .toAlternate
+                self.showPhaseTransition(telop)
             }
         }
     }
@@ -391,9 +417,9 @@ final class JankenViewModel {
     // MARK: - フェーズ切替（挑戦モードのみ）
 
     /// タイマーを止めてテロップを表示し、終了後にゲームを再開する
-    private func showPhaseTransition(_ telopKey: String) {
+    private func showPhaseTransition(_ telop: JankenTelop) {
         isTimerRunning = false
-        phase          = .phaseTransition(telopKey)
+        phase          = .phaseTransition(telop)
         DispatchQueue.main.asyncAfter(deadline: .now() + C.phaseDuration) { [weak self] in
             guard let self else { return }
             self.nextRound()

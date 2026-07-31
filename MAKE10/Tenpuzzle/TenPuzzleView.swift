@@ -164,8 +164,8 @@ private struct TenPuzzleGameView: View {
             }
 
             // ヒントバナー（ヒントボタンを押したときだけ表示）
-            if let hint = viewModel.hintBannerText {
-                HintBanner(text: hint)
+            if let content = viewModel.hintBannerContent {
+                HintBanner(content: content)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 8)
                     .transition(.opacity.combined(with: .move(edge: .top)))
@@ -306,7 +306,7 @@ private struct DigitTile: View {
 /// ヒントボタンを押したときに表示されるバナー。
 /// 解ける問題なら解の例、不可能問題なら「作れません」メッセージを表示する。
 private struct HintBanner: View {
-    let text: String
+    let content: TenPuzzleViewModel.HintBannerContent
 
     var body: some View {
         HStack(spacing: 10) {
@@ -314,11 +314,23 @@ private struct HintBanner: View {
                 .foregroundStyle(.orange)
                 .font(.system(size: 15))
 
-            Text(text)
-                .font(.system(size: 15, weight: .bold, design: .monospaced))
-                .foregroundStyle(DS.textPrimary)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+            // ★ 解の例（数式）は翻訳不要なので Text(String) のまま、
+            //   「作れません」は翻訳が必要なので LocalizedStringKey で渡す。
+            //   （設計の理由は TenPuzzleViewModel.HintBannerContent のコメント参照）
+            switch content {
+            case .example(let expr):
+                Text(expr)
+                    .font(.system(size: 15, weight: .bold, design: .monospaced))
+                    .foregroundStyle(DS.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            case .impossibleMessage:
+                Text("この問題は10を作れません")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+            }
 
             Spacer()
         }
@@ -603,7 +615,7 @@ private struct SubmitArea: View {
 }
 
 private struct ActionButton: View {
-    let label:    String
+    let label:    LocalizedStringKey
     let icon:     String
     let color:    Color
     let action:   () -> Void
@@ -722,8 +734,15 @@ private struct TenPuzzleResultView: View {
 }
 
 private struct ResultRow: View {
-    let label: String
-    let value: String
+    // ★ label・value ともに LocalizedStringKey にしている理由 ★
+    //   Xcode の文字列抽出は Text() に限らず、LocalizedStringKey 型の引数に
+    //   渡されたリテラルをすべて拾う。value を String 型のままにすると
+    //   保証がなくなるため、label と同じ型に揃えている。
+    //   呼び出し側で "\(件数)問" のようにリテラル文字列補間を直接渡せば、
+    //   "%lld問" という書式キーとして自動抽出・翻訳される
+    //  （janken の "\(difficulty.totalRounds)手" と同じパターン）。
+    let label: LocalizedStringKey
+    let value: LocalizedStringKey
 
     var body: some View {
         HStack {

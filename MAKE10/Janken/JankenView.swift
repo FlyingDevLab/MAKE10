@@ -41,8 +41,8 @@ struct JankenView: View {
             case .countdown(let n):
                 JankenCountdownView(count: n)
                     .transition(.opacity)
-            case .phaseTransition(let key):
-                JankenPhaseTransitionView(telopKey: key)
+            case .phaseTransition(let telop):
+                JankenPhaseTransitionView(telop: telop)
                     .transition(.opacity)
             case .playing:
                 JankenPlayingView(viewModel: viewModel)
@@ -201,7 +201,8 @@ private struct JankenCountdownView: View {
 /// 挑戦モードで「勝て→負けろ→交互」へ切り替わる節目に出すテロップ表示。
 private struct JankenPhaseTransitionView: View {
 
-    let telopKey: String
+    /// 表示するテロップの種別。ローカライズキーは JankenTelop.key が持つ。
+    let telop: JankenTelop
 
     @State private var scale:   CGFloat = 0.6
     @State private var opacity: Double  = 0.0
@@ -210,7 +211,7 @@ private struct JankenPhaseTransitionView: View {
         ZStack {
             DS.bg.ignoresSafeArea()
 
-            Text(LocalizedStringKey(telopKey))
+            Text(telop.key)
                 .font(.system(size: 38, weight: .black, design: .rounded))  // ← 変更可
                 .foregroundStyle(DS.primary)
                 .multilineTextAlignment(.center)

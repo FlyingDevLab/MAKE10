@@ -103,7 +103,7 @@ struct StickerStorageView: View {
                 VStack(spacing: 0) {
                     // 上行：MAKE10
                     rowView(
-                        label:     String(localized: "title_game_name"),
+                        label:     String(localized: "make10_title"),
                         groups:    gameGroups,
                         index:     gameIndex,
                         countText: "\(displayGameCount) / 50",

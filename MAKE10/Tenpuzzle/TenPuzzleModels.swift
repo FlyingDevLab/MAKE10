@@ -63,7 +63,12 @@ enum TenPuzzleMode: String, CaseIterable {
         }
     }
 
-    var title: String {
+    /// ★ String ではなく LocalizedStringKey を返す理由 ★
+    ///   String型のまま渡すと Xcode のビルド時文字列抽出が効かず、
+    ///   Localizable.xcstrings に登録されないため翻訳が引けなくなる
+    ///   （日本語環境でしか正しく表示されない不具合の原因になっていた）。
+    ///   リテラルを直接返す形にすることで自動抽出の対象になる。
+    var title: LocalizedStringKey {
         switch self {
         case .modeA: return "かんたん / ふつう"
         case .modeB: return "むずかしい"
@@ -73,7 +78,8 @@ enum TenPuzzleMode: String, CaseIterable {
 
     // ★ "description" は CustomStringConvertible が要求する名前と衝突するため
     //   "subtitle" を使う。衝突するとprint(mode)で予期せぬ挙動が起きる。
-    var subtitle: String {
+    // ★ LocalizedStringKey を返す理由は title と同じ（このファイル冒頭のコメント参照）★
+    var subtitle: LocalizedStringKey {
         switch self {
         case .modeA: return "10を作れる問題だけ。\nヒントを使いながら自分のペースで。"
         case .modeB: return "解が少ない難問。\nわからなければヒントを見よう。"
@@ -154,7 +160,8 @@ enum TenPuzzleJudgment: Equatable {
     }
 
     /// フィードバック表示用のメッセージ
-    var message: String {
+    /// ★ LocalizedStringKey を返す理由は TenPuzzleMode.title と同じ ★
+    var message: LocalizedStringKey {
         switch self {
         case .correct:          return "正解！"
         case .wrongAnswer:      return "ちがう…"

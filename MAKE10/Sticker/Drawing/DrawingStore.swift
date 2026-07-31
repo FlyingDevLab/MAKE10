@@ -43,7 +43,9 @@ final class DrawingStore {
     private(set) var activeStroke: DrawingStroke? = nil
 
     /// 現在選択中の描画色（hex 文字列）。デフォルトは黒。
-    var currentColorHex: String = DrawingColor.palette.last(where: { $0.nameKey.contains("black") })?.hex
+    // ★ 以前は $0.nameKey.contains("black") という文字列マッチだったが、
+    //   ColorName enum の導入で == .black と型安全に書けるようになった。
+    var currentColorHex: String = DrawingColor.palette.last(where: { $0.name == .black })?.hex
                                   ?? "#1C1C1E"
 
     /// 消しゴムモードの ON/OFF
