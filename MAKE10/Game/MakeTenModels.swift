@@ -65,6 +65,7 @@ enum UDKey {
     static let stickers            = "stickers"            // シール用：ゲームモード位置データ（既存キー維持）
     static let storageEmojis       = "storageEmojis"       // シール用：ストレージ絵文字リスト
     static let playStickers        = "playStickers"        // シール用：シール画面位置データ
+    static let pendingStickers     = "pendingStickers"     // シール用：リザルト画面で配置待ちのシール
     static let playBoardBackground = "playBoardBackground" // シール用：シール画面背景色インデックス
     static let mazeHighScore          = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア
     static let pinballHighScore       = "fdl_pinball_hi"               // ピンボールの歴代最高スコア

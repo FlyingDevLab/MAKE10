@@ -393,12 +393,25 @@ final class MazeGameModel: NSObject {
     //   （矩形と円の最近接点を使う定番の手法）
 
     /// 位置(px,py)・半径 r の円が、どこかの壁タイルにめり込んでいるかを返す。
+    ///
+    /// ★ フィールド外に出た円の扱い ★
+    ///   x0〜y1 は「調べるタイル範囲」だが、円がグリッドの外へ大きくはみ出すと
+    ///   x0 > x1（下限が上限を上回る）という逆転が起きる。
+    ///   Swift の a...b は a > b のとき実行時エラーで落ちるため、範囲を作る前に必ず弾く。
+    ///   判定はタイル番号ではなく「座標」で行うこと。番号を 0...GW-1 に丸めるだけだと
+    ///   逆転は防げるが、遠く外にある円が端のタイルとの距離だけで「当たっていない」と
+    ///   誤判定され、プレイヤーが迷路の外へ出たまま戻れなくなる。
+    ///   迷路の外周タイルは buildMaze が必ず壁のまま残すので、
+    ///   フィールド外は「壁の中」とみなして true を返すのが物理的に正しい。
     func hitsWall(_ px: CGFloat, _ py: CGFloat, _ r: CGFloat) -> Bool {
+        // 円がフィールド(0〜BASE)に収まっていなければ壁扱いにして移動を却下させる
+        guard px - r >= 0, py - r >= 0, px + r <= BASE, py + r <= BASE else { return true }
         // 円が触れうるタイルの範囲だけに絞って調べる（全タイル走査を避ける）
-        let x0 = max(0, Int((px - r) / T))
-        let x1 = min(GW - 1, Int((px + r) / T))
-        let y0 = max(0, Int((py - r) / T))
-        let y1 = min(GW - 1, Int((py + r) / T))
+        // px + r == BASE ちょうどのとき Int((px + r) / T) が GW になるため上限で丸める
+        let x0 = min(GW - 1, max(0, Int((px - r) / T)))
+        let x1 = max(0, min(GW - 1, Int((px + r) / T)))
+        let y0 = min(GW - 1, max(0, Int((py - r) / T)))
+        let y1 = max(0, min(GW - 1, Int((py + r) / T)))
         for ty in y0...y1 {
             for tx in x0...x1 {
                 guard grid[ty][tx] == 0 else { continue }   // 通路タイルは無視（壁のみ判定）
@@ -413,11 +426,18 @@ final class MazeGameModel: NSObject {
 
     /// 壁にめり込んだ円を、めり込み量だけ壁の外へ押し戻した位置を返す。
     /// hitsWall が「当たったか否か」なのに対し、こちらは「どれだけ・どちら向きに戻すか」を計算する。
+    /// （フィールド外の扱いは hitsWall と同じ理由。こちらは押し戻す向きを決められないため元の位置を返す）
     private func pushOut(_ px: CGFloat, _ py: CGFloat, _ r: CGFloat) -> CGPoint {
-        let x0 = max(0, Int((px - r) / T))
-        let x1 = min(GW - 1, Int((px + r) / T))
-        let y0 = max(0, Int((py - r) / T))
-        let y1 = min(GW - 1, Int((py + r) / T))
+        // フィールド外なら押し戻し量を計算できない。現在位置をそのまま返す
+        // （hitsWall が true を返すので slideMove 側が手前で移動を却下しており、通常ここへは来ない）
+        guard px - r >= 0, py - r >= 0, px + r <= BASE, py + r <= BASE else {
+            return CGPoint(x: px, y: py)
+        }
+        // タイル範囲の丸め方は hitsWall と同じ（解説はそちらを参照）
+        let x0 = min(GW - 1, max(0, Int((px - r) / T)))
+        let x1 = max(0, min(GW - 1, Int((px + r) / T)))
+        let y0 = min(GW - 1, max(0, Int((py - r) / T)))
+        let y1 = max(0, min(GW - 1, Int((py + r) / T)))
         var ox: CGFloat = 0, oy: CGFloat = 0   // 押し戻しベクトルの累積
         for ty in y0...y1 {
             for tx in x0...x1 {

@@ -49,7 +49,13 @@ final class StickerStore {
     // シール画面用。位置情報あり・上限 100 枚
     private(set) var playStickers: [Sticker] = []
 
-    // リザルト画面でゲームボードへ配置するシール一時保持用
+    // リザルト画面でゲームボードへ配置するシール一時保持用。
+    // ★ この配列を永続化している理由 ★
+    //   シール発行時に totalCorrect は即 0 にリセットされるため、
+    //   この配列を保存せずにアプリが強制終了されると
+    //   「シール1枚 + 貯めた100ポイント」が同時に消えてしまう。
+    //   配置が確定するまで UserDefaults に残し、次回起動時に復元する。
+    //   （その結果、未配置のシールは次に開いたリザルト画面へ持ち越される）
     private(set) var pendingStickers: [String] = []
 
     // リザルト画面でストレージへ送出されたシール枚数。
@@ -104,6 +110,7 @@ final class StickerStore {
         } else {
             // 通常ルート → リザルト画面のバナーに表示してから配置
             pendingStickers.append(emoji)
+            savePending()   // 配置前に落ちてもシールを失わないよう即保存する
         }
     }
 
@@ -117,6 +124,7 @@ final class StickerStore {
             saveStorage()
         } else {
             pendingStickers.append(emoji)
+            savePending()   // 理由は recordCorrect と同じ
         }
     }
 
@@ -130,6 +138,7 @@ final class StickerStore {
     func placePendingSticker(emoji: String, xRatio: Double, yRatio: Double) {
         if let idx = pendingStickers.firstIndex(of: emoji) {
             pendingStickers.remove(at: idx)
+            savePending()   // 配置済みのぶんを保存側からも取り除く
         }
         stickers.append(Sticker(emoji: emoji, xRatio: xRatio, yRatio: yRatio))
         saveGame()
@@ -140,6 +149,7 @@ final class StickerStore {
     func confirmPendingStickers() {
         let toAdd = pendingStickers
         pendingStickers = []
+        savePending()   // 先に空を保存する（この後の spawnSticker が saveGame で確定させる）
         for emoji in toAdd { spawnSticker(emoji: emoji) }
     }
 
@@ -242,6 +252,7 @@ final class StickerStore {
         UserDefaults.standard.removeObject(forKey: UDKey.stickers)
         UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
+        UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
     }
 
@@ -287,6 +298,12 @@ final class StickerStore {
         UserDefaults.standard.set(data, forKey: UDKey.playStickers)
     }
 
+    /// 配置待ちシールを保存する。他の save〜 と違い、位置情報のない絵文字リストだけを持つ。
+    private func savePending() {
+        guard let data = try? JSONEncoder().encode(pendingStickers) else { return }
+        UserDefaults.standard.set(data, forKey: UDKey.pendingStickers)
+    }
+
     /// 起動時に UserDefaults から全状態を復元する。
     // 各配列のデコード失敗時は初期値（空配列）のままにする
     private func load() {
@@ -303,6 +320,11 @@ final class StickerStore {
         if let data    = UserDefaults.standard.data(forKey: UDKey.playStickers),
            let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
             playStickers = decoded
+        }
+        // 前回配置しきれなかったシール。次に開くリザルト画面のバナーへ引き継がれる
+        if let data    = UserDefaults.standard.data(forKey: UDKey.pendingStickers),
+           let decoded = try? JSONDecoder().decode([String].self, from: data) {
+            pendingStickers = decoded
         }
     }
 }
