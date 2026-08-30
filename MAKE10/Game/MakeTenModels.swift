@@ -9,7 +9,7 @@
 // ロジックを持たない純粋なモデル層として、各ViewModel・Viewから参照される。
 //
 // ★ このファイルの構成 ★
-//   GameState   … ゲームの画面状態（タイトル / プレイ中 / 結果）
+//   GameState   … ゲームの画面状態（タイトル / スタート画面 / プレイ中 / 結果）
 //   GameMode    … ゲームモード（30秒 / 10秒Blitz）
 //   AnswerMark  … 正解・不正解マークの種別
 //   ResetTarget … リセット操作の対象（設定画面で使用）
@@ -22,8 +22,13 @@ import SwiftUI
 
 /// ゲームの画面状態。
 /// MakeTenContentView のコンテンツ切り替え条件として使われる。
-/// GameViewModel が保持し、遷移メソッド（startGame / returnToTitle）で更新される。
-enum GameState  { case title, playing, finished }
+/// GameViewModel が保持し、遷移メソッド（showStartScreen / startGame / returnToTitle）で更新される。
+///
+/// ★ starting とは ★
+///   タイトルでモードを選んでから実際にゲームが始まるまでの「スタート画面」の状態。
+///   遊び方の説明とそのモードの最高記録を表示し、ボタンを押すと playing に進む。
+///   他のゲーム（もぐら叩き・迷路など）と画面構成を揃えるために追加した。
+enum GameState  { case title, starting, playing, finished }
 
 /// ゲームモード。normal = 30秒、blitz = 10秒。
 /// タイマー上限・ゲージ警告閾値・ポイント倍率などの分岐条件として各所で参照される。

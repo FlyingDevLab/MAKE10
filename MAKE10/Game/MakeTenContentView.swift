@@ -215,14 +215,16 @@ struct MakeTenContentView: View {
     }
 
     /// ヘッダー左の「戻る（chevron.left）」の挙動。nil を返すとボタン自体が出ない。
-    /// MAKE10 はゲーム中・結果画面のときだけタイトルへ戻れる。
+    /// MAKE10 はスタート画面・ゲーム中・結果画面のときだけタイトルへ戻れる。
     /// 各ミニゲームからはゲーム選択（.make10 のタイトル）へ戻る。
     private var backAction: (() -> Void)? {
         switch screen {
         case .make10:
             switch viewModel.gameState {
             case .title:              return nil
-            case .playing, .finished:
+            // .starting（スタート画面）もタイトルへ戻せるようにする。
+            // 戻り道がないと、ゲームを始めずに引き返せない行き止まりになるため。
+            case .starting, .playing, .finished:
                 return {
                     withAnimation(.easeInOut(duration: 0.3)) { viewModel.returnToTitle() }
                 }
@@ -279,8 +281,8 @@ struct MakeTenContentView: View {
 
     // MARK: MAKE10 コンテンツ
 
-    /// MAKE10 本体の画面。gameState に応じてタイトル / プレイ中 / 結果を切り替える。
-    /// タイトル画面のタイル選択はここで受け取り、MAKE10 のモード開始か他ゲームへの遷移に振り分ける。
+    /// MAKE10 本体の画面。gameState に応じてタイトル / スタート画面 / プレイ中 / 結果を切り替える。
+    /// タイトル画面のタイル選択はここで受け取り、MAKE10 のスタート画面か他ゲームへの遷移に振り分ける。
     @ViewBuilder
     private var make10Content: some View {
         switch viewModel.gameState {
@@ -290,8 +292,10 @@ struct MakeTenContentView: View {
                 onSelectGame: { selected in
                     withAnimation(.easeInOut(duration: 0.3)) {
                         switch selected {
-                        case .normal:         viewModel.startGame(mode: .normal)
-                        case .blitz:          viewModel.startGame(mode: .blitz)
+                        // タイルをタップしたら即開始せず、まずスタート画面へ送る。
+                        // 遊び方の説明とそのモードの最高記録を見せてから始める。
+                        case .normal:         viewModel.showStartScreen(mode: .normal)
+                        case .blitz:          viewModel.showStartScreen(mode: .blitz)
                         case .quiz:           screen = .quizHome
                         case .whackAMole:     screen = .whackAMole
                         case .maze:           screen = .maze
@@ -305,6 +309,8 @@ struct MakeTenContentView: View {
                 }
             )
             .transition(.opacity)
+        case .starting:
+            MakeTenStartView(viewModel: viewModel).transition(.opacity)
         case .playing:
             PlayingView(viewModel: viewModel).transition(.opacity)
         case .finished:

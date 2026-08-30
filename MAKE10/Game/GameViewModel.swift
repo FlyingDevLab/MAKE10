@@ -206,11 +206,31 @@ final class GameViewModel {
         if correct { questionCorrects[question] += 1 }
     }
 
+    // MARK: スタート画面へ
+
+    /// タイトルでモードを選んだあと、スタート画面（.starting）へ遷移する。
+    /// ここではゲームを開始せず、モードの記録用にプレイするモードだけを確定させる。
+    ///
+    /// ★ startGame(mode:) と分けている理由 ★
+    ///   スタート画面は「遊び方の説明と、そのモードの最高記録を見せる」ための画面。
+    ///   タイマーも状態リセットも不要なため、gameMode と gameState だけを更新する。
+    ///   currentHighScore が gameMode を参照するので、ここで確定させておけば
+    ///   スタート画面が正しいモードの記録を表示できる。
+    ///
+    /// - Parameter mode: これから遊ぶモード（.normal = 30びょう / .blitz = 10びょう）
+    func showStartScreen(mode: GameMode) {
+        gameMode  = mode
+        gameState = .starting
+    }
+
     // MARK: ゲーム開始
 
     /// 全状態をリセットして新しいゲームを開始する。
     /// confettiGeneration をインクリメントして前世代のタイマーを無効化してから、
     /// タイマーを新規起動する。
+    ///
+    /// スタート画面の「はじめる」ボタンと、結果画面の「もういちど」から呼ばれる。
+    /// mode を省略した場合は現在の gameMode を引き継がず .normal になる点に注意。
     func startGame(mode: GameMode = .normal) {
         gameMode            = mode
         score               = 0
