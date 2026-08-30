@@ -18,6 +18,11 @@
 //   viewModel が nil の場合（クイズ画面から開いた場合等）はリセット項目を非表示にする。
 //   実際のリセット処理は GameViewModel 側（resetHighScore / resetProgress）が担い、
 //   この画面は「確認を取って呼ぶ」ことに専念する。
+//
+// ★ リセットの範囲について ★
+//   resetHighScore() は MAKE10 だけでなく全ゲームの記録を一括で削除する。
+//   シール・解放状態・統計は消さないため、resetProgress()（さいしょからはじめる）とは
+//   役割が明確に分かれている。確認ダイアログの文言もこの違いを伝える必要がある。
 
 import SwiftUI
 
@@ -59,9 +64,11 @@ struct SettingsView: View {
 
     // MARK: 表示条件
 
-    /// Blitzモードかつハイスコア解放済みのときのみハイスコアリセットボタンを表示する。
+    /// ハイスコアリセットボタンを表示するか。
+    /// viewModel がある（＝MAKE10 側から開いた）ときは常に表示する。
+    /// 以前は解放条件（isHighScoreUnlocked）で隠していたが、その仕組み自体を廃止した。
     private var showHighScoreReset: Bool {
-        viewModel?.isHighScoreUnlocked ?? false
+        viewModel != nil
     }
 
     /// Blitzモード解放済みのときのみ進捗リセットボタンを表示する。
@@ -98,11 +105,16 @@ struct SettingsView: View {
                 )
 
                 // ── リセットボタン（viewModel がある場合のみ）──
-                // 解放状況に応じてハイスコアリセット・進捗リセットを条件付きで表示する
+                // ハイスコアリセットは常時表示、進捗リセットは Blitz 解放後のみ表示する。
+                //
+                // ★ 2つのリセットの違い ★
+                //   ハイスコアをリセット … 全ゲームの記録だけを消す。シールと解放状態は残る
+                //   さいしょからはじめる … 記録・シール・解放状態・統計をすべて消す（譲渡時など）
                 if showHighScoreReset || showProgressReset {
                     VStack(spacing: 10) {
                         if showHighScoreReset {
-                            // タップすると confirmTarget を .highScore にセットして確認ダイアログを出す
+                            // タップすると confirmTarget を .highScore にセットして確認ダイアログを出す。
+                            // 実行時は GameViewModel.resetHighScore() が全ゲームの記録を一括削除する
                             resetButton(
                                 icon:  "trophy",
                                 label: "settings_reset_high_score",

@@ -8,6 +8,12 @@
 // ゲーム終了時に表示する結果画面と、シールチップのドラッグUIを定義するファイル。
 // スコア表示・ハイスコア更新・Blitzモード解放バナー・シール獲得バナーを状況に応じて表示する。
 //
+// ★ ハイスコアの表示条件について ★
+//   以前は「Blitzで100問正解して解放されるまで隠す」仕組みだったが、
+//   他のゲームと揃えて「記録が1つでもあれば表示する」方式に統一した。
+//   30びょうと10びょうは別々のキーで記録され、currentHighScore が
+//   今プレイしたモードの記録を返す。
+//
 // ★ このファイルの構成 ★
 //   FinishedView                … 結果画面本体（カード・各種バナー・ボタン）
 //   DraggablePendingStickerChip … バナー内のドラッグ可能なシールチップ
@@ -91,8 +97,10 @@ struct FinishedView: View {
                         .foregroundStyle(DS.primary)
                         .multilineTextAlignment(.center)
 
-                    // Blitzモードかつ解放済みのときのみハイスコアセクションを表示する
-                    if viewModel.gameMode == .blitz && viewModel.isHighScoreUnlocked {
+                    // 記録が1つでもあればハイスコアセクションを表示する。
+                    // 30びょう・10びょうは別々に記録されるため、currentHighScore が
+                    // 今プレイしたモードの記録を返す（他のゲームの表示条件と揃えている）。
+                    if viewModel.currentHighScore > 0 {
                         Divider().padding(.horizontal, 20)
                         if viewModel.isNewHighScore {
                             // 今回が新記録のとき。ゴールドカラーで更新を強調する
@@ -105,7 +113,7 @@ struct FinishedView: View {
                                 Text("finished_high_score_label")
                                     .font(.system(size: 15, weight: .medium, design: .rounded))
                                     .foregroundStyle(DS.muted)
-                                Text("\(viewModel.blitzHighScore)")
+                                Text("\(viewModel.currentHighScore)")
                                     .font(.system(size: 22, weight: .black, design: .rounded))
                                     .foregroundStyle(DS.accent)
                             }
