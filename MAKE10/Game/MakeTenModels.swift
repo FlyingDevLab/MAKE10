@@ -51,13 +51,19 @@ enum ResetTarget { case highScore, progress }
 //
 // 新ゲームのスコア・ベストタイム用キーを追加したときは、
 // ScoreBoard.swift の allScoreKeys にも必ず追加すること（リセット対象に含めるため）。
+//
+// ★ 廃止したキーについて ★
+//   "isHighScoreUnlocked"（10びょうで100問正解するとハイスコア表示が解放される仕組み）は
+//   廃止した。他のゲームと同じく「記録が1つでもあれば表示する」方式に統一したため。
+//   既存ユーザーの端末には値が残るが、読み書きしなくなるだけで害はない。
+//   なお "isBlitzUnlocked"（30びょうで100問 → 10びょう解放）は維持している。
 
 enum UDKey {
     static let hasAgreedToTerms    = "hasAgreedToTerms"    // 初回同意済みフラグ
     static let isSoundOn           = "isSoundOn"           // サウンドON/OFF設定
     static let isBlitzUnlocked     = "isBlitzUnlocked"     // Blitzモード解放済みフラグ
-    static let isHighScoreUnlocked = "isHighScoreUnlocked" // ハイスコア表示解放済みフラグ
-    static let blitzHighScore      = "blitzHighScore"      // Blitzモードの歴代最高スコア
+    static let normalHighScore     = "normalHighScore"     // 30びょうモードの歴代最高スコア
+    static let blitzHighScore      = "blitzHighScore"      // 10びょう(Blitz)モードの歴代最高スコア
     static let questionAttempts    = "questionAttempts"    // 問題番号ごとの出題回数（内部統計）
     static let questionCorrects    = "questionCorrects"    // 問題番号ごとの正解回数（内部統計）
     static let quizMode            = "quizMode"            // 絵文字クイズの選択モード

@@ -39,6 +39,7 @@ enum ScoreBoard {
 
     static let allScoreKeys: [String] = [
         // ── MAKE10 ────────────────────────────────
+        UDKey.normalHighScore,
         UDKey.blitzHighScore,
         // ── WhackAMole ────────────────────────────
         UDKey.whackHighScore,

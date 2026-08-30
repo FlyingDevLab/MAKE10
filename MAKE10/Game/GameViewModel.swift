@@ -60,20 +60,15 @@ final class GameViewModel {
 
     // MARK: UserDefaults 永続化（解放フラグ・統計）
     //
-    // ★ blitzHighScore はここで管理しない ★
+    // ★ ハイスコアはここで管理しない ★
     //   スコアの読み書きは ScoreBoard に一元化されている。
-    //   blitzHighScore は下の「計算プロパティ」として UD から直接読む。
+    //   normalHighScore / blitzHighScore は下の「計算プロパティ」として UD から直接読む。
     //
     // didSet による自動保存パターンの解説は AppSettings.swift を参照。
 
     /// Blitzモード（10秒モード）の解放状態。通常モードで100問正解すると true になる
     var isBlitzUnlocked: Bool {
         didSet { UserDefaults.standard.set(isBlitzUnlocked,     forKey: UDKey.isBlitzUnlocked) }
-    }
-
-    /// Blitzモードのハイスコア表示の解放状態。Blitzで100問正解すると true になる
-    var isHighScoreUnlocked: Bool {
-        didSet { UserDefaults.standard.set(isHighScoreUnlocked, forKey: UDKey.isHighScoreUnlocked) }
     }
 
     // 問題ごとの出題回数・正解回数（内部統計・ユーザー非公開）
@@ -90,7 +85,7 @@ final class GameViewModel {
         didSet { UserDefaults.standard.set(questionCorrects, forKey: UDKey.questionCorrects) }
     }
 
-    // MARK: Blitz ハイスコア（ScoreBoard 経由）
+    // MARK: ハイスコア（ScoreBoard 経由）
     //
     // ★ なぜ計算プロパティにするのか ★
     //   ScoreBoard がスコアの永続化を担うため、ここでは保存せず読むだけにします。
@@ -98,9 +93,23 @@ final class GameViewModel {
     //   このプロパティは常に最新の UD 値を返します。
     //   isNewHighScore（@Observable な stored property）が変化するたびに
     //   View が再描画され、そのタイミングで最新値が読まれるため表示のズレは起きません。
+    //
+    // ★ モードごとに別キーで保存する理由 ★
+    //   30びょうと10びょうでは制限時間が3倍違うため、取れる正解数の桁が変わります。
+    //   同じキーに混ぜると10びょうの記録が永久に埋もれてしまうため、完全に分離します。
 
-    /// Blitzモードの歴代最高スコア（正解数）。ScoreBoard から読み取る。
+    /// 30びょうモードの歴代最高スコア（正解数）。ScoreBoard から読み取る。
+    var normalHighScore: Int { ScoreBoard.highScore(for: UDKey.normalHighScore) }
+
+    /// 10びょう(Blitz)モードの歴代最高スコア（正解数）。ScoreBoard から読み取る。
     var blitzHighScore: Int { ScoreBoard.highScore(for: UDKey.blitzHighScore) }
+
+    /// 現在のモードに対応するハイスコア。
+    /// FinishedView / スタート画面が「今遊んでいるモードの記録」を表示するために使う。
+    var currentHighScore: Int { gameMode == .blitz ? blitzHighScore : normalHighScore }
+
+    /// 現在のモードに対応するスコア保存キー。endGame() の保存先の振り分けに使う。
+    private var currentScoreKey: String { gameMode == .blitz ? UDKey.blitzHighScore : UDKey.normalHighScore }
 
     // MARK: ゲーム中の状態
     //
@@ -134,7 +143,8 @@ final class GameViewModel {
     var tappedTileValue:  Int?        = nil
     /// Blitzモード解放バナーの表示フラグ（解放直後のゲーム終了画面で1度だけ表示）
     var showUnlockBanner: Bool        = false
-    /// 今回が Blitz 歴代最高スコアかどうか（リザルト画面の「New Record!」表示に使う）
+    /// 今回が歴代最高スコアかどうか（リザルト画面の「New Record!」表示に使う）。
+    /// 30びょう・10びょうそれぞれのモードで、そのモードの記録を更新したときに true になる。
     var isNewHighScore:   Bool        = false
 
     /// タイマーの購読を保持する変数。stopTimer() 時に cancel() を呼ぶために参照を保持する。
@@ -168,12 +178,11 @@ final class GameViewModel {
     // MARK: 初期化
 
     /// UserDefaultsから保存済みの値を復元して初期化する。
-    /// blitzHighScore は ScoreBoard 経由の計算プロパティのため、ここでは読み込まない。
+    /// ハイスコアは ScoreBoard 経由の計算プロパティのため、ここでは読み込まない。
     /// questionAttempts / Corrects は要素数10固定。
     /// 壊れたデータが保存されていた場合（要素数が10でない）はゼロリセットする。
     init() {
-        self.isBlitzUnlocked     = UserDefaults.standard.bool(forKey: UDKey.isBlitzUnlocked)
-        self.isHighScoreUnlocked = UserDefaults.standard.bool(forKey: UDKey.isHighScoreUnlocked)
+        self.isBlitzUnlocked = UserDefaults.standard.bool(forKey: UDKey.isBlitzUnlocked)
 
         // UserDefaults から配列を取り出す。
         // array(forKey:) は Any? を返すため、as? [Int] でキャストしてオプショナルにする
@@ -479,14 +488,11 @@ final class GameViewModel {
         // Blitz 解放と同時にゲーム終了した場合は解放音も重ねて再生する
         if showUnlockBanner { SoundManager.shared.playUnlock() }
 
-        // ── Blitzモード専用の処理 ──────────────────────────
-        if gameMode == .blitz {
-            // Blitz で100問達成かつ未解放ならハイスコア表示を解放する
-            if score >= C.unlockThreshold && !isHighScoreUnlocked { isHighScoreUnlocked = true }
-            // 今回のスコアが歴代最高を上回れば ScoreBoard に保存し、新記録フラグを立てる
-            // saveIfBetter は保存に成功した（= 新記録）場合に true を返す
-            isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: UDKey.blitzHighScore)
-        }
+        // ── ハイスコアの保存 ──────────────────────────────
+        // 今回のスコアが歴代最高を上回れば ScoreBoard に保存し、新記録フラグを立てる。
+        // saveIfBetter は保存に成功した（= 新記録）場合に true を返す。
+        // 保存先は currentScoreKey がモードに応じて振り分ける（30びょうと10びょうは別キー）。
+        isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: currentScoreKey)
 
         // ── 紙吹雪の処理 ──────────────────────────────────
         // confettiThreshold 以上の正解で紙吹雪を表示する。
@@ -510,10 +516,14 @@ final class GameViewModel {
 
     // MARK: リセット
 
-    /// Blitz ハイスコアのみをリセットする（開発・デバッグ用途を想定）。
-    /// ScoreBoard の全リセットではなく、Blitz キーだけを削除する。
+    /// 全ゲームの最高記録・ベストタイムを一括で削除する。
+    ///
+    /// ★ resetProgress() との違い ★
+    ///   こちらが消すのは「記録」だけで、シール・解放状態・統計は残る。
+    ///   大人が試遊で作った高得点だけを消したいときのための操作。
+    ///   端末を譲るときなど、全てを初期状態に戻したい場合は resetProgress() を使う。
     func resetHighScore() {
-        UserDefaults.standard.removeObject(forKey: UDKey.blitzHighScore)
+        ScoreBoard.resetAll()
         isNewHighScore = false
     }
 
@@ -524,7 +534,6 @@ final class GameViewModel {
         confettiGeneration  += 1   // 実行中の紙吹雪タイマーを世代番号で無効化する
         showConfetti         = false
         isBlitzUnlocked     = false
-        isHighScoreUnlocked = false
         isNewHighScore      = false
         showUnlockBanner    = false
         // Array(repeating:count:) でゼロ埋め配列を作り直して統計をクリア

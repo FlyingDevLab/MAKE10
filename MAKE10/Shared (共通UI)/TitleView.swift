@@ -6,13 +6,13 @@
 //
 
 // タイトル画面のルートビュー。
-// アニメーションカード・ハイスコア・ゲーム選択グリッドを管理する。
+// アニメーションカードとゲーム選択グリッドを管理する。
 //
 // ★ このファイルの構成 ★
 //   TitleView（親）
-//     ├ アニメーションカード … 「n + (10-n) = 10」をループアニメで表示
-//     │                        5ループごとに FDL ロゴスプラッシュを挟む
-//     ├ ハイスコア表示       … isHighScoreUnlocked が true のときのみ表示
+//     ├ アニメーションカード … 画面表示直後に FDL ロゴを 4.5 秒表示し、
+//     │                        その後「n + (10-n) = 10」をループアニメで表示。
+//     │                        以降 5 ループごとに 13 秒のロゴを挟む
 //     └ ゲーム選択グリッド   … GamePickerTile を LazyVGrid で2列に並べる
 //
 // 役割分担:
@@ -77,6 +77,10 @@ struct TitleView: View {
     /// フリックと判定する最低速度（pt/s）。
     private let flickSpeedThreshold: CGFloat = 300   // ← 変更可
 
+    /// グリッドに表示するタイル枚数（2列 × 3行）。
+    /// visibleGames / runDemoFly / handleFlick の3箇所がこの値を共有する。
+    private let visibleTileCount: Int = 6            // ← 変更可
+
     /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する。
     @State private var demoGeneration: Int = 0
 
@@ -84,8 +88,8 @@ struct TitleView: View {
 
     /// タイトルループの累計回数。5の倍数のときロゴスプラッシュを挟む。
     @State private var loopCount:      Int    = 0
-    /// ロゴスプラッシュの表示フラグ。
-    @State private var showLogoSplash: Bool   = false
+    /// ロゴスプラッシュの表示フラグ。画面表示直後はロゴから始めるため true。
+    @State private var showLogoSplash: Bool   = true
     /// ロゴ外周リングの回転角度（度）。表示中は左回転し続ける。
     @State private var ringAngle:      Double = 0
 
@@ -162,27 +166,6 @@ struct TitleView: View {
             .padding(.top, 12)
             .padding(.bottom, 20)
 
-            // ── ハイスコア表示（解放後のみ）────────────────────
-            if viewModel.isHighScoreUnlocked {
-                HStack(spacing: 8) {
-                    Text("🏆").font(.system(size: 20))
-                    Text("title_high_score_label")
-                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text("\(viewModel.blitzHighScore)")
-                        .font(.system(size: 24, weight: .black, design: .rounded))
-                        .foregroundStyle(DS.accent)
-                }
-                .padding(.horizontal, 24)
-                .padding(.vertical, 10)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.sectionRadius)
-                        .fill(DS.card)
-                        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
-                )
-                .padding(.bottom, 16)
-            }
-
             // ── ゲーム選択グリッド ────────────────────────────
             // ★ LazyVGrid とは？ ★
             //   格子状にViewを並べるコンテナです。columns で列の定義を渡し、
@@ -216,7 +199,9 @@ struct TitleView: View {
         }
         .onAppear {
             loopGeneration += 1
-            runTitleLoop(generation: loopGeneration)
+            // 画面表示直後はロゴから始める。ロゴ終了後に runTitleLoop へ自動で移る。
+            // ← 変更可：先頭ロゴの表示時間（秒）
+            runLogoSplash(generation: loopGeneration, duration: 4.5)
 
             // ← 変更可：初回デモ開始までの待機時間（秒）
             scheduleDemo(delay: 2.5)
@@ -225,14 +210,15 @@ struct TitleView: View {
 
     // MARK: 表示ゲームの算出
 
-    /// グリッドに表示するゲーム一覧。blitz は解放前は除外し、先頭6つ（2列×3行）に絞る。
+    /// グリッドに表示するゲーム一覧。blitz は解放前は除外し、
+    /// 先頭 visibleTileCount 個（2列×4行）に絞る。
     ///
-    /// ⚠️ 変更注意: prefix(6) の「6」は handleFlick / runDemoFly 内の
-    ///   「allVisible.count > 6」と連動している。表示数を変えるときは
-    ///   3箇所すべてを同じ値に揃えること（ずれると隠しゲームの判定が壊れる）。
+    /// ⚠️ 変更注意: 表示枚数は visibleTileCount 一箇所で管理している。
+    ///   handleFlick / runDemoFly の「allVisible.count > visibleTileCount」も
+    ///   同じ定数を参照しているため、枚数を変えるときは定数だけを書き換えること。
     private var visibleGames: [GamePickerSelection] {
         let all = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-        return Array(all.prefix(6))
+        return Array(all.prefix(visibleTileCount))
     }
 
     // MARK: 自動デモアニメ
@@ -319,9 +305,9 @@ struct TitleView: View {
                 return
             }
 
-            // ⚠️ 変更注意: 「> 6」は visibleGames の prefix(6) と連動（詳細はそちらを参照）
+            // 表示枚数より多くゲームがあれば、繰り上がる隠しタイルが存在する
             let allVisible    = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-            let hasHiddenGame = allVisible.count > 6
+            let hasHiddenGame = allVisible.count > visibleTileCount
 
             flyOffsets.removeValue(forKey: lastGame)
             if hasHiddenGame {
@@ -349,6 +335,7 @@ struct TitleView: View {
     ///     0 1      ・偶数 = 左列 / 奇数 = 右列
     ///     2 3      ・+1 / -1 = 左右の隣
     ///     4 5      ・+2 / -2 = 上下の隣
+    ///     6 7      （行数は visibleTileCount に応じて増減する）
     ///   フリック方向の隣が存在すればスワップ、存在しなければ（端から外へ向かう
     ///   フリックなら）タイルを画面外へ飛ばして末尾送りにする。
     private func handleFlick(
@@ -413,9 +400,9 @@ struct TitleView: View {
             }
             // flyOffset 完了後にグリッド再配置（待機時間も飛び出し速度に合わせて延長）
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
-                // ⚠️ 変更注意: 「> 6」は visibleGames の prefix(6) と連動（詳細はそちらを参照）
+                // 表示枚数より多くゲームがあれば、繰り上がる隠しタイルが存在する
                 let allVisible  = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-                let hasHiddenGame = allVisible.count > 6
+                let hasHiddenGame = allVisible.count > visibleTileCount
 
                 flyOffsets.removeValue(forKey: game)
                 if hasHiddenGame {
@@ -497,13 +484,16 @@ struct TitleView: View {
 
     // MARK: ロゴスプラッシュ
 
-    /// FDL ロゴ（家マーク＋回転リング）を一定時間表示してからタイトルループに戻る。
-    private func runLogoSplash(generation: Int) {
+    /// FDL ロゴ（家マーク＋回転リング）を duration 秒表示してからタイトルループに戻る。
+    ///
+    /// - Parameter duration: ロゴの表示秒数。省略時は周期表示用の 13 秒。
+    ///   画面表示直後の初回のみ onAppear から短い値（4.5秒）を渡して呼ぶ。
+    ///   周期呼び出し（runTitleLoop の5ループごと）は引数なしで 13 秒のまま。
+    private func runLogoSplash(generation: Int, duration: Double = 13.0) {   // ← 変更可（既定の表示時間）
         guard generation == loopGeneration else { return }
         withAnimation(.easeInOut(duration: 0.5)) { showLogoSplash = true }
 
-        // ← 変更可：ロゴ表示時間（秒）
-        DispatchQueue.main.asyncAfter(deadline: .now() + 13.0) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
             guard generation == self.loopGeneration else { return }
             withAnimation(.easeInOut(duration: 0.5)) { self.showLogoSplash = false }
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
