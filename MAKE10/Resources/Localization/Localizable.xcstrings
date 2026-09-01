@@ -17462,96 +17462,96 @@
       }
     },
     "reset_confirm_progress_body" : {
-      "comment" : "Body text of the Reset Progress confirmation alert.",
+      "comment" : "Body text of the Reset Progress confirmation alert. States that records and stickers are all erased.",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle freigeschalteten Modi werden zurückgesetzt. Bist du sicher?"
+            "value" : "Alle Rekorde und Sticker werden gelöscht. Bist du sicher?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All unlocked modes will be reset. Are you sure?"
+            "value" : "All records and stickers will be erased. Are you sure?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Todos los modos desbloqueados se restablecerán. ¿Estás seguro?"
+            "value" : "Se borrarán todos los récords y pegatinas. ¿Estás seguro?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tous les modes débloqués seront réinitialisés. Êtes-vous sûr ?"
+            "value" : "Tous les records et autocollants seront effacés. Es-tu sûr ?"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सभी अनलॉक मोड रीसेट हो जाएंगे। क्या आप निश्चित हैं?"
+            "value" : "सभी रिकॉर्ड और स्टिकर मिट जाएंगे। क्या आप निश्चित हैं?"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semua mode yang terbuka akan direset. Yakin?"
+            "value" : "Semua rekor dan stiker akan dihapus. Yakin?"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutte le modalità sbloccate verranno reimpostate. Sei sicuro?"
+            "value" : "Tutti i record e gli adesivi verranno cancellati. Sei sicuro?"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "かいほうしたモードが ぜんぶきえます。よろしいですか？"
+            "value" : "きろくも シールも ぜんぶ きえます。よろしいですか？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해금된 모든 모드가 초기화됩니다. 괜찮으세요?"
+            "value" : "기록도 스티커도 모두 사라집니다. 괜찮으세요?"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle ontgrendelde modi worden gereset. Weet je het zeker?"
+            "value" : "Alle records en stickers worden gewist. Weet je het zeker?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Todos os modos desbloqueados serão redefinidos. Tem certeza?"
+            "value" : "Todos os recordes e adesivos serão apagados. Tem certeza?"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "โหมดที่ปลดล็อกทั้งหมดจะถูกรีเซ็ต แน่ใจหรือไม่?"
+            "value" : "สถิติและสติกเกอร์ทั้งหมดจะถูกลบ แน่ใจหรือไม่?"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tất cả chế độ đã mở khóa sẽ được đặt lại. Bạn có chắc không?"
+            "value" : "Toàn bộ kỷ lục và nhãn dán sẽ bị xóa. Bạn có chắc không?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有已解锁模式将被重置。你确定吗？"
+            "value" : "所有记录和贴纸都会被清除。确定吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有已解鎖模式將被重置。你確定嗎？"
+            "value" : "所有紀錄和貼紙都會被清除。確定嗎？"
           }
         }
       }

@@ -12,7 +12,10 @@
 //   TitleView（親）
 //     ├ アニメーションカード … 画面表示直後に FDL ロゴを 4.5 秒表示し、
 //     │                        その後「n + (10-n) = 10」をループアニメで表示。
-//     │                        以降 5 ループごとに 13 秒のロゴを挟む
+//     │                        以降 5 ループごとに 13 秒のロゴを挟む。
+//     │                        左右フリックで画面外へ追い出せる（遊び要素。
+//     │                        追い出した枠は空白のまま残り、数秒後に
+//     │                        反対側からロゴで再登場する）
 //     └ ゲーム選択グリッド   … GamePickerTile を LazyVGrid で2列に並べる
 //
 // 役割分担:
@@ -93,6 +96,30 @@ struct TitleView: View {
     /// ロゴ外周リングの回転角度（度）。表示中は左回転し続ける。
     @State private var ringAngle:      Double = 0
 
+    // MARK: カード追い出し状態
+
+    // ★ この機能は「意味のない遊び」として独立させている ★
+    //   ゲームタイルのフリック（並べ替え）とは無関係で、
+    //   scheduleDemo() も呼ばない。並び順にも一切影響しない。
+    //
+    // ★ なぜ .offset() で動かすのか ★
+    //   .offset() はレイアウト計算に影響しないため、カードが画面外へ出ても
+    //   VStack 上の占有スペース（高さ200）はそのまま残る。
+    //   結果として「追い出した部分が空白になる」という狙い通りの見た目になり、
+    //   下のグリッドが繰り上がることもない。
+
+    /// アニメーションカードの現在オフセット。左右フリックで ±cardFlyDistance へ動かす。
+    @State private var cardFlyOffset: CGSize = .zero
+    /// カードが定位置に無い間（飛行中〜復帰完了まで）true。二重フリックを防ぐ。
+    @State private var isCardAway:    Bool   = false
+
+    /// カードを飛ばす距離（pt）。600 = どの端末でも確実に画面外まで出る。
+    private let cardFlyDistance:  CGFloat = 600    // ← 変更可
+    /// カードが画面外で待機する時間（秒）。
+    private let cardAwayDuration: Double  = 4.5    // ← 変更可
+    /// 復帰時のスライドイン時間（秒）。
+    private let cardReturnDuration: Double = 0.5   // ← 変更可
+
     // MARK: body
 
     var body: some View {
@@ -165,6 +192,21 @@ struct TitleView: View {
             .padding(.horizontal, 24)
             .padding(.top, 12)
             .padding(.bottom, 20)
+            .offset(cardFlyOffset)
+            // カード内は文字と画像だけで背景が無い箇所があるため、
+            // 矩形全体をタッチ判定にしてどこを触ってもフリックできるようにする
+            .contentShape(Rectangle())
+            // タップ操作は無いので minimumDistance を持たせ、
+            // 指のわずかな動きを拾わないようにする
+            .gesture(
+                DragGesture(minimumDistance: 10)
+                    .onEnded { value in
+                        handleCardFlick(
+                            translation: value.translation,
+                            velocity:    value.velocity
+                        )
+                    }
+            )
 
             // ── ゲーム選択グリッド ────────────────────────────
             // ★ LazyVGrid とは？ ★
@@ -198,6 +240,14 @@ struct TitleView: View {
             .padding(.bottom, 24)
         }
         .onAppear {
+            // ⚠️ カードを追い出したまま他ゲームへ遷移すると、@State に
+            //   ±600 のオフセットが残ったままになる。世代チェックに頼らず、
+            //   画面が現れるたびここで必ず定位置へ戻すこと。
+            //   （これを省くと、戻ってきたときカードが画面外に取り残され、
+            //     再起動するまで空白のままになる）
+            cardFlyOffset = .zero
+            isCardAway    = false
+
             loopGeneration += 1
             // 画面表示直後はロゴから始める。ロゴ終了後に runTitleLoop へ自動で移る。
             // ← 変更可：先頭ロゴの表示時間（秒）
@@ -416,7 +466,84 @@ struct TitleView: View {
             }
         }
     }
+    // MARK: カード追い出し処理
 
+    /// アニメーションカードを左右フリックで画面外へ追い出し、数秒後に反対側から戻す。
+    ///
+    /// ★ 時間軸 ★
+    ///   0.00秒  loopGeneration を進めて走行中のアニメを停止し、飛ばし始める
+    ///   0.50秒  中身をリセットし、アニメーション無しで反対側へ瞬間移動
+    ///           （以降 cardAwayDuration 秒、枠は空白のまま）
+    ///   5.00秒  反対側からスライドインしつつ、ロゴ 4.5 秒から再スタート
+    ///
+    /// ★ なぜ中身をリセットするのか ★
+    ///   飛ばした時点では数式の途中かもしれず、そのまま戻すと中途半端な状態から
+    ///   再開して不自然になる。画面外で初期状態に戻し、復帰時は必ず
+    ///   「ロゴ → 数式ループ」の固定シーケンスで始まるようにしている。
+    ///   リセットを 0.50秒後（＝飛び切った後）に行うのは、画面内で中身が
+    ///   消えるところを見せないため。
+    private func handleCardFlick(translation: CGSize, velocity: CGSize) {
+        // 定位置に無いときは無視する（飛行中の二重フリック防止）
+        guard !isCardAway else { return }
+
+        // 三平方の定理で速度ベクトルの大きさを求め、しきい値未満は無視する
+        // （しきい値はゲームタイルと共通の flickSpeedThreshold を使う）
+        let speed = sqrt(velocity.width * velocity.width + velocity.height * velocity.height)
+        guard speed > flickSpeedThreshold else { return }
+
+        // 横方向のフリックのみ受け付ける。
+        // .offset() は他のビューを避けないため、上へ飛ばすとヘッダーに、
+        // 下へ飛ばすとゲームグリッドに重なってしまう。
+        guard abs(translation.width) > abs(translation.height) else { return }
+
+        let toRight = translation.width > 0
+        isCardAway  = true
+
+        // 走行中のタイトルループ／ロゴスプラッシュを世代番号で停止する。
+        // （多段の asyncAfter を止める手段はこれしかない）
+        loopGeneration += 1
+        let generation = loopGeneration
+
+        SoundManager.shared.vibrate()
+
+        // ← 変更可：飛び出しアニメ速度（ゲームタイルと同じ 0.44 秒）
+        withAnimation(.easeIn(duration: 0.44)) {
+            cardFlyOffset = CGSize(
+                width:  toRight ? cardFlyDistance : -cardFlyDistance,
+                height: 0
+            )
+        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
+            // 画面を離れて戻った場合は onAppear が後始末済みなので、ここは何もしない
+            guard generation == self.loopGeneration else { return }
+
+            // ① 中身を初期状態へ（画面外なので切り替わる瞬間は見えない）
+            self.resetState()
+            self.showLogoSplash = false
+            self.loopCount      = 0
+
+            // ② 反対側へ瞬間移動する。
+            //    withAnimation を付けないことで、画面を横切って戻る動きを避ける。
+            self.cardFlyOffset = CGSize(
+                width:  toRight ? -self.cardFlyDistance : self.cardFlyDistance,
+                height: 0
+            )
+
+            // ③ 待機後、反対側からスライドインしながらロゴで再スタート
+            DispatchQueue.main.asyncAfter(deadline: .now() + self.cardAwayDuration) {
+                guard generation == self.loopGeneration else { return }
+
+                withAnimation(.easeOut(duration: self.cardReturnDuration)) {
+                    self.cardFlyOffset = .zero
+                }
+                self.isCardAway = false
+
+                // ← 変更可：復帰時のロゴ表示時間（秒。onAppear と同じ 4.5 秒）
+                self.runLogoSplash(generation: generation, duration: 4.5)
+            }
+        }
+    }
     // MARK: タイトルアニメーション
 
     /// 「n + (10-n) = 10」のループアニメを1周実行し、最後に自分自身を再帰呼び出しする。
@@ -510,3 +637,4 @@ struct TitleView: View {
         tenScale = 1.0; sparkOpacity = 0.0; sparkOffsetY = 0; incomingNumber = 0
     }
 }
+
