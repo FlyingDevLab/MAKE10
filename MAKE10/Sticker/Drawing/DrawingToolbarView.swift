@@ -7,15 +7,17 @@
 
 // プレイキャンバス下部に固定表示するお絵かきツールバー。
 //
-// ★ 表示内容（お絵かきモード時）★
-//   [モード切替] | [12色パレット] [消しゴム] [全消去]
-//
-// ★ 表示内容（ステッカーモード時）★
-//   [モード切替]  ← これだけ（既存のステッカーUIを邪魔しない）
+// ★ 表示内容（常時）★
+//   [シールロック切替] | [12色パレット] [消しゴム] [全消去]
 //
 // ★ このビューの責務 ★
 //   ユーザーの操作を DrawingStore に反映する。
 //   全消去ボタンだけ誤操作防止のため確認アラートを出す。
+//
+// ★ 以前は「お絵かき⇄シール移動」の排他モード切替ボタンだったが、
+//   お絵かきを常時有効にしたことに伴い役割を変更した。
+//   このボタンは今は「シールを固定するかどうか」だけを切り替える。
+//   パレットも表示/非表示を切り替える必要がなくなったため常時表示にした。
 
 import SwiftUI
 
@@ -34,44 +36,40 @@ struct DrawingToolbarView: View {
         HStack(spacing: 0) {
 
             // ─────────────────────────────
-            // モード切替ボタン
+            // シールロック切替ボタン
             // ─────────────────────────────
-            modeToggleButton
+            stickerLockButton
                 .padding(.horizontal, 12)
 
-            // お絵かきモードのときだけパレット・ツールを表示
-            if store.canvasMode == .drawing {
+            // 縦の区切り線
+            Divider()
+                .frame(height: 32)
 
-                // 縦の区切り線
-                Divider()
-                    .frame(height: 32)
+            // ─────────────────────────────
+            // 12色パレット ＋ 消しゴム ＋ 全消去（常時表示）
+            // 色が多いので ScrollView で横スクロールにする
+            // ─────────────────────────────
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 10) {
 
-                // ─────────────────────────────
-                // 12色パレット ＋ 消しゴム ＋ 全消去
-                // 色が多いので ScrollView で横スクロールにする
-                // ─────────────────────────────
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 10) {
-
-                        // カラーパレット
-                        ForEach(DrawingColor.palette, id: \.hex) { drawingColor in
-                            colorButton(drawingColor)
-                        }
-
-                        // 区切り
-                        Divider()
-                            .frame(height: 28)
-                            .padding(.horizontal, 2)
-
-                        // 消しゴムボタン
-                        eraserButton
-
-                        // 全消去ボタン
-                        clearButton
+                    // カラーパレット
+                    ForEach(DrawingColor.palette, id: \.hex) { drawingColor in
+                        colorButton(drawingColor)
                     }
-                    .padding(.horizontal, 12)
-                    .padding(.vertical, 6)
+
+                    // 区切り
+                    Divider()
+                        .frame(height: 28)
+                        .padding(.horizontal, 2)
+
+                    // 消しゴムボタン
+                    eraserButton
+
+                    // 全消去ボタン
+                    clearButton
                 }
+                .padding(.horizontal, 12)
+                .padding(.vertical, 6)
             }
         }
         .frame(maxWidth: .infinity)
@@ -98,30 +96,31 @@ struct DrawingToolbarView: View {
         }
     }
 
-    // MARK: - モード切替ボタン
+    // MARK: - シールロック切替ボタン
 
-    /// お絵かき ⇄ ステッカー の切り替えボタン
-    private var modeToggleButton: some View {
+    /// シールを固定（ロック）するかどうかを切り替えるボタン。
+    /// ロック中はシールが動かせず、お絵かきに集中できる。
+    /// ロック解除中はシールをドラッグして自由に動かせる。
+    private var stickerLockButton: some View {
         Button {
             withAnimation(.easeInOut(duration: 0.2)) {
-                store.canvasMode = store.canvasMode.toggled
-                // モードを切り替えたら消しゴムをリセット（ステッカーモードから戻ったとき用）
-                if store.canvasMode == .sticker {
-                    store.isEraserMode = false
-                }
+                store.isStickerLocked.toggle()
             }
         } label: {
             VStack(spacing: 2) {
-                Text(store.canvasMode == .drawing ? "🖍️" : "🌟")
+                Text(store.isStickerLocked ? "🔒" : "🔓")
                     .font(.system(size: 22))
-                Text(store.canvasMode == .drawing
-                     ? String(localized: "drawing_mode_label")
-                     : String(localized: "sticker_mode_label"))
+                Text(store.isStickerLocked
+                     ? String(localized: "sticker_locked_label")
+                     : String(localized: "sticker_unlocked_label"))
                     .font(.system(size: 9, weight: .medium))
                     .foregroundStyle(DS.textBody)
             }
             .frame(minWidth: 44, minHeight: 44)  // タッチターゲットを確保
         }
+        .accessibilityLabel(store.isStickerLocked
+             ? String(localized: "sticker_locked_label")
+             : String(localized: "sticker_unlocked_label"))
     }
 
     // MARK: - カラーボタン
