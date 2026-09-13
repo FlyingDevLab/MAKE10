@@ -11,7 +11,7 @@
 //   1. 現在の描画状態（ストローク配列・選択色・消しゴムモード）を保持する
 //   2. ジェスチャーに応じてストロークを追加・更新する
 //   3. 描画データを Documents/drawing_canvas.json へ永続保存・読み込みする
-//   4. キャンバスモード（描画 / ステッカー）の状態を持つ
+//   4. シールの固定（ロック）状態を持つ
 //
 // ★ AppSettings.shared と同じシングルトンパターンを採用している理由 ★
 //   DrawingCanvasView と DrawingToolbarView の両方から同じデータにアクセスする必要があるため、
@@ -28,10 +28,14 @@ final class DrawingStore {
     // アプリ内どこからでも DrawingStore.shared と書くだけでアクセスできる。
     static let shared = DrawingStore()
 
-    // MARK: - キャンバスモード
-    // デフォルトはステッカーモード（既存の操作体験を維持するため）。
-    // お絵かきしたいときにユーザーがツールバーのボタンで切り替える。
-    var canvasMode: StickerCanvasMode = .sticker
+    // MARK: - シールのロック状態
+    // ★ 以前は StickerCanvasMode（.drawing / .sticker の排他モード）で
+    //   お絵かきとシール移動を切り替えていたが、
+    //   「お絵かき中でもシールを動かしたい」という要望により廃止した。
+    //   今はお絵かき（キャンバスへのジェスチャー）は常時有効で、
+    //   このフラグはシールが動かせるかどうかだけを制御する。
+    // false = シール可動（デフォルト）、true = シール固定（誤って動かさないようにロック）
+    var isStickerLocked: Bool = false
 
     // MARK: - 描画状態
 

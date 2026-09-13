@@ -29,6 +29,9 @@
 //   全ゲームを統一サイズの GamePickerTile で2列グリッドに並べた。
 //   フリック操作で並び替えができ、並び順は GameRankManager が UserDefaults に永続化する。
 //   blitz（10びょう）は isBlitzUnlocked が true になるまで非表示にする。
+//   拡大表示（設定 > 画面表示と明るさ > 拡大）などで画面の論理サイズが小さくなると、
+//   カード・ロゴ・数字フォントの固定値がそのまま画面をはみ出してしまう問題があったため、
+//   GeometryReader で実際に使える高さを取得し、その高さに応じて縮小する仕組みを追加した。
 //
 // このファイルでは「世代番号パターン」を多用している（loopGeneration / demoGeneration）。
 // パターンの解説は GameViewModel.swift を参照。
@@ -120,141 +123,185 @@ struct TitleView: View {
     /// 復帰時のスライドイン時間（秒）。
     private let cardReturnDuration: Double = 0.5   // ← 変更可
 
+    // MARK: 画面サイズ対応（縮小率計算）
+    //
+    // ★ なぜこの仕組みが必要か ★
+    //   設定アプリの「画面表示と明るさ > 拡大」を選んでいる端末では、
+    //   画面の論理的な高さ（pt数）が標準表示より小さくなる。
+    //   このファイルのカード・ロゴ・数字フォントは pt 固定値で書かれているため、
+    //   画面が縮んでもサイズが変わらず、グリッドやフッターが画面外へ
+    //   はみ出してしまう問題があった。
+    //   body を GeometryReader で包み、実際に使える高さ（geo.size.height）を
+    //   取得したうえで、この基準値との比率を「縮小率」として固定値に掛け合わせる。
+
+    /// 「縮小の必要がない」とみなす基準の高さ（pt）。
+    /// 標準的な画面サイズでカード＋グリッドがちょうど収まる想定の値。
+    /// 実機で確認しながら微調整すること。
+    private let designContentHeight: CGFloat = 700   // ← 変更可（実機確認の上で調整）
+
+    /// 縮小しすぎて数字やロゴが読みにくくならないようにする下限（70%まで）。
+    private let minContentScale: CGFloat = 0.7       // ← 変更可
+
+    /// 実際に使える高さから縮小率を計算する。
+    /// - Parameter availableHeight: GeometryReader から得た、この画面に割り当てられた高さ。
+    /// - Returns: 1.0（等倍）〜 minContentScale の範囲に収めた縮小率。
+    private func contentScale(for availableHeight: CGFloat) -> CGFloat {
+        // availableHeight が 0 以下になることは通常無いが、
+        // レイアウト計算の最初のフレームなど念のためガードしておく。
+        guard availableHeight > 0 else { return 1.0 }
+        let raw = availableHeight / designContentHeight
+        // 基準より広い画面ではそれ以上拡大しない（min 1.0）。
+        // 基準より狭い画面では minContentScale を下回らないようにする（max）。
+        return min(1.0, max(minContentScale, raw))
+    }
+
     // MARK: body
 
     var body: some View {
-        VStack(spacing: 0) {
+        // GeometryReader で、SharedFrame からこの画面に割り当てられた
+        // 実際の高さ（ヘッダー・フッターを除いた残りの高さ）を取得する。
+        GeometryReader { geo in
+            let scale = contentScale(for: geo.size.height)
 
-            // ── アニメーションカード ──────────────────────────
-            ZStack {
-                DS.cardShadow()
+            VStack(spacing: 0) {
+
+                // ── アニメーションカード ──────────────────────────
                 ZStack {
-                    if showLogoSplash {
-                        // ── FDL ロゴスプラッシュ ──────────────
-                        ZStack {
-                            Image("fdl-logo-mark")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 165, height: 165)   // ← 変更可
-                            Image("fdl-logo-ring")
-                                .resizable()
-                                .scaledToFit()
-                                .frame(width: 175, height: 175)   // ← 変更可
-                                // blendMode(.multiply): 重なった色を「掛け算」で合成するモード。
-                                // 白(1.0)を掛けても下の色が変わらないため、リング画像の白背景が透過して見える
-                                .blendMode(.multiply)
-                                .rotationEffect(.degrees(ringAngle))
-                                .onAppear {
-                                    withAnimation(
-                                        .linear(duration: 11)     // ← 変更可：回転速度（秒/周）
-                                        .repeatForever(autoreverses: false)
-                                    ) { ringAngle = -360 }        // 負値 = 左回転
-                                }
-                                .onDisappear { ringAngle = 0 }
-                        }
-                        .transition(.opacity)
-
-                    } else if showTen {
-                        // ── 完成形「10」とキラキラ ─────────────
-                        Text("10")
-                            .font(.system(size: 130, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.primary)
-                            .scaleEffect(tenScale)
-                        Text("✨")
-                            .font(.system(size: 26))
-                            .offset(x: 74, y: -62 + sparkOffsetY)
-                            .opacity(sparkOpacity)
-                    } else {
-                        // ── 数式「n + (10-n)」の組み立て ───────
-                        Text("\(centerNumber)")
-                            .font(.system(size: 130, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.primary)
-                            .opacity(incomingNumber > 0 ? 1.0 : 0.0)
-                        if incomingNumber > 0 {
-                            HStack(spacing: 6) {
-                                Text("\(incomingNumber)")
-                                    .font(.system(size: 90, weight: .bold, design: .rounded))
-                                    .foregroundStyle(DS.accent)
-                                if showPlus {
-                                    Text("+")
-                                        .font(.system(size: 72, weight: .medium, design: .rounded))
-                                        .foregroundStyle(DS.muted)
-                                        .transition(.opacity)
-                                }
+                    DS.cardShadow()
+                    ZStack {
+                        if showLogoSplash {
+                            // ── FDL ロゴスプラッシュ ──────────────
+                            ZStack {
+                                Image("fdl-logo-mark")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 165 * scale, height: 165 * scale)   // ← 変更可（元165）
+                                Image("fdl-logo-ring")
+                                    .resizable()
+                                    .scaledToFit()
+                                    .frame(width: 175 * scale, height: 175 * scale)   // ← 変更可（元175）
+                                    // blendMode(.multiply): 重なった色を「掛け算」で合成するモード。
+                                    // 白(1.0)を掛けても下の色が変わらないため、リング画像の白背景が透過して見える
+                                    .blendMode(.multiply)
+                                    .rotationEffect(.degrees(ringAngle))
+                                    .onAppear {
+                                        withAnimation(
+                                            .linear(duration: 11)     // ← 変更可：回転速度（秒/周）
+                                            .repeatForever(autoreverses: false)
+                                        ) { ringAngle = -360 }        // 負値 = 左回転
+                                    }
+                                    .onDisappear { ringAngle = 0 }
                             }
-                            .offset(x: incomingOffsetX - 100)
+                            .transition(.opacity)
+
+                        } else if showTen {
+                            // ── 完成形「10」とキラキラ ─────────────
+                            Text("10")
+                                .font(.system(size: 130 * scale, weight: .bold, design: .rounded))   // ← 変更可（元130）
+                                .foregroundStyle(DS.primary)
+                                .scaleEffect(tenScale)
+                            Text("✨")
+                                .font(.system(size: 26 * scale))   // ← 変更可（元26）
+                                .offset(x: 74 * scale, y: -62 * scale + sparkOffsetY)
+                                .opacity(sparkOpacity)
+                        } else {
+                            // ── 数式「n + (10-n)」の組み立て ───────
+                            Text("\(centerNumber)")
+                                .font(.system(size: 130 * scale, weight: .bold, design: .rounded))   // ← 変更可（元130）
+                                .foregroundStyle(DS.primary)
+                                .opacity(incomingNumber > 0 ? 1.0 : 0.0)
+                            if incomingNumber > 0 {
+                                HStack(spacing: 6) {
+                                    Text("\(incomingNumber)")
+                                        .font(.system(size: 90 * scale, weight: .bold, design: .rounded))   // ← 変更可（元90）
+                                        .foregroundStyle(DS.accent)
+                                    if showPlus {
+                                        Text("+")
+                                            .font(.system(size: 72 * scale, weight: .medium, design: .rounded))   // ← 変更可（元72）
+                                            .foregroundStyle(DS.muted)
+                                            .transition(.opacity)
+                                    }
+                                }
+                                // 100 はレイアウト上の水平オフセット調整値。
+                                // フォントサイズが縮むと数式全体の見かけの幅も縮むため、
+                                // 整合を取るため同じ scale を掛けている。
+                                .offset(x: incomingOffsetX - 100 * scale)
+                            }
                         }
                     }
                 }
-            }
-            .frame(maxWidth: .infinity)
-            .frame(height: 200)
-            .padding(.horizontal, 24)
-            .padding(.top, 12)
-            .padding(.bottom, 20)
-            .offset(cardFlyOffset)
-            // カード内は文字と画像だけで背景が無い箇所があるため、
-            // 矩形全体をタッチ判定にしてどこを触ってもフリックできるようにする
-            .contentShape(Rectangle())
-            // タップ操作は無いので minimumDistance を持たせ、
-            // 指のわずかな動きを拾わないようにする
-            .gesture(
-                DragGesture(minimumDistance: 10)
-                    .onEnded { value in
-                        handleCardFlick(
-                            translation: value.translation,
-                            velocity:    value.velocity
-                        )
-                    }
-            )
+                .frame(maxWidth: .infinity)
+                .frame(height: 200 * scale)   // ← 変更可（元200）
+                .padding(.horizontal, 24)
+                .padding(.top, 12)
+                .padding(.bottom, 20)
+                .offset(cardFlyOffset)
+                // カード内は文字と画像だけで背景が無い箇所があるため、
+                // 矩形全体をタッチ判定にしてどこを触ってもフリックできるようにする
+                .contentShape(Rectangle())
+                // タップ操作は無いので minimumDistance を持たせ、
+                // 指のわずかな動きを拾わないようにする
+                .gesture(
+                    DragGesture(minimumDistance: 10)
+                        .onEnded { value in
+                            handleCardFlick(
+                                translation: value.translation,
+                                velocity:    value.velocity
+                            )
+                        }
+                )
 
-            // ── ゲーム選択グリッド ────────────────────────────
-            // ★ LazyVGrid とは？ ★
-            //   格子状にViewを並べるコンテナです。columns で列の定義を渡し、
-            //   ここでは .flexible() ×2 で「等幅2列」を作っています。
-            //   "Lazy" は「画面に見える分だけ生成する」という意味で、
-            //   タイル数が増えてもパフォーマンスが落ちにくい仕組みです。
-            LazyVGrid(
-                columns: [GridItem(.flexible()), GridItem(.flexible())],
-                spacing: 12
-            ) {
-                ForEach(Array(visibleGames.enumerated()), id: \.element) { index, game in
-                    GamePickerTile(
-                        game:      game,
-                        flyOffset: flyOffsets[game] ?? .zero
-                    ) {
-                        onSelectGame(game)
-                    } onFlick: { translation, velocity in
-                        handleFlick(
-                            game:           game,
-                            visibleIndex:   index,
-                            translation:    translation,
-                            velocity:       velocity
-                        )
+                // ── ゲーム選択グリッド ────────────────────────────
+                // ★ LazyVGrid とは？ ★
+                //   格子状にViewを並べるコンテナです。columns で列の定義を渡し、
+                //   ここでは .flexible() ×2 で「等幅2列」を作っています。
+                //   "Lazy" は「画面に見える分だけ生成する」という意味で、
+                //   タイル数が増えてもパフォーマンスが落ちにくい仕組みです。
+                LazyVGrid(
+                    columns: [GridItem(.flexible()), GridItem(.flexible())],
+                    spacing: 12
+                ) {
+                    ForEach(Array(visibleGames.enumerated()), id: \.element) { index, game in
+                        GamePickerTile(
+                            game:      game,
+                            flyOffset: flyOffsets[game] ?? .zero
+                        ) {
+                            onSelectGame(game)
+                        } onFlick: { translation, velocity in
+                            handleFlick(
+                                game:           game,
+                                visibleIndex:   index,
+                                translation:    translation,
+                                velocity:       velocity
+                            )
+                        }
                     }
                 }
+                // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
+                .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
+                .padding(.horizontal, 20)
+                .padding(.bottom, 24)
             }
-            // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
-            .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
-            .padding(.horizontal, 20)
-            .padding(.bottom, 24)
-        }
-        .onAppear {
-            // ⚠️ カードを追い出したまま他ゲームへ遷移すると、@State に
-            //   ±600 のオフセットが残ったままになる。世代チェックに頼らず、
-            //   画面が現れるたびここで必ず定位置へ戻すこと。
-            //   （これを省くと、戻ってきたときカードが画面外に取り残され、
-            //     再起動するまで空白のままになる）
-            cardFlyOffset = .zero
-            isCardAway    = false
+            // GeometryReader から渡された幅・高さいっぱいに配置し、
+            // 上詰め（.top）にすることで元のレイアウト（カードが上、グリッドが続く）を保つ。
+            .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
+            .onAppear {
+                // ⚠️ カードを追い出したまま他ゲームへ遷移すると、@State に
+                //   ±600 のオフセットが残ったままになる。世代チェックに頼らず、
+                //   画面が現れるたびここで必ず定位置へ戻すこと。
+                //   （これを省くと、戻ってきたときカードが画面外に取り残され、
+                //     再起動するまで空白のままになる）
+                cardFlyOffset = .zero
+                isCardAway    = false
 
-            loopGeneration += 1
-            // 画面表示直後はロゴから始める。ロゴ終了後に runTitleLoop へ自動で移る。
-            // ← 変更可：先頭ロゴの表示時間（秒）
-            runLogoSplash(generation: loopGeneration, duration: 4.5)
+                loopGeneration += 1
+                // 画面表示直後はロゴから始める。ロゴ終了後に runTitleLoop へ自動で移る。
+                // ← 変更可：先頭ロゴの表示時間（秒）
+                runLogoSplash(generation: loopGeneration, duration: 4.5)
 
-            // ← 変更可：初回デモ開始までの待機時間（秒）
-            scheduleDemo(delay: 2.5)
+                // ← 変更可：初回デモ開始までの待機時間（秒）
+                scheduleDemo(delay: 2.5)
+            }
         }
     }
 
@@ -637,4 +684,3 @@ struct TitleView: View {
         tenScale = 1.0; sparkOpacity = 0.0; sparkOffsetY = 0; incomingNumber = 0
     }
 }
-

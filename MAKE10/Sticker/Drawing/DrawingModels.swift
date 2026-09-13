@@ -11,31 +11,9 @@
 //   - DrawingPoint     : 画面上の1点の座標
 //   - DrawingStroke    : 指1回のなぞり（= 点の列 + 色 + 太さ）
 //   - DrawingColor     : クレヨンパレットの1色
-//   - StickerCanvasMode: お絵かきモード / ステッカーモードの切り替え
 //   - Color(hex:)      : "#FF3B30" 形式の文字列から Color を作る拡張
 
 import SwiftUI
-
-// MARK: - StickerCanvasMode
-// プレイキャンバスの操作モードを表す列挙型。
-// .drawing のとき → 指でなぞると線が描かれる。ステッカーはタップ不可。
-// .sticker のとき → ステッカーを移動・貼り付けできる。描画は不可。
-//
-// ★ なぜ enum にするのか ★
-//   Bool（isDrawingMode）でも実現できますが、
-//   将来モードが3つ以上になったときに enum の方が拡張しやすいです。
-//   また「どちらかでなければならない」という意図が enum の方が明確です。
-
-enum StickerCanvasMode {
-    case drawing  // お絵かきモード（クレヨン）
-    case sticker  // ステッカーモード（貼り付け・移動）
-
-    // 現在のモードを切り替えた「反対のモード」を返すヘルパー。
-    // DrawingToolbarView のトグルボタンで使う。
-    var toggled: StickerCanvasMode {
-        self == .drawing ? .sticker : .drawing
-    }
-}
 
 // MARK: - DrawingPoint
 // 画面上の1点の座標を保持する。
@@ -152,7 +130,7 @@ struct DrawingColor {
         DrawingColor(name: .cyan,   hex: "#5AC8FA"),  // 水色 ← 変更可
         DrawingColor(name: .blue,   hex: "#007AFF"),  // 青 ← 変更可
         DrawingColor(name: .purple, hex: "#AF52DE"),  // 紫 ← 変更可
-        DrawingColor(name: .pink,   hex: "#FF2D55"),  // ピンク ← 変更可
+        DrawingColor(name: .pink,   hex: "#FF8FB3"),  // ピンク ← 変更可
         DrawingColor(name: .brown,  hex: "#A2845E"),  // 茶 ← 変更可
         DrawingColor(name: .black,  hex: "#1C1C1E"),  // 黒 ← 変更可
         DrawingColor(name: .white,  hex: "#FFFFFF"),  // 白 ← 変更可

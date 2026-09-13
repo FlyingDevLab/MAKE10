@@ -11,7 +11,9 @@
 // ★ このビューの責務 ★
 //   1. DrawingStore のストローク配列を Canvas で描画する
 //   2. DragGesture で指の動きを DrawingStore に伝える
-//   3. お絵かきモード時のみジェスチャーを受け付ける
+//   3. ジェスチャーは常時受け付ける（シールが上に乗っている場所は
+//      StickerPlayView 側のヒットテストがシール優先で奪うため、
+//      ここで有効/無効を切り替える必要はない）
 //
 // ★ SwiftUI の Canvas とは？ ★
 //   毎フレーム再描画される低レベルな描画面です。
@@ -23,6 +25,14 @@
 //   ビューを Metal（GPU）レイヤーにラスタライズします。
 //   blendMode(.clear) で「透明な穴」を開けるには Metal レイヤーが必要なため、
 //   消しゴム機能の実現に必須です。
+//
+// ★ 以前は StickerCanvasMode（お絵かき⇄シール移動の排他モード）で
+//   ジェスチャーの有効/無効を切り替えていたが、
+//   「お絵かき中でもシールを動かしたい」という要望により廃止した。
+//   お絵かきは常時有効にし、シール側の DraggablePlayStickerView が
+//   絵文字の描画範囲だけをヒットテスト領域として持つため、
+//   シールの上を触ればシールが、それ以外の場所をなぞればここで
+//   線が引かれる、という自然な棲み分けになる。
 
 import SwiftUI
 
@@ -49,20 +59,8 @@ struct DrawingCanvasView: View {
         //   Metal レイヤー上での合成が必要。このモディファイアがないと
         //   消しゴムが「透明」ではなく「黒」になってしまう。
         .drawingGroup()
-        // お絵かきモードのときのみジェスチャーを受け付ける
-        .gesture(
-            drawingEnabled ? drawingGesture : nil
-        )
-        // タッチの hitTest（タップ判定）もお絵かきモード時のみ有効にする。
-        // ステッカーモードでは透過させてステッカーのタップを通す。
-        .allowsHitTesting(drawingEnabled)
-    }
-
-    // MARK: - 計算プロパティ
-
-    /// お絵かきモードが有効かどうか
-    private var drawingEnabled: Bool {
-        store.canvasMode == .drawing
+        // お絵かきジェスチャーは常時有効
+        .gesture(drawingGesture)
     }
 
     // MARK: - ジェスチャー

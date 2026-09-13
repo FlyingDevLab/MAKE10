@@ -57,7 +57,7 @@ struct StickerPlayView: View {
                 ZStack {
                     // ★ お絵かきレイヤー（最下層）
                     // 描いた絵がステッカーの下になるよう ZStack の先頭に置く。
-                    // お絵かきモード時のみジェスチャーを受け付ける（DrawingCanvasView 内部で制御）。
+                    // お絵かきジェスチャーは常時有効（DrawingCanvasView 内部で制御）。
                     DrawingCanvasView()
 
                     // ステッカー（お絵かきの上）
@@ -67,9 +67,11 @@ struct StickerPlayView: View {
                             bounds:     geo.size,
                             draggingID: $draggingID
                         )
-                        // ★ ステッカーモードのときだけドラッグ可能にする。
-                        //   お絵かきモード中は指の動きをすべて DrawingCanvasView に渡す。
-                        .allowsHitTesting(drawingStore.canvasMode == .sticker)
+                        // ★ シールがロックされていないときだけドラッグ可能にする。
+                        //   ロック中はシールの絵文字が乗っている場所でも
+                        //   タッチがそのまま下の DrawingCanvasView に貫通し、
+                        //   シールの上からでも自由に描けるようになる。
+                        .allowsHitTesting(!drawingStore.isStickerLocked)
                     }
                 }
             }
@@ -90,7 +92,7 @@ struct StickerPlayView: View {
                 }
 
                 // ★ お絵かきツールバー（常時下部固定）
-                // モード切替・カラーパレット・消しゴム・全消去を提供する。
+                // シールロック切替・カラーパレット・消しゴム・全消去を提供する。
                 DrawingToolbarView()
                     .padding(.horizontal, 16)
                     .padding(.bottom, 32)  // Safe Area 下端からの余白 ← 変更可
