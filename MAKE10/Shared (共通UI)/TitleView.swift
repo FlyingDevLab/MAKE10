@@ -6,17 +6,12 @@
 //
 
 // タイトル画面のルートビュー。
-// アニメーションカードとゲーム選択グリッドを管理する。
+// ゲーム選択グリッドを管理する。
 //
 // ★ このファイルの構成 ★
-//   TitleView（親）
-//     ├ アニメーションカード … 画面表示直後に FDL ロゴを 4.5 秒表示し、
-//     │                        その後「n + (10-n) = 10」をループアニメで表示。
-//     │                        以降 5 ループごとに 13 秒のロゴを挟む。
-//     │                        左右フリックで画面外へ追い出せる（遊び要素。
-//     │                        追い出した枠は空白のまま残り、数秒後に
-//     │                        反対側からロゴで再登場する）
-//     └ ゲーム選択グリッド   … GamePickerTile を LazyVGrid で2列に並べる
+//   TitleView（親） … pickerRows で組み立てた「行」を縦に並べる独自レイアウト。
+//                     フリック操作で並べ替え・吹き飛ばしができ、
+//                     無操作が続くと自動デモ（スワップ／フライ）が動く。
 //
 // 役割分担:
 //   - GamePickerTile (GamePickerComponents.swift) : タップ/フリックの「判定」
@@ -29,11 +24,30 @@
 //   全ゲームを統一サイズの GamePickerTile で2列グリッドに並べた。
 //   フリック操作で並び替えができ、並び順は GameRankManager が UserDefaults に永続化する。
 //   blitz（10びょう）は isBlitzUnlocked が true になるまで非表示にする。
-//   拡大表示（設定 > 画面表示と明るさ > 拡大）などで画面の論理サイズが小さくなると、
-//   カード・ロゴ・数字フォントの固定値がそのまま画面をはみ出してしまう問題があったため、
-//   GeometryReader で実際に使える高さを取得し、その高さに応じて縮小する仕組みを追加した。
+//   FDLロゴのアニメーションカード（数式ループ演出）は廃止し、
+//   ロゴ＋回転リングだけの GamePickerSelection.logoCard として
+//   ゲーム選択の一員に統合した。ただし見た目は画面幅いっぱいのバナーにしたため、
+//   均等2列を前提にした LazyVGrid をやめ、pickerRows による自前の行組み立てに変更した。
 //
-// このファイルでは「世代番号パターン」を多用している（loopGeneration / demoGeneration）。
+// ★ バナー（logoCard）のフリック挙動について ★
+//   ・左右フリック → 相手がいないため自動的に「末尾送り」になる（特別なコードは不要）
+//   ・上下フリック → 隣接行があれば3点ローテーション、無ければ（画面の端）末尾送りへ合流する
+//     （GameRankManager.rotateBanner を参照）
+//   ・通常タイルがバナーへ向けて縦フリック → 単純な1対1位置入れ替え（既存の swap を流用）。
+//     入れ替わった側で相棒を失ったタイルは、自動的に「片方だけの行」になる。
+//
+// ★ 表示枚数の可変化について ★
+//   バナーが先頭 visibleCountWithBanner 枠以内にあるときは「バナー＋通常8枚」、
+//   それより後ろ（左右フリックで最後尾に送られた等）にあるときは
+//   「バナー抜きで通常10枚」に切り替わる。currentVisibleCount / visibleGames を参照。
+//
+// ★ タイル移動のアニメーションについて ★
+//   matchedGeometryEffect（tileTransition名前空間）で各タイルにゲームIDを紐付けている。
+//   これにより、行（HStack）をまたいだ移動（スワップで左右が入れ替わる、末尾送り、
+//   バナーローテーションなど）でも「同じタイルがどこからどこへ動いたか」を
+//   SwiftUI が追跡でき、位置の変化が自動的に滑らかなアニメーションになる。
+//
+// このファイルでは「世代番号パターン」を使っている（demoGeneration）。
 // パターンの解説は GameViewModel.swift を参照。
 
 import SwiftUI
@@ -49,30 +63,6 @@ struct TitleView: View {
     /// MakeTenContentView が画面遷移・ゲーム開始を担う。
     var onSelectGame: (GamePickerSelection) -> Void
 
-    /// 流れてくる数字の初期X位置（画面外左）。resetState() で毎ループここに戻す。
-    private let offScreenLeading: CGFloat = -220
-
-    // MARK: アニメーション状態
-
-    /// 中央に表示する数字（1〜9のランダム）。
-    @State private var centerNumber:    Int     = Int.random(in: 1...9)
-    /// 左から流れてくる相方の数字（10 - centerNumber）。0 のときは非表示。
-    @State private var incomingNumber:  Int     = 0
-    /// 流れてくる数字の現在X位置。-220（画面外）→ 0（定位置）へアニメする。
-    @State private var incomingOffsetX: CGFloat = -220
-    /// 「+」記号の表示フラグ。数字が定位置に着いてから表示する。
-    @State private var showPlus:        Bool    = false
-    /// 「10」の表示フラグ。true の間は数式の代わりに大きな10を表示する。
-    @State private var showTen:         Bool    = false
-    /// 「10」のパルス演出用スケール（1.0 → 1.08 → 1.0）。
-    @State private var tenScale:        CGFloat = 1.0
-    /// ✨の不透明度。「10」の登場と同時に光って、上昇しながら消える。
-    @State private var sparkOpacity:    Double  = 0.0
-    /// ✨のY方向オフセット。0 → -28 へ上昇する。
-    @State private var sparkOffsetY:    CGFloat = 0
-    /// タイトルループの世代番号。画面再表示時に古いループのコールバックを無効化する。
-    @State private var loopGeneration:  Int     = 0
-
     // MARK: ゲームグリッド状態
 
     /// ゲームタイルの並び順を管理する（UserDefaults に永続化）。
@@ -83,185 +73,33 @@ struct TitleView: View {
     /// フリックと判定する最低速度（pt/s）。
     private let flickSpeedThreshold: CGFloat = 300   // ← 変更可
 
-    /// グリッドに表示するタイル枚数（2列 × 3行）。
-    /// visibleGames / runDemoFly / handleFlick の3箇所がこの値を共有する。
-    private let visibleTileCount: Int = 6            // ← 変更可
+    /// バナーが表示される場合の表示枚数（バナー1 + 通常8 = 9）。
+    private let visibleCountWithBanner: Int = 9      // ← 変更可
+    /// バナーが表示されない場合の表示枚数（通常タイルのみ10）。
+    private let visibleCountWithoutBanner: Int = 10  // ← 変更可
+
+    /// バナー（logoCard）の高さ。画面幅いっぱいでも正方形に伸びないよう明示的に固定する。
+    /// 他タイルの実測高さと見比べて合わなければここだけ調整すればよい。
+    private let bannerHeight: CGFloat = 130          // ← 変更可
 
     /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する。
     @State private var demoGeneration: Int = 0
 
-    // MARK: ロゴスプラッシュ状態
-
-    /// タイトルループの累計回数。5の倍数のときロゴスプラッシュを挟む。
-    @State private var loopCount:      Int    = 0
-    /// ロゴスプラッシュの表示フラグ。画面表示直後はロゴから始めるため true。
-    @State private var showLogoSplash: Bool   = true
-    /// ロゴ外周リングの回転角度（度）。表示中は左回転し続ける。
-    @State private var ringAngle:      Double = 0
-
-    // MARK: カード追い出し状態
-
-    // ★ この機能は「意味のない遊び」として独立させている ★
-    //   ゲームタイルのフリック（並べ替え）とは無関係で、
-    //   scheduleDemo() も呼ばない。並び順にも一切影響しない。
-    //
-    // ★ なぜ .offset() で動かすのか ★
-    //   .offset() はレイアウト計算に影響しないため、カードが画面外へ出ても
-    //   VStack 上の占有スペース（高さ200）はそのまま残る。
-    //   結果として「追い出した部分が空白になる」という狙い通りの見た目になり、
-    //   下のグリッドが繰り上がることもない。
-
-    /// アニメーションカードの現在オフセット。左右フリックで ±cardFlyDistance へ動かす。
-    @State private var cardFlyOffset: CGSize = .zero
-    /// カードが定位置に無い間（飛行中〜復帰完了まで）true。二重フリックを防ぐ。
-    @State private var isCardAway:    Bool   = false
-
-    /// カードを飛ばす距離（pt）。600 = どの端末でも確実に画面外まで出る。
-    private let cardFlyDistance:  CGFloat = 600    // ← 変更可
-    /// カードが画面外で待機する時間（秒）。
-    private let cardAwayDuration: Double  = 4.5    // ← 変更可
-    /// 復帰時のスライドイン時間（秒）。
-    private let cardReturnDuration: Double = 0.5   // ← 変更可
-
-    // MARK: 画面サイズ対応（縮小率計算）
-    //
-    // ★ なぜこの仕組みが必要か ★
-    //   設定アプリの「画面表示と明るさ > 拡大」を選んでいる端末では、
-    //   画面の論理的な高さ（pt数）が標準表示より小さくなる。
-    //   このファイルのカード・ロゴ・数字フォントは pt 固定値で書かれているため、
-    //   画面が縮んでもサイズが変わらず、グリッドやフッターが画面外へ
-    //   はみ出してしまう問題があった。
-    //   body を GeometryReader で包み、実際に使える高さ（geo.size.height）を
-    //   取得したうえで、この基準値との比率を「縮小率」として固定値に掛け合わせる。
-
-    /// 「縮小の必要がない」とみなす基準の高さ（pt）。
-    /// 標準的な画面サイズでカード＋グリッドがちょうど収まる想定の値。
-    /// 実機で確認しながら微調整すること。
-    private let designContentHeight: CGFloat = 700   // ← 変更可（実機確認の上で調整）
-
-    /// 縮小しすぎて数字やロゴが読みにくくならないようにする下限（70%まで）。
-    private let minContentScale: CGFloat = 0.7       // ← 変更可
-
-    /// 実際に使える高さから縮小率を計算する。
-    /// - Parameter availableHeight: GeometryReader から得た、この画面に割り当てられた高さ。
-    /// - Returns: 1.0（等倍）〜 minContentScale の範囲に収めた縮小率。
-    private func contentScale(for availableHeight: CGFloat) -> CGFloat {
-        // availableHeight が 0 以下になることは通常無いが、
-        // レイアウト計算の最初のフレームなど念のためガードしておく。
-        guard availableHeight > 0 else { return 1.0 }
-        let raw = availableHeight / designContentHeight
-        // 基準より広い画面ではそれ以上拡大しない（min 1.0）。
-        // 基準より狭い画面では minContentScale を下回らないようにする（max）。
-        return min(1.0, max(minContentScale, raw))
-    }
+    /// タイルの位置移動（スワップ・末尾送り・バナーローテーション）を滑らかにアニメーションさせるための名前空間。
+    /// matchedGeometryEffect は「同じ id を持つビューが前後でどこにあったか」を追跡して
+    /// フレーム差分を自動でアニメーションする仕組みで、行（HStack）をまたいだ移動にも対応できる。
+    @Namespace private var tileTransition
 
     // MARK: body
 
     var body: some View {
-        // GeometryReader で、SharedFrame からこの画面に割り当てられた
-        // 実際の高さ（ヘッダー・フッターを除いた残りの高さ）を取得する。
-        GeometryReader { geo in
-            let scale = contentScale(for: geo.size.height)
+        VStack(spacing: 0) {
 
-            VStack(spacing: 0) {
-
-                // ── アニメーションカード ──────────────────────────
-                ZStack {
-                    DS.cardShadow()
-                    ZStack {
-                        if showLogoSplash {
-                            // ── FDL ロゴスプラッシュ ──────────────
-                            ZStack {
-                                Image("fdl-logo-mark")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 165 * scale, height: 165 * scale)   // ← 変更可（元165）
-                                Image("fdl-logo-ring")
-                                    .resizable()
-                                    .scaledToFit()
-                                    .frame(width: 175 * scale, height: 175 * scale)   // ← 変更可（元175）
-                                    // blendMode(.multiply): 重なった色を「掛け算」で合成するモード。
-                                    // 白(1.0)を掛けても下の色が変わらないため、リング画像の白背景が透過して見える
-                                    .blendMode(.multiply)
-                                    .rotationEffect(.degrees(ringAngle))
-                                    .onAppear {
-                                        withAnimation(
-                                            .linear(duration: 11)     // ← 変更可：回転速度（秒/周）
-                                            .repeatForever(autoreverses: false)
-                                        ) { ringAngle = -360 }        // 負値 = 左回転
-                                    }
-                                    .onDisappear { ringAngle = 0 }
-                            }
-                            .transition(.opacity)
-
-                        } else if showTen {
-                            // ── 完成形「10」とキラキラ ─────────────
-                            Text("10")
-                                .font(.system(size: 130 * scale, weight: .bold, design: .rounded))   // ← 変更可（元130）
-                                .foregroundStyle(DS.primary)
-                                .scaleEffect(tenScale)
-                            Text("✨")
-                                .font(.system(size: 26 * scale))   // ← 変更可（元26）
-                                .offset(x: 74 * scale, y: -62 * scale + sparkOffsetY)
-                                .opacity(sparkOpacity)
-                        } else {
-                            // ── 数式「n + (10-n)」の組み立て ───────
-                            Text("\(centerNumber)")
-                                .font(.system(size: 130 * scale, weight: .bold, design: .rounded))   // ← 変更可（元130）
-                                .foregroundStyle(DS.primary)
-                                .opacity(incomingNumber > 0 ? 1.0 : 0.0)
-                            if incomingNumber > 0 {
-                                HStack(spacing: 6) {
-                                    Text("\(incomingNumber)")
-                                        .font(.system(size: 90 * scale, weight: .bold, design: .rounded))   // ← 変更可（元90）
-                                        .foregroundStyle(DS.accent)
-                                    if showPlus {
-                                        Text("+")
-                                            .font(.system(size: 72 * scale, weight: .medium, design: .rounded))   // ← 変更可（元72）
-                                            .foregroundStyle(DS.muted)
-                                            .transition(.opacity)
-                                    }
-                                }
-                                // 100 はレイアウト上の水平オフセット調整値。
-                                // フォントサイズが縮むと数式全体の見かけの幅も縮むため、
-                                // 整合を取るため同じ scale を掛けている。
-                                .offset(x: incomingOffsetX - 100 * scale)
-                            }
-                        }
-                    }
-                }
-                .frame(maxWidth: .infinity)
-                .frame(height: 200 * scale)   // ← 変更可（元200）
-                .padding(.horizontal, 24)
-                .padding(.top, 12)
-                .padding(.bottom, 20)
-                .offset(cardFlyOffset)
-                // カード内は文字と画像だけで背景が無い箇所があるため、
-                // 矩形全体をタッチ判定にしてどこを触ってもフリックできるようにする
-                .contentShape(Rectangle())
-                // タップ操作は無いので minimumDistance を持たせ、
-                // 指のわずかな動きを拾わないようにする
-                .gesture(
-                    DragGesture(minimumDistance: 10)
-                        .onEnded { value in
-                            handleCardFlick(
-                                translation: value.translation,
-                                velocity:    value.velocity
-                            )
-                        }
-                )
-
-                // ── ゲーム選択グリッド ────────────────────────────
-                // ★ LazyVGrid とは？ ★
-                //   格子状にViewを並べるコンテナです。columns で列の定義を渡し、
-                //   ここでは .flexible() ×2 で「等幅2列」を作っています。
-                //   "Lazy" は「画面に見える分だけ生成する」という意味で、
-                //   タイル数が増えてもパフォーマンスが落ちにくい仕組みです。
-                LazyVGrid(
-                    columns: [GridItem(.flexible()), GridItem(.flexible())],
-                    spacing: 12
-                ) {
-                    ForEach(Array(visibleGames.enumerated()), id: \.element) { index, game in
+            // ── ゲーム選択グリッド（行ベース） ────────────────
+            VStack(spacing: 10) {
+                ForEach(Array(pickerRows.enumerated()), id: \.element.id) { rowIndex, row in
+                    switch row {
+                    case .banner(let game):
                         GamePickerTile(
                             game:      game,
                             flyOffset: flyOffsets[game] ?? .zero
@@ -269,53 +107,148 @@ struct TitleView: View {
                             onSelectGame(game)
                         } onFlick: { translation, velocity in
                             handleFlick(
-                                game:           game,
-                                visibleIndex:   index,
-                                translation:    translation,
-                                velocity:       velocity
+                                game:        game,
+                                rowIndex:    rowIndex,
+                                column:      nil,
+                                translation: translation,
+                                velocity:    velocity
                             )
+                        }
+                        .matchedGeometryEffect(id: game, in: tileTransition)
+                        .frame(height: bannerHeight)
+
+                    case .pair(let left, let right):
+                        HStack(spacing: 10) {
+                            GamePickerTile(
+                                game:      left,
+                                flyOffset: flyOffsets[left] ?? .zero
+                            ) {
+                                onSelectGame(left)
+                            } onFlick: { translation, velocity in
+                                handleFlick(
+                                    game:        left,
+                                    rowIndex:    rowIndex,
+                                    column:      0,
+                                    translation: translation,
+                                    velocity:    velocity
+                                )
+                            }
+                            .matchedGeometryEffect(id: left, in: tileTransition)
+
+                            if let right {
+                                GamePickerTile(
+                                    game:      right,
+                                    flyOffset: flyOffsets[right] ?? .zero
+                                ) {
+                                    onSelectGame(right)
+                                } onFlick: { translation, velocity in
+                                    handleFlick(
+                                        game:        right,
+                                        rowIndex:    rowIndex,
+                                        column:      1,
+                                        translation: translation,
+                                        velocity:    velocity
+                                    )
+                                }
+                                .matchedGeometryEffect(id: right, in: tileTransition)
+                            } else {
+                                // 奇数個であぶれた行の空きマス（見た目にも操作にも影響しない透明マス）
+                                Color.clear
+                            }
                         }
                     }
                 }
-                // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
-                .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
-                .padding(.horizontal, 20)
-                .padding(.bottom, 24)
             }
-            // GeometryReader から渡された幅・高さいっぱいに配置し、
-            // 上詰め（.top）にすることで元のレイアウト（カードが上、グリッドが続く）を保つ。
-            .frame(width: geo.size.width, height: geo.size.height, alignment: .top)
-            .onAppear {
-                // ⚠️ カードを追い出したまま他ゲームへ遷移すると、@State に
-                //   ±600 のオフセットが残ったままになる。世代チェックに頼らず、
-                //   画面が現れるたびここで必ず定位置へ戻すこと。
-                //   （これを省くと、戻ってきたときカードが画面外に取り残され、
-                //     再起動するまで空白のままになる）
-                cardFlyOffset = .zero
-                isCardAway    = false
-
-                loopGeneration += 1
-                // 画面表示直後はロゴから始める。ロゴ終了後に runTitleLoop へ自動で移る。
-                // ← 変更可：先頭ロゴの表示時間（秒）
-                runLogoSplash(generation: loopGeneration, duration: 4.5)
-
-                // ← 変更可：初回デモ開始までの待機時間（秒）
-                scheduleDemo(delay: 2.5)
-            }
+            // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
+            .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
+            .padding(.horizontal, 24)   // 他画面（遊び方カード等）と揃えた余白
+            .padding(.bottom, 24)
+        }
+        .onAppear {
+            // ← 変更可：初回デモ開始までの待機時間（秒）
+            scheduleDemo(delay: 2.5)
         }
     }
 
     // MARK: 表示ゲームの算出
 
-    /// グリッドに表示するゲーム一覧。blitz は解放前は除外し、
-    /// 先頭 visibleTileCount 個（2列×4行）に絞る。
-    ///
-    /// ⚠️ 変更注意: 表示枚数は visibleTileCount 一箇所で管理している。
-    ///   handleFlick / runDemoFly の「allVisible.count > visibleTileCount」も
-    ///   同じ定数を参照しているため、枚数を変えるときは定数だけを書き換えること。
+    /// blitz の解放状態を反映した、ロゴを含む全ゲームの並び順。
+    /// visibleGames / currentVisibleCount の両方から参照される共通の下地。
+    private var filteredGames: [GamePickerSelection] {
+        rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
+    }
+
+    /// 現在の表示枚数上限。ロゴの位置によって9（バナーあり）と10（バナーなし）を動的に切り替える。
+    /// ⚠️ 変更注意: handleFlick / runDemoFly の「hasHiddenGame」判定もこの値を参照するため、
+    ///   枚数を変えるときは visibleCountWithBanner / visibleCountWithoutBanner の定数だけを書き換えること。
+    private var currentVisibleCount: Int {
+        let filtered = filteredGames
+        guard let bannerIndex = filtered.firstIndex(of: .logoCard) else {
+            return visibleCountWithoutBanner
+        }
+        return bannerIndex < visibleCountWithBanner ? visibleCountWithBanner : visibleCountWithoutBanner
+    }
+
+    /// グリッドに表示するゲーム一覧。
+    /// ロゴが先頭 visibleCountWithBanner 枠以内にあれば「ロゴ＋通常8枚」をそのまま上位9個として表示し、
+    /// それより後ろ（左右フリックで最後尾に送られた等）にあれば、ロゴを除外して通常タイル上位10個を表示する。
     private var visibleGames: [GamePickerSelection] {
-        let all = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-        return Array(all.prefix(visibleTileCount))
+        let filtered = filteredGames
+        guard let bannerIndex = filtered.firstIndex(of: .logoCard) else {
+            return Array(filtered.prefix(visibleCountWithoutBanner))
+        }
+        if bannerIndex < visibleCountWithBanner {
+            return Array(filtered.prefix(visibleCountWithBanner))
+        } else {
+            return Array(filtered.filter { $0 != .logoCard }.prefix(visibleCountWithoutBanner))
+        }
+    }
+
+    // MARK: 行の組み立て
+
+    /// グリッド描画用の1行。banner は画面幅いっぱいの単独行、pair は通常タイル2枚組の行。
+    /// 奇数個で組めなかった最後の1枚は right が nil になり、空きマスとして描画される。
+    private enum PickerRow: Identifiable {
+        case banner(GamePickerSelection)
+        case pair(left: GamePickerSelection, right: GamePickerSelection?)
+
+        /// 行の中身から作る安定したID。
+        /// ⚠️ 変更注意: これが配列上の位置（offset）ではなく中身ベースであることで、
+        ///   SwiftUI が「同じ行が別の位置へ移動した」と認識できるようになる。
+        ///   ただし .pair はタイル自体の入れ替わりでこのIDが変わってしまうため、
+        ///   タイル単位の移動アニメーションは matchedGeometryEffect（tileTransition）が別途担っている。
+        var id: String {
+            switch self {
+            case .banner(let game):
+                return "banner-\(game.rawValue)"
+            case .pair(let left, let right):
+                return "pair-\(left.rawValue)-\(right?.rawValue ?? "_")"
+            }
+        }
+    }
+
+    /// visibleGames を順に走査し、logoCard を単独のフル幅行に、それ以外を2枚組の行に組み立てる。
+    /// ⚠️ 変更注意: バナー（logoCard）がどの位置に来ても、その位置で単独行として割り込む。
+    ///   直前が奇数個で終わっていた場合、バナーの手前の1枚は right: nil の空きマス行になる
+    ///   （繰り上げて詰めるのではなく、あえて空けている＝バナーの位置が動いても手前の並びを崩さない）。
+    private var pickerRows: [PickerRow] {
+        var rows: [PickerRow] = []
+        var i = 0
+        let games = visibleGames
+        while i < games.count {
+            let game = games[i]
+            if game == .logoCard {
+                rows.append(.banner(game))
+                i += 1
+            } else if i + 1 < games.count, games[i + 1] != .logoCard {
+                rows.append(.pair(left: game, right: games[i + 1]))
+                i += 2
+            } else {
+                rows.append(.pair(left: game, right: nil))
+                i += 1
+            }
+        }
+        return rows
     }
 
     // MARK: 自動デモアニメ
@@ -332,23 +265,25 @@ struct TitleView: View {
     }
 
     /// スワップデモとフライデモをランダムで切り替えながらループする。
+    /// ⚠️ バナー（logoCard）は対象から除外する。行の形（単独行 vs 2枚組）が異なるタイル同士を
+    ///   機械的に交換すると見た目が破綻するため、常に通常タイルの中だけで完結させる。
     private func runDemoLoop(generation: Int) {
         guard generation == demoGeneration else { return }
-        guard visibleGames.count >= 2     else { return }
+        let candidates = visibleGames.filter { $0 != .logoCard }
+        guard candidates.count >= 2 else { return }
 
         if Bool.random() {
-            runDemoSwap(generation: generation)
+            runDemoSwap(generation: generation, candidates: candidates)
         } else {
-            runDemoFly(generation: generation)
+            runDemoFly(generation: generation, candidates: candidates)
         }
     }
 
-    /// 右下2枚を入れ替えて戻すデモ。
+    /// 末尾2枚（バナーを除く）を入れ替えて戻すデモ。
     /// swap → 1.4秒後に swap back → 4秒後に次のデモへ。
-    private func runDemoSwap(generation: Int) {
-        let games      = visibleGames
-        let lastGame   = games[games.count - 1]
-        let secondLast = games[games.count - 2]
+    private func runDemoSwap(generation: Int, candidates: [GamePickerSelection]) {
+        let lastGame   = candidates[candidates.count - 1]
+        let secondLast = candidates[candidates.count - 2]
 
         guard let si = rankManager.sortedGames.firstIndex(of: lastGame),
               let sj = rankManager.sortedGames.firstIndex(of: secondLast) else { return }
@@ -373,11 +308,10 @@ struct TitleView: View {
         }
     }
 
-    /// 右下タイルを画面外に飛ばして末尾送りするデモ。
+    /// 末尾タイル（バナーを除く）を画面外に飛ばして末尾送りするデモ。
     /// 隠しゲームがあれば新タイルがスライドインして「入れ替わり」を見せられる。
-    private func runDemoFly(generation: Int) {
-        let games    = visibleGames
-        let lastGame = games[games.count - 1]
+    private func runDemoFly(generation: Int, candidates: [GamePickerSelection]) {
+        let lastGame = candidates[candidates.count - 1]
 
         // ← 変更可：デモフライ方向（右端タイルなので右へ）
         let flyDir = CGSize(width: 600, height: 0)
@@ -392,19 +326,14 @@ struct TitleView: View {
             //   guard の後に書くと、デモ中にユーザーが操作した場合（＝世代が進んだ場合）に
             //   タイルが画面外へ取り残され、再起動するまでグリッドに空白が残るバグになる。
             guard generation == self.demoGeneration else {
-                // デモ中断時: 飛ばしかけたタイルをスプリングで元の位置へ戻す
                 withAnimation(.spring(response: 0.40, dampingFraction: 0.80)) {
-                    // _ = で removeValue の戻り値（取り除いた値）を明示的に捨てる。
-                    // クロージャの中身が1式だけだと暗黙returnになり、
-                    // withAnimation がその値を返して「結果が未使用」警告になるため。
                     _ = self.flyOffsets.removeValue(forKey: lastGame)
                 }
                 return
             }
 
-            // 表示枚数より多くゲームがあれば、繰り上がる隠しタイルが存在する
-            let allVisible    = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-            let hasHiddenGame = allVisible.count > visibleTileCount
+            let allVisible    = filteredGames
+            let hasHiddenGame = allVisible.count > currentVisibleCount
 
             flyOffsets.removeValue(forKey: lastGame)
             if hasHiddenGame {
@@ -425,59 +354,112 @@ struct TitleView: View {
 
     // MARK: フリック処理
 
-    /// フリックの方向と速度から「隣とスワップ」か「画面外へ飛ばして末尾送り」かを決めて実行する。
+    /// フリックの方向から「同じ行・同じ列に相手がいればスワップ」「いなければ末尾送り」を判定する。
+    /// バナー（column == nil）の縦フリックは、隣接行があれば別処理（3点ローテーション）で完結し、
+    /// 隣接行が無ければ（画面の端）下の共通の末尾送り処理へ合流する。
     ///
-    /// ★ 2列グリッドの座標の考え方 ★
-    ///   visibleIndex はグリッド上の通し番号で、2列なので:
-    ///     0 1      ・偶数 = 左列 / 奇数 = 右列
-    ///     2 3      ・+1 / -1 = 左右の隣
-    ///     4 5      ・+2 / -2 = 上下の隣
-    ///     6 7      （行数は visibleTileCount に応じて増減する）
-    ///   フリック方向の隣が存在すればスワップ、存在しなければ（端から外へ向かう
-    ///   フリックなら）タイルを画面外へ飛ばして末尾送りにする。
+    /// ★ 行ベースになったことでの考え方の変化 ★
+    ///   以前は「2列固定グリッドの通し番号」で隣を計算していたが、バナーが不定形（単独行）を
+    ///   挟むようになったため、pickerRows（行の配列）を都度引いて「同じ行の反対列」
+    ///   「隣接行の同じ列」を探す方式に変えた。相手が見つからない場合（行の端・外向きフリック・
+    ///   隣接行が存在しない）は、すべて同じ「末尾送り」処理に合流する。
+    ///
+    /// ★ 通常タイル ⇄ バナーの縦フリックについて ★
+    ///   隣接行がバナー（単独行）のときは、その1枚だけを相手として通常の swap を呼ぶ。
+    ///   結果として、入れ替わった側で相棒を失ったタイルは自動的に「片方だけの行」になる
+    ///   （pickerRows が「次がlogoCardなら手前を単独扱いにする」ロジックを持っているため）。
     private func handleFlick(
-        game:         GamePickerSelection,
-        visibleIndex: Int,
-        translation:  CGSize,
-        velocity:     CGSize
+        game:        GamePickerSelection,
+        rowIndex:    Int,
+        column:      Int?,      // nil = バナー（単独行）、0 = 左、1 = 右
+        translation: CGSize,
+        velocity:    CGSize
     ) {
         // 三平方の定理で速度ベクトルの大きさを求め、しきい値未満は無視する
         let speed = sqrt(velocity.width * velocity.width + velocity.height * velocity.height)
         guard speed > flickSpeedThreshold else { return }
 
+        let isHorizontal = abs(translation.width) > abs(translation.height)
+
+        // ── バナーの縦フリック：隣接行があれば3点ローテーション、無ければ末尾送りへ ──────
+        // 通常タイルの「相手を探してswap」とは仕組みが異なる（1個 vs 複数個のため）
+        // ので、隣接行が見つかった場合だけここで完結させて早期returnする。
+        // 画面の端（隣接行が存在しない）は早期returnせず、下の共通の末尾送り処理へ合流させる。
+        if column == nil, !isHorizontal {
+            let rows              = pickerRows
+            let neighborRowIndex  = translation.height > 0 ? rowIndex + 1 : rowIndex - 1
+            if rows.indices.contains(neighborRowIndex),
+               case .pair(let nLeft, let nRight) = rows[neighborRowIndex],
+               let bannerIdx = rankManager.sortedGames.firstIndex(of: game) {
+
+                let rowGames   = [nLeft, nRight].compactMap { $0 }
+                let rowIndices = rowGames.compactMap { rankManager.sortedGames.firstIndex(of: $0) }
+
+                if !rowIndices.isEmpty {
+                    // 手動操作でデモを一時停止し、5秒後に再開する
+                    scheduleDemo(delay: 5.0)
+
+                    SoundManager.shared.vibrate()
+                    // ← 変更可：バナーのローテーション速度
+                    withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
+                        rankManager.rotateBanner(
+                            at:        bannerIdx,
+                            withRow:   rowIndices,
+                            direction: translation.height > 0 ? .down : .up
+                        )
+                    }
+                    return
+                }
+            }
+            // ここに到達するのは画面の端（一番上で上フリック／一番下で下フリック）のときだけ。
+            // 隣接行が無いので、下の共通処理（末尾送り）へそのまま流れる。
+        }
+
         // 手動操作でデモを一時停止し、5秒後に再開する
         // ← 変更可：無操作からデモ再開までの待機時間（秒）
         scheduleDemo(delay: 5.0)
 
-        // 移動量の大きい軸をフリック方向とみなす（横長なら左右、縦長なら上下）
-        let isHorizontal = abs(translation.width) > abs(translation.height)
-        let count        = visibleGames.count
-        let neighborVI:  Int?
+        let rows = pickerRows
+        var neighbor: GamePickerSelection? = nil
 
         if isHorizontal {
-            // 右フリック: 左列(偶数)で右隣が存在すれば +1 / 左フリック: 右列(奇数)なら -1
-            neighborVI = translation.width > 0
-                ? ((visibleIndex % 2 == 0 && visibleIndex + 1 < count) ? visibleIndex + 1 : nil)
-                : ((visibleIndex % 2 == 1)                              ? visibleIndex - 1 : nil)
-        } else {
-            // 下フリック: 下の行が存在すれば +2 / 上フリック: 上の行が存在すれば -2
-            neighborVI = translation.height > 0
-                ? ((visibleIndex + 2 < count) ? visibleIndex + 2 : nil)
-                : ((visibleIndex >= 2)         ? visibleIndex - 2 : nil)
-        }
-
-        if let nvi = neighborVI {
-            // ── 隣が存在する → スワップ ──────────────────────
-            let neighborGame = visibleGames[nvi]
-            if let si = rankManager.sortedGames.firstIndex(of: game),
-               let sj = rankManager.sortedGames.firstIndex(of: neighborGame) {
-                // ← 変更可：スワップアニメ速度（response: 0.70 = 旧 0.35 の半速）
-                withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
-                    rankManager.swap(at: si, with: sj)
+            // 横フリック：内側向き（左タイルを右へ／右タイルを左へ）のときだけ相手あり＝スワップ。
+            // 外側向き（左タイルを左へ／右タイルを右へ）は相手なし＝末尾送りへ合流する。
+            if let column, rows.indices.contains(rowIndex),
+               case .pair(let left, let right) = rows[rowIndex] {
+                if column == 0, translation.width > 0, let right {
+                    neighbor = right
+                } else if column == 1, translation.width < 0 {
+                    neighbor = left
                 }
             }
         } else {
-            // ── 隣が存在しない（端の外向きフリック）→ 飛ばして末尾送り ──
+            // 縦フリック：隣接行が「通常タイルの行（同じ列に相手がいる）」か「バナーの単独行」
+            // であればスワップ。それ以外（隣接行が存在しない等）は末尾送りへ合流する。
+            let neighborRowIndex = translation.height > 0 ? rowIndex + 1 : rowIndex - 1
+            if rows.indices.contains(neighborRowIndex) {
+                switch rows[neighborRowIndex] {
+                case .pair(let nLeft, let nRight):
+                    if let column {
+                        neighbor = (column == 0) ? nLeft : nRight
+                    }
+                case .banner(let bannerGame):
+                    // 通常タイル1枚とバナーの単純な1対1入れ替え
+                    neighbor = bannerGame
+                }
+            }
+        }
+
+        if let neighbor,
+           let si = rankManager.sortedGames.firstIndex(of: game),
+           let sj = rankManager.sortedGames.firstIndex(of: neighbor) {
+            // ── 相手が見つかった → スワップ ──────────────────
+            // ← 変更可：スワップアニメ速度（response: 0.70 = 旧 0.35 の半速）
+            withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
+                rankManager.swap(at: si, with: sj)
+            }
+        } else {
+            // ── 相手がいない（行の端・外向きフリック等）→ 飛ばして末尾送り ──
             // 600pt = どの端末でも画面外まで確実に出る距離
             let flyDir: CGSize
             if isHorizontal {
@@ -497,9 +479,8 @@ struct TitleView: View {
             }
             // flyOffset 完了後にグリッド再配置（待機時間も飛び出し速度に合わせて延長）
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
-                // 表示枚数より多くゲームがあれば、繰り上がる隠しタイルが存在する
-                let allVisible  = rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
-                let hasHiddenGame = allVisible.count > visibleTileCount
+                let allVisible    = filteredGames
+                let hasHiddenGame = allVisible.count > currentVisibleCount
 
                 flyOffsets.removeValue(forKey: game)
                 if hasHiddenGame {
@@ -512,175 +493,5 @@ struct TitleView: View {
                 }
             }
         }
-    }
-    // MARK: カード追い出し処理
-
-    /// アニメーションカードを左右フリックで画面外へ追い出し、数秒後に反対側から戻す。
-    ///
-    /// ★ 時間軸 ★
-    ///   0.00秒  loopGeneration を進めて走行中のアニメを停止し、飛ばし始める
-    ///   0.50秒  中身をリセットし、アニメーション無しで反対側へ瞬間移動
-    ///           （以降 cardAwayDuration 秒、枠は空白のまま）
-    ///   5.00秒  反対側からスライドインしつつ、ロゴ 4.5 秒から再スタート
-    ///
-    /// ★ なぜ中身をリセットするのか ★
-    ///   飛ばした時点では数式の途中かもしれず、そのまま戻すと中途半端な状態から
-    ///   再開して不自然になる。画面外で初期状態に戻し、復帰時は必ず
-    ///   「ロゴ → 数式ループ」の固定シーケンスで始まるようにしている。
-    ///   リセットを 0.50秒後（＝飛び切った後）に行うのは、画面内で中身が
-    ///   消えるところを見せないため。
-    private func handleCardFlick(translation: CGSize, velocity: CGSize) {
-        // 定位置に無いときは無視する（飛行中の二重フリック防止）
-        guard !isCardAway else { return }
-
-        // 三平方の定理で速度ベクトルの大きさを求め、しきい値未満は無視する
-        // （しきい値はゲームタイルと共通の flickSpeedThreshold を使う）
-        let speed = sqrt(velocity.width * velocity.width + velocity.height * velocity.height)
-        guard speed > flickSpeedThreshold else { return }
-
-        // 横方向のフリックのみ受け付ける。
-        // .offset() は他のビューを避けないため、上へ飛ばすとヘッダーに、
-        // 下へ飛ばすとゲームグリッドに重なってしまう。
-        guard abs(translation.width) > abs(translation.height) else { return }
-
-        let toRight = translation.width > 0
-        isCardAway  = true
-
-        // 走行中のタイトルループ／ロゴスプラッシュを世代番号で停止する。
-        // （多段の asyncAfter を止める手段はこれしかない）
-        loopGeneration += 1
-        let generation = loopGeneration
-
-        SoundManager.shared.vibrate()
-
-        // ← 変更可：飛び出しアニメ速度（ゲームタイルと同じ 0.44 秒）
-        withAnimation(.easeIn(duration: 0.44)) {
-            cardFlyOffset = CGSize(
-                width:  toRight ? cardFlyDistance : -cardFlyDistance,
-                height: 0
-            )
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
-            // 画面を離れて戻った場合は onAppear が後始末済みなので、ここは何もしない
-            guard generation == self.loopGeneration else { return }
-
-            // ① 中身を初期状態へ（画面外なので切り替わる瞬間は見えない）
-            self.resetState()
-            self.showLogoSplash = false
-            self.loopCount      = 0
-
-            // ② 反対側へ瞬間移動する。
-            //    withAnimation を付けないことで、画面を横切って戻る動きを避ける。
-            self.cardFlyOffset = CGSize(
-                width:  toRight ? -self.cardFlyDistance : self.cardFlyDistance,
-                height: 0
-            )
-
-            // ③ 待機後、反対側からスライドインしながらロゴで再スタート
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.cardAwayDuration) {
-                guard generation == self.loopGeneration else { return }
-
-                withAnimation(.easeOut(duration: self.cardReturnDuration)) {
-                    self.cardFlyOffset = .zero
-                }
-                self.isCardAway = false
-
-                // ← 変更可：復帰時のロゴ表示時間（秒。onAppear と同じ 4.5 秒）
-                self.runLogoSplash(generation: generation, duration: 4.5)
-            }
-        }
-    }
-    // MARK: タイトルアニメーション
-
-    /// 「n + (10-n) = 10」のループアニメを1周実行し、最後に自分自身を再帰呼び出しする。
-    ///
-    /// ★ このアニメの時間軸 ★（asyncAfter の深いネストを読む前にこの表を見てください）
-    ///   0.0秒   中央に n を配置（この時点では非表示）
-    ///   0.8秒   相方の数字 (10-n) が画面外左からスライドイン（1.0秒かけて）
-    ///   1.4秒   「+」がフェードイン
-    ///   1.95秒  数式が「10」に切り替わり、✨が光って上昇しながら消える
-    ///   2.1秒   「10」がパルス（1.0 → 1.08 → 1.0）
-    ///   3.15秒  「10」がフェードアウトして状態リセット
-    ///   3.6秒   ループ回数を加算し、5の倍数ならロゴスプラッシュへ、それ以外は次のループへ
-    ///   ※ 各ステップの guard generation == loopGeneration は、画面遷移などで
-    ///     新しいループが始まったとき、古いループの続きを止めるための世代チェック
-    private func runTitleLoop(generation: Int) {
-        guard generation == loopGeneration else { return }
-        resetState()
-        let n = Int.random(in: 1...9)
-        centerNumber = n
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            guard generation == self.loopGeneration else { return }
-            self.incomingNumber = 10 - n
-            withAnimation(.easeInOut(duration: 1.0)) { self.incomingOffsetX = 0 }
-
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                guard generation == self.loopGeneration else { return }
-                withAnimation(.easeInOut(duration: 0.35)) { self.showPlus = true }
-
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.55) {
-                    guard generation == self.loopGeneration else { return }
-                    withAnimation(.easeInOut(duration: 0.28)) {
-                        self.showTen = true; self.sparkOpacity = 1.0
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 0.15) {
-                        guard generation == self.loopGeneration else { return }
-                        withAnimation(.easeInOut(duration: 0.28)) { self.tenScale = 1.08 }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.28) {
-                            guard generation == self.loopGeneration else { return }
-                            withAnimation(.easeInOut(duration: 0.28)) { self.tenScale = 1.0 }
-                        }
-                    }
-                    withAnimation(.easeInOut(duration: 0.8)) {
-                        self.sparkOffsetY = -28; self.sparkOpacity = 0.0
-                    }
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) {
-                        guard generation == self.loopGeneration else { return }
-                        withAnimation(.easeInOut(duration: 0.35)) {
-                            self.showTen = false; self.resetState()
-                        }
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) {
-                            self.loopCount += 1
-                            // ← 変更可：何ループごとにロゴを挟むか（現在：5回）
-                            if self.loopCount % 5 == 0 {
-                                self.runLogoSplash(generation: generation)
-                            } else {
-                                self.runTitleLoop(generation: generation)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // MARK: ロゴスプラッシュ
-
-    /// FDL ロゴ（家マーク＋回転リング）を duration 秒表示してからタイトルループに戻る。
-    ///
-    /// - Parameter duration: ロゴの表示秒数。省略時は周期表示用の 13 秒。
-    ///   画面表示直後の初回のみ onAppear から短い値（4.5秒）を渡して呼ぶ。
-    ///   周期呼び出し（runTitleLoop の5ループごと）は引数なしで 13 秒のまま。
-    private func runLogoSplash(generation: Int, duration: Double = 13.0) {   // ← 変更可（既定の表示時間）
-        guard generation == loopGeneration else { return }
-        withAnimation(.easeInOut(duration: 0.5)) { showLogoSplash = true }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + duration) {
-            guard generation == self.loopGeneration else { return }
-            withAnimation(.easeInOut(duration: 0.5)) { self.showLogoSplash = false }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
-                self.runTitleLoop(generation: generation)
-            }
-        }
-    }
-
-    // MARK: 状態リセット
-
-    /// アニメーション用の状態を全てループ開始前の初期値に戻す。
-    private func resetState() {
-        incomingOffsetX = offScreenLeading; showPlus = false; showTen = false
-        tenScale = 1.0; sparkOpacity = 0.0; sparkOffsetY = 0; incomingNumber = 0
     }
 }

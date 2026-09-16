@@ -311,6 +311,7 @@ struct MakeTenContentView: View {
                         case .tenPuzzle:      screen = .tenPuzzle
                         case .memory:         screen = .memory
                         case .stickerStorage: screen = .stickerStorage
+                        case .logoCard:       break   // ブランドタイル。タップは無反応（GamePickerTile側で既に無視）
                         }
                     }
                 }
