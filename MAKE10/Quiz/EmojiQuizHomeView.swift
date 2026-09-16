@@ -140,7 +140,7 @@ struct QuizHomeContent: View {
                             }
                         }
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 24)   // 他画面と揃えた余白
                     .padding(.top, 8)
                     .padding(.bottom, 8)
                 }
