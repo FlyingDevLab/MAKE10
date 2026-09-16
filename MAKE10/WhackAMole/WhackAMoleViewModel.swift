@@ -372,6 +372,8 @@ final class WhackAMoleViewModel {
     private func endGame() {
         stopGame()
         isNewRecord = checkAndSaveHighScore(score)
+        // もぐら2匹につき1pt。完走の参加賞として、スコア0でも必ず1pt加算する
+        StickerStore.shared.recordCorrect(points: Double(score) / 2.0 + 1.0)  // ← 変更可
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }

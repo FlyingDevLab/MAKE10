@@ -236,6 +236,8 @@ private struct PBResultView: View {
 
             Spacer()
 
+            StickerRewardBanner()
+
             VStack(spacing: 12) {
                 // もう一度
                 Button {

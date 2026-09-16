@@ -52,8 +52,8 @@ final class GameViewModel {
         static let unlockThreshold:    Int    = 100   // Blitz/ハイスコア解放の正解数閾値 ← 変更可（説明文の「100」表記とも整合させること）
         static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数 ← 変更可
         static let reactionLimit:      Int    = 15    // 画面上のリアクション絵文字の上限数 ← 変更可
-        static let stickerPointNormal: Double = 1.1   // normalモードの正解1問あたりのシールポイント ← 変更可
-        static let stickerPointBlitz:  Double = 5.6   // blitzモードの正解1問あたりのシールポイント ← 変更可
+        static let stickerPointNormal: Double = 1.8   // normalモードの正解1問あたりのシールポイント ← 変更可
+        static let stickerPointBlitz:  Double = 7.0   // blitzモードの正解1問あたりのシールポイント ← 変更可
         static let confettiDuration:   Double = 3.5   // 通常の紙吹雪表示時間（秒）← 変更可
         static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）← 変更可
     }
@@ -387,7 +387,7 @@ final class GameViewModel {
         combo += 1
         // Blitz モードの方が短時間で答えているため、シールポイントを高く設定している
         let stickerPt = gameMode == .blitz ? C.stickerPointBlitz : C.stickerPointNormal
-        StickerStore.shared.recordCorrect(points: stickerPt)  // 10秒:5.6pt / 30秒:1.1pt
+        StickerStore.shared.recordCorrect(points: stickerPt)  // 10秒:7.0pt / 30秒:1.8pt
         SoundManager.shared.vibrate()
         SoundManager.shared.playCorrect()
 

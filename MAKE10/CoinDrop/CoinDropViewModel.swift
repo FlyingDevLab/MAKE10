@@ -253,6 +253,10 @@ final class CoinDropViewModel {
         gameOverReason = reason
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord    = ScoreBoard.saveIfBetter(score: score, for: UDKey.coinDropHighScore)
+        // 獲得$1につき1pt。完走の参加賞として、スコア0でも必ず1pt加算する
+        StickerStore.shared.recordCorrect(points: Double(score) + 1.0)  // ← 変更可
+        // $10ぴったり達成（MAKE10）はボーナスとしてシール1枚を即付与する
+        if isPerfect { StickerStore.shared.addBonusSticker() }
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
