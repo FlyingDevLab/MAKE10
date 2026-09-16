@@ -394,6 +394,8 @@ private struct CDResultView: View {
 
             Spacer()
 
+            StickerRewardBanner()
+
             // ── ボタン群 ──────────────────────────────────────
             VStack(spacing: 12) {
 

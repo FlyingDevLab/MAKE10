@@ -59,6 +59,7 @@ final class TenPuzzleViewModel {
         static let correctFeedback: Double = 1.0   // 正解フィードバック表示時間（秒）← 変更可
         static let wrongFeedback:   Double = 0.8   // 不正解フィードバック表示時間（秒）← 変更可
         static let declaredDisplay: Double = 3.5   // 宣言不正解時の解表示時間（秒）← 変更可
+        static let stickerPoint:    Double = 2.0   // 正解1問あたりのシールポイント ← 変更可
     }
 
     // MARK: ゲームフェーズ・モード
@@ -148,6 +149,9 @@ final class TenPuzzleViewModel {
     private func loadCurrentProblem() {
         let n = TenPuzzleMode.problemsPerSession
         guard problemIndex < n && problemIndex < pool.count else {
+            if record.correct == record.total {
+                StickerStore.shared.addBonusSticker()
+            }
             withAnimation(.easeInOut(duration: 0.3)) { phase = .result }
             return
         }
@@ -227,6 +231,7 @@ final class TenPuzzleViewModel {
             if hintShown { record.hintUsed += 1 }
             problemState = .correct
             SoundManager.shared.playCorrect()
+            StickerStore.shared.recordCorrect(points: C.stickerPoint)
             scheduleNextProblem(after: C.correctFeedback)
 
         } else if judgment == .wrongAnswer {
@@ -285,6 +290,7 @@ final class TenPuzzleViewModel {
             lastJudgment       = .correct
             problemState       = .correct
             SoundManager.shared.playCorrect()
+            StickerStore.shared.recordCorrect(points: C.stickerPoint)
             scheduleNextProblem(after: C.correctFeedback)
         } else {
             // 不正解：実は作れる問題だった → 解を表示してから次へ

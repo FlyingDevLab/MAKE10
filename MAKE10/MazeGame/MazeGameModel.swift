@@ -642,5 +642,7 @@ final class MazeGameModel: NSObject {
         SoundManager.shared.playMazeGameOver()   // ゲームオーバー音
         // 新記録なら ScoreBoard が保存し true を返す
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
+        // チーズ1個につき5pt。完走の参加賞として、チーズ0個でも必ず1pt加算する
+        StickerStore.shared.recordCorrect(points: Double(score) * 5.0 + 1.0)  // ← 変更可
     }
 }

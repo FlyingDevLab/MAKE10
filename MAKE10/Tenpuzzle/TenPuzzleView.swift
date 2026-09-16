@@ -690,6 +690,8 @@ private struct TenPuzzleResultView: View {
 
             Spacer()
 
+            StickerRewardBanner()
+
             VStack(spacing: 12) {
                 Button {
                     SoundManager.shared.vibrate()

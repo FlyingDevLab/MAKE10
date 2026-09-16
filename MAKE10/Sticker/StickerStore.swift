@@ -51,7 +51,7 @@ final class StickerStore {
 
     // リザルト画面でゲームボードへ配置するシール一時保持用。
     // ★ この配列を永続化している理由 ★
-    //   シール発行時に totalCorrect は即 0 にリセットされるため、
+    //   シール発行時に totalCorrect からは 100pt が差し引かれるため、
     //   この配列を保存せずにアプリが強制終了されると
     //   「シール1枚 + 貯めた100ポイント」が同時に消えてしまう。
     //   配置が確定するまで UserDefaults に残し、次回起動時に復元する。
@@ -62,7 +62,8 @@ final class StickerStore {
     // FinishedView がメッセージ表示の判断に使う。表示後に clearPendingStorage() でリセットする
     private(set) var pendingStorageCount: Int = 0
 
-    // 累積ポイント。nextMilestone（100pt）に達するたびに 0 にリセットしてシールを1枚発行する
+    // 累積ポイント。nextMilestone（100pt）に達するたびに 100pt を差し引いてシールを1枚発行する
+    // （超過分は次のシールへ繰り越される）
     private(set) var totalCorrect: Double = 0
 
     // MARK: - 上限定数
@@ -95,17 +96,32 @@ final class StickerStore {
 
     // MARK: - 公開API（獲得・pending 管理）
 
-    /// 正解時に呼ぶ。ゲームボードが満杯なら新規シールをストレージへ直接送出する。
-    /// points は難易度・モードに応じて変動（例：Blitz 正解=2.6pt、通常正解=1.1pt）。
+    /// 正解時・ゲーム終了時に呼ぶ。points は難易度・モードやスコアに応じて変動する
+    /// （例：MAKE10 ブリッツ正解=7.0pt、ピンボール=スコア÷1000）。
+    ///
+    /// ★ while で回して差し引いている理由 ★
+    ///   アーケード系はゲーム終了時にスコア分をまとめて渡すため、1回で100ptを大きく
+    ///   超えることがある。ここで 0 にリセットすると超過分がまるごと消えてしまい、
+    ///   他のゲームで貯めた分まで巻き添えで失われる。
+    ///   100pt ずつ差し引きながら発行することで、余りは次のシールへ繰り越される。
     func recordCorrect(points: Double = 1.0) {
         totalCorrect += points
+        while totalCorrect >= nextMilestone {
+            totalCorrect -= nextMilestone
+            issueSticker()
+        }
         UserDefaults.standard.set(totalCorrect, forKey: UDKey.totalCorrectAllTime)
-        guard totalCorrect >= nextMilestone else { return }
+    }
 
+    /// 全問正解ボーナスなど、ポイント外でシールを1枚追加する。
+    // EmojiQuizViewModel の advance() から pct == 1.0 のときに呼ばれる
+    func addBonusSticker() {
+        issueSticker()
+    }
+
+    /// シールを1枚発行する。ゲームボードが満杯ならストレージへ直接送出する。
+    private func issueSticker() {
         let emoji = Self.palette.randomElement()!
-        totalCorrect = 0
-        UserDefaults.standard.set(0, forKey: UDKey.totalCorrectAllTime)
-
         if stickers.count >= gameDisplayLimit {
             // ゲームボード満杯 → ストレージへ直接送出
             storageEmojis.append(emoji)
@@ -115,20 +131,6 @@ final class StickerStore {
             // 通常ルート → リザルト画面のバナーに表示してから配置
             pendingStickers.append(emoji)
             savePending()   // 配置前に落ちてもシールを失わないよう即保存する
-        }
-    }
-
-    /// 全問正解ボーナスなど、ポイント外でシールを1枚追加する。
-    // EmojiQuizViewModel の advance() から pct == 1.0 のときに呼ばれる
-    func addBonusSticker() {
-        let emoji = Self.palette.randomElement()!
-        if stickers.count >= gameDisplayLimit {
-            storageEmojis.append(emoji)
-            pendingStorageCount += 1
-            saveStorage()
-        } else {
-            pendingStickers.append(emoji)
-            savePending()   // 理由は recordCorrect と同じ
         }
     }
 

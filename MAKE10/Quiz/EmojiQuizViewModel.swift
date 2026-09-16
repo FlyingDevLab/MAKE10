@@ -137,7 +137,7 @@ final class EmojiQuizViewModel {
         if isCorrect {
             score += 1
             // textToEmoji モードは難易度が高いため、シールポイントを高く設定している
-            StickerStore.shared.recordCorrect(points: mode == .textToEmoji ? 1.9 : 1.4)  // ← 変更可（難しい:1.9pt / 基本:1.4pt）
+            StickerStore.shared.recordCorrect(points: mode == .textToEmoji ? 2.9 : 2.4)  // ← 変更可（難しい:2.9pt / 基本:2.4pt）
         }
         results[currentIndex] = isCorrect
 
