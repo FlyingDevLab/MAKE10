@@ -4,9 +4,9 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/21.
 //
-//  約100ポイント獲得ごとに絵文字シールを1つ獲得。
-//  ポイントは難易度・モードに応じて変動（1.1pt〜2.6pt/問）するため
-//  実際の問題数は難易度によって異なる。
+//  100ポイント獲得ごとに絵文字シールを1つ獲得（超過分は繰り越し）。
+//  ポイントはゲーム・難易度・スコアに応じて変動（正解1問 1.8〜7.0pt、
+//  アーケード系はスコア換算＋参加賞1pt）するため、必要なプレイ数はゲームごとに異なる。
 //
 //  【3エリア管理】
 //  ゲームモード（stickers）  : 全件保持・画面表示は先頭50枚のみ
@@ -36,6 +36,8 @@ final class StickerStore {
         let emoji: String
         var xRatio: Double   // コンテナ幅に対する比率 (0.0–1.0)
         var yRatio: Double   // コンテナ高さに対する比率 (0.0–1.0)
+        var scale:    Double = 1.0   // 表示倍率（シール画面のみ使用。1.0 = 40pt）
+        var rotation: Double = 0     // 回転角（度。シール画面のみ使用）
     }
 
     // MARK: - 状態
@@ -221,17 +223,34 @@ final class StickerStore {
 
     // MARK: - 公開API（ストレージ ↔ シール画面）
 
+    /// シール画面が満杯（100枚）かどうか。
+    var isPlayFull: Bool { playStickers.count >= playLimit }
+
     /// ストレージ → シール画面へ1枚移動。満杯（100枚以上）のときは何もしない。
+    /// 位置を指定しなければ螺旋状に自動配置する（トレイのタップ用）。
     /// - Returns: 移動成功なら true、満杯なら false
     @discardableResult
-    func moveStorageToPlay(emoji: String) -> Bool {
-        guard playStickers.count < playLimit else { return false }
-        if let idx = storageEmojis.firstIndex(of: emoji) {
-            storageEmojis.remove(at: idx)
+    func moveStorageToPlay(emoji: String, xRatio: Double? = nil, yRatio: Double? = nil) -> Bool {
+        guard !isPlayFull else { return false }
+        guard let idx = storageEmojis.firstIndex(of: emoji) else { return false }
+        storageEmojis.remove(at: idx)
+        if let x = xRatio, let y = yRatio {
+            playStickers.append(Sticker(emoji: emoji, xRatio: x, yRatio: y))
+            savePlay()
+        } else {
+            spawnPlaySticker(emoji: emoji)
         }
-        spawnPlaySticker(emoji: emoji)
         saveStorage()
         return true
+    }
+
+    /// シール画面のシールをまとめてストレージへ戻す（「ぜんぶしまう」）。
+    func moveAllPlayToStorage() {
+        guard !playStickers.isEmpty else { return }
+        storageEmojis.append(contentsOf: playStickers.map { $0.emoji })
+        playStickers = []
+        savePlay()
+        saveStorage()
     }
 
     /// シール画面 → ストレージへ1枚移動。常に成功する。
@@ -251,6 +270,14 @@ final class StickerStore {
         guard let idx = playStickers.firstIndex(where: { $0.id == id }) else { return }
         playStickers[idx].xRatio = xRatio
         playStickers[idx].yRatio = yRatio
+        savePlay()
+    }
+
+    /// ピンチ・回転・編集バー操作後にシール画面のシールの倍率と角度を更新・保存する。
+    func updatePlayTransform(id: UUID, scale: Double, rotation: Double) {
+        guard let idx = playStickers.firstIndex(where: { $0.id == id }) else { return }
+        playStickers[idx].scale    = scale
+        playStickers[idx].rotation = rotation
         savePlay()
     }
 
@@ -349,5 +376,50 @@ final class StickerStore {
            let decoded = try? JSONDecoder().decode([String].self, from: data) {
             pendingStickers = decoded
         }
+    }
+
+    // MARK: - 表示用ヘルパー
+
+    /// 絵文字1種類と、その枚数をまとめた表示用の値（ストレージ画面・シールトレイで共用）。
+    struct EmojiGroup: Identifiable {
+        let emoji: String
+        let count: Int
+        var id: String { emoji }  // 種類ごとに一意なので絵文字そのものを ID にする
+    }
+
+    /// フラットな絵文字配列を「初出順の [種類, 枚数]」へ集約する。
+    /// 初出順を保つことで、枚数が増減しても並びが動かず操作感が安定する。
+    static func grouped(_ emojis: [String]) -> [EmojiGroup] {
+        var order:  [String] = []
+        var counts: [String: Int] = [:]
+        for e in emojis {
+            if counts[e] == nil { order.append(e) }
+            counts[e, default: 0] += 1
+        }
+        return order.map { EmojiGroup(emoji: $0, count: counts[$0]!) }
+    }
+}
+
+// MARK: - Sticker の後方互換デコード
+
+// ★ extension に置いている理由 ★
+//   struct 本体に init(from:) を書くと memberwise init（Sticker(emoji:xRatio:yRatio:)）が
+//   生成されなくなる。extension なら両方が使える。
+// ★ decodeIfPresent が必要な理由 ★
+//   scale / rotation は後から追加したキーで、既存ユーザーの UserDefaults には存在しない。
+//   通常のデコードだとキー欠落で失敗し、起動時に全シールが消えてしまう。
+extension StickerStore.Sticker {
+    private enum CodingKeys: String, CodingKey {
+        case id, emoji, xRatio, yRatio, scale, rotation
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id       = try c.decode(UUID.self,   forKey: .id)
+        emoji    = try c.decode(String.self, forKey: .emoji)
+        xRatio   = try c.decode(Double.self, forKey: .xRatio)
+        yRatio   = try c.decode(Double.self, forKey: .yRatio)
+        scale    = try c.decodeIfPresent(Double.self, forKey: .scale)    ?? 1.0
+        rotation = try c.decodeIfPresent(Double.self, forKey: .rotation) ?? 0
     }
 }
