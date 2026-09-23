@@ -193,6 +193,7 @@ struct SettingsView: View {
         }
         .sheet(isPresented: $showPolicy) {
             PolicyView()
+                .dynamicTypeSize(.large)
         }
     }
 
