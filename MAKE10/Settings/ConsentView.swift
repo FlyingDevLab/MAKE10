@@ -173,6 +173,7 @@ struct ConsentView: View {
         // ポリシーリンクのタップで PolicyView をシートとして表示する
         .sheet(isPresented: $showPolicy) {
             PolicyView()
+                .dynamicTypeSize(.large)
         }
     }
 }

@@ -57,6 +57,10 @@ struct FDL_TenBlitzApp: App {
             // MakeTenContentView がアプリ全体の View 階層の起点（ルートView）。
             // ここから各ゲーム画面・設定画面などが枝分かれして表示される。
             MakeTenContentView()
+                // 端末の「テキストサイズ（ダイナミックタイプ）」設定に関わらず、
+                // 文字サイズを標準（.large）に固定してゲーム画面のレイアウト崩れを防ぐ。
+                // ※ sheet / fullScreenCover の中身にも同じ指定を付けている。
+                .dynamicTypeSize(.large)
         }
     }
 }

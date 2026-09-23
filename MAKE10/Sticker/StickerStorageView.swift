@@ -191,6 +191,7 @@ struct StickerStorageView: View {
         .ignoresSafeArea(edges: .bottom)
         .fullScreenCover(isPresented: $showPlayView) {
             StickerPlayView()
+                .dynamicTypeSize(.large)
         }
     }
 
