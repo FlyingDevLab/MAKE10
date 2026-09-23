@@ -6,14 +6,13 @@
 //
 
 // プレイキャンバスの「お絵かきレイヤー」ビュー。
-// ステッカーの下に置かれ、指でなぞった線をリアルタイムで描画する。
+// ステッカーの下に置かれ、DrawingStore のストロークをリアルタイムで描画する。
 //
 // ★ このビューの責務 ★
-//   1. DrawingStore のストローク配列を Canvas で描画する
-//   2. DragGesture で指の動きを DrawingStore に伝える
-//   3. ジェスチャーは常時受け付ける（シールが上に乗っている場所は
-//      StickerPlayView 側のヒットテストがシール優先で奪うため、
-//      ここで有効/無効を切り替える必要はない）
+//   DrawingStore のストローク配列を Canvas で描画すること「だけ」。
+//   指のジェスチャーは StickerPlayView 側でキャンバス全体に付けている。
+//   （シールの上をなぞっても線が引けるよう、親の simultaneousGesture で
+//     受け取る必要があるため。詳細は StickerPlayView.swift 冒頭を参照）
 //
 // ★ SwiftUI の Canvas とは？ ★
 //   毎フレーム再描画される低レベルな描画面です。
@@ -26,13 +25,6 @@
 //   blendMode(.clear) で「透明な穴」を開けるには Metal レイヤーが必要なため、
 //   消しゴム機能の実現に必須です。
 //
-// ★ 以前は StickerCanvasMode（お絵かき⇄シール移動の排他モード）で
-//   ジェスチャーの有効/無効を切り替えていたが、
-//   「お絵かき中でもシールを動かしたい」という要望により廃止した。
-//   お絵かきは常時有効にし、シール側の DraggablePlayStickerView が
-//   絵文字の描画範囲だけをヒットテスト領域として持つため、
-//   シールの上を触ればシールが、それ以外の場所をなぞればここで
-//   線が引かれる、という自然な棲み分けになる。
 
 import SwiftUI
 
@@ -59,30 +51,9 @@ struct DrawingCanvasView: View {
         //   Metal レイヤー上での合成が必要。このモディファイアがないと
         //   消しゴムが「透明」ではなく「黒」になってしまう。
         .drawingGroup()
-        // お絵かきジェスチャーは常時有効
-        .gesture(drawingGesture)
-    }
-
-    // MARK: - ジェスチャー
-
-    /// 指でなぞって線を描くジェスチャー。
-    /// minimumDistance: 0 にすることでタップ（点）も記録できる。
-    private var drawingGesture: some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .local)
-            .onChanged { value in
-                let point = DrawingPoint(value.location)
-                if store.activeStroke == nil {
-                    // 指を置いた瞬間：新しいストロークを開始
-                    store.beginStroke(at: point)
-                } else {
-                    // 指を動かしている最中：現在のストロークに点を追加
-                    store.continueStroke(to: point)
-                }
-            }
-            .onEnded { _ in
-                // 指を離した瞬間：ストロークを確定して保存
-                store.endStroke()
-            }
+        // 親（StickerPlayView）のジェスチャーがタッチを受け取れるよう、
+        // このビュー自体はヒットテストに参加しない
+        .allowsHitTesting(false)
     }
 
     // MARK: - 描画

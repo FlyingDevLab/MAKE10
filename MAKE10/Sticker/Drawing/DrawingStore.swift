@@ -11,7 +11,6 @@
 //   1. 現在の描画状態（ストローク配列・選択色・消しゴムモード）を保持する
 //   2. ジェスチャーに応じてストロークを追加・更新する
 //   3. 描画データを Documents/drawing_canvas.json へ永続保存・読み込みする
-//   4. シールの固定（ロック）状態を持つ
 //
 // ★ AppSettings.shared と同じシングルトンパターンを採用している理由 ★
 //   DrawingCanvasView と DrawingToolbarView の両方から同じデータにアクセスする必要があるため、
@@ -27,15 +26,6 @@ final class DrawingStore {
     // MARK: - シングルトン
     // アプリ内どこからでも DrawingStore.shared と書くだけでアクセスできる。
     static let shared = DrawingStore()
-
-    // MARK: - シールのロック状態
-    // ★ 以前は StickerCanvasMode（.drawing / .sticker の排他モード）で
-    //   お絵かきとシール移動を切り替えていたが、
-    //   「お絵かき中でもシールを動かしたい」という要望により廃止した。
-    //   今はお絵かき（キャンバスへのジェスチャー）は常時有効で、
-    //   このフラグはシールが動かせるかどうかだけを制御する。
-    // false = シール可動（デフォルト）、true = シール固定（誤って動かさないようにロック）
-    var isStickerLocked: Bool = false
 
     // MARK: - 描画状態
 
@@ -94,6 +84,23 @@ final class DrawingStore {
         // 点が1つでも線として記録する（タップで点を打てるようにするため）
         strokes.append(stroke)
         activeStroke = nil
+        save()
+    }
+
+    /// 描画中のストロークを破棄する（保存しない）。
+    /// シールを長押しで掴んだときや2本指操作が始まったとき、
+    /// 指を置いた瞬間にできてしまった点を取り消すために使う。
+    func cancelStroke() {
+        activeStroke = nil
+    }
+
+    /// 元に戻せる線があるか（ツールバーの ↩︎ ボタンの有効/無効に使う）
+    var canUndo: Bool { !strokes.isEmpty }
+
+    /// 元に戻す：最後に確定したストロークを1本消して保存する。
+    func undo() {
+        guard !strokes.isEmpty else { return }
+        strokes.removeLast()
         save()
     }
 

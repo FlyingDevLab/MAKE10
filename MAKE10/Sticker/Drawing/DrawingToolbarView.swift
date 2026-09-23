@@ -8,16 +8,16 @@
 // プレイキャンバス下部に固定表示するお絵かきツールバー。
 //
 // ★ 表示内容（常時）★
-//   [シールロック切替] | [12色パレット] [消しゴム] [全消去]
+//   [元に戻す] | [12色パレット] [消しゴム] [全消去]
 //
 // ★ このビューの責務 ★
 //   ユーザーの操作を DrawingStore に反映する。
 //   全消去ボタンだけ誤操作防止のため確認アラートを出す。
 //
-// ★ 以前は「お絵かき⇄シール移動」の排他モード切替ボタンだったが、
-//   お絵かきを常時有効にしたことに伴い役割を変更した。
-//   このボタンは今は「シールを固定するかどうか」だけを切り替える。
-//   パレットも表示/非表示を切り替える必要がなくなったため常時表示にした。
+// ★ 左端のボタンの変遷 ★
+//   排他モード切替 → シールロック → 元に戻す（現在）。
+//   シールは「長押しで掴む」方式になり、なぞるだけでは動かなくなったため
+//   ロックの必要がなくなり、代わりに描画の取り消しを置いた。
 
 import SwiftUI
 
@@ -36,9 +36,9 @@ struct DrawingToolbarView: View {
         HStack(spacing: 0) {
 
             // ─────────────────────────────
-            // シールロック切替ボタン
+            // 元に戻すボタン
             // ─────────────────────────────
-            stickerLockButton
+            undoButton
                 .padding(.horizontal, 12)
 
             // 縦の区切り線
@@ -96,31 +96,28 @@ struct DrawingToolbarView: View {
         }
     }
 
-    // MARK: - シールロック切替ボタン
+    // MARK: - 元に戻すボタン
 
-    /// シールを固定（ロック）するかどうかを切り替えるボタン。
-    /// ロック中はシールが動かせず、お絵かきに集中できる。
-    /// ロック解除中はシールをドラッグして自由に動かせる。
-    private var stickerLockButton: some View {
+    /// 最後に描いた線を1本消すボタン。線が無いときは薄く表示して無効にする。
+    private var undoButton: some View {
         Button {
-            withAnimation(.easeInOut(duration: 0.2)) {
-                store.isStickerLocked.toggle()
-            }
+            store.undo()
+            SoundManager.shared.vibrate()
         } label: {
             VStack(spacing: 2) {
-                Text(store.isStickerLocked ? "🔒" : "🔓")
-                    .font(.system(size: 22))
-                Text(store.isStickerLocked
-                     ? String(localized: "sticker_locked_label")
-                     : String(localized: "sticker_unlocked_label"))
+                Image(systemName: "arrow.uturn.backward")
+                    .font(.system(size: 20, weight: .semibold))
+                    .foregroundStyle(DS.textBody)
+                Text("drawing_undo_label")
                     .font(.system(size: 9, weight: .medium))
                     .foregroundStyle(DS.textBody)
             }
             .frame(minWidth: 44, minHeight: 44)  // タッチターゲットを確保
+            .opacity(store.canUndo ? 1.0 : 0.35)
         }
-        .accessibilityLabel(store.isStickerLocked
-             ? String(localized: "sticker_locked_label")
-             : String(localized: "sticker_unlocked_label"))
+        .buttonStyle(.plain)
+        .disabled(!store.canUndo)
+        .accessibilityLabel(String(localized: "drawing_undo_label"))
     }
 
     // MARK: - カラーボタン
