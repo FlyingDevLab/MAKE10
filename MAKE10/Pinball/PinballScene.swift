@@ -67,6 +67,22 @@ private enum Tuning {
     /// 物理演算速度倍率。1.0=通常 / 2.0=2倍速（全体的に速くなる）
     static let worldSpeed:      CGFloat = 1.0
 
+    // ── ボール発射直後のゆっくりタイム ─────────────────────────
+    // ★ 発射直後だけ重力を弱くしている理由 ★
+    //   ボールは左フリッパーのすぐ上（約46px）に出るため、普通の重力だと約0.3秒で着地し、
+    //   そのままフリッパーの先から転がり落ちてしまう。初めての子は構える前に1球目を失いやすい。
+    //   出た直後だけ重力を弱くして「落ちる・転がる」をゆっくりにし、フリッパーを押す余裕をつくる。
+    //   その後、少しずつ普通の重力に戻す（急に戻すとボールが急加速して驚かせてしまう）。
+    /// 発射直後の重力の倍率（0.0〜1.0）。小さいほどゆっくり落ちる。
+    static let launchGravityScale:  CGFloat      = 0.2   // ← 変更可
+    /// 弱い重力のまま保つ時間（秒）。
+    static let launchSlowHold:      TimeInterval = 1.5   // ← 変更可
+    /// そこから普通の重力に戻すまでの時間（秒）。
+    static let launchSlowRamp:      TimeInterval = 1.5   // ← 変更可
+    /// ボールを出す高さの上乗せ分 (px)。0 だと左フリッパーの面まで約46px、44 で約90px になる。
+    /// 高くするほど落ちてくるまでの時間が長くなり、構える余裕ができる。
+    static let launchExtraHeight:   CGFloat      = 44    // ← 変更可
+
     // ── ボール ────────────────────────────────────────────────
     /// ボール反発係数 (0=吸収 / 1=完全弾性)
     static let ballRestitution: CGFloat = 0.59
@@ -188,6 +204,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     private var isLFlipRaising = false
     private var isRFlipRaising = false
     private var ballDrainPending = false  // 二重ドレイン防止
+    /// ボールを出してからの経過秒数。ゆっくりタイム（Tuning.launchSlow〜）の計算に使う。
+    /// nil のときはゆっくりタイムが終わっていて、普通の重力のまま。
+    private var launchElapsed: TimeInterval? = nil
 
     // ── セットアップ済みフラグ（didMove の二重呼び出し対策） ──
     // SKView に同一シーンが再提示されると didMove が再度呼ばれ、
@@ -585,8 +604,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         let ball = SKShapeNode(circleOfRadius: BR)
 
         // ── 発射位置 ──────────────────────────────────────────
-        // FY = フリッパーピボットY。BR*2 上に配置してフリッパーと干渉しないようにする
-        ball.position = CGPoint(x: LPX + 20, y: FY + BR * 4)  // ← 左フリッパー上(LPX+20)
+        // FY = フリッパーピボットY。BR*4 上に配置してフリッパーと干渉しないようにし、
+        // さらに launchExtraHeight だけ高くして、落ちてくるまでの時間を稼ぐ（Tuning を参照）
+        ball.position = CGPoint(x: LPX + 20, y: FY + BR * 4 + Tuning.launchExtraHeight)  // ← 左フリッパー上(LPX+20)
 
         ball.fillColor   = .white
         ball.strokeColor = SKColor(red: 0.63, green: 0.63, blue: 0.86, alpha: 0.6)
@@ -619,6 +639,31 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         let vx: CGFloat = Bool.random() ? Tuning.launchVX : -Tuning.launchVX
         let vy: CGFloat = Tuning.launchVY
         body.velocity = CGVector(dx: vx, dy: vy)
+
+        // ── ゆっくりタイムの開始 ──────────────────────────────
+        // 重力を弱くしておき、update で少しずつ普通の強さに戻す（updateLaunchGravity を参照）
+        launchElapsed = 0
+        physicsWorld.gravity = CGVector(dx: 0, dy: Tuning.gravity * Tuning.launchGravityScale)
+    }
+
+    /// 発射直後の弱い重力を、時間とともに普通の重力へ戻す。update から毎フレーム呼ぶ。
+    ///   0 〜 hold 秒          : 弱い重力（launchGravityScale 倍）のまま
+    ///   hold 〜 hold+ramp 秒  : なめらかに普通の重力へ近づける
+    ///   それ以降               : 普通の重力に固定し、計算をやめる
+    private func updateLaunchGravity(dt: CGFloat) {
+        guard var elapsed = launchElapsed else { return }
+        elapsed += Double(dt)
+        let rampProgress = (elapsed - Tuning.launchSlowHold) / Tuning.launchSlowRamp
+        if rampProgress >= 1 {
+            physicsWorld.gravity = CGVector(dx: 0, dy: Tuning.gravity)
+            launchElapsed = nil
+            return
+        }
+        launchElapsed = elapsed
+        // 戻り始めはゆっくり、終わりに向けて速く戻す（t² のカーブ）
+        let t = CGFloat(max(0, rampProgress))
+        let scale = Tuning.launchGravityScale + (1 - Tuning.launchGravityScale) * t * t
+        physicsWorld.gravity = CGVector(dx: 0, dy: Tuning.gravity * scale)
     }
 
     // MARK: - ゲームループ（update）
@@ -627,6 +672,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     override func update(_ currentTime: TimeInterval) {
         let dt: CGFloat = lastUpdateTime == 0 ? 0 : min(CGFloat(currentTime - lastUpdateTime), 1.0/30)
         lastUpdateTime = currentTime
+
+        // 発射直後のゆっくりタイム（重力を少しずつ普通の強さへ戻す）
+        updateLaunchGravity(dt: dt)
 
         // フリッパー角度更新
         updateFlipperAngle(node: lFlipNode,
