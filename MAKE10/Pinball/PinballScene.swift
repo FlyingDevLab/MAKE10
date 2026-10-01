@@ -124,9 +124,19 @@ private enum Tuning {
     static let targetFriction:    CGFloat = 0.1
     /// ターゲット消灯→点灯までの秒数。短いほど連打しやすい
     static let targetRestoreSec:  TimeInterval = 4.0
-    /// 2倍スコアタイムの継続秒数
-    // TODO(整形): 下行のインデントが他の定数(4スペース)とずれている。動作影響なし。次回の整形パスで揃える。
-        static let doubleScoreDuration: TimeInterval = 10.0
+
+    // ── マルチボール ──────────────────────────────────────────
+    // 10000pt ターゲットに当てると、ボールがもう1個増える（以前は「スコア2倍タイム」だった）。
+    // 見た目でボールが増える方が、子どもにも「当たった！」が分かりやすいため。
+    /// 同時に遊べるボールの最大数。これ以上はターゲットに当たっても増えない。
+    static let maxBallsInPlay:   Int     = 2              // ← 変更可
+    /// 増えたボールが出てくる位置（上のバンパーの少し上）。
+    static let extraBallSpawn:   CGPoint = CGPoint(x: 195, y: 625)   // ← 変更可
+    /// 増えたボールの初速（左右はランダムに振り分ける）
+    static let extraBallVX:      CGFloat = 60             // ← 変更可
+    static let extraBallVY:      CGFloat = -40            // ← 変更可
+    /// 「マルチボール！」表示を出しておく秒数
+    static let multiBallBannerSec: TimeInterval = 1.6    // ← 変更可
     // ── フリッパー ────────────────────────────────────────────
     /// フリッパーの反発係数 (低めが自然)
     static let flipperRestitution: CGFloat = 0.4
@@ -189,12 +199,14 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     // ── Nodes ─────────────────────────────────────────────────
     private var lFlipNode = SKNode()
     private var rFlipNode = SKNode()
-    private var ballNode: SKShapeNode?
+    /// いま遊んでいるボール（マルチボール中は2個）。全部落ちたら残り回数が1つ減る。
+    private var balls: [SKShapeNode] = []
     private var bumperNodes: [SKShapeNode] = []
     private var targetNodes: [SKShapeNode] = []
     private var scoreLabel: SKLabelNode!
     private var ballsLabel:  SKLabelNode!
-    private var doubleScoreLabel: SKLabelNode!
+    /// 「マルチボール！」の表示（以前の「×2」表示を流用している）
+    private var multiBallLabel: SKLabelNode!
 
     // ── State ─────────────────────────────────────────────────
     private var internalScore = 0
@@ -203,7 +215,13 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     var rFlipRaised = false
     private var isLFlipRaising = false
     private var isRFlipRaising = false
-    private var ballDrainPending = false  // 二重ドレイン防止
+    /// 指ごとに「どちらのフリッパーを押しているか」を覚えておく（フリッパーが固まる問題の対策）。
+    /// ★ 指ごとに覚える理由 ★
+    ///   以前は指を離したときに、残っている指の「今の位置」から左右を計算し直していた。
+    ///   指が真ん中をまたいで動いていると左右が入れ替わり、押しているのに下がる・離したのに
+    ///   上がったまま、という「固まった」ような動きになっていた。
+    ///   触れた瞬間の左右を指ごとに記録し、その指が離れたときだけ消すことで防ぐ。
+    private var touchSides: [ObjectIdentifier: Bool] = [:]   // true = 左フリッパー
     /// ボールを出してからの経過秒数。ゆっくりタイム（Tuning.launchSlow〜）の計算に使う。
     /// nil のときはゆっくりタイムが終わっていて、普通の重力のまま。
     private var launchElapsed: TimeInterval? = nil
@@ -221,9 +239,8 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
     // バンパー: 3つ（flash タイマー）
     private var bumperFlash: [TimeInterval] = [0, 0, 0]
-    // 2倍スコアタイム残り秒数（0以下 = 無効）
-    // TODO(整形): 下行のインデントが周囲(4スペース)とずれている。動作影響なし。次回まとめて整形する。
-        private var doubleScoreTimer: TimeInterval = 0
+    // 「マルチボール！」表示の残り秒数（0以下 = 非表示）
+    private var multiBallLabelTimer: TimeInterval = 0
     // スコアポップアップ
     private struct Popup { var node: SKLabelNode; var vy: CGFloat = 80; var alpha: CGFloat = 1.0 }
     private var popups: [Popup] = []
@@ -238,6 +255,12 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         // 二重呼び出し対策: 初回のみセットアップを実行する
         guard !isSetupDone else { return }
         isSetupDone = true
+
+        // ★ 複数の指を受け付ける設定（フリッパーが固まる問題の対策） ★
+        //   SKView は初期設定だと1本の指しか受け付けない。左を押したまま右を押すと
+        //   2本目の指が無視され、右のフリッパーが反応しない（＝固まったように見える）。
+        //   両手の親指で遊ぶゲームなので、複数の指を受け付けるようにする。
+        view.isMultipleTouchEnabled = true
 
         backgroundColor = SKColor(red: 0.027, green: 0.027, blue: 0.078, alpha: 1)
 
@@ -580,14 +603,14 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addChild(ballsLabel)
 
         // ── 2倍スコアタイマー（左下・非表示で待機）──────────────
-        doubleScoreLabel = SKLabelNode(text: "")
-        doubleScoreLabel.fontName                = "Helvetica-Bold"
-        doubleScoreLabel.fontSize                = 14
-        doubleScoreLabel.fontColor               = SKColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1)
-        doubleScoreLabel.position                = CGPoint(x: 14, y: 80)
-        doubleScoreLabel.horizontalAlignmentMode = .left
-        doubleScoreLabel.isHidden                = true
-        addChild(doubleScoreLabel)
+        multiBallLabel = SKLabelNode(text: "MULTI BALL!")
+        multiBallLabel.fontName                = "Helvetica-Bold"
+        multiBallLabel.fontSize                = 22
+        multiBallLabel.fontColor               = SKColor(red: 1.0, green: 0.84, blue: 0.0, alpha: 1)
+        multiBallLabel.position                = CGPoint(x: CW / 2, y: 300)
+        multiBallLabel.horizontalAlignmentMode = .center
+        multiBallLabel.isHidden                = true
+        addChild(multiBallLabel)
     }
 
     /// 残機ドット（●○）を現在の残数に合わせて更新する。
@@ -599,15 +622,43 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - ボールの発射
 
+    /// 残り回数を1つ使って、新しいボールを出す（ゲーム開始時・全部のボールが落ちた後）。
+    /// 左フリッパーの上から出し、出た直後はゆっくりタイムにする。
     func launchBall() {
-        ballNode?.removeFromParent()
-        let ball = SKShapeNode(circleOfRadius: BR)
+        removeAllBalls()
 
         // ── 発射位置 ──────────────────────────────────────────
         // FY = フリッパーピボットY。BR*4 上に配置してフリッパーと干渉しないようにし、
         // さらに launchExtraHeight だけ高くして、落ちてくるまでの時間を稼ぐ（Tuning を参照）
-        ball.position = CGPoint(x: LPX + 20, y: FY + BR * 4 + Tuning.launchExtraHeight)  // ← 左フリッパー上(LPX+20)
+        let position = CGPoint(x: LPX + 20, y: FY + BR * 4 + Tuning.launchExtraHeight)  // ← 左フリッパー上(LPX+20)
 
+        // ── 発射初速 ──────────────────────────────────────────
+        // SpriteKit は Y 上向き正。dx で左右の振り分け、dy で上方向の打ち出し。
+        // 初速は Tuning.launchVX / launchVY で調整する。重力（Tuning.gravity）と
+        // セットでバランスを取ること（詳細は Tuning の定義コメント参照）。
+        let vx: CGFloat = Bool.random() ? Tuning.launchVX : -Tuning.launchVX
+        spawnBall(at: position, velocity: CGVector(dx: vx, dy: Tuning.launchVY))
+
+        // ── ゆっくりタイムの開始 ──────────────────────────────
+        // 重力を弱くしておき、update で少しずつ普通の強さに戻す（updateLaunchGravity を参照）
+        launchElapsed = 0
+        physicsWorld.gravity = CGVector(dx: 0, dy: Tuning.gravity * Tuning.launchGravityScale)
+    }
+
+    /// マルチボール：上のほうからボールをもう1個出す（残り回数は使わない）。
+    private func addExtraBall() {
+        guard balls.count < Tuning.maxBallsInPlay else { return }
+        let vx: CGFloat = Bool.random() ? Tuning.extraBallVX : -Tuning.extraBallVX
+        spawnBall(at: Tuning.extraBallSpawn, velocity: CGVector(dx: vx, dy: Tuning.extraBallVY))
+
+        multiBallLabelTimer      = Tuning.multiBallBannerSec
+        multiBallLabel.isHidden  = false
+    }
+
+    /// ボールを1個作って盤面に置く。
+    private func spawnBall(at position: CGPoint, velocity: CGVector) {
+        let ball = SKShapeNode(circleOfRadius: BR)
+        ball.position    = position
         ball.fillColor   = .white
         ball.strokeColor = SKColor(red: 0.63, green: 0.63, blue: 0.86, alpha: 0.6)
         ball.lineWidth   = 1.2
@@ -625,25 +676,21 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         body.allowsRotation = false
         body.usesPreciseCollisionDetection = true
         body.categoryBitMask    = Cat.ball
-        body.collisionBitMask   = Cat.wall | Cat.bumper | Cat.flipper | Cat.target | Cat.sling
+        // ボール同士もぶつかるようにして、マルチボール中のにぎやかさを出す
+        body.collisionBitMask   = Cat.wall | Cat.bumper | Cat.flipper | Cat.target | Cat.sling | Cat.ball
         body.contactTestBitMask = Cat.bumper | Cat.target | Cat.sling | Cat.flipper
+        body.velocity = velocity
         ball.physicsBody = body
         addChild(ball)
-        ballNode = ball
-        ballDrainPending = false
+        balls.append(ball)
+    }
 
-        // ── 発射初速 ──────────────────────────────────────────
-        // SpriteKit は Y 上向き正。dx で左右の振り分け、dy で上方向の打ち出し。
-        // 初速は Tuning.launchVX / launchVY で調整する。重力（Tuning.gravity）と
-        // セットでバランスを取ること（詳細は Tuning の定義コメント参照）。
-        let vx: CGFloat = Bool.random() ? Tuning.launchVX : -Tuning.launchVX
-        let vy: CGFloat = Tuning.launchVY
-        body.velocity = CGVector(dx: vx, dy: vy)
-
-        // ── ゆっくりタイムの開始 ──────────────────────────────
-        // 重力を弱くしておき、update で少しずつ普通の強さに戻す（updateLaunchGravity を参照）
-        launchElapsed = 0
-        physicsWorld.gravity = CGVector(dx: 0, dy: Tuning.gravity * Tuning.launchGravityScale)
+    /// 盤面のボールをすべて取り除く。
+    private func removeAllBalls() {
+        balls.forEach { $0.removeFromParent() }
+        balls.removeAll()
+        multiBallLabelTimer     = 0
+        multiBallLabel?.isHidden = true
     }
 
     /// 発射直後の弱い重力を、時間とともに普通の重力へ戻す。update から毎フレーム呼ぶ。
@@ -704,17 +751,11 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
             }
         }
 
-        // 2倍スコアタイマー（後から追加した機能）の残り秒数を減らし、表示を更新する
-        // TODO(整形): このブロックは周囲より深くインデントされている。動作影響なし。次回8スペースに揃える。
-                if doubleScoreTimer > 0 {
-                    doubleScoreTimer -= Double(dt)
-                    if doubleScoreTimer <= 0 {
-                        doubleScoreTimer = 0
-                        doubleScoreLabel.isHidden = true
-                    } else {
-                        doubleScoreLabel.text = "×2  \(Int(ceil(doubleScoreTimer)))s"
-                    }
-                }
+        // 「マルチボール！」表示の残り秒数を減らし、時間が来たら消す
+        if multiBallLabelTimer > 0 {
+            multiBallLabelTimer -= Double(dt)
+            if multiBallLabelTimer <= 0 { multiBallLabel.isHidden = true }
+        }
         // スコアポップアップ更新（上に浮かびながらフェードアウト）
         for i in (0..<popups.count).reversed() {
             popups[i].node.position.y += popups[i].vy * dt  // popups[i].vy ← 上昇速度 (px/s)
@@ -727,13 +768,17 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         }
 
         // ドレイン判定（ボールが画面下に消えたとき）
-        if let ball = ballNode, ball.position.y < -BR * 4, !ballDrainPending {
-            ballDrainPending = true
-            ball.physicsBody?.isDynamic = false
-            ball.removeFromParent()
-            ballNode = nil
+        // マルチボール中は、落ちたボールを取り除くだけ。遊んでいるボールが全部なくなったときだけ
+        // 残り回数を1つ減らす（onBallDrained）。1個落としただけで回数が減らないので親切。
+        let drained = balls.filter { $0.position.y < -BR * 4 }
+        if !drained.isEmpty {
+            for ball in drained {
+                ball.physicsBody?.isDynamic = false
+                ball.removeFromParent()
+            }
+            balls.removeAll { ball in drained.contains(ball) }
             SoundManager.shared.playBallDrain()
-            onBallDrained?()
+            if balls.isEmpty { onBallDrained?() }
         }
     }
 
@@ -795,7 +840,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
               let bIdx  = bumperNodes.firstIndex(of: bNode) else { return }
 
         // バンパーからボールを弾き飛ばす（最低速度を保証）
-        if let ballNode = ballNode {
+        if let ballNode = ballBody.node {
             let dx = ballNode.position.x - bNode.position.x
             let dy = ballNode.position.y - bNode.position.y
             let len = sqrt(dx*dx + dy*dy)
@@ -840,18 +885,15 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
         deactivateTarget(at: tIdx)
 
-        // 10000pt ターゲット(index 3)に当たったら 2倍スコアタイムを発動する。
-        // （マルチボール案は残機管理が複雑になるため見送り、2倍タイムで代替している）
-        // TODO(整形): 下の if 本体のインデントが深すぎる(20スペース)。動作影響なし。次回12スペースに揃える。
-        if targetPoints[tIdx] == 10000 {
-                    doubleScoreTimer = Tuning.doubleScoreDuration
-                    doubleScoreLabel.text   = "×2  \(Int(Tuning.doubleScoreDuration))s"
-                    doubleScoreLabel.isHidden = false
-                    SoundManager.shared.playSpecial()  // 2倍タイム発動の特別演出音
-                    SoundManager.shared.vibrate()
-                } else {
-                    SoundManager.shared.playTargetHit()
-                }
+        // 10000pt ターゲット(index 3)に当たったらマルチボール（ボールがもう1個増える）。
+        // すでに最大数のボールが出ているときは、得点だけ入る。
+        if targetPoints[tIdx] == 10000 && balls.count < Tuning.maxBallsInPlay {
+            addExtraBall()
+            SoundManager.shared.playSpecial()  // マルチボール発動の特別演出音
+            SoundManager.shared.vibrate()
+        } else {
+            SoundManager.shared.playTargetHit()
+        }
         addScore(targetPoints[tIdx], at: tNode.position)
     }
 
@@ -924,9 +966,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
 
     // MARK: - スコア加算
 
-    /// 得点を加算し（2倍タイム中は倍）、その場にポップアップ演出を出す。
+    /// 得点を加算し、その場にポップアップ演出を出す。
     private func addScore(_ pts: Int, at pos: CGPoint) {
-        let actual = doubleScoreTimer > 0 ? pts * 2 : pts
+        let actual = pts
         internalScore += actual
         onScoreChanged?(internalScore)
         scoreLabel.text = "\(internalScore)"
@@ -959,30 +1001,27 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - タッチ入力
 
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        // 触れた瞬間の位置で左右を決め、指ごとに覚える（touchSides の解説を参照）
         for touch in touches {
-            let x = touch.location(in: self).x
-            if x < CW / 2 { lFlipRaised = true } else { rFlipRaised = true }
+            touchSides[ObjectIdentifier(touch)] = touch.location(in: self).x < CW / 2
         }
+        refreshFlipperState()
     }
 
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
-        syncFlipperState(touches: event?.allTouches)
+        for touch in touches { touchSides.removeValue(forKey: ObjectIdentifier(touch)) }
+        refreshFlipperState()
     }
 
     override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lFlipRaised = false; rFlipRaised = false
+        for touch in touches { touchSides.removeValue(forKey: ObjectIdentifier(touch)) }
+        refreshFlipperState()
     }
 
-    /// 現在押されているタッチから左右フリッパーの上げ下げ状態を再計算する。
-    private func syncFlipperState(touches: Set<UITouch>?) {
-        var hasLeft = false, hasRight = false
-        for t in touches ?? [] {
-            guard t.phase != .ended && t.phase != .cancelled else { continue }
-            let x = t.location(in: self).x
-            if x < CW / 2 { hasLeft = true } else { hasRight = true }
-        }
-        lFlipRaised = hasLeft
-        rFlipRaised = hasRight
+    /// 押している指の一覧から、左右フリッパーの上げ下げを決める。
+    private func refreshFlipperState() {
+        lFlipRaised = touchSides.values.contains(true)
+        rFlipRaised = touchSides.values.contains(false)
     }
 
     // MARK: - リセット
@@ -991,13 +1030,8 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     func resetGame(ballsLeft: Int) {
         internalScore = 0
         scoreLabel.text = "0"
-        ballDrainPending = false
+        touchSides.removeAll()
         lFlipRaised = false; rFlipRaised = false
-
-        // 2倍タイムをリセット
-        // TODO(整形): 下2行のインデントが深い(16スペース→本来8)。動作影響なし。次回の整形パスで揃える。
-                doubleScoreTimer = 0
-                doubleScoreLabel.isHidden = true
         // ターゲット・バンパーを初期状態に
         for i in 0..<targetStates.count { activateTarget(at: i) }
         for i in 0..<bumperFlash.count  { bumperFlash[i] = 0; updateBumperAppearance(at: i) }
@@ -1005,8 +1039,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         popups.removeAll()
 
         refreshBallsHUD(ballsLeft: ballsLeft)
-        ballNode?.removeFromParent()
-        launchBall()
+        launchBall()   // 中で前のボールをすべて取り除く
     }
 
     /// 残機HUDを更新する（PinballView から呼ばれる）
