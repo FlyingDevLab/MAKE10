@@ -207,6 +207,9 @@ final class JankenViewModel {
     }
 
     /// 最終正解率（0.0〜1.0）。終了後に参照する。
+    /// ノーミス（全問正解）でクリアしたか。最高記録はこのときだけ保存する。
+    var isPerfect: Bool { missCount == 0 }
+
     var finalAccuracy: Double {
         totalRounds > 0 ? Double(totalRounds - missCount) / Double(totalRounds) : 0
     }
@@ -436,8 +439,14 @@ final class JankenViewModel {
         gameTimer?.invalidate()
         gameTimer      = nil
         isTimerRunning = false
-        // 現在タイムが過去最速なら ScoreBoard が保存し true を返す
-        isNewBest      = ScoreBoard.saveIfFaster(time: elapsed, for: difficulty.bestTimeKey)
+        // ノーミス（全問正解）のときだけ、過去最速なら ScoreBoard が保存し true を返す。
+        // ★ ノーミスに限っている理由 ★
+        //   ミスしても最後まで進めばクリアになるため、適当に連打して早く終わらせた
+        //   タイムが記録になってしまう。指令どおりに出せた速さを競うゲームなので、
+        //   全問正解のタイムだけを最高記録として扱う。
+        isNewBest      = isPerfect
+            ? ScoreBoard.saveIfFaster(time: elapsed, for: difficulty.bestTimeKey)
+            : false
         awardClearBonus()
         SoundManager.shared.playTenClear()
         withAnimation(.easeInOut(duration: 0.3)) {

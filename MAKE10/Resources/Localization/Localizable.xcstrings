@@ -4,6 +4,101 @@
     "" : {
 
     },
+    "janken_result_perfect_only" : {
+      "comment" : "Command Janken result screen: shown when the player made a mistake, explaining that only a perfect (no-mistake) run counts as a best time.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Clear with no mistakes to set a best time!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ノーミスで クリアすると きろくに なるよ"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ohne Fehler schaffen, um eine Bestzeit aufzustellen!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine sans erreur pour établir un record !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finisci senza errori per fare un record!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Termina sin errores para marcar un récord!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Termine sem erros para fazer um recorde!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speel zonder fouten voor een record!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "零失误通关才会记录最佳时间哦"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "零失誤過關才會記錄最佳時間喔"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 번도 틀리지 않고 클리어하면 기록이 돼요"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ผ่านแบบไม่พลาดเลยถึงจะบันทึกสถิตินะ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoàn thành không sai lần nào để lập kỷ lục nhé!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selesaikan tanpa salah untuk mencetak rekor!"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "बिना गलती के पूरा करो, तभी रिकॉर्ड बनेगा!"
+          }
+        }
+      }
+    },
     "sticker_storage_row_kids" : {
       "comment" : "Sticker storage screen: short label of the top row (stickers shown on the app's title screen). It is the app name, with a line break where it reads naturally because the label area is narrow.",
       "localizations" : {

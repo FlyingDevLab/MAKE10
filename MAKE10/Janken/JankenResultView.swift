@@ -78,16 +78,25 @@ struct JankenResultView: View {
                     Text("janken_result_new_best")
                         .font(.system(size: 20, weight: .black, design: .rounded))
                         .foregroundStyle(DS.gold)
-                } else if let best = viewModel.bestTimeFormatted {
-                    // 記録あり・未更新のとき
-                    HStack(spacing: 6) {
-                        Text("janken_result_best_label")
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                } else {
+                    if let best = viewModel.bestTimeFormatted {
+                        // 記録あり・未更新のとき
+                        HStack(spacing: 6) {
+                            Text("janken_result_best_label")
+                                .font(.system(size: 15, weight: .medium, design: .rounded))
+                                .foregroundStyle(DS.muted)
+                            Text(best)
+                                .font(.system(size: 20, weight: .black, design: .rounded))
+                                .monospacedDigit()
+                                .foregroundStyle(DS.accent)
+                        }
+                    }
+                    // ミスがあったときは、タイムが記録にならない理由を伝える
+                    if !viewModel.isPerfect {
+                        Text("janken_result_perfect_only")
+                            .font(.system(size: 13, weight: .bold, design: .rounded))
                             .foregroundStyle(DS.muted)
-                        Text(best)
-                            .font(.system(size: 20, weight: .black, design: .rounded))
-                            .monospacedDigit()
-                            .foregroundStyle(DS.accent)
+                            .multilineTextAlignment(.center)
                     }
                 }
 
