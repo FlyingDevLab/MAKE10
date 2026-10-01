@@ -100,9 +100,9 @@ struct StickerStorageView: View {
 
                     Divider()
 
-                    // 中行：ストレージ
+                    // 中行：もっているシール（ストレージ）
                     rowView(
-                        label:     String(localized: "sticker_storage_title"),
+                        label:     String(localized: "sticker_storage_row_mine"),
                         groups:    storageGroups,
                         index:     storageIndex,
                         countText: "\(store.storageEmojis.count)",

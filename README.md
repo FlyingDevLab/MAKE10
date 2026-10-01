@@ -28,8 +28,8 @@ Included games:
 - **Animal Match** — a memory game; match every pair to pick a sticker
 - **Stickers & Drawing** — decorate your own canvas with stickers and draw freely with crayons
 
-Playing games fills up your **Energy 🔥** (shown in kcal — one banana's worth, 100 kcal, buys one gacha spin).
-Spend it in the **Gacha** for a random sticker, or in the **Sticker Shop** to choose one from ten stickers that change every day.
+Playing games fills up your **Energy 🔥** (shown in kcal — one banana's worth, 100 kcal, is enough for one gacha spin).
+Spend it in the **Gacha** for a random sticker, or in the **Sticker Corner** to pick one from ten stickers that change every day.
 Energy is earned only by playing — there is no way to buy it with real money.
 
 ### Why This Code Is Public
