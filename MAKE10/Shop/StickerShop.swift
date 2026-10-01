@@ -97,7 +97,7 @@ final class StickerShop {
     /// ショップを開いたときに呼ぶ。日付が変わっていれば、新しい品揃えで開店する。
     /// 同じ日のうちは何もしない（品揃えと売り切れはそのまま）。
     func openShop(now: Date = .now) {
-        let today = Self.dayKey(for: now)
+        let today = DayKey.string(for: now)
         guard state?.day != today else { return }
 
         var rng = SystemRandomNumberGenerator()
@@ -196,14 +196,6 @@ final class StickerShop {
         }
         // 小数の誤差で最後まで 0 未満にならなかったときは、最後の候補にする
         return candidates.count - 1
-    }
-
-    // MARK: 非公開
-
-    /// 日付を "2026-10-01" の形の文字列にする（端末のカレンダー・タイムゾーン基準）。
-    private static func dayKey(for date: Date) -> String {
-        let c = Calendar.current.dateComponents([.year, .month, .day], from: date)
-        return String(format: "%04d-%02d-%02d", c.year ?? 0, c.month ?? 0, c.day ?? 0)
     }
 
     // MARK: 保存／読み込み

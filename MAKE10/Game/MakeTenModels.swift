@@ -77,6 +77,11 @@ enum UDKey {
     static let stickerShopState    = "stickerShopState"    // ショップ：その日の品揃えと売り切れ（JSON）
     static let migration150Done    = "migration_1_5_0_done"       // 1.5.0 への更新時の処理を済ませたか
     static let updateGiftPending   = "updateGiftNoticePending"    // アップデートのプレゼントのお知らせを未表示か
+    static let dailyBonusLastDay   = "dailyBonusLastDay"          // ログインボーナスを最後に受け取った日（"2026-10-01"）
+    static let welcomeGiftPending  = "welcomeGiftPending"         // 「はじめまして」プレゼントをまだ渡していないか（新規インストール）
+    static let welcomeNoticePending = "welcomeNoticePending"      // 「はじめまして」のお知らせを未表示か
+    static let loginNoticeKcal     = "loginBonusNoticeKcal"       // 未表示のログインボーナスの量（0 なら無し）
+    static let loginNoticeIsStreak = "loginBonusNoticeIsStreak"   // 未表示のログインボーナスが連続ボーナスか
     static let stickers            = "stickers"            // シール用：ゲームモード位置データ（既存キー維持）
     static let storageEmojis       = "storageEmojis"       // シール用：ストレージ絵文字リスト
     static let playStickers        = "playStickers"        // シール用：シール画面位置データ
