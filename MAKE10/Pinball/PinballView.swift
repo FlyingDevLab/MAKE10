@@ -236,7 +236,7 @@ private struct PBResultView: View {
 
             Spacer()
 
-            StickerRewardBanner()
+            EnergyRewardBanner()
 
             VStack(spacing: 12) {
                 // もう一度

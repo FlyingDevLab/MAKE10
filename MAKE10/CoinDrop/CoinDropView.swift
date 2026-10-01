@@ -394,7 +394,7 @@ private struct CDResultView: View {
 
             Spacer()
 
-            StickerRewardBanner()
+            EnergyRewardBanner()
 
             // ── ボタン群 ──────────────────────────────────────
             VStack(spacing: 12) {

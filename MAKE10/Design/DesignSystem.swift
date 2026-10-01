@@ -101,6 +101,9 @@ enum DS {
     /// ゴールド（ハイスコア・★・金メダル・$1 完成など特別な達成を祝う色）
     static let gold        = Color(red: 0.85, green: 0.62, blue: 0.10)
 
+    /// エネルギー（🔥 kcal の数字・獲得バナー・ガチャ／ショップの値段など）
+    static let energy      = Color(red: 0.92, green: 0.42, blue: 0.16)
+
     // MARK: 角丸
     //
     // 角丸は要素の大きさ・重要度に比例して数値を大きくする体系。

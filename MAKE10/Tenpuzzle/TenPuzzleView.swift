@@ -690,7 +690,7 @@ private struct TenPuzzleResultView: View {
 
             Spacer()
 
-            StickerRewardBanner()
+            EnergyRewardBanner()
 
             VStack(spacing: 12) {
                 Button {
