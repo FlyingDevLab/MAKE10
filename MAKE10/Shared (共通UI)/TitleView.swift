@@ -165,8 +165,14 @@ struct TitleView: View {
             .padding(.bottom, 24)
         }
         .onAppear {
+            // デモで見た目だけ動いていた並びを捨て、保存済みの（自分で並べた）順番に戻す
+            rankManager.reloadSaved()
             // ← 変更可：初回デモ開始までの待機時間（秒）
             scheduleDemo(delay: 2.5)
+        }
+        .onDisappear {
+            // 世代番号を進めて、予約済みのデモをすべて無効にする（ゲーム中に裏で動かさない）
+            demoGeneration += 1
         }
     }
 
@@ -253,6 +259,15 @@ struct TitleView: View {
 
     // MARK: 自動デモアニメ
 
+    // ★ 自動デモの動きを保存しない理由 ★
+    //   以前はデモの入れ替えも手で並べ替えたときと同じく保存していた。そのため、
+    //   ・何もしないでいるだけで、自分で並べた順番が少しずつ書き換わる
+    //   ・ゲームを始めてもデモが裏で動き続け、戻ると並びが変わっている
+    //   ・「入れ替えて元に戻す」の途中でゲームを始めると、戻らないまま保存される
+    //   という不具合があった。デモは見た目だけにして、保存するのは手で並べ替えたときだけにする。
+    //   画面を離れたら onDisappear で世代番号を進めてデモを止め、戻ってきたときは保存済みの
+    //   （＝自分で並べた）順番から表示し直す。
+
     /// デモを（再）スケジュールする。
     /// 手動操作後も delay 秒の無操作が続けば自動デモが再開される。
     /// demoGeneration をインクリメントすることで古い世代のコールバックを無効化する。
@@ -290,7 +305,7 @@ struct TitleView: View {
 
         // ← 変更可：デモスワップ速度（response: 0.70 = 手動の半速）
         withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
-            rankManager.swap(at: si, with: sj)
+            rankManager.swap(at: si, with: sj, persist: false)   // デモは保存しない（下の解説を参照）
         }
 
         // ← 変更可：swap back までの待機時間（秒）
@@ -299,7 +314,7 @@ struct TitleView: View {
             guard let si2 = self.rankManager.sortedGames.firstIndex(of: lastGame),
                   let sj2 = self.rankManager.sortedGames.firstIndex(of: secondLast) else { return }
             withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
-                self.rankManager.swap(at: si2, with: sj2)
+                self.rankManager.swap(at: si2, with: sj2, persist: false)
             }
             // ← 変更可：次のデモまでの待機時間（秒）
             DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
@@ -339,10 +354,10 @@ struct TitleView: View {
             if hasHiddenGame {
                 // ← 変更可：新タイルのスライドイン速度（response: 0.80 = 手動の半速）
                 withAnimation(.spring(response: 0.80, dampingFraction: 0.75)) {
-                    rankManager.throwToBottom(lastGame)
+                    rankManager.throwToBottom(lastGame, persist: false)
                 }
             } else {
-                rankManager.throwToBottom(lastGame)
+                rankManager.throwToBottom(lastGame, persist: false)
             }
 
             // ← 変更可：フライ後、次のデモまでの待機時間（秒）

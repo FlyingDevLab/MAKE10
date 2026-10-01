@@ -160,31 +160,43 @@ final class GameRankManager {
     /// ⚠️ 既存ユーザーの保存データに無い新しい case（新ゲーム追加時など）は、
     ///   ?? -1 により自動的に先頭へ回る。複数同時追加時は宣言順のまま先頭ブロックになる。
     init() {
+        sortedGames = Self.loadSaved()
+    }
+
+    /// 保存済みの並び順を読み直す。自動デモで見た目だけ動かした並びを捨てたいときに呼ぶ。
+    func reloadSaved() {
+        sortedGames = Self.loadSaved()
+    }
+
+    /// 保存済みの並び順を読み込む。保存が無ければ定義順を返す。
+    private static func loadSaved() -> [GamePickerSelection] {
         let all = GamePickerSelection.allCases
-        if let data = UserDefaults.standard.data(forKey: Self.udKey),
+        if let data = UserDefaults.standard.data(forKey: udKey),
            let dict = try? JSONDecoder().decode([String: Int].self, from: data) {
             // ?? -1: 辞書に無いゲーム（保存後に追加された新ゲーム）は先頭に回す。
             // 複数を同時に追加した場合は enum の宣言順のまま先頭ブロックとして挿入される
             // （sorted は安定ソートのため、-1 同士は元の並び＝宣言順を保つ）。
-            sortedGames = all.sorted { (dict[$0.rawValue] ?? -1) < (dict[$1.rawValue] ?? -1) }
-        } else {
-            sortedGames = all
+            return all.sorted { (dict[$0.rawValue] ?? -1) < (dict[$1.rawValue] ?? -1) }
         }
+        return all
     }
 
-    /// 指定ゲームを並び順の最後尾へ移動して保存する（フリックで吹き飛ばしたときに呼ばれる）。
-    func throwToBottom(_ game: GamePickerSelection) {
+    /// 指定ゲームを並び順の最後尾へ移動する（フリックで吹き飛ばしたときに呼ばれる）。
+    /// - Parameter persist: 保存するか。自動デモでは false にして、見た目だけ動かす
+    ///   （ユーザーが自分で並べた順番を、デモが勝手に書き換えないようにするため）。
+    func throwToBottom(_ game: GamePickerSelection, persist: Bool = true) {
         sortedGames.removeAll { $0 == game }
         sortedGames.append(game)
-        save()
+        if persist { save() }
     }
 
-    /// i 番目と j 番目のタイルを入れ替えて保存する。
+    /// i 番目と j 番目のタイルを入れ替える。
     /// 範囲外の添字は guard で弾き、何もしない（クラッシュ防止）。
-    func swap(at i: Int, with j: Int) {
+    /// - Parameter persist: 保存するか。自動デモでは false にして、見た目だけ動かす。
+    func swap(at i: Int, with j: Int, persist: Bool = true) {
         guard i >= 0, j >= 0, i < sortedGames.count, j < sortedGames.count else { return }
         sortedGames.swapAt(i, j)
-        save()
+        if persist { save() }
     }
 
     /// バナー（単独行）を上下フリックしたときの3点ローテーション方向。
