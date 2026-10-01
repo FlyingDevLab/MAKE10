@@ -8,10 +8,10 @@
 //  指令じゃんけん（Command Janken）のゲームロジック・状態・タイマー担当ViewModel。
 //  「勝て／負けろ」という指示に対し、正しい手をタップして10手（挑戦モードは30手）を
 //  最速で答えるゲーム。難易度ごとの指示列生成・勝敗判定・ミスペナルティ・
-//  フェーズ切替・シール報酬まで、ロジックをすべてここに集約する。
+//  フェーズ切替・クリアボーナスまで、ロジックをすべてここに集約する。
 //
 //  ② 役割分担
-//    - ViewModel（このファイル）: 状態・タイマー・判定・指示列生成・シール付与
+//    - ViewModel（このファイル）: 状態・タイマー・判定・指示列生成・クリアボーナス付与
 //    - View (JankenView)       : 状態を表示し、手のタップを ViewModel へ渡す
 //    - JankenResultView        : 終了後のタイム・正解率・新記録を表示する
 //
@@ -29,7 +29,7 @@ import SwiftUI
 
 // MARK: - JankenDifficulty（難易度）
 
-/// ゲームの難易度。出題内容・手数・シール倍率を決定する。
+/// ゲームの難易度。出題内容・手数・クリアボーナス倍率を決定する。
 enum JankenDifficulty {
     case easy       // かんたん：10回勝て
     case hard       // むずかしい：10回負けろ
@@ -43,8 +43,8 @@ enum JankenDifficulty {
         }
     }
 
-    /// クリア時に獲得するシール枚数の倍率（難しいほど多く貰える）
-    var stickerMultiplier: Int {
+    /// クリアボーナスの倍率（難しいほど多く貰える）
+    var bonusMultiplier: Int {
         switch self {
         case .easy:      return 1  // ← 変更可
         case .hard:      return 2  // ← 変更可
@@ -272,6 +272,7 @@ final class JankenViewModel {
         isNewBest       = false
         isTapLocked     = false
         phase           = .countdown(0)
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
         beginCountdown()
     }
 
@@ -430,31 +431,30 @@ final class JankenViewModel {
 
     // MARK: - 終了処理
 
-    /// ゲーム終了。タイマーを止め、ベストタイム更新判定とシール付与を行う。
+    /// ゲーム終了。タイマーを止め、ベストタイム更新判定とクリアボーナスの付与を行う。
     private func endGame() {
         gameTimer?.invalidate()
         gameTimer      = nil
         isTimerRunning = false
         // 現在タイムが過去最速なら ScoreBoard が保存し true を返す
         isNewBest      = ScoreBoard.saveIfFaster(time: elapsed, for: difficulty.bestTimeKey)
-        awardStickers()
+        awardClearBonus()
         SoundManager.shared.playTenClear()
         withAnimation(.easeInOut(duration: 0.3)) {
             phase = .finished
         }
     }
 
-    // MARK: - シール報酬
+    // MARK: - クリアボーナス
 
-    /// クリア枚数×難易度倍率を計算してStickerStoreに追加
-    private func awardStickers() {
+    /// クリア内容×難易度倍率でクリアボーナスの数を決め、エネルギーとして渡す。
+    /// 1.4 以前はこの数だけボーナスシールを渡していた（1つ = EnergyTuning.clearBonusUnit）。
+    private func awardClearBonus() {
         var base = 1                     // クリアボーナス
         if finalAccuracy >= 0.5 { base += 1 }  // 50%以上ボーナス
         if finalAccuracy >= 1.0 { base += 1 }  // ノーミスボーナス
-        let total = base * difficulty.stickerMultiplier
-        for _ in 0..<total {
-            StickerStore.shared.addBonusSticker()
-        }
+        let units = base * difficulty.bonusMultiplier
+        EnergyStore.shared.grantClearBonus(Double(units) * EnergyTuning.clearBonusUnit)
     }
 
     // MARK: - 指示列の生成
