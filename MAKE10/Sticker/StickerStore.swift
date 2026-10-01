@@ -4,9 +4,15 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/03/21.
 //
-//  100ポイント獲得ごとに絵文字シールを1つ獲得（超過分は繰り越し）。
-//  ポイントはゲーム・難易度・スコアに応じて変動（正解1問 1.8〜7.0pt、
-//  アーケード系はスコア換算＋参加賞1pt）するため、必要なプレイ数はゲームごとに異なる。
+//  手に入れた絵文字シールの保管・配置・永続化を担う。
+//  シールはゲームで貯めたエネルギー（EnergyStore）を使い、ガチャ（StickerGacha）か
+//  ショップ（StickerShop）で手に入れる。手に入れたシールはストレージへ直送される。
+//  どんなシールがあるかの一覧は StickerCatalog が持つ。
+//
+//  ★ 1.4 以前との違い ★
+//    1.4 以前は「100pt 貯まるとランダムなシールが自動で出て、結果画面でボードに貼る」
+//    仕組みだった。1.5 からポイントはエネルギーとして画面に表示し、
+//    使い道（ガチャ／ショップ）を自分で選ぶ方式に変わった。
 //
 //  【3エリア管理】
 //  ゲームモード（stickers）  : 全件保持・画面表示は先頭50枚のみ
@@ -14,8 +20,6 @@
 //  シール画面（playStickers） : 位置情報あり・上限100枚
 
 // 絵文字シールの状態管理・永続化・ライフサイクル制御を担うシングルトン。
-// ポイント蓄積 → pending（またはストレージ直送）→ ボード配置という流れで管理する。
-// ゲームボードが満杯（50枚以上）のときは新規シールをストレージへ直接送出する。
 
 import SwiftUI
 
@@ -52,44 +56,18 @@ final class StickerStore {
     private(set) var playStickers: [Sticker] = []
 
     // リザルト画面でゲームボードへ配置するシール一時保持用。
-    // ★ この配列を永続化している理由 ★
-    //   シール発行時に totalCorrect からは 100pt が差し引かれるため、
-    //   この配列を保存せずにアプリが強制終了されると
-    //   「シール1枚 + 貯めた100ポイント」が同時に消えてしまう。
-    //   配置が確定するまで UserDefaults に残し、次回起動時に復元する。
-    //   （その結果、未配置のシールは次に開いたリザルト画面へ持ち越される）
+    // 配置が確定するまで UserDefaults に残し、次回起動時はストレージへ移す（load() を参照）。
+    // ⚠️ 移行中: ボーナスシールのエネルギー化と結果画面のシールバナー廃止が済んだら削除する。
     private(set) var pendingStickers: [String] = []
 
     // リザルト画面でストレージへ送出されたシール枚数。
     // FinishedView がメッセージ表示の判断に使う。表示後に clearPendingStorage() でリセットする
     private(set) var pendingStorageCount: Int = 0
 
-    // 累積ポイント。nextMilestone（100pt）に達するたびに 100pt を差し引いてシールを1枚発行する
-    // （超過分は次のシールへ繰り越される）
-    private(set) var totalCorrect: Double = 0
-
     // MARK: - 上限定数
 
     private let gameDisplayLimit: Int    = 50    // ← 変更可：ゲームボードの表示上限
     private let playLimit:        Int    = 100   // ← 変更可：シール画面の上限
-    private let nextMilestone:    Double = 100.0 // ← 変更可：シール獲得に必要なポイント
-
-    // MARK: - 絵文字プール（ランダムに1つ選ばれる）
-    // 🌸 が複数・☁️ が3つなど出現確率に重みを持たせている（多いほど出やすい）
-    private static let palette: [String] = [
-        "😄","🥹","☺️","😊","😋",
-        "🦁","🐧","🦊","🌊",
-        // ── どうぶつ ────────────────────────────────
-        // どうぶつめくりのカード面と共通の10種のうち、ここに無かった7種。
-        // 定義は MemoryModels.swift の MemoryAnimal を参照（片方を変えたら両方を揃えること）。
-        "🐘","🦒","🐰","🐢","🐙","🐳","🐵",
-        "🌟","🌈","🦋","🌷","🌹","🌼","🌻","🌸","🌸","🌸","🍀","🦄","🐠","🎈","🎀",
-        "🌺","🐬","🌙","☀️","🍭","🎠","🌴",
-        "🎵","🍕","🍦","🦖","🦔","🎪","🌻","🍄",
-        "🐣","🦩","🎡","🎋","🎍","🌏","🪄","🏆",
-        "🚗","🚒","🚐","🚑","🚓","🏎️","🚕","🛩️","🚀",
-        "☁️","☁️","☁️","🏠","💩"
-    ]
 
     // MARK: - 初期化
 
@@ -98,32 +76,23 @@ final class StickerStore {
 
     // MARK: - 公開API（獲得・pending 管理）
 
-    /// 正解時・ゲーム終了時に呼ぶ。points は難易度・モードやスコアに応じて変動する
-    /// （例：MAKE10 ブリッツ正解=7.0pt、ピンボール=スコア÷1000）。
-    ///
-    /// ★ while で回して差し引いている理由 ★
-    ///   アーケード系はゲーム終了時にスコア分をまとめて渡すため、1回で100ptを大きく
-    ///   超えることがある。ここで 0 にリセットすると超過分がまるごと消えてしまい、
-    ///   他のゲームで貯めた分まで巻き添えで失われる。
-    ///   100pt ずつ差し引きながら発行することで、余りは次のシールへ繰り越される。
+    /// 正解時・ゲーム終了時に呼ぶ。1.5 からはシールを出さず、エネルギーとして加算するだけ。
+    // ⚠️ 移行中の窓口: 各ゲームが EnergyStore.earn / grantClearBonus を直接呼ぶように
+    //   置き換えたら、このメソッドは削除する。
     func recordCorrect(points: Double = 1.0) {
-        totalCorrect += points
-        while totalCorrect >= nextMilestone {
-            totalCorrect -= nextMilestone
-            issueSticker()
-        }
-        UserDefaults.standard.set(totalCorrect, forKey: UDKey.totalCorrectAllTime)
+        EnergyStore.shared.earn(points)
     }
 
     /// 全問正解ボーナスなど、ポイント外でシールを1枚追加する。
-    // EmojiQuizViewModel の advance() から pct == 1.0 のときに呼ばれる
+    // ⚠️ 移行中の窓口: 各ゲームがクリアボーナス（EnergyStore.grantClearBonus）を
+    //   渡すように置き換えたら、このメソッドと issueSticker() は削除する。
     func addBonusSticker() {
         issueSticker()
     }
 
     /// シールを1枚発行する。ゲームボードが満杯ならストレージへ直接送出する。
     private func issueSticker() {
-        let emoji = Self.palette.randomElement()!
+        let emoji = StickerCatalog.all.randomElement()!
         if stickers.count >= gameDisplayLimit {
             // ゲームボード満杯 → ストレージへ直接送出
             storageEmojis.append(emoji)
@@ -149,7 +118,14 @@ final class StickerStore {
     ///   ここでの直送は最初からそう決まっている正規の経路なので、
     ///   増やすと次の MAKE10 のリザルト画面に身に覚えのないメッセージが出てしまう。
     func addStickerToStorage(emoji: String) {
-        storageEmojis.append(emoji)
+        addStickersToStorage([emoji])
+    }
+
+    /// 複数の絵文字をまとめてストレージへ直接追加する（ガチャ・ショップで手に入れたシール）。
+    /// ストレージには上限がないため必ず成功する。保存は最後に1回だけ行う。
+    func addStickersToStorage(_ emojis: [String]) {
+        guard !emojis.isEmpty else { return }
+        storageEmojis.append(contentsOf: emojis)
         saveStorage()   // 直後に落ちてもシールを失わないよう即保存する
     }
 
@@ -296,14 +272,30 @@ final class StickerStore {
         stickers            = []
         storageEmojis       = []
         playStickers        = []
-        totalCorrect        = 0
         pendingStickers     = []
         pendingStorageCount = 0
         UserDefaults.standard.removeObject(forKey: UDKey.stickers)
         UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
         UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
-        UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
+    }
+
+    // MARK: - 公開API（所有数）
+
+    /// シールの種類ごとに、いま持っている枚数を数える（ショップの救済枠の抽選に使う）。
+    /// MAKE10ボード・ストレージ・シール画面・配置待ちのどこにあっても1枚と数える。
+    ///
+    /// ★ 「これまでに手に入れた枚数」を別に記録していない理由 ★
+    ///   シールを捨てる・消す方法はない（進捗リセットを除く）ため、
+    ///   いま持っている枚数＝これまでに手に入れた枚数になる。
+    ///   将来シールを消費する機能を作るときに、ここを初期値にして記録を始めればよい。
+    func ownedCounts() -> [String: Int] {
+        var counts: [String: Int] = [:]
+        for s in stickers        { counts[s.emoji, default: 0] += 1 }
+        for e in storageEmojis   { counts[e,       default: 0] += 1 }
+        for s in playStickers    { counts[s.emoji, default: 0] += 1 }
+        for e in pendingStickers { counts[e,       default: 0] += 1 }
+        return counts
     }
 
     // MARK: - 非公開
@@ -357,8 +349,6 @@ final class StickerStore {
     /// 起動時に UserDefaults から全状態を復元する。
     // 各配列のデコード失敗時は初期値（空配列）のままにする
     private func load() {
-        totalCorrect = UserDefaults.standard.double(forKey: UDKey.totalCorrectAllTime)
-
         if let data    = UserDefaults.standard.data(forKey: UDKey.stickers),
            let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
             stickers = decoded
@@ -371,10 +361,16 @@ final class StickerStore {
            let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
             playStickers = decoded
         }
-        // 前回配置しきれなかったシール。次に開くリザルト画面のバナーへ引き継がれる
+        // ★ 配置待ちのシールをストレージへ移す理由 ★
+        //   1.4 以前は、結果画面でボードに貼る前のシールを pendingStickers に保存していた。
+        //   1.5 から手に入れたシールはストレージへ直送する方式になったため、
+        //   起動時に残っていればストレージへ移し、どの画面からも扱えるようにする。
         if let data    = UserDefaults.standard.data(forKey: UDKey.pendingStickers),
-           let decoded = try? JSONDecoder().decode([String].self, from: data) {
-            pendingStickers = decoded
+           let decoded = try? JSONDecoder().decode([String].self, from: data),
+           !decoded.isEmpty {
+            storageEmojis.append(contentsOf: decoded)
+            saveStorage()   // 先にストレージを保存してから配置待ちを消す（途中で落ちても失わない）
+            UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
         }
     }
 

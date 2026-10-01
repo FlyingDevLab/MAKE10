@@ -548,7 +548,7 @@ final class GameViewModel {
     }
 
     /// 全進捗をリセットする（設定画面からの「最初からはじめる」操作）。
-    /// タイマー停止・紙吹雪停止・フラグ全リセット・統計ゼロクリア・全スコア削除・シールデータ削除を行う。
+    /// タイマー停止・紙吹雪停止・フラグ全リセット・統計ゼロクリア・全スコア削除・シール／エネルギー／ショップのデータ削除を行う。
     func resetProgress() {
         stopTimer()
         confettiGeneration  += 1   // 実行中の紙吹雪タイマーを世代番号で無効化する
@@ -561,6 +561,8 @@ final class GameViewModel {
         questionCorrects    = Array(repeating: 0, count: 10)
         ScoreBoard.resetAll()        // 全ゲームのスコア・ベストタイムを一括削除
         StickerStore.shared.reset()  // シールデータもリセット（こちらは StickerStore が責任を持つ）
+        EnergyStore.shared.reset()   // エネルギー残高も 0 に戻す
+        StickerShop.shared.reset()   // ショップの品揃え・売り切れも消す（次に開いたとき新しく開店する）
         gameState           = .title
     }
 
