@@ -41,6 +41,8 @@ struct GachaView: View {
     private let revealStagger: Double = 0.12  // ← 変更可
     /// 画面下部のメッセージを出しておく時間（秒）。
     private let toastDuration: Double = 1.8   // ← 変更可
+    /// 10連の結果で紙吹雪を出しておく時間（秒）。
+    private let confettiDuration: Double = 3.5  // ← 変更可
 
     // MARK: ローカル状態
 
@@ -60,6 +62,10 @@ struct GachaView: View {
     @State private var toast: LocalizedStringKey? = nil
     /// メッセージの世代番号（世代番号パターンの解説は GameViewModel.swift を参照）。
     @State private var toastGeneration = 0
+    /// 10連の結果で紙吹雪を出しているか。
+    @State private var showsConfetti = false
+    /// 紙吹雪の世代番号。続けて10連を回したとき、前回の消去で今回の紙吹雪を消さないようにする。
+    @State private var confettiGeneration = 0
 
     // MARK: body
 
@@ -87,6 +93,15 @@ struct GachaView: View {
                 shortageOverlay(pull)
                     .transition(.opacity)
                     .zIndex(10)
+            }
+
+            // 紙吹雪は結果カードより手前に重ね、タップは下へ素通しさせる（「とじる」を押せるように）。
+            // isSpecial（金・白・銀）だと白い結果カードの上で白い粒が見えなくなるので、虹色の通常版を使う
+            if showsConfetti {
+                ConfettiView(isSpecial: false)
+                    .ignoresSafeArea()
+                    .allowsHitTesting(false)
+                    .zIndex(15)
             }
 
             if let toast {
@@ -323,11 +338,23 @@ struct GachaView: View {
         revealedCount = 0
         results = items
         isTen ? SoundManager.shared.playSpecial() : SoundManager.shared.playUnlock()
+        if isTen { celebrate() }
         for index in items.indices {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.25 + revealStagger * Double(index)) {
                 withAnimation(.spring(response: 0.3, dampingFraction: 0.55)) { revealedCount = index + 1 }
                 if index == items.count - 1 { isSpinning = false }
             }
+        }
+    }
+
+    /// 10連の結果に紙吹雪を出し、しばらくしたら消す。
+    private func celebrate() {
+        confettiGeneration += 1
+        let generation = confettiGeneration
+        showsConfetti = true
+        DispatchQueue.main.asyncAfter(deadline: .now() + confettiDuration) {
+            guard generation == confettiGeneration else { return }
+            showsConfetti = false
         }
     }
 
