@@ -137,15 +137,8 @@ struct MakeTenContentView: View {
                     MemoryGameView()
                         .transition(.opacity)
                 case .stickerStorage:
-                    StickerStorageView(
-                        onOpenShop: {
-                            withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerShop }
-                        },
-                        onOpenGacha: {
-                            withAnimation(.easeInOut(duration: 0.3)) { screen = .gacha }
-                        }
-                    )
-                    .transition(.opacity)
+                    StickerStorageView()
+                        .transition(.opacity)
                 case .stickerShop:
                     StickerShopView(
                         onOpenGacha: {
@@ -261,14 +254,10 @@ struct MakeTenContentView: View {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage:
+             .janken, .tenPuzzle, .memory, .stickerStorage,
+             .stickerShop, .gacha:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
-            }
-        // ショップとガチャはシール画面から開くので、戻るとシール画面へ戻る
-        case .stickerShop, .gacha:
-            return {
-                withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerStorage }
             }
         }
     }
@@ -340,6 +329,8 @@ struct MakeTenContentView: View {
                         case .tenPuzzle:      screen = .tenPuzzle
                         case .memory:         screen = .memory
                         case .stickerStorage: screen = .stickerStorage
+                        case .stickerShop:    screen = .stickerShop
+                        case .gacha:          screen = .gacha
                         case .logoCard:       break   // ブランドタイル。タップは無反応（GamePickerTile側で既に無視）
                         }
                     }
