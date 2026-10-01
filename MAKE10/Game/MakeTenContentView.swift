@@ -49,6 +49,7 @@ private enum Screen {
     case tenPuzzle
     case memory
     case stickerStorage
+    case stickerShop
 }
 
 // MARK: - MakeTenContentView
@@ -135,7 +136,14 @@ struct MakeTenContentView: View {
                     MemoryGameView()
                         .transition(.opacity)
                 case .stickerStorage:
-                    StickerStorageView()
+                    StickerStorageView(
+                        onOpenShop: {
+                            withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerShop }
+                        }
+                    )
+                    .transition(.opacity)
+                case .stickerShop:
+                    StickerShopView()
                         .transition(.opacity)
                 }
             }
@@ -216,6 +224,7 @@ struct MakeTenContentView: View {
         case .tenPuzzle:           return String(localized: "tenpuzzle_title")
         case .memory:              return String(localized: "memory_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
+        case .stickerShop:         return String(localized: "shop_title")
         }
     }
 
@@ -244,6 +253,11 @@ struct MakeTenContentView: View {
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
+        // ショップはシール画面から開くので、戻るとシール画面へ戻る
+        case .stickerShop:
+            return {
+                withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerStorage }
+            }
         }
     }
 
@@ -258,7 +272,7 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage:              return nil
+             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerShop: return nil
         }
     }
 
@@ -282,6 +296,7 @@ struct MakeTenContentView: View {
         case .tenPuzzle:           return "tenPuzzle"
         case .memory:              return "memory"
         case .stickerStorage:      return "stickerStorage"
+        case .stickerShop:         return "stickerShop"
         }
     }
 
