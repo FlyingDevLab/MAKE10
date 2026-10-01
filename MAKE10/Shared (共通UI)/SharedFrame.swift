@@ -51,6 +51,10 @@ struct SharedFrame<Content: View>: View {
     var onSettingsOpen:  (() -> Void)?  = nil
     var onSettingsClose: (() -> Void)?  = nil
 
+    /// ヘッダーの下にエネルギー残高を出すか。
+    /// シールやさん・ガチャは画面の中に同じ残高を大きく出しているので、二重にならないよう false にする。
+    var showsEnergyBadge: Bool = true
+
     // MARK: コンテンツ
 
     // ★ @ViewBuilder とは？ ★
@@ -84,8 +88,11 @@ struct SharedFrame<Content: View>: View {
                     // エネルギー残高をヘッダーの下にぶら下げて表示する（energyBadge の解説を参照）。
                     // zIndex で後に描くコンテンツより手前に出す
                     .overlay(alignment: .bottom) {
+                        // ⚠️ 変更注意: 隠すときは if ではなく opacity を使うこと。
+                        //   if で包むと alignmentGuide が効かなくなり、バッジがタイトルに重なってしまう。
                         energyBadge
                             .alignmentGuide(.bottom) { d in d[.top] }   // バッジの上端をヘッダーの下端に合わせる
+                            .opacity(showsEnergyBadge ? 1 : 0)
                     }
                     .zIndex(1)
                 content()
@@ -179,9 +186,9 @@ struct SharedFrame<Content: View>: View {
     ///   タイトルとは重ならないようヘッダーの下に置き、その分はゲーム画面の上にかぶせる。
     ///   かぶった部分の操作を邪魔しないよう、タッチは下の画面へ素通しさせる。
     private var energyBadge: some View {
-        EnergyBadge(fontSize: 20)   // ← 変更可（エネルギー表示の大きさ）
-            .padding(.horizontal, 18)
-            .padding(.vertical, 6)
+        EnergyBadge(fontSize: 16)   // ← 変更可（エネルギー表示の大きさ）
+            .padding(.horizontal, 10)
+            .padding(.vertical, 3)
             .background(
                 Capsule()
                     .fill(DS.card)
@@ -189,7 +196,7 @@ struct SharedFrame<Content: View>: View {
             )
             .overlay(Capsule().stroke(DS.energy, lineWidth: 2.5))
             .padding(.top, 4)
-            .offset(y: -13)   // ← 変更可（上下の位置。マイナスで上へ。タイトルに重ならない範囲で調整）
+            .offset(y: -15)   // ← 変更可（上下の位置。マイナスで上へ。タイトルに重ならない範囲で調整）
             .allowsHitTesting(false)
     }
 

@@ -99,7 +99,8 @@ struct MakeTenContentView: View {
                 gameViewModel:   viewModel,
                 // 設定パネルを開いている間は MAKE10 のタイマーを止める
                 onSettingsOpen:  { viewModel.suspend() },
-                onSettingsClose: { viewModel.resume()  }
+                onSettingsClose: { viewModel.resume()  },
+                showsEnergyBadge: showsEnergyBadge
             ) {
                 // screen の値に応じて SharedFrame の中身を切り替える
                 switch screen {
@@ -206,6 +207,15 @@ struct MakeTenContentView: View {
     }
 
     // MARK: お知らせ
+
+    /// ヘッダーの下にエネルギー残高を出すか。
+    /// シールやさん・ガチャは画面の中に同じ残高を大きく出しているので、二重に並ばないよう隠す。
+    private var showsEnergyBadge: Bool {
+        switch screen {
+        case .stickerShop, .gacha: return false
+        default:                   return true
+        }
+    }
 
     /// お知らせカードを出してよい画面か。ゲームの途中で割り込まないよう、タイトル画面に限る。
     private var isOnTitleScreen: Bool {
