@@ -175,11 +175,11 @@ struct SharedFrame<Content: View>: View {
     /// ヘッダーの下にぶら下げる、エネルギー残高の大きな表示。プレイ中もここで数字が増えていく。
     ///
     /// ★ ヘッダーの外にはみ出させている理由 ★
-    ///   小さいままでは目立たないので、外枠で囲んで大きく（文字 32pt＝以前の約2.5倍）表示している。
+    ///   小さいままでは目立たないので、外枠で囲んで大きく（文字 20pt）表示している。
     ///   タイトルとは重ならないようヘッダーの下に置き、その分はゲーム画面の上にかぶせる。
     ///   かぶった部分の操作を邪魔しないよう、タッチは下の画面へ素通しさせる。
     private var energyBadge: some View {
-        EnergyBadge(fontSize: 32)   // ← 変更可（エネルギー表示の大きさ）
+        EnergyBadge(fontSize: 20)   // ← 変更可（エネルギー表示の大きさ）
             .padding(.horizontal, 18)
             .padding(.vertical, 6)
             .background(
@@ -189,6 +189,7 @@ struct SharedFrame<Content: View>: View {
             )
             .overlay(Capsule().stroke(DS.energy, lineWidth: 2.5))
             .padding(.top, 4)
+            .offset(y: -13)   // ← 変更可（上下の位置。マイナスで上へ。タイトルに重ならない範囲で調整）
             .allowsHitTesting(false)
     }
 
