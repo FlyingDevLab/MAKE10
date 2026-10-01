@@ -50,6 +50,7 @@ private enum Screen {
     case memory
     case stickerStorage
     case stickerShop
+    case gacha
 }
 
 // MARK: - MakeTenContentView
@@ -139,11 +140,21 @@ struct MakeTenContentView: View {
                     StickerStorageView(
                         onOpenShop: {
                             withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerShop }
+                        },
+                        onOpenGacha: {
+                            withAnimation(.easeInOut(duration: 0.3)) { screen = .gacha }
                         }
                     )
                     .transition(.opacity)
                 case .stickerShop:
-                    StickerShopView()
+                    StickerShopView(
+                        onOpenGacha: {
+                            withAnimation(.easeInOut(duration: 0.3)) { screen = .gacha }
+                        }
+                    )
+                    .transition(.opacity)
+                case .gacha:
+                    GachaView()
                         .transition(.opacity)
                 }
             }
@@ -225,6 +236,7 @@ struct MakeTenContentView: View {
         case .memory:              return String(localized: "memory_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         case .stickerShop:         return String(localized: "shop_title")
+        case .gacha:               return String(localized: "gacha_title")
         }
     }
 
@@ -253,8 +265,8 @@ struct MakeTenContentView: View {
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
-        // ショップはシール画面から開くので、戻るとシール画面へ戻る
-        case .stickerShop:
+        // ショップとガチャはシール画面から開くので、戻るとシール画面へ戻る
+        case .stickerShop, .gacha:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .stickerStorage }
             }
@@ -272,7 +284,8 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerShop: return nil
+             .janken, .tenPuzzle, .memory, .stickerStorage,
+             .stickerShop, .gacha:                                        return nil
         }
     }
 
@@ -297,6 +310,7 @@ struct MakeTenContentView: View {
         case .memory:              return "memory"
         case .stickerStorage:      return "stickerStorage"
         case .stickerShop:         return "stickerShop"
+        case .gacha:               return "gacha"
         }
     }
 
