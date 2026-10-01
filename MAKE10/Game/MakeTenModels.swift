@@ -75,6 +75,8 @@ enum UDKey {
     static let totalCorrectAllTime = "totalCorrectAllTime" // 1.4以前のシール用ポイント（Double）。1.5で energyDeciKcal へ移行後に削除される
     static let energyDeciKcal      = "energyDeciKcal"      // エネルギー残高（0.1kcal 単位の Int）
     static let stickerShopState    = "stickerShopState"    // ショップ：その日の品揃えと売り切れ（JSON）
+    static let migration150Done    = "migration_1_5_0_done"       // 1.5.0 への更新時の処理を済ませたか
+    static let updateGiftPending   = "updateGiftNoticePending"    // アップデートのプレゼントのお知らせを未表示か
     static let stickers            = "stickers"            // シール用：ゲームモード位置データ（既存キー維持）
     static let storageEmojis       = "storageEmojis"       // シール用：ストレージ絵文字リスト
     static let playStickers        = "playStickers"        // シール用：シール画面位置データ

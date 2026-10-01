@@ -37,6 +37,15 @@ import SwiftUI
 @main
 struct FDL_TenBlitzApp: App {
 
+    // MARK: 初期化
+
+    /// アプリの起動時に1回だけ呼ばれる。
+    /// 新しいバージョンへの更新時の処理（記録のリセット・プレゼントなど）は、
+    /// 画面を作る前に済ませておく（詳しくは AppMigration.swift を参照）。
+    init() {
+        AppMigration.runIfNeeded()
+    }
+
     // MARK: body
 
     // ★ some Scene とは？ ★
