@@ -5,7 +5,7 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/06/04.
 //
 
-// ストレージ画面。2行レイアウトで MAKE10 ボードとストレージのシールを管理する。
+// ストレージ画面。2行レイアウトでキッズゲームコレクションのボード（タイトル画面などに貼るシール）とストレージのシールを管理する。
 // シール画面（お絵描き）との出し入れは StickerPlayView 内のトレイで行う。
 //
 // 【表示方針】
@@ -17,21 +17,14 @@
 // 【操作】
 //   横フリック：各行の「絵文字の種類」を選択（循環）
 //   縦フリック：選んだ種類の絵文字を1枚だけ隣の行へ移動
-//     MAKE10行  下フリック → ストレージへ
-//     ストレージ 上フリック → MAKE10へ
+//     キッズゲームコレクション行  下フリック → ストレージへ
+//     ストレージ行                上フリック → キッズゲームコレクションへ
 
 import SwiftUI
 
 // MARK: - StickerStorageView
 
 struct StickerStorageView: View {
-
-    /// 「シールやさん」ボタンが押されたときの処理（画面遷移は MakeTenContentView が行う）。
-    var onOpenShop: () -> Void = {}
-
-    /// 「ガチャ」ボタンが押されたときの処理（画面遷移は MakeTenContentView が行う）。
-    var onOpenGacha: () -> Void = {}
-
     private let store = StickerStore.shared
 
     // 各行で現在選択中の「種類インデックス」（グループ配列に対するインデックス）
@@ -87,9 +80,14 @@ struct StickerStorageView: View {
 
             ZStack {
                 VStack(spacing: 0) {
-                    // 上行：MAKE10
+                    // 上行：キッズゲームコレクション（タイトル画面などに貼られるシール）
+                    // ★ MAKE10 ではなくアプリ名にしている理由 ★
+                    //   この行のシールが貼られるのは MAKE10 だけでなく、タイトル画面・クイズの画面も含む
+                    //   （MakeTenContentView.stickerBoardVisible を参照）。アプリ名の方が実態に合う。
                     rowView(
-                        label:     String(localized: "make10_title"),
+                        // 欄が狭いので、読みやすい位置で改行を入れたこの場所専用の文言を使う
+                        // （例: 日本語は「キッズゲーム／コレクション」で2行にする）
+                        label:     String(localized: "sticker_storage_row_kids"),
                         groups:    gameGroups,
                         index:     gameIndex,
                         countText: "\(displayGameCount) / 50",
@@ -125,20 +123,25 @@ struct StickerStorageView: View {
                         .allowsHitTesting(false)
                 }
 
-                // シールやさん・ガチャ・シール画面を開くボタン（下部固定）
-                VStack(spacing: 10) {
+                // シール画面を開くボタン（下部固定）
+                VStack {
                     Spacer()
-                    HStack(spacing: 12) {
-                        bottomButton("shop_title", systemImage: "storefront", color: DS.energy) {
-                            onOpenShop()
-                        }
-                        bottomButton("gacha_title", systemImage: "gift", color: DS.energy) {
-                            onOpenGacha()
-                        }
-                    }
-                    bottomButton("sticker_open_play_mode", systemImage: "rectangle.expand.diagonal", color: DS.primary) {
+                    Button {
                         showPlayView = true
+                        SoundManager.shared.vibrate()
+                    } label: {
+                        Label(
+                            LocalizedStringKey("sticker_open_play_mode"),
+                            systemImage: "rectangle.expand.diagonal"
+                        )
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 24)
+                        .padding(.vertical, 12)
+                        .background(Capsule().fill(DS.primary))
+                        .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
                     }
+                    .buttonStyle(.plain)
                     .padding(.bottom, 20)
                 }
 
@@ -161,30 +164,6 @@ struct StickerStorageView: View {
         }
     }
 
-    // MARK: - 下部ボタン
-
-    /// 画面下部に並べるカプセル型のボタン。
-    private func bottomButton(
-        _ titleKey: LocalizedStringKey,
-        systemImage: String,
-        color: Color,
-        action: @escaping () -> Void
-    ) -> some View {
-        Button {
-            SoundManager.shared.vibrate()
-            action()
-        } label: {
-            Label(titleKey, systemImage: systemImage)
-                .font(.system(size: 15, weight: .bold, design: .rounded))
-                .foregroundStyle(.white)
-                .padding(.horizontal, 20)
-                .padding(.vertical, 12)
-                .background(Capsule().fill(color))
-                .shadow(color: color.opacity(0.30), radius: 6, x: 0, y: 3)
-        }
-        .buttonStyle(.plain)
-    }
-
     // MARK: - 行ビュー
 
     private func rowView(
@@ -203,6 +182,9 @@ struct StickerStorageView: View {
                 Text(label)
                     .font(.system(size: 14, weight: .semibold, design: .rounded))
                     .foregroundStyle(.secondary)
+                    // アプリ名は言語によって長いので、3行まで折り返し、それでも入らなければ少し縮める
+                    .lineLimit(3)
+                    .minimumScaleFactor(0.75)
                     .frame(width: 72, alignment: .leading)
                     .padding(.leading, 16)
 
@@ -383,7 +365,7 @@ struct StickerStorageView: View {
 
         switch row {
         case .game:
-            // 下フリックのみ有効：MAKE10 → ストレージ
+            // 下フリックのみ有効：キッズゲームコレクション → ストレージ
             guard goDown else { return }
             guard let emoji = selectedGameEmoji(),
                   // 同じ絵文字の先頭1枚を対象にする（位置・z順に影響しない閲覧用の集約なので先頭で良い）
@@ -396,7 +378,7 @@ struct StickerStorageView: View {
             }
 
         case .storage:
-            // 上フリックのみ有効：ストレージ → MAKE10
+            // 上フリックのみ有効：ストレージ → キッズゲームコレクション
             guard !goDown else { return }
             guard let emoji = selectedStorageEmoji()
             else { showBlock(String(localized: "sticker_storage_empty")); return }

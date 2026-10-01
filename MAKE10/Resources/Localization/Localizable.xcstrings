@@ -4,6 +4,101 @@
     "" : {
 
     },
+    "sticker_storage_row_kids" : {
+      "comment" : "Sticker storage screen: short label of the top row (stickers shown on the app's title screen). It is the app name, with a line break where it reads naturally because the label area is narrow.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kinderspiele"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kids Game Collection"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Juegos para niños"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeux pour enfants"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "बच्चों के गेम्स"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Koleksi Game Anak"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Giochi per bambini"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キッズゲーム\nコレクション"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "키즈 게임\n컬렉션"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kinderspelletjes"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogos para crianças"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "รวมเกม\nสำหรับเด็ก"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trò chơi cho bé"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儿童游戏\n合集"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "兒童遊戲\n合輯"
+          }
+        }
+      }
+    },
     "—" : {
       "comment" : "Placeholder shown when no record exists yet. Keep as an em dash in all languages.",
       "localizations" : {
@@ -23351,91 +23446,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Keine Sticker in MAKE10"
+            "value" : "Keine Sticker in „Kinderspiele“"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No stickers in MAKE10"
+            "value" : "No stickers in Kids Game Collection"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sin pegatinas en MAKE10"
+            "value" : "No hay pegatinas en «Juegos para niños»"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aucun sticker dans MAKE10"
+            "value" : "Aucun sticker dans « Jeux pour enfants »"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 में कोई स्टिकर नहीं"
+            "value" : "बच्चों के गेम्स में कोई स्टिकर नहीं"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tidak ada stiker di MAKE10"
+            "value" : "Tidak ada stiker di Koleksi Game Anak"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nessun adesivo in MAKE10"
+            "value" : "Nessun adesivo in «Giochi per bambini»"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10にシールがありません"
+            "value" : "キッズゲームコレクションにシールがありません"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10에 스티커 없음"
+            "value" : "키즈 게임 컬렉션에 스티커 없음"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Geen stickers in MAKE10"
+            "value" : "Geen stickers in „Kinderspelletjes”"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sem adesivos no MAKE10"
+            "value" : "Sem adesivos em “Jogos para crianças”"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ไม่มีสติ๊กเกอร์ใน MAKE10"
+            "value" : "ไม่มีสติ๊กเกอร์ในรวมเกมสำหรับเด็ก"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Không có nhãn dán trong MAKE10"
+            "value" : "Không có nhãn dán trong Trò chơi cho bé"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 中没有贴纸"
+            "value" : "儿童游戏合集中没有贴纸"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 中沒有貼紙"
+            "value" : "兒童遊戲合輯中沒有貼紙"
           }
         }
       }
@@ -23446,91 +23541,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 ist voll"
+            "value" : "„Kinderspiele“ ist voll"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 is full"
+            "value" : "Kids Game Collection is full"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 está lleno"
+            "value" : "«Juegos para niños» está lleno"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 est plein"
+            "value" : "« Jeux pour enfants » est plein"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 भरा हुआ है"
+            "value" : "बच्चों के गेम्स भर गया है"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 penuh"
+            "value" : "Koleksi Game Anak penuh"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 è pieno"
+            "value" : "«Giochi per bambini» è pieno"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10がいっぱいです"
+            "value" : "キッズゲームコレクションがいっぱいです"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10이 가득 찼어요"
+            "value" : "키즈 게임 컬렉션이 가득 찼어요"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 is vol"
+            "value" : "„Kinderspelletjes” is vol"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 está cheio"
+            "value" : "“Jogos para crianças” está cheio"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 เต็มแล้ว"
+            "value" : "รวมเกมสำหรับเด็กเต็มแล้ว"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 đã đầy"
+            "value" : "Trò chơi cho bé đã đầy"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 已满"
+            "value" : "儿童游戏合集已满"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "MAKE10 已滿"
+            "value" : "兒童遊戲合輯已滿"
           }
         }
       }
@@ -24495,91 +24590,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ zu MAKE10"
+            "value" : "↑ zu „Kinderspiele“"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ to MAKE10"
+            "value" : "↑ to Kids Game Collection"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ a MAKE10"
+            "value" : "↑ a «Juegos para niños»"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ vers MAKE10"
+            "value" : "↑ vers « Jeux pour enfants »"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10 को"
+            "value" : "↑ बच्चों के गेम्स में"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ ke MAKE10"
+            "value" : "↑ ke Koleksi Game Anak"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ a MAKE10"
+            "value" : "↑ a «Giochi per bambini»"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10へ"
+            "value" : "↑ キッズゲームコレクションへ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10으로"
+            "value" : "↑ 키즈 게임 컬렉션으로"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ naar MAKE10"
+            "value" : "↑ naar „Kinderspelletjes”"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ para MAKE10"
+            "value" : "↑ para “Jogos para crianças”"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ ไป MAKE10"
+            "value" : "↑ ไปที่รวมเกมสำหรับเด็ก"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ vào MAKE10"
+            "value" : "↑ vào Trò chơi cho bé"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ 到 MAKE10"
+            "value" : "↑ 到儿童游戏合集"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ 到 MAKE10"
+            "value" : "↑ 到兒童遊戲合輯"
           }
         }
       }
@@ -24591,91 +24686,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ Sticker"
+            "value" : "↑ Kinderspiele  ↓ Sticker"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ stickers"
+            "value" : "↑ Kids Game Collection  ↓ stickers"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ pegatinas"
+            "value" : "↑ Juegos para niños  ↓ pegatinas"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ stickers"
+            "value" : "↑ Jeux pour enfants  ↓ stickers"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ स्टिकर"
+            "value" : "↑ बच्चों के गेम्स  ↓ स्टिकर"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ stiker"
+            "value" : "↑ Koleksi Game Anak  ↓ stiker"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ adesivi"
+            "value" : "↑ Giochi per bambini  ↓ adesivi"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ シール"
+            "value" : "↑ キッズゲームコレクション  ↓ シール"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ 스티커"
+            "value" : "↑ 키즈 게임 컬렉션  ↓ 스티커"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ stickers"
+            "value" : "↑ Kinderspelletjes  ↓ stickers"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ adesivos"
+            "value" : "↑ Jogos para crianças  ↓ adesivos"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ สติ๊กเกอร์"
+            "value" : "↑ รวมเกมสำหรับเด็ก  ↓ สติ๊กเกอร์"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ nhãn dán"
+            "value" : "↑ Trò chơi cho bé  ↓ nhãn dán"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ 贴纸"
+            "value" : "↑ 儿童游戏合集  ↓ 贴纸"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ MAKE10  ↓ 貼紙"
+            "value" : "↑ 兒童遊戲合輯  ↓ 貼紙"
           }
         }
       }

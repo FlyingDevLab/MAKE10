@@ -44,6 +44,13 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case quiz
     case whackAMole
     case maze
+    // ★ シールやさん・ガチャをここ（宣言の途中）に置いている理由 ★
+    //   保存済みの並び順が無い新規インストールでは、宣言順がそのまま初期の並びになる。
+    //   ロゴの下に2枚ずつ並ぶので、ここに置くと「下から2番目の段」に入り、
+    //   入れ替わらない段で最初から目に入る（一番下の段は自動デモで入れ替わる）。
+    //   既存ユーザーは保存データに無い case として先頭に入る（GameRankManager.init を参照）。
+    case stickerShop    // シールやさん（エネルギーでシールを買う）
+    case gacha          // ガチャ（エネルギーでシールを引く）
     case pinball
     case coinDrop
     case janken
@@ -68,6 +75,8 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:        return "🔢"
         case .memory:           return "🐘"
         case .stickerStorage:   return "🖼️"
+        case .stickerShop:      return "🛍️"
+        case .gacha:            return "🎁"
         }
     }
 
@@ -92,6 +101,8 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:         return "tenpuzzle_title"
         case .memory:            return "memory_title"
         case .stickerStorage:    return "sticker_storage_title"
+        case .stickerShop:       return "shop_title"
+        case .gacha:             return "gacha_title"
         }
     }
 
@@ -110,6 +121,8 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:        return .indigo
         case .memory:           return .brown
         case .stickerStorage:   return .pink
+        case .stickerShop:      return DS.energy
+        case .gacha:            return .mint
         }
     }
 }
