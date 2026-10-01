@@ -158,7 +158,7 @@ final class TenPuzzleViewModel {
                 }
             }()
             var bonus = (Double(record.correct) * bonusRate).rounded()
-            if record.correct == record.total { bonus += EnergyRewards.perfectBonus }
+            if record.correct == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
             EnergyStore.shared.grantClearBonus(bonus)
             withAnimation(.easeInOut(duration: 0.3)) { phase = .result }
             return
