@@ -251,7 +251,7 @@ private struct WAMResultView: View {
 
             Spacer()
 
-            StickerRewardBanner()
+            EnergyRewardBanner()
 
             // ── ボタン群 ──────────────────────────────────────
             VStack(spacing: 12) {

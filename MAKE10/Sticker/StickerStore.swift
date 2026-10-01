@@ -55,15 +55,6 @@ final class StickerStore {
     // シール画面用。位置情報あり・上限 100 枚
     private(set) var playStickers: [Sticker] = []
 
-    // リザルト画面でゲームボードへ配置するシール一時保持用。
-    // 配置が確定するまで UserDefaults に残し、次回起動時はストレージへ移す（load() を参照）。
-    // ⚠️ 移行中: ボーナスシールのエネルギー化と結果画面のシールバナー廃止が済んだら削除する。
-    private(set) var pendingStickers: [String] = []
-
-    // リザルト画面でストレージへ送出されたシール枚数。
-    // FinishedView がメッセージ表示の判断に使う。表示後に clearPendingStorage() でリセットする
-    private(set) var pendingStorageCount: Int = 0
-
     // MARK: - 上限定数
 
     private let gameDisplayLimit: Int    = 50    // ← 変更可：ゲームボードの表示上限
@@ -74,20 +65,14 @@ final class StickerStore {
     // 外部からの直接初期化を禁止し、shared 経由のみを強制する
     private init() { load() }
 
-    // MARK: - 公開API（獲得・pending 管理）
+    // MARK: - 公開API（獲得）
 
     /// 指定した絵文字を1枚、ストレージへ直接追加する。
     /// どうぶつめくりのように「自分で選んだシール」をそのまま渡す場面で使う。
     ///
-    /// ★ ボードの空きを見ない理由 ★
+    /// ★ ボードではなくストレージへ直送する理由 ★
     ///   ストレージには上限がないため、この経路は必ず成功する。
-    ///   満杯かどうかの分岐そのものが不要になる。
-    ///
-    /// ★ pendingStorageCount を増やさない理由 ★
-    ///   あのカウンタは「ゲームボードが満杯だったので、やむを得ずストレージへ回した」
-    ///   ことをリザルト画面で知らせるためのもの。
-    ///   ここでの直送は最初からそう決まっている正規の経路なので、
-    ///   増やすと次の MAKE10 のリザルト画面に身に覚えのないメッセージが出てしまう。
+    ///   ボードが満杯かどうかの分岐そのものが不要になる。
     func addStickerToStorage(emoji: String) {
         addStickersToStorage([emoji])
     }
@@ -98,31 +83,6 @@ final class StickerStore {
         guard !emojis.isEmpty else { return }
         storageEmojis.append(contentsOf: emojis)
         saveStorage()   // 直後に落ちてもシールを失わないよう即保存する
-    }
-
-    /// リザルト画面での表示完了後に呼ぶ。ストレージ送出カウントをリセットする。
-    func clearPendingStorage() {
-        pendingStorageCount = 0
-    }
-
-    /// リザルト画面でユーザーが絵文字をドラッグして配置したときに呼ぶ。
-    // firstIndex(of:) で同じ絵文字が複数あっても先頭の1つだけを消費する
-    func placePendingSticker(emoji: String, xRatio: Double, yRatio: Double) {
-        if let idx = pendingStickers.firstIndex(of: emoji) {
-            pendingStickers.remove(at: idx)
-            savePending()   // 配置済みのぶんを保存側からも取り除く
-        }
-        stickers.append(Sticker(emoji: emoji, xRatio: xRatio, yRatio: yRatio))
-        saveGame()
-    }
-
-    /// ドラッグ配置されなかった残りの pending を自動配置するフォールバック。
-    // リザルト画面の onDisappear やボタン操作時に呼ばれる
-    func confirmPendingStickers() {
-        let toAdd = pendingStickers
-        pendingStickers = []
-        savePending()   // 先に空を保存する（この後の spawnSticker が saveGame で確定させる）
-        for emoji in toAdd { spawnSticker(emoji: emoji) }
     }
 
     // MARK: - 公開API（ゲームモード操作）
@@ -243,8 +203,6 @@ final class StickerStore {
         stickers            = []
         storageEmojis       = []
         playStickers        = []
-        pendingStickers     = []
-        pendingStorageCount = 0
         UserDefaults.standard.removeObject(forKey: UDKey.stickers)
         UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
@@ -254,7 +212,7 @@ final class StickerStore {
     // MARK: - 公開API（所有数）
 
     /// シールの種類ごとに、いま持っている枚数を数える（ショップの救済枠の抽選に使う）。
-    /// MAKE10ボード・ストレージ・シール画面・配置待ちのどこにあっても1枚と数える。
+    /// MAKE10ボード・ストレージ・シール画面のどこにあっても1枚と数える。
     ///
     /// ★ 「これまでに手に入れた枚数」を別に記録していない理由 ★
     ///   シールを捨てる・消す方法はない（進捗リセットを除く）ため、
@@ -262,16 +220,15 @@ final class StickerStore {
     ///   将来シールを消費する機能を作るときに、ここを初期値にして記録を始めればよい。
     func ownedCounts() -> [String: Int] {
         var counts: [String: Int] = [:]
-        for s in stickers        { counts[s.emoji, default: 0] += 1 }
-        for e in storageEmojis   { counts[e,       default: 0] += 1 }
-        for s in playStickers    { counts[s.emoji, default: 0] += 1 }
-        for e in pendingStickers { counts[e,       default: 0] += 1 }
+        for s in stickers      { counts[s.emoji, default: 0] += 1 }
+        for e in storageEmojis { counts[e,       default: 0] += 1 }
+        for s in playStickers  { counts[s.emoji, default: 0] += 1 }
         return counts
     }
 
     // MARK: - 非公開
 
-    /// ゲームボードへ螺旋状に自動配置する（pending フォールバック・ストレージ移動時）。
+    /// ゲームボードへ螺旋状に自動配置する（ストレージからの移動時）。
     // 黄金角（約137.5°= 2.399rad）ベースの螺旋配置でシールを均等に散らばせる。
     // ボード下部（yRatio 0.83〜0.90）に収めるよう縦方向の振れ幅を 0.2 倍に抑えている
     private func spawnSticker(emoji: String) {
@@ -309,12 +266,6 @@ final class StickerStore {
     private func savePlay() {
         guard let data = try? JSONEncoder().encode(playStickers) else { return }
         UserDefaults.standard.set(data, forKey: UDKey.playStickers)
-    }
-
-    /// 配置待ちシールを保存する。他の save〜 と違い、位置情報のない絵文字リストだけを持つ。
-    private func savePending() {
-        guard let data = try? JSONEncoder().encode(pendingStickers) else { return }
-        UserDefaults.standard.set(data, forKey: UDKey.pendingStickers)
     }
 
     /// 起動時に UserDefaults から全状態を復元する。

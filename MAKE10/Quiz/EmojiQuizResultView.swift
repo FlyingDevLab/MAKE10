@@ -7,15 +7,12 @@
 
 // 絵文字クイズ終了後に表示する結果画面。
 // スコア・メッセージ・円形ゲージで結果を視覚的に伝え、
-// 獲得したシールのバナー表示とドラッグ配置への誘導も担う。
+// 今回増えたエネルギーも EnergyRewardBanner で見せる。
 //
 // 役割分担:
-//   - EmojiQuizViewModel        : スコア・総問題数の算出元（この画面は表示するだけ）
-//   - EmojiQuizResultView       : 結果の視覚表現とシールバナー
-//   - DraggablePendingStickerChip : シールチップ（FinishedView.swift で定義された共用部品）
-//
-// シールがこの画面に届くまでの流れは FinishedView.swift 冒頭の解説を参照
-// （あちらは MAKE10 の結果画面、こちらはクイズの結果画面で、同じ仕組みを共用している）。
+//   - EmojiQuizViewModel  : スコア・総問題数の算出元（この画面は表示するだけ）
+//   - EmojiQuizResultView : 結果の視覚表現
+//   - EnergyRewardBanner  : 今回増えたエネルギーの表示（共通部品）
 
 import SwiftUI
 
@@ -26,19 +23,6 @@ struct EmojiQuizResultView: View {
     // MARK: 依存
 
     var viewModel: EmojiQuizViewModel
-
-    // MARK: ローカル状態
-
-    /// 今回のクイズで新たに獲得したシールの絵文字リスト。
-    /// onAppear で StickerStore.pendingStickers から取得し、バナーに表示する。
-    @State private var newStickerEmojis: [String] = []
-
-    /// バナー内の各絵文字チップのグローバル座標（index → CGPoint）。
-    /// ドラッグせずに「もう一度」を押した場合に、バナー上の表示位置へシールを自動配置するために使う。
-    @State private var capturedPositions: [Int: CGPoint] = [:]
-
-    /// placeRemainingStickers 内で座標をスクリーン比率に変換するために使用する。
-    private var screenSize: CGSize { UIScreen.main.bounds.size }
 
     // MARK: 表示の算出
 
@@ -156,63 +140,11 @@ struct EmojiQuizResultView: View {
 
             Spacer()
 
-            // ── 新着シールバナー ──────────────────────────────
-            // 獲得シールがある場合のみスプリングアニメーションで表示する。
-            // ドラッグして盤面に置くか、ドラッグしなかった場合は「もう一度」タップ時に自動配置される
-            if !newStickerEmojis.isEmpty {
-                VStack(spacing: 8) {
-                    // 獲得枚数に応じてメッセージを単数形・複数形で切り替える
-                    Text("Got \(newStickerEmojis.count) Stickers!")
-                        .font(.system(size: 15, weight: .black, design: .rounded))
-                        .foregroundStyle(DS.primary)
-
-                    HStack(spacing: 4) {
-                        ForEach(Array(newStickerEmojis.enumerated()), id: \.offset) { idx, emoji in
-                            // ドラッグで盤面に配置できるシールチップ（FinishedView.swift で定義）。
-                            // ドラッグ完了コールバックで配列から該当シールを削除する
-                            DraggablePendingStickerChip(emoji: emoji) {
-                                if let i = newStickerEmojis.firstIndex(of: emoji) {
-                                    withAnimation(.easeIn(duration: 0.15)) {
-                                        newStickerEmojis.remove(at: i)
-                                        capturedPositions.removeValue(forKey: idx)
-                                    }
-                                }
-                            }
-                            // チップの画面上の中心座標を記録する（ドラッグしなかった場合の自動配置に使う）
-                            // 見えない背景で座標を取得するテクニックの解説は FinishedView.swift を参照
-                            .background(
-                                GeometryReader { chipGeo in
-                                    Color.clear.onAppear {
-                                        let frame = chipGeo.frame(in: .global)
-                                        capturedPositions[idx] = CGPoint(x: frame.midX, y: frame.midY)
-                                    }
-                                }
-                            )
-                        }
-                    }
-
-                    Text("Drag to Move")
-                        .font(.system(size: 12, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                }
-                .padding(.vertical, 14)
-                .padding(.horizontal, 20)
-                .frame(maxWidth: .infinity)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.sectionRadius)
-                        .fill(DS.card)
-                        .shadow(color: DS.primary.opacity(0.12), radius: 10, x: 0, y: 4)
-                )
-                .padding(.horizontal, 28)
-                .padding(.bottom, 8)
-                // バナー出現時にスケール＋フェードで自然に現れるトランジションを設定する
-                .transition(.scale(scale: 0.85).combined(with: .opacity))
-            }
+            // ── エネルギー獲得バナー ──────────────────────────
+            EnergyRewardBanner()
 
             // ── 「もう一度」ボタン ────────────────────────────
-            // タップ前に残留シールを自動配置してから ViewModel をリセットする
             Button {
-                placeRemainingStickers()
                 viewModel.restart()
             } label: {
                 Label("quiz_play_again", systemImage: "arrow.counterclockwise")
@@ -230,45 +162,5 @@ struct EmojiQuizResultView: View {
             .padding(.horizontal, 28)
             .padding(.bottom, 16)
         }
-        .onAppear {
-            // 画面表示時に StickerStore から未配置のシールを取得してバナーに渡す。
-            // pendingStickers が空のときはバナー自体を表示しない
-            if !StickerStore.shared.pendingStickers.isEmpty {
-                withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
-                    newStickerEmojis = StickerStore.shared.pendingStickers
-                }
-            }
-        }
-        .onDisappear {
-            // Viewが消える直前に残留シールを自動配置する。
-            // 「もう一度」ボタン経由でも、別の操作で画面を離れた場合でもシールをロストしないための安全策
-            placeRemainingStickers()
-        }
-    }
-
-    // MARK: シール配置
-
-    /// ドラッグされなかった残りのシールを、バナー上の表示位置にそのまま配置する。
-    /// 座標を比率で保存する理由の解説は FinishedView.swift を参照。
-    ///
-    /// ⚠️ 変更注意: クランプ範囲 0.08〜0.92 は FinishedView.placeRemainingStickers と
-    ///   DraggablePendingStickerChip.onEnded の同じ値と揃えること（計3箇所）。
-    private func placeRemainingStickers() {
-        for (idx, emoji) in newStickerEmojis.enumerated() {
-            if let pos = capturedPositions[idx] {
-                // キャプチャ済みの座標があれば、その位置にシールを配置する
-                StickerStore.shared.placePendingSticker(
-                    emoji: emoji,
-                    xRatio: max(0.08, min(0.92, pos.x / screenSize.width)),
-                    yRatio: max(0.08, min(0.92, pos.y / screenSize.height))
-                )
-            } else {
-                // 座標が取得できていない場合（稀なケース）はデフォルト位置に確定する
-                StickerStore.shared.confirmPendingStickers()
-            }
-        }
-        // 配置処理完了後にローカルの状態をクリアして重複配置を防ぐ
-        newStickerEmojis = []
-        capturedPositions = [:]
     }
 }
