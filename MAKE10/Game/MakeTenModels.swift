@@ -65,7 +65,8 @@ enum ResetTarget { case highScore, progress }
 
 enum UDKey {
     static let hasAgreedToTerms    = "hasAgreedToTerms"    // 初回同意済みフラグ
-    static let isSoundOn           = "isSoundOn"           // サウンドON/OFF設定
+    static let isSoundOn           = "isSoundOn"           // おと（効果音）のON/OFF設定
+    static let isHapticOn          = "isHapticOn"          // ぶるぶる（振動）のON/OFF設定（1.5で「おと」から分離）
     static let isBlitzUnlocked     = "isBlitzUnlocked"     // Blitzモード解放済みフラグ
     static let normalHighScore     = "normalHighScore"     // 30びょうモードの歴代最高スコア
     static let blitzHighScore      = "blitzHighScore"      // 10びょう(Blitz)モードの歴代最高スコア

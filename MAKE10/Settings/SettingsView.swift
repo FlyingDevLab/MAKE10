@@ -90,13 +90,19 @@ struct SettingsView: View {
                     .font(.system(size: 26, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.primary)
 
-                // ── 音＆バイブ トグル ──────────────────────
+                // ── おと／ぶるぶる トグル ──────────────────
                 // AppSettings.shared に直接バインドし、変更が UserDefaults に即時保存される
                 VStack(spacing: 0) {
                     settingRow(
                         icon:  "speaker.wave.2.fill",
-                        label: "settings_sound_haptic_label",
+                        label: "settings_sound_label",
                         isOn:  $settings.isSoundOn
+                    )
+                    Divider().padding(.leading, 60)
+                    settingRow(
+                        icon:  "iphone.radiowaves.left.and.right",
+                        label: "settings_haptic_label",
+                        isOn:  $settings.isHapticOn
                     )
                 }
                 .background(
@@ -200,7 +206,7 @@ struct SettingsView: View {
     // MARK: サブビュー生成ヘルパー
 
     /// 設定行を生成するヘルパー。アイコン・ラベル・トグルを横並びにしたレイアウトを返す。
-    /// 現在は音＆バイブのみだが、設定項目が増えた場合も同じメソッドで追加できる。
+    /// 設定項目が増えた場合も同じメソッドで追加できる（いまは「おと」と「ぶるぶる」）。
     private func settingRow(icon: String, label: LocalizedStringKey, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)
