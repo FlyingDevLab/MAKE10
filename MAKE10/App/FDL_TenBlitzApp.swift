@@ -44,6 +44,7 @@ struct FDL_TenBlitzApp: App {
     /// 画面を作る前に済ませておく（詳しくは AppMigration.swift を参照）。
     init() {
         AppMigration.runIfNeeded()
+        DailyBonus.prepareAtLaunch()   // 新しくインストールした人かを、同意前のこの時点で記録する
     }
 
     // MARK: body

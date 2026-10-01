@@ -63,8 +63,8 @@ struct MakeTenContentView: View {
     @State private var viewModel      = GameViewModel()
     /// 現在表示中の画面。
     @State private var screen: Screen = .make10
-    /// アップデートのプレゼントのお知らせを出しているか（AppMigration.swift を参照）。
-    @State private var showsGiftNotice = AppMigration.hasPendingGiftNotice
+    /// まだ見せていないお知らせ（アップデートのお礼・はじめまして・ログインボーナス）。先頭から順に出す。
+    @State private var giftNotices: [GiftNotice] = []
     // hasAgreedToTerms は AppSettings.shared 経由で参照する。
     // @Observable により body 内での参照が自動追跡され、値が変わると再描画される。
 
@@ -162,13 +162,16 @@ struct MakeTenContentView: View {
                     .zIndex(20)
             }
 
-            // アップデートのプレゼントのお知らせ（1回だけ）。zIndex はSharedFrameの階層表どおり
-            if showsGiftNotice {
-                UpdateGiftNoticeView(
-                    onOpenGacha: { closeGiftNotice(openingScreen: .gacha) },
-                    onOpenShop:  { closeGiftNotice(openingScreen: .stickerShop) },
-                    onClose:     { closeGiftNotice(openingScreen: nil) }
+            // エネルギーのプレゼントのお知らせ。タイトル画面にいるときだけ、1枚ずつ順番に出す。
+            // zIndex はSharedFrameの階層表どおり
+            if let notice = giftNotices.first, isOnTitleScreen {
+                GiftNoticeView(
+                    notice:      notice,
+                    onOpenGacha: { closeGiftNotice(notice, openingScreen: .gacha) },
+                    onOpenShop:  { closeGiftNotice(notice, openingScreen: .stickerShop) },
+                    onClose:     { closeGiftNotice(notice, openingScreen: nil) }
                 )
+                .id(notice.id)   // 次のお知らせに切り替わったとき、登場の演出をやり直す
                 .transition(.opacity)
                 .zIndex(60)
             }
@@ -182,7 +185,10 @@ struct MakeTenContentView: View {
             }
         }
         .onDisappear { viewModel.suspend() }
-        .onAppear    { viewModel.resume()  }
+        .onAppear {
+            viewModel.resume()
+            refreshGiftNotices()   // 同意直後・起動直後に、その日のログインボーナスなどを確認する
+        }
         // ★ onReceive / NotificationCenter とは？ ★
         //   iOS がアプリ全体に放送する「お知らせ」（通知）を受け取る仕組みです。
         //   didEnterBackground = ホーム画面に戻った / willEnterForeground = アプリに戻ってきた
@@ -193,17 +199,42 @@ struct MakeTenContentView: View {
         ) { _ in viewModel.suspend() }
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.willEnterForegroundNotification)
-        ) { _ in viewModel.resume() }
+        ) { _ in
+            viewModel.resume()
+            refreshGiftNotices()   // 寝る前に開いたまま翌朝戻ってきた、などのときもログインボーナスを渡す
+        }
     }
 
     // MARK: お知らせ
 
-    /// アップデートのプレゼントのお知らせを閉じる。openingScreen を渡すとその画面へ移る。
-    private func closeGiftNotice(openingScreen: Screen?) {
-        AppMigration.markGiftNoticeShown()
+    /// お知らせカードを出してよい画面か。ゲームの途中で割り込まないよう、タイトル画面に限る。
+    private var isOnTitleScreen: Bool {
+        if case .make10 = screen { return viewModel.gameState == .title }
+        return false
+    }
+
+    /// その日のログインボーナスを受け取り、まだ見せていないお知らせを並べ直す。
+    /// 出す順: アップデートのお礼 → はじめまして → ログインボーナス
+    private func refreshGiftNotices() {
+        DailyBonus.checkIn()
+        var notices: [GiftNotice] = []
+        if AppMigration.hasPendingGiftNotice { notices.append(.updateThanks) }
+        notices += DailyBonus.pendingNotices.map { .daily($0) }
+        giftNotices = notices
+    }
+
+    /// お知らせを1枚閉じる。openingScreen を渡すとその画面へ移る。次のお知らせがあれば続けて出す。
+    private func closeGiftNotice(_ notice: GiftNotice, openingScreen: Screen?) {
+        switch notice {
+        case .updateThanks:      AppMigration.markGiftNoticeShown()
+        case .daily(let daily):  DailyBonus.markShown(daily)
+        }
         withAnimation(.easeInOut(duration: 0.25)) {
-            showsGiftNotice = false
-            if let openingScreen { screen = openingScreen }
+            giftNotices.removeFirst()
+            if let openingScreen {
+                screen = openingScreen
+                // 別の画面へ移るので、残りのお知らせはタイトル画面に戻ってきたときに出す
+            }
         }
     }
 
