@@ -14,8 +14,9 @@
 //    - StickerStore                : 手に入れたシールの保管
 //
 //  ★ エネルギーの増え方（体験の設計） ★
-//    ・プレイ中: 正解ごとに earn() で少しずつ増える（ヘッダーの数字がその場で増える）
-//    ・クリア後: grantClearBonus() でまとめてドサっと増える（結果画面で見せる）
+//    ・プレイ中: 正解ごとに earn() で +1 ずつ増える（ヘッダーの数字がその場で増える）
+//    ・クリア後: grantClearBonus() で「正解の数 × 倍率」がドサっと増える（結果画面で見せる）
+//    量は下の EnergyRewards の表でまとめて調整できる。
 //    どちらも呼んだ瞬間に残高へ加算・保存する。演出のために加算を遅らせると、
 //    演出の途中でアプリが終了されたときにエネルギーが消えてしまうため。
 
@@ -29,11 +30,6 @@ import Foundation
 // └─────────────────────────────────────────────┘
 
 enum EnergyTuning {
-    /// クリアボーナスの基本単位（kcal）。1.4 以前の「ボーナスシール1枚」をこの量に置き換えた。
-    /// クイズ全問正解・テンパズル全問正解・コインドロップのパーフェクトで1つ分、
-    /// じゃんけんはクリア内容と難易度に応じて 1〜9 つ分を渡す。
-    static let clearBonusUnit:  Double = 100    // ← 変更可
-
     /// ガチャ1回の値段（kcal）。バナナ1本分。
     static let gachaPrice:      Double = 100    // ← 変更可
     /// 10連ガチャでまわす回数。値段は gachaPrice × この回数になる。
@@ -54,6 +50,60 @@ enum EnergyTuning {
     static let rescueWeightExponent: Double = 2.0   // ← 変更可
 }
 
+// MARK: - ⚙️ もらえるエネルギーの表（ゲームごと・ここだけ触ればOK）
+//
+// ┌──────────────────────────────────────────────────────────┐
+// │  どのゲームで、いつ、どれだけエネルギーが増えるかを一箇所に集約。  │
+// │  ゲームバランスを変えたいときはここだけ編集する。                  │
+// └──────────────────────────────────────────────────────────┘
+//
+// ★ 増え方のルール（全ゲーム共通） ★
+//   ① プレイ中: 正解（もぐらを叩く・チーズを取る など）のたびに perCorrect（+1）ずつ増える。
+//      ヘッダーの数字がその場で増えていくのを見せるため。
+//   ② クリア後: 「正解の数 × ゲームごとの倍率」をクリアボーナスとしてまとめて渡す。
+//      難しいゲーム・モードほど倍率を高くしている（難易度の予想順は下の各項目のコメント）。
+//   ③ 全問正解などの特別な達成には perfectBonus（+100）を上乗せする。
+//   クリアボーナスは小数になったら四捨五入する（画面には整数しか出さないため）。
+
+enum EnergyRewards {
+    /// 正解1回ごとにプレイ中に増える量（kcal）。全ゲーム共通。
+    static let perCorrect:   Double = 1      // ← 変更可
+    /// 全問正解・パーフェクトなど、特別な達成のボーナス（kcal）。
+    static let perfectBonus: Double = 100    // ← 変更可
+
+    /// もぐら叩き（難易度の予想: いちばんやさしい）。クリアボーナス = 叩いた数 × この倍率。
+    static let whackAMoleBonusRate: Double = 0.5   // ← 変更可
+
+    /// 指令じゃんけん。クリアボーナス = 正解の数 × 難易度ごとの倍率。ノーミスで perfectBonus。
+    static let jankenBonusRateEasy:      Double = 1    // ← 変更可（予想: やさしい）
+    static let jankenBonusRateHard:      Double = 3    // ← 変更可（予想: ふつう。「負けて」は頭の切り替えが必要）
+    static let jankenBonusRateChallenge: Double = 4    // ← 変更可（予想: むずかしい。30問）
+
+    /// 絵文字クイズ。クリアボーナス = 正解の数 × モードごとの倍率。全問正解で perfectBonus。
+    static let quizBonusRateBasic: Double = 1.5   // ← 変更可（ふつう）
+    static let quizBonusRateHard:  Double = 2     // ← 変更可（むずかしい）
+
+    /// コインドロップ。クリアボーナス = 作った$1の数 × この倍率。$10達成で perfectBonus。
+    static let coinDropBonusRate: Double = 2      // ← 変更可
+
+    /// 迷路。クリアボーナス = 取ったチーズの数 × この倍率（チーズは数が少ないので高め）。
+    static let mazeBonusRate: Double = 3          // ← 変更可
+
+    /// ピンボール。この点数ごとに「正解1回」と数える（プレイ中に +1）。
+    static let pinballPointsPerCorrect: Int = 1000 // ← 変更可
+    /// ピンボールのクリアボーナス = 正解の数（点数 ÷ pinballPointsPerCorrect）× この倍率。
+    static let pinballBonusRate: Double = 0.5     // ← 変更可
+
+    /// MAKE10。クリアボーナス = 正解の数 × モードごとの倍率。
+    static let make10BonusRateNormal: Double = 1  // ← 変更可（30びょう）
+    static let make10BonusRateBlitz:  Double = 6  // ← 変更可（10びょう）
+
+    /// 四則テンパズル。クリアボーナス = 正解の数 × モードごとの倍率。全問正解で perfectBonus。
+    static let tenPuzzleBonusRateA: Double = 2    // ← 変更可（かんたん / ふつう）
+    static let tenPuzzleBonusRateB: Double = 4    // ← 変更可（むずかしい）
+    static let tenPuzzleBonusRateC: Double = 6    // ← 変更可（チャレンジ）
+}
+
 // MARK: - EnergyStore
 
 // @Observable / シングルトンの解説は AppSettings.swift 冒頭を参照
@@ -67,10 +117,10 @@ final class EnergyStore {
     /// 残高（0.1kcal 単位の整数）。画面に出すときは balance を使う。
     ///
     /// ★ Double ではなく 0.1kcal 単位の Int で持っている理由 ★
-    ///   Double は 1.8 のような小数を正確に表せず、足し算を重ねると
-    ///   99.99999… のような誤差が生まれる。すると画面には「100.0kcal」と出ているのに
-    ///   100kcal のガチャがまわせない、という不思議なことが起きてしまう。
-    ///   獲得量は小数第1位までと決めているので、10倍した整数で持てば誤差が出ない。
+    ///   Double は 0.1 のような小数を正確に表せず、足し算を重ねると 99.99999… のような
+    ///   誤差が生まれる。いまの獲得量はすべて整数だが、1.4 以前から引き継いだポイントには
+    ///   端数（例: 57.4）があるため、その端数を誤差なく持てるよう 10倍した整数で保存している。
+    ///   （画面には整数しか出さない。format を参照）
     private(set) var balanceDeci: Int = 0
 
     /// 今回のプレイ中に earn() で増えた量（0.1kcal 単位）。beginSession() で 0 に戻る。
@@ -112,7 +162,7 @@ final class EnergyStore {
         save()
     }
 
-    /// クリア後にまとめて渡すボーナス（旧ボーナスシールの置き換え・アーケード系のスコア換算）。
+    /// クリア後にまとめて渡すボーナス（正解の数 × 倍率、全問正解ボーナスなど）。
     /// 残高にすぐ加算して保存する。演出は結果画面が sessionClearBonus を見て行う。
     /// - Parameter kcal: 獲得量。小数第2位以下は四捨五入される。
     func grantClearBonus(_ kcal: Double) {
@@ -164,10 +214,20 @@ final class EnergyStore {
 
     // MARK: 表示用の書式
 
-    /// kcal を「1,100.8」のような小数第1位までの文字列にする（単位は付けない）。
-    /// 区切り記号（, と .）は端末の言語・地域設定に合わせて変わる。
+    /// kcal を「1,100」のような整数の文字列にする（単位は付けない）。
+    /// 区切り記号（,）は端末の言語・地域設定に合わせて変わる。
+    ///
+    /// ★ 小数点を表示しない理由 ★
+    ///   子どもには小数の概念が難しいため。獲得量はすべて整数にしているが、
+    ///   1.4 以前から引き継いだ端数（例: 57.4）が残っている場合があるので、切り捨てて表示する。
+    ///   切り捨てなら「表示されている数 ≦ 本当の残高」になるので、表示どおりの値段のものは必ず買える。
     static func format(_ kcal: Double) -> String {
-        kcal.formatted(.number.precision(.fractionLength(1)))
+        kcal.rounded(.down).formatted(.number.precision(.fractionLength(0)))
+    }
+
+    /// 足りない量を整数で表示する文字列。端数があれば切り上げる（「あと 0」と出さないため）。
+    static func formatShortage(_ kcal: Double) -> String {
+        max(1, kcal.rounded(.up)).formatted(.number.precision(.fractionLength(0)))
     }
 
     // MARK: 非公開

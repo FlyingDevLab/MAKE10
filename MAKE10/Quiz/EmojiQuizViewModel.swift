@@ -137,8 +137,8 @@ final class EmojiQuizViewModel {
 
         if isCorrect {
             score += 1
-            // textToEmoji モードは難易度が高いため、エネルギーを高く設定している
-            EnergyStore.shared.earn(mode == .textToEmoji ? 2.9 : 2.4)  // ← 変更可（難しい:2.9kcal / 基本:2.4kcal）
+            // 正解するたびにエネルギーを +1（量は EnergyRewards で調整する）
+            EnergyStore.shared.earn(EnergyRewards.perCorrect)
         }
         results[currentIndex] = isCorrect
 
@@ -170,8 +170,13 @@ final class EmojiQuizViewModel {
             case 0.8...: SoundManager.shared.playTenClear()  // 80%以上 ← 変更可（特別音の閾値）
             default:     SoundManager.shared.playGameOver()  // 80%未満
             }
-            // 全問正解でクリアボーナス（リザルト画面でまとめて増える演出を見せる）
-            if pct == 1.0 { EnergyStore.shared.grantClearBonus(EnergyTuning.clearBonusUnit) }
+            // クリアボーナス = 正解の数 × モードごとの倍率（textToEmoji は文字を読むぶん難しいので高め）。
+            // 全問正解ならさらに上乗せする。リザルト画面でまとめて増える演出を見せる
+            let bonusRate = mode == .textToEmoji ? EnergyRewards.quizBonusRateHard
+                                                 : EnergyRewards.quizBonusRateBasic
+            var bonus = (Double(score) * bonusRate).rounded()
+            if pct == 1.0 { bonus += EnergyRewards.perfectBonus }
+            EnergyStore.shared.grantClearBonus(bonus)
             isFinished = true
         } else {
             // 次の問題へ。answerState と selectedItem をリセットして未回答状態に戻す

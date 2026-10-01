@@ -43,12 +43,12 @@ enum JankenDifficulty {
         }
     }
 
-    /// クリアボーナスの倍率（難しいほど多く貰える）
-    var bonusMultiplier: Int {
+    /// クリアボーナスの倍率（難しいほど多く貰える。値は EnergyRewards で調整する）
+    var bonusRate: Double {
         switch self {
-        case .easy:      return 1  // ← 変更可
-        case .hard:      return 2  // ← 変更可
-        case .challenge: return 3  // ← 変更可
+        case .easy:      return EnergyRewards.jankenBonusRateEasy
+        case .hard:      return EnergyRewards.jankenBonusRateHard
+        case .challenge: return EnergyRewards.jankenBonusRateChallenge
         }
     }
 
@@ -317,6 +317,7 @@ final class JankenViewModel {
 
         if isCorrect {
             flash = .correct
+            EnergyStore.shared.earn(EnergyRewards.perCorrect)   // 正解するたびにエネルギーを +1
             SoundManager.shared.playCorrect()
             SoundManager.shared.vibrate()
         } else {
@@ -456,14 +457,12 @@ final class JankenViewModel {
 
     // MARK: - クリアボーナス
 
-    /// クリア内容×難易度倍率でクリアボーナスの数を決め、エネルギーとして渡す。
-    /// 1.4 以前はこの数だけボーナスシールを渡していた（1つ = EnergyTuning.clearBonusUnit）。
+    /// クリアボーナス = 正解の数 × 難易度ごとの倍率。ノーミスならさらに上乗せする。
     private func awardClearBonus() {
-        var base = 1                     // クリアボーナス
-        if finalAccuracy >= 0.5 { base += 1 }  // 50%以上ボーナス
-        if finalAccuracy >= 1.0 { base += 1 }  // ノーミスボーナス
-        let units = base * difficulty.bonusMultiplier
-        EnergyStore.shared.grantClearBonus(Double(units) * EnergyTuning.clearBonusUnit)
+        let corrects = totalRounds - missCount
+        var bonus = (Double(corrects) * difficulty.bonusRate).rounded()
+        if isPerfect { bonus += EnergyRewards.perfectBonus }
+        EnergyStore.shared.grantClearBonus(bonus)
     }
 
     // MARK: - 指示列の生成

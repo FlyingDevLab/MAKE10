@@ -286,7 +286,7 @@ struct StickerShopView: View {
                     Text("shop_not_enough")
                         .font(.system(size: 20, weight: .black, design: .rounded))
                         .foregroundStyle(DS.textPrimary)
-                    Text("shop_need_more \(EnergyStore.format(shortage))")
+                    Text("shop_need_more \(EnergyStore.formatShortage(shortage))")
                         .font(.system(size: 16, weight: .bold, design: .rounded))
                         .foregroundStyle(DS.energy)
                     Text("shop_not_enough_hint")

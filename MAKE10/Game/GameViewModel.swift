@@ -52,8 +52,6 @@ final class GameViewModel {
         static let unlockThreshold:    Int    = 100   // Blitz/ハイスコア解放の正解数閾値 ← 変更可（説明文の「100」表記とも整合させること）
         static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数 ← 変更可
         static let reactionLimit:      Int    = 15    // 画面上のリアクション絵文字の上限数 ← 変更可
-        static let energyPerCorrectNormal: Double = 1.8   // normalモードの正解1問あたりのエネルギー（kcal）← 変更可
-        static let energyPerCorrectBlitz:  Double = 7.0   // blitzモードの正解1問あたりのエネルギー（kcal）← 変更可
         static let confettiDuration:   Double = 3.5   // 通常の紙吹雪表示時間（秒）← 変更可
         static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）← 変更可
     }
@@ -386,9 +384,8 @@ final class GameViewModel {
 
         score += 1
         combo += 1
-        // Blitz モードの方が短時間で答えているため、エネルギーを高く設定している
-        let energy = gameMode == .blitz ? C.energyPerCorrectBlitz : C.energyPerCorrectNormal
-        EnergyStore.shared.earn(energy)  // 10秒:7.0kcal / 30秒:1.8kcal
+        // 正解するたびにエネルギーを +1（量は EnergyRewards で調整する）
+        EnergyStore.shared.earn(EnergyRewards.perCorrect)
         SoundManager.shared.vibrate()
         SoundManager.shared.playCorrect()
 
@@ -514,6 +511,12 @@ final class GameViewModel {
         // saveIfBetter は保存に成功した（= 新記録）場合に true を返す。
         // 保存先は currentScoreKey がモードに応じて振り分ける（30びょうと10びょうは別キー）。
         isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: currentScoreKey)
+
+        // ── クリアボーナス ────────────────────────────────
+        // 正解の数 × モードごとの倍率。10びょうは短い時間で答えるぶん倍率を高くしている
+        let bonusRate = gameMode == .blitz ? EnergyRewards.make10BonusRateBlitz
+                                           : EnergyRewards.make10BonusRateNormal
+        EnergyStore.shared.grantClearBonus((Double(score) * bonusRate).rounded())
 
         // ── 紙吹雪の処理 ──────────────────────────────────
         // confettiThreshold 以上の正解で紙吹雪を表示する。

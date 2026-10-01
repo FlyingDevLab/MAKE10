@@ -363,6 +363,7 @@ final class WhackAMoleViewModel {
         }
 
         score += 1
+        EnergyStore.shared.earn(EnergyRewards.perCorrect)   // 叩くたびにエネルギーを +1
         SoundManager.shared.vibrate()
         SoundManager.shared.playTap()
     }
@@ -373,8 +374,8 @@ final class WhackAMoleViewModel {
     private func endGame() {
         stopGame()
         isNewRecord = checkAndSaveHighScore(score)
-        // もぐら2匹につき1kcal。完走の参加賞として、スコア0でも必ず1kcal加算する
-        EnergyStore.shared.grantClearBonus(Double(score) / 2.0 + 1.0)  // ← 変更可
+        // クリアボーナス = 叩いた数 × 倍率（量は EnergyRewards で調整する）
+        EnergyStore.shared.grantClearBonus((Double(score) * EnergyRewards.whackAMoleBonusRate).rounded())
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }
