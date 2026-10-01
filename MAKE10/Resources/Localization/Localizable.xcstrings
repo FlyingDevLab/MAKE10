@@ -384,6 +384,196 @@
         }
       }
     },
+    "pinball_howto_lives" : {
+      "comment" : "Pinball How to Play: you lose one of your 3 tries only when every ball in play has fallen.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lose a try when all balls fall. 3 tries!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ボールが ぜんぶ おちたら のこりが へるよ。3かいで おしまい！"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fallen alle Bälle runter, verlierst du einen Versuch. 3 Versuche!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quand toutes les balles tombent, tu perds un essai. 3 essais !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando cadono tutte le palle perdi un tentativo. 3 tentativi!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Si caen todas las bolas, pierdes un intento. ¡3 intentos!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando todas as bolas caem, você perde uma vez. 3 vezes!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vallen alle ballen eruit, dan ben je een poging kwijt. 3 pogingen!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有球都掉下去才会少一次机会，共3次！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有球都掉下去才會少一次機會，共3次！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "공이 모두 떨어지면 기회가 하나 줄어요. 3번이면 끝!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ลูกตกหมดทุกลูกจึงจะเสียหนึ่งครั้ง เล่นได้ 3 ครั้ง!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khi tất cả bóng rơi hết thì mất một lượt. Có 3 lượt!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kalau semua bola jatuh, kesempatan berkurang satu. 3 kali!"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सारी गेंदें गिरने पर एक मौका कम होगा। 3 मौके!"
+          }
+        }
+      }
+    },
+    "pinball_howto_multiball" : {
+      "comment" : "Pinball How to Play: hitting the 10000 target adds one more ball (multiball). Keep it short and child-friendly.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hit 10000 to get another ball!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10000に あてると ボールが ふえるよ！"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Triff 10000 und du bekommst noch einen Ball!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Touche 10000 pour avoir une balle de plus !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colpisci 10000 per avere un'altra palla!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Dale al 10000 y tendrás otra bola!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acerte o 10000 para ganhar mais uma bola!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Raak 10000 en je krijgt nog een bal!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打中10000就会多一个球！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "打中10000就會多一顆球！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10000을 맞히면 공이 하나 더 나와요!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยิงโดน 10000 แล้วจะได้ลูกเพิ่ม!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bắn trúng 10000 sẽ có thêm một quả bóng!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kenai 10000 untuk dapat bola tambahan!"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "10000 पर मारो तो एक और गेंद मिलेगी!"
+          }
+        }
+      }
+    },
     "settings_haptic_label" : {
       "comment" : "Settings: toggle for vibration (haptic feedback). Use a simple, child-friendly word.",
       "localizations" : {
@@ -12502,101 +12692,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "指令剪刀石頭布"
-          }
-        }
-      }
-    },
-    "Lose a life each time the ball drops. 3 lives total!" : {
-      "comment" : "An instruction line in Pinball's How to Play section.",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verliere ein Leben wenn der Ball fällt. Ende nach 3 Mal!"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lose a life each time the ball drops. 3 lives total!"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pierdes una vida cada vez que cae la bola. ¡Fin después de 3 veces!"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perdez une vie à chaque chute du ballon. Fin après 3 fois !"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "बॉल गिरने पर 1 जीवन कम होता है। 3 बार में खेल खत्म!"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kehilangan 1 nyawa setiap bola jatuh. Selesai setelah 3 kali!"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perdi una vita ogni volta che la palla cade. Fine dopo 3 volte!"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "ボールが落ちるたびに残機が1つ減る。3回で終了！"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "볼이 떨어질 때마다 목숨 1개 감소. 3번으로 종료!"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Verlies een leven elke keer dat de bal valt. Einde na 3 keer!"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Perde uma vida cada vez que a bola cai. Fim após 3 vezes!"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "บอลตกแต่ละครั้งจะเสียชีวิต 1 ครั้ง จบเกมหลัง 3 ครั้ง!"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mất 1 mạng mỗi khi bóng rơi. Kết thúc sau 3 lần!"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每次球落下失去一条命。3次后结束！"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "每次球落下失去一條命。3次後結束！"
           }
         }
       }

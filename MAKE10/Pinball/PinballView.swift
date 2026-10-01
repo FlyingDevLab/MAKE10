@@ -13,7 +13,7 @@
 //
 //  ② 役割分担
 //    - View（このファイル）  : 画面切り替えと、SpriteKit シーンの生成・保持・リセット
-//    - ViewModel (PinballViewModel): スコア・残機・状態の保持
+//    - ViewModel (PinballViewModel): スコア・残り回数・状態の保持
 //    - Scene (PinballScene)  : 物理シミュレーション本体
 //
 //  ★ SpriteView とは？ ★
@@ -79,8 +79,14 @@ private struct PBTitleView: View {
                         .foregroundStyle(DS.textPrimary)
                 }
                 HStack(alignment: .top, spacing: 8) {
+                    Text("🎯").font(.system(size: 18))
+                    Text("pinball_howto_multiball")
+                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .foregroundStyle(DS.textPrimary)
+                }
+                HStack(alignment: .top, spacing: 8) {
                     Text("🎱").font(.system(size: 18))
-                    Text("Lose a life each time the ball drops. 3 lives total!")
+                    Text("pinball_howto_lives")
                         .font(.system(size: 15, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.textPrimary)
                 }
