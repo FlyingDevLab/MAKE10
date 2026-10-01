@@ -20,7 +20,7 @@
 //     - 問題の生成（重複しないランダム選択）
 //     - Blitz モードの解放判定
 //     - UserDefaults への永続化（解放フラグ・統計のみ。スコアは ScoreBoard が担う）
-//     - シールポイントの付与
+//     - エネルギー（kcal）の付与
 
 import SwiftUI
 import Combine
@@ -52,8 +52,8 @@ final class GameViewModel {
         static let unlockThreshold:    Int    = 100   // Blitz/ハイスコア解放の正解数閾値 ← 変更可（説明文の「100」表記とも整合させること）
         static let confettiThreshold:  Int    = 10    // 紙吹雪を表示する最低正解数 ← 変更可
         static let reactionLimit:      Int    = 15    // 画面上のリアクション絵文字の上限数 ← 変更可
-        static let stickerPointNormal: Double = 1.8   // normalモードの正解1問あたりのシールポイント ← 変更可
-        static let stickerPointBlitz:  Double = 7.0   // blitzモードの正解1問あたりのシールポイント ← 変更可
+        static let energyPerCorrectNormal: Double = 1.8   // normalモードの正解1問あたりのエネルギー（kcal）← 変更可
+        static let energyPerCorrectBlitz:  Double = 7.0   // blitzモードの正解1問あたりのエネルギー（kcal）← 変更可
         static let confettiDuration:   Double = 3.5   // 通常の紙吹雪表示時間（秒）← 変更可
         static let confettiDurationEx: Double = 5.0   // 100問以上達成時の紙吹雪表示時間（秒）← 変更可
     }
@@ -234,6 +234,7 @@ final class GameViewModel {
     func startGame(mode: GameMode = .normal) {
         gameMode            = mode
         score               = 0
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
         combo               = 0
         timeRemaining       = maxTime
         reactions           = []
@@ -379,15 +380,15 @@ final class GameViewModel {
         return 1.0                                // それ以外：1.0秒加算（標準）← 変更可
     }
 
-    /// 正解時の処理。スコア・コンボ更新、シールポイント付与、問題の切り替えなどを行う。
+    /// 正解時の処理。スコア・コンボ更新、エネルギー付与、問題の切り替えなどを行う。
     private func handleCorrect() {
         recordAttempt(question: questionNumber, correct: true)
 
         score += 1
         combo += 1
-        // Blitz モードの方が短時間で答えているため、シールポイントを高く設定している
-        let stickerPt = gameMode == .blitz ? C.stickerPointBlitz : C.stickerPointNormal
-        StickerStore.shared.recordCorrect(points: stickerPt)  // 10秒:7.0pt / 30秒:1.8pt
+        // Blitz モードの方が短時間で答えているため、エネルギーを高く設定している
+        let energy = gameMode == .blitz ? C.energyPerCorrectBlitz : C.energyPerCorrectNormal
+        EnergyStore.shared.earn(energy)  // 10秒:7.0kcal / 30秒:1.8kcal
         SoundManager.shared.vibrate()
         SoundManager.shared.playCorrect()
 

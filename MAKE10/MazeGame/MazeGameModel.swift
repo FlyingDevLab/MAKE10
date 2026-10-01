@@ -212,6 +212,7 @@ final class MazeGameModel: NSObject {
         stage      = 0
         cheeseHp   = 3
         isNewRecord = false
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
         startStage()
         startLoop()
     }
@@ -642,7 +643,7 @@ final class MazeGameModel: NSObject {
         SoundManager.shared.playMazeGameOver()   // ゲームオーバー音
         // 新記録なら ScoreBoard が保存し true を返す
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
-        // チーズ1個につき5pt。完走の参加賞として、チーズ0個でも必ず1pt加算する
-        StickerStore.shared.recordCorrect(points: Double(score) * 5.0 + 1.0)  // ← 変更可
+        // チーズ1個につき5kcal。完走の参加賞として、チーズ0個でも必ず1kcal加算する
+        EnergyStore.shared.grantClearBonus(Double(score) * 5.0 + 1.0)  // ← 変更可
     }
 }

@@ -216,6 +216,7 @@ final class CoinDropViewModel {
         displaySeconds = Int(CoinDropTuning.gameDuration)
         nextCoin       = .penny
         isNewRecord    = false
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
         gameState      = .playing  // View 側が .playing に切り替わり CDPlayingView が表示される
     }
 
@@ -253,10 +254,10 @@ final class CoinDropViewModel {
         gameOverReason = reason
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord    = ScoreBoard.saveIfBetter(score: score, for: UDKey.coinDropHighScore)
-        // 獲得$1につき1pt。完走の参加賞として、スコア0でも必ず1pt加算する
-        StickerStore.shared.recordCorrect(points: Double(score) + 1.0)  // ← 変更可
-        // $10ぴったり達成（MAKE10）はボーナスとしてシール1枚を即付与する
-        if isPerfect { StickerStore.shared.addBonusSticker() }
+        // 獲得$1につき1kcal。完走の参加賞として、スコア0でも必ず1kcal加算する
+        EnergyStore.shared.grantClearBonus(Double(score) + 1.0)  // ← 変更可
+        // $10ぴったり達成（MAKE10）はさらにクリアボーナスを上乗せする
+        if isPerfect { EnergyStore.shared.grantClearBonus(EnergyTuning.clearBonusUnit) }
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished

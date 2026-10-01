@@ -49,6 +49,7 @@ final class PinballViewModel {
         ballsLeft   = 3
         isNewRecord = false
         gameState   = .playing
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
     }
 
     /// PinballScene からスコア変化を受け取るコールバック
@@ -78,8 +79,8 @@ final class PinballViewModel {
     private func endGame() {
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.pinballHighScore)
-        // スコア1000点につき1pt。完走の参加賞として、スコア0でも必ず1pt加算する
-        StickerStore.shared.recordCorrect(points: Double(score) / 1000.0 + 1.0)  // ← 変更可
+        // スコア1000点につき1kcal。完走の参加賞として、スコア0でも必ず1kcal加算する
+        EnergyStore.shared.grantClearBonus(Double(score) / 1000.0 + 1.0)  // ← 変更可
 
         // 新記録ならアンロック風の祝福音、そうでなければ通常のゲームオーバー音
         // （Scene 側で鳴らす ballDrain 音の余韻の後に、結果を告げる音として重ねる）

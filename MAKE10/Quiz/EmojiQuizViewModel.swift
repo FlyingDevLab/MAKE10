@@ -102,6 +102,7 @@ final class EmojiQuizViewModel {
         self.mode       = mode
         self.totalCount = totalCount
         buildQuestions()
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
     }
 
     // MARK: 問題生成
@@ -136,8 +137,8 @@ final class EmojiQuizViewModel {
 
         if isCorrect {
             score += 1
-            // textToEmoji モードは難易度が高いため、シールポイントを高く設定している
-            StickerStore.shared.recordCorrect(points: mode == .textToEmoji ? 2.9 : 2.4)  // ← 変更可（難しい:2.9pt / 基本:2.4pt）
+            // textToEmoji モードは難易度が高いため、エネルギーを高く設定している
+            EnergyStore.shared.earn(mode == .textToEmoji ? 2.9 : 2.4)  // ← 変更可（難しい:2.9kcal / 基本:2.4kcal）
         }
         results[currentIndex] = isCorrect
 
@@ -169,8 +170,8 @@ final class EmojiQuizViewModel {
             case 0.8...: SoundManager.shared.playTenClear()  // 80%以上 ← 変更可（特別音の閾値）
             default:     SoundManager.shared.playGameOver()  // 80%未満
             }
-            // 全問正解でステッカーを1枚追加（リザルト画面で表示・確定される）
-            if pct == 1.0 { StickerStore.shared.addBonusSticker() }
+            // 全問正解でクリアボーナス（リザルト画面でまとめて増える演出を見せる）
+            if pct == 1.0 { EnergyStore.shared.grantClearBonus(EnergyTuning.clearBonusUnit) }
             isFinished = true
         } else {
             // 次の問題へ。answerState と selectedItem をリセットして未回答状態に戻す
@@ -199,5 +200,6 @@ final class EmojiQuizViewModel {
         selectedItem = nil
         isFinished   = false
         buildQuestions()
+        EnergyStore.shared.beginSession()
     }
 }

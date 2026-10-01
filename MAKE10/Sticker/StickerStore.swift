@@ -76,35 +76,6 @@ final class StickerStore {
 
     // MARK: - 公開API（獲得・pending 管理）
 
-    /// 正解時・ゲーム終了時に呼ぶ。1.5 からはシールを出さず、エネルギーとして加算するだけ。
-    // ⚠️ 移行中の窓口: 各ゲームが EnergyStore.earn / grantClearBonus を直接呼ぶように
-    //   置き換えたら、このメソッドは削除する。
-    func recordCorrect(points: Double = 1.0) {
-        EnergyStore.shared.earn(points)
-    }
-
-    /// 全問正解ボーナスなど、ポイント外でシールを1枚追加する。
-    // ⚠️ 移行中の窓口: 各ゲームがクリアボーナス（EnergyStore.grantClearBonus）を
-    //   渡すように置き換えたら、このメソッドと issueSticker() は削除する。
-    func addBonusSticker() {
-        issueSticker()
-    }
-
-    /// シールを1枚発行する。ゲームボードが満杯ならストレージへ直接送出する。
-    private func issueSticker() {
-        let emoji = StickerCatalog.all.randomElement()!
-        if stickers.count >= gameDisplayLimit {
-            // ゲームボード満杯 → ストレージへ直接送出
-            storageEmojis.append(emoji)
-            pendingStorageCount += 1
-            saveStorage()
-        } else {
-            // 通常ルート → リザルト画面のバナーに表示してから配置
-            pendingStickers.append(emoji)
-            savePending()   // 配置前に落ちてもシールを失わないよう即保存する
-        }
-    }
-
     /// 指定した絵文字を1枚、ストレージへ直接追加する。
     /// どうぶつめくりのように「自分で選んだシール」をそのまま渡す場面で使う。
     ///

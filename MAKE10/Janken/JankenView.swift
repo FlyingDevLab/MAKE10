@@ -15,7 +15,7 @@
 //
 //  ② 役割分担
 //    - View（このファイル）  : 画面の描画と、手のタップを ViewModel へ渡すこと
-//    - ViewModel (JankenViewModel): 状態・タイマー・勝敗判定・シール報酬
+//    - ViewModel (JankenViewModel): 状態・タイマー・勝敗判定・クリアボーナス
 //  SharedFrame のバックボタン・画面離脱で stopGame() が呼ばれる。
 //
 //  ★ .animation(value:) は Equatable な値が必要（Phase: Equatable）。仕組みは PlayingView.swift 参照 ★
