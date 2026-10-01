@@ -81,6 +81,13 @@ struct SharedFrame<Content: View>: View {
 
             VStack(spacing: 0) {
                 headerRow
+                    // エネルギー残高をヘッダーの下にぶら下げて表示する（energyBadge の解説を参照）。
+                    // zIndex で後に描くコンテンツより手前に出す
+                    .overlay(alignment: .bottom) {
+                        energyBadge
+                            .alignmentGuide(.bottom) { d in d[.top] }   // バッジの上端をヘッダーの下端に合わせる
+                    }
+                    .zIndex(1)
                 content()
                 footerRow
             }
@@ -106,10 +113,7 @@ struct SharedFrame<Content: View>: View {
     /// 中央：タイトルとその下にエネルギー残高、右：設定ボタン（常に表示）。
     /// 左右ボタンを固定幅(52pt)にすることでタイトルが常に画面中央に配置される。
     ///
-    /// ★ エネルギー残高をタイトルの下に置いている理由 ★
-    ///   「🔥 1,100kcal」は幅が約100ptある。設定ボタンの横に置くと、タイトルを中央に
-    ///   保つために左の枠も同じだけ広げることになり、タイトルの幅が足りなくなる。
-    ///   タイトルの下なら左右の枠はそのままで、高さも元のヘッダー（44pt）に収まる。
+    /// エネルギー残高はこの行には入れず、行の下にぶら下げて表示する（energyBadge を参照）。
     private var headerRow: some View {
         HStack(spacing: 0) {
             Group {
@@ -143,15 +147,11 @@ struct SharedFrame<Content: View>: View {
             .frame(width: 52, height: 44)
 
             // タイトルテキスト。lineLimit(1) でタイトルが長くても1行に収める
-            VStack(spacing: 0) {
-                Text(title ?? "")
-                    .font(.system(size: 17, weight: .semibold, design: .rounded))
-                    .foregroundStyle(DS.textPrimary)
-                    .lineLimit(1)
-                // エネルギー残高。プレイ中もここで数字が増えていく
-                EnergyBadge()
-            }
-            .frame(maxWidth: .infinity)
+            Text(title ?? "")
+                .font(.system(size: 17, weight: .semibold, design: .rounded))
+                .foregroundStyle(DS.textPrimary)
+                .lineLimit(1)
+                .frame(maxWidth: .infinity)
 
             // 設定ボタン（常に右端に表示）。タップで SettingsView をオーバーレイとして表示する
             Button {
@@ -168,6 +168,28 @@ struct SharedFrame<Content: View>: View {
         }
         .padding(.horizontal, 8)
         .background(DS.bg)
+    }
+
+    // MARK: エネルギー残高
+
+    /// ヘッダーの下にぶら下げる、エネルギー残高の大きな表示。プレイ中もここで数字が増えていく。
+    ///
+    /// ★ ヘッダーの外にはみ出させている理由 ★
+    ///   小さいままでは目立たないので、外枠で囲んで大きく（文字 32pt＝以前の約2.5倍）表示している。
+    ///   タイトルとは重ならないようヘッダーの下に置き、その分はゲーム画面の上にかぶせる。
+    ///   かぶった部分の操作を邪魔しないよう、タッチは下の画面へ素通しさせる。
+    private var energyBadge: some View {
+        EnergyBadge(fontSize: 32)   // ← 変更可（エネルギー表示の大きさ）
+            .padding(.horizontal, 18)
+            .padding(.vertical, 6)
+            .background(
+                Capsule()
+                    .fill(DS.card)
+                    .shadow(color: DS.energy.opacity(0.25), radius: 6, x: 0, y: 3)
+            )
+            .overlay(Capsule().stroke(DS.energy, lineWidth: 2.5))
+            .padding(.top, 4)
+            .allowsHitTesting(false)
     }
 
     // MARK: フッター
