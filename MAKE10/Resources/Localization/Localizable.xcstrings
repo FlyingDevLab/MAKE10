@@ -20593,91 +20593,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fortschritt zurücksetzen"
+            "value" : "Von vorn beginnen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reset Progress"
+            "value" : "Start Over"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restablecer progreso"
+            "value" : "Empezar de nuevo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Réinitialiser la progression"
+            "value" : "Tout recommencer"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "प्रगति रीसेट करें"
+            "value" : "शुरू से शुरू करें"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reset kemajuan"
+            "value" : "Mulai dari awal"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reimposta progressi"
+            "value" : "Ricomincia da capo"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "しんちょくをリセット"
+            "value" : "さいしょから はじめる"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "진행 초기화"
+            "value" : "처음부터 시작"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voortgang resetten"
+            "value" : "Opnieuw beginnen"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Redefinir progresso"
+            "value" : "Começar de novo"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "รีเซ็ตความคืบหน้า"
+            "value" : "เริ่มใหม่ตั้งแต่ต้น"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đặt lại tiến trình"
+            "value" : "Bắt đầu lại từ đầu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重置进度"
+            "value" : "从头开始"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重置進度"
+            "value" : "從頭開始"
           }
         }
       }
@@ -21260,91 +21260,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Fortschritt zurücksetzen"
+            "value" : "Von vorn beginnen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reset Progress"
+            "value" : "Start Over"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Restablecer progreso"
+            "value" : "Empezar de nuevo"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Réinitialiser la progression"
+            "value" : "Tout recommencer"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "प्रगति रीसेट करें"
+            "value" : "शुरू से शुरू करें"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reset kemajuan"
+            "value" : "Mulai dari awal"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Reimposta progressi"
+            "value" : "Ricomincia da capo"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "しんちょくをリセット"
+            "value" : "さいしょから はじめる"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "진행 초기화"
+            "value" : "처음부터 시작"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voortgang resetten"
+            "value" : "Opnieuw beginnen"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Redefinir progresso"
+            "value" : "Começar de novo"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "รีเซ็ตความคืบหน้า"
+            "value" : "เริ่มใหม่ตั้งแต่ต้น"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Đặt lại tiến trình"
+            "value" : "Bắt đầu lại từ đầu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重置进度"
+            "value" : "从头开始"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "重置進度"
+            "value" : "從頭開始"
           }
         }
       }
