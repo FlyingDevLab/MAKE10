@@ -63,6 +63,8 @@ struct MakeTenContentView: View {
     @State private var viewModel      = GameViewModel()
     /// 現在表示中の画面。
     @State private var screen: Screen = .make10
+    /// アップデートのプレゼントのお知らせを出しているか（AppMigration.swift を参照）。
+    @State private var showsGiftNotice = AppMigration.hasPendingGiftNotice
     // hasAgreedToTerms は AppSettings.shared 経由で参照する。
     // @Observable により body 内での参照が自動追跡され、値が変わると再描画される。
 
@@ -160,6 +162,17 @@ struct MakeTenContentView: View {
                     .zIndex(20)
             }
 
+            // アップデートのプレゼントのお知らせ（1回だけ）。zIndex はSharedFrameの階層表どおり
+            if showsGiftNotice {
+                UpdateGiftNoticeView(
+                    onOpenGacha: { closeGiftNotice(openingScreen: .gacha) },
+                    onOpenShop:  { closeGiftNotice(openingScreen: .stickerShop) },
+                    onClose:     { closeGiftNotice(openingScreen: nil) }
+                )
+                .transition(.opacity)
+                .zIndex(60)
+            }
+
             // 紙吹雪。allowsHitTesting(false) でタップを下のViewへ素通しさせる
             if viewModel.showConfetti {
                 ConfettiView(isSpecial: viewModel.score >= 100)
@@ -181,6 +194,17 @@ struct MakeTenContentView: View {
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.willEnterForegroundNotification)
         ) { _ in viewModel.resume() }
+    }
+
+    // MARK: お知らせ
+
+    /// アップデートのプレゼントのお知らせを閉じる。openingScreen を渡すとその画面へ移る。
+    private func closeGiftNotice(openingScreen: Screen?) {
+        AppMigration.markGiftNoticeShown()
+        withAnimation(.easeInOut(duration: 0.25)) {
+            showsGiftNotice = false
+            if let openingScreen { screen = openingScreen }
+        }
     }
 
     // MARK: シール表示制御

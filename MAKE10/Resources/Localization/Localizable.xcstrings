@@ -194,6 +194,291 @@
         }
       }
     },
+    "update_gift_janken_note" : {
+      "comment" : "Notice shown once after updating: Command Janken best times were reset because only no-mistake times are recorded now.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Command Janken now records only no-mistake times,\nso its best times have been reset."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指令じゃんけんは ノーミスの タイムだけを\nきろくするように なったので、きろくを リセットしたよ"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Befehl Stein-Schere-Papier“ zählt jetzt nur fehlerfreie Zeiten,\ndaher wurden die Bestzeiten zurückgesetzt."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "« Janken de Commande » n'enregistre plus que les temps sans erreur,\nles records ont donc été réinitialisés."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«Janken dei Comandi» ora registra solo i tempi senza errori,\nquindi i record sono stati azzerati."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "«Janken de Comandos» ahora solo registra tiempos sin errores,\nasí que se reiniciaron los récords."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "“Janken de Comandos” agora só registra tempos sem erros,\npor isso os recordes foram zerados."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "„Opdracht Janken” bewaart nu alleen tijden zonder fouten,\ndus de records zijn gewist."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指令剪刀石头布现在只记录零失误的时间，\n所以已重置记录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "指令剪刀石頭布現在只記錄零失誤的時間，\n所以已重設紀錄"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "명령 가위바위보는 이제 실수 없는 기록만 남기므로\n기록을 초기화했어요"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "แจงเก็นคำสั่งจะบันทึกเฉพาะเวลาที่ไม่พลาดเลย\nจึงรีเซ็ตสถิติแล้ว"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Oẳn tù tì theo Lệnh giờ chỉ ghi thời gian không sai lần nào,\nnên kỷ lục đã được đặt lại."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Janken Perintah kini hanya mencatat waktu tanpa salah,\njadi rekornya sudah direset."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कमांड जनकेन अब सिर्फ़ बिना गलती वाला समय दर्ज करता है,\nइसलिए रिकॉर्ड रीसेट कर दिए गए हैं।"
+          }
+        }
+      }
+    },
+    "update_gift_message" : {
+      "comment" : "Notice shown once after updating: the energy shown above is a present. Energy can be spent on stickers in the gacha and the sticker shop.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Here's some energy as a present!\nUse it in the Gacha or the Sticker Shop."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エネルギーを プレゼント！\nガチャや シールやさんで つかってね"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier ist Energie als Geschenk!\nNutze sie beim Gacha oder im Stickerladen."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voici de l'énergie en cadeau !\nUtilise-la au gacha ou à la boutique de stickers."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ecco dell'energia in regalo!\nUsala nel gacha o nel negozio di adesivi."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Te regalamos energía!\nÚsala en el gacha o en la tienda de pegatinas."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ganhe energia de presente!\nUse no gacha ou na loja de adesivos."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hier is energie als cadeau!\nGebruik het bij de gacha of in de stickerwinkel."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "送你能量！\n可以在扭蛋和贴纸商店使用哦"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "送你能量！\n可以在扭蛋和貼紙商店使用喔"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "에너지를 선물로 줄게요!\n뽑기나 스티커 가게에서 써 보세요"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "มอบพลังงานเป็นของขวัญ!\nใช้ได้ที่กาชาและร้านสติกเกอร์นะ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tặng bạn năng lượng!\nDùng ở gacha hoặc cửa hàng nhãn dán nhé."
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ini hadiah energi untukmu!\nPakai di gacha atau Toko Stiker ya."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "तोहफ़े में ऊर्जा!\nइसे गाचा या स्टिकर दुकान में इस्तेमाल करो।"
+          }
+        }
+      }
+    },
+    "update_gift_title" : {
+      "comment" : "Notice shown once after updating the app: thank-you title.",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Thanks for updating!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アップデート ありがとう！"
+          }
+        },
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Danke fürs Aktualisieren!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Merci pour la mise à jour !"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grazie per l'aggiornamento!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Gracias por actualizar!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Obrigado por atualizar!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedankt voor het bijwerken!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "感谢更新！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "感謝更新！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "업데이트해 줘서 고마워요!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ขอบคุณที่อัปเดตนะ!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cảm ơn bạn đã cập nhật!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terima kasih sudah memperbarui!"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अपडेट करने के लिए धन्यवाद!"
+          }
+        }
+      }
+    },
     "—" : {
       "comment" : "Placeholder shown when no record exists yet. Keep as an em dash in all languages.",
       "localizations" : {

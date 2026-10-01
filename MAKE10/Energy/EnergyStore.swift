@@ -123,6 +123,15 @@ final class EnergyStore {
         save()
     }
 
+    /// プレゼント（アップデートのお礼など）。残高にだけ加算し、「今回の獲得量」には含めない。
+    /// ゲームの結果画面の内訳に混ざらないよう、earn / grantClearBonus とは分けている。
+    func grantGift(_ kcal: Double) {
+        let deci = Self.toDeci(kcal)
+        guard deci > 0 else { return }
+        balanceDeci += deci
+        save()
+    }
+
     // MARK: 消費
 
     /// 指定した量のエネルギーが足りているか。
