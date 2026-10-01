@@ -48,6 +48,11 @@ struct TenPuzzleSessionRecord {
 
     /// ヒントなしで自力で正解した数
     var selfSolved: Int { correct - hintUsed - impossible }
+    /// ヒントを見ずに正解した数（「作れない」の宣言も含む）。エネルギーはこの数だけで計算する。
+    /// ★ ヒントを使った正解を数えない理由 ★
+    ///   ヒントには解き方がそのまま出るので、写せば誰でも正解できてしまう。
+    ///   大きなボーナスを付けているゲームなので、自分の力で解いた問題だけを数える。
+    var noHintCorrect: Int { correct - hintUsed }
 }
 
 // MARK: - ViewModel
@@ -157,8 +162,9 @@ final class TenPuzzleViewModel {
                 case .modeC: return EnergyRewards.tenPuzzleBonusRateC
                 }
             }()
-            var bonus = (Double(record.correct) * bonusRate).rounded()
-            if record.correct == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
+            // ヒントを使った正解は数えない（noHintCorrect の解説を参照）
+            var bonus = (Double(record.noHintCorrect) * bonusRate).rounded()
+            if record.noHintCorrect == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
             EnergyStore.shared.grantClearBonus(bonus)
             withAnimation(.easeInOut(duration: 0.3)) { phase = .result }
             return
@@ -239,7 +245,8 @@ final class TenPuzzleViewModel {
             if hintShown { record.hintUsed += 1 }
             problemState = .correct
             SoundManager.shared.playCorrect()
-            EnergyStore.shared.earn(EnergyRewards.perCorrect)
+            // ヒントを見ずに正解したときだけエネルギーを +1（noHintCorrect の解説を参照）
+            if !hintShown { EnergyStore.shared.earn(EnergyRewards.perCorrect) }
             scheduleNextProblem(after: C.correctFeedback)
 
         } else if judgment == .wrongAnswer {
@@ -298,7 +305,7 @@ final class TenPuzzleViewModel {
             lastJudgment       = .correct
             problemState       = .correct
             SoundManager.shared.playCorrect()
-            EnergyStore.shared.earn(EnergyRewards.perCorrect)
+            if !hintShown { EnergyStore.shared.earn(EnergyRewards.perCorrect) }
             scheduleNextProblem(after: C.correctFeedback)
         } else {
             // 不正解：実は作れる問題だった → 解を表示してから次へ

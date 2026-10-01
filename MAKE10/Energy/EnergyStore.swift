@@ -99,7 +99,7 @@ enum EnergyRewards {
     static let make10BonusRateBlitz:  Double = 6  // ← 変更可（10びょう）
 
     /// 四則テンパズル（難易度の予想: いちばんむずかしい。大人向け）。
-    /// クリアボーナス = 正解の数 × モードごとの倍率。全問正解で tenPuzzlePerfectBonus。
+    /// クリアボーナス = ヒントを見ずに正解した数 × モードごとの倍率。ヒントなしで全問正解なら tenPuzzlePerfectBonus。
     /// 保護者が挑戦してエネルギーを貯める場として、ほかのゲームより大きくしている。
     static let tenPuzzleBonusRateA: Double = 20   // ← 変更可（かんたん / ふつう）
     static let tenPuzzleBonusRateB: Double = 50   // ← 変更可（むずかしい）
