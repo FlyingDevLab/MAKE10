@@ -98,10 +98,14 @@ enum EnergyRewards {
     static let make10BonusRateNormal: Double = 1  // ← 変更可（30びょう）
     static let make10BonusRateBlitz:  Double = 6  // ← 変更可（10びょう）
 
-    /// 四則テンパズル。クリアボーナス = 正解の数 × モードごとの倍率。全問正解で perfectBonus。
-    static let tenPuzzleBonusRateA: Double = 2    // ← 変更可（かんたん / ふつう）
-    static let tenPuzzleBonusRateB: Double = 4    // ← 変更可（むずかしい）
-    static let tenPuzzleBonusRateC: Double = 6    // ← 変更可（チャレンジ）
+    /// 四則テンパズル（難易度の予想: いちばんむずかしい。大人向け）。
+    /// クリアボーナス = 正解の数 × モードごとの倍率。全問正解で tenPuzzlePerfectBonus。
+    /// 保護者が挑戦してエネルギーを貯める場として、ほかのゲームより大きくしている。
+    static let tenPuzzleBonusRateA: Double = 20   // ← 変更可（かんたん / ふつう）
+    static let tenPuzzleBonusRateB: Double = 50   // ← 変更可（むずかしい）
+    static let tenPuzzleBonusRateC: Double = 100  // ← 変更可（チャレンジ）
+    /// 四則テンパズルの全問正解ボーナス（kcal）。ほかのゲームの perfectBonus より大きい。
+    static let tenPuzzlePerfectBonus: Double = 1_000  // ← 変更可
 }
 
 // MARK: - EnergyStore
