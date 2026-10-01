@@ -163,7 +163,7 @@ final class TenPuzzleViewModel {
                 }
             }()
             // ヒントを使った正解は数えない（noHintCorrect の解説を参照）
-            var bonus = (Double(record.noHintCorrect) * bonusRate).rounded()
+            var bonus = Double(record.noHintCorrect) * bonusRate
             if record.noHintCorrect == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
             EnergyStore.shared.grantClearBonus(bonus)
             withAnimation(.easeInOut(duration: 0.3)) { phase = .result }

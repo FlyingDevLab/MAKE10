@@ -516,7 +516,7 @@ final class GameViewModel {
         // 正解の数 × モードごとの倍率。10びょうは短い時間で答えるぶん倍率を高くしている
         let bonusRate = gameMode == .blitz ? EnergyRewards.make10BonusRateBlitz
                                            : EnergyRewards.make10BonusRateNormal
-        EnergyStore.shared.grantClearBonus((Double(score) * bonusRate).rounded())
+        EnergyStore.shared.grantClearBonus(Double(score) * bonusRate)
 
         // ── 紙吹雪の処理 ──────────────────────────────────
         // confettiThreshold 以上の正解で紙吹雪を表示する。

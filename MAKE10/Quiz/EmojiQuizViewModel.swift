@@ -174,7 +174,7 @@ final class EmojiQuizViewModel {
             // 全問正解ならさらに上乗せする。リザルト画面でまとめて増える演出を見せる
             let bonusRate = mode == .textToEmoji ? EnergyRewards.quizBonusRateHard
                                                  : EnergyRewards.quizBonusRateBasic
-            var bonus = (Double(score) * bonusRate).rounded()
+            var bonus = Double(score) * bonusRate
             if pct == 1.0 { bonus += EnergyRewards.perfectBonus }
             EnergyStore.shared.grantClearBonus(bonus)
             isFinished = true

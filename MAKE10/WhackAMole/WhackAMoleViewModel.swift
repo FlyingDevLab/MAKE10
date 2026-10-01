@@ -375,7 +375,7 @@ final class WhackAMoleViewModel {
         stopGame()
         isNewRecord = checkAndSaveHighScore(score)
         // クリアボーナス = 叩いた数 × 倍率（量は EnergyRewards で調整する）
-        EnergyStore.shared.grantClearBonus((Double(score) * EnergyRewards.whackAMoleBonusRate).rounded())
+        EnergyStore.shared.grantClearBonus(Double(score) * EnergyRewards.whackAMoleBonusRate)
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }

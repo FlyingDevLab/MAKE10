@@ -645,6 +645,6 @@ final class MazeGameModel: NSObject {
         // 新記録なら ScoreBoard が保存し true を返す
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
         // クリアボーナス = 取ったチーズの数 × 倍率（量は EnergyRewards で調整する）
-        EnergyStore.shared.grantClearBonus((Double(score) * EnergyRewards.mazeBonusRate).rounded())
+        EnergyStore.shared.grantClearBonus(Double(score) * EnergyRewards.mazeBonusRate)
     }
 }
