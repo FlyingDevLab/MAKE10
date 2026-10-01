@@ -46,6 +46,9 @@ struct StickerStorageView: View {
     // シール画面の表示フラグ
     @State private var showPlayView: Bool = false
 
+    // シールじてんの表示フラグ
+    @State private var showDex: Bool = false
+
     // スワイプ判定の閾値
     private let hThreshold: CGFloat = 40 // ← 変更可：横スワイプ感度
     private let vThreshold: CGFloat = 40 // ← 変更可：縦スワイプ感度
@@ -123,9 +126,24 @@ struct StickerStorageView: View {
                         .allowsHitTesting(false)
                 }
 
-                // シール画面を開くボタン（下部固定）
+                // シールじてん・シール画面を開くボタン（下部固定・横一列にして高さを変えない）
                 VStack {
                     Spacer()
+                    HStack(spacing: 10) {
+                    Button {
+                        showDex = true
+                        SoundManager.shared.vibrate()
+                    } label: {
+                        Label(LocalizedStringKey("sticker_dex_title"), systemImage: "books.vertical")
+                            .font(.system(size: 15, weight: .bold, design: .rounded))
+                            .foregroundStyle(DS.primary)
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 12)
+                            .background(Capsule().fill(DS.card))
+                            .overlay(Capsule().stroke(DS.primary.opacity(0.4), lineWidth: 1.5))
+                    }
+                    .buttonStyle(.plain)
+
                     Button {
                         showPlayView = true
                         SoundManager.shared.vibrate()
@@ -142,6 +160,7 @@ struct StickerStorageView: View {
                         .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
                     }
                     .buttonStyle(.plain)
+                    }
                     .padding(.bottom, 20)
                 }
 
@@ -160,6 +179,10 @@ struct StickerStorageView: View {
         .ignoresSafeArea(edges: .bottom)
         .fullScreenCover(isPresented: $showPlayView) {
             StickerPlayView()
+                .dynamicTypeSize(.large)
+        }
+        .sheet(isPresented: $showDex) {
+            StickerDexView()
                 .dynamicTypeSize(.large)
         }
     }
