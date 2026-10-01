@@ -484,13 +484,13 @@ private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 
 // MARK: - MazeTopBar（迷路の上：ライフ・スコア）
 
-/// 迷路の上に置く帯。左にライフ（チーズの三角）、右に集めたチーズの数を大きく出す。
+/// 迷路の上に置く帯。左にライフ（❤️）、右に集めたチーズの数を大きく出す。
 private struct MazeTopBar: View {
     let model: MazeGameModel
 
     var body: some View {
         HStack(spacing: 10) {
-            // ライフ：残りは黄色いチーズ、なくなったぶんは灰色
+            // ライフ：残りは ❤️、なくなったぶんは 💔
             HStack(spacing: 6) {
                 ForEach(0..<3, id: \.self) { i in
                     MazeLifeIcon(isAlive: i < model.cheeseHp)
@@ -515,29 +515,16 @@ private struct MazeTopBar: View {
     }
 }
 
-/// ライフ1つ分のアイコン（チーズの三角）。
+/// ライフ1つ分のアイコン。残りは ❤️、なくなったぶんは 💔 で、ひと目で分かるようにする。
 private struct MazeLifeIcon: View {
     let isAlive: Bool
 
     var body: some View {
-        Triangle()
-            .fill(isAlive ? Color(red: 1.0, green: 0.80, blue: 0.20) : Color(white: 0.82))
-            .overlay(Triangle().stroke(isAlive ? Color(red: 0.85, green: 0.6, blue: 0.0) : Color(white: 0.65),
-                                       lineWidth: 2))
+        Text(verbatim: isAlive ? "❤️" : "💔")
+            .font(.system(size: 26))   // ← 変更可（ライフの大きさ）
+            .opacity(isAlive ? 1.0 : 0.6)
             .scaleEffect(isAlive ? 1.0 : 0.85)
             .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isAlive)
-    }
-
-    /// 上向きの三角形。
-    private struct Triangle: Shape {
-        func path(in rect: CGRect) -> Path {
-            var p = Path()
-            p.move(to: CGPoint(x: rect.midX, y: rect.minY))
-            p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
-            p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
-            p.closeSubpath()
-            return p
-        }
     }
 }
 
