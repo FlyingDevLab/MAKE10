@@ -158,15 +158,28 @@ private struct MazePlayView: View {
 
     // MARK: body
 
+    // ★ ライフ・スコア・衝撃波ゲージを迷路の外に出している理由 ★
+    //   もとは Web ゲームのレイアウトのまま、迷路の上に重ねて描いていたため、
+    //   壁と重なって見えにくかった。迷路の上下に SwiftUI の部品として並べ、
+    //   迷路はその残りの場所に収まる最大の正方形で描く。
+
+    /// 迷路の上の帯（ライフ・スコア）の高さ（pt）。
+    private let topBarHeight:    CGFloat = 56    // ← 変更可
+    /// 迷路の下の帯（衝撃波ゲージ・さいこう記録）の高さ（pt）。
+    private let bottomBarHeight: CGFloat = 92    // ← 変更可
+
     var body: some View {
         GeometryReader { geo in
-            // 画面に収まる最大の正方形サイズ
-            let side  = min(geo.size.width, geo.size.height)
+            // 上下の帯を除いた場所に収まる最大の正方形サイズ
+            let side  = min(geo.size.width, geo.size.height - topBarHeight - bottomBarHeight - 16)
             // 論理座標 → ビュー座標の変換係数（view_px = logical_px * scale）
             let scale = side / model.BASE
 
-            VStack {
+            VStack(spacing: 8) {
                 Spacer(minLength: 0)
+
+                MazeTopBar(model: model)
+                    .frame(width: side, height: topBarHeight)
 
                 // ★ TimelineView(.animation) とは？ ★
                 //   画面のリフレッシュ（約60fps）に合わせて中身を再評価し続けるView。
@@ -181,6 +194,9 @@ private struct MazePlayView: View {
                 .frame(width: side, height: side)
                 .clipShape(RoundedRectangle(cornerRadius: 16))  // ← キャンバスの角丸
                 .gesture(makeDragGesture(scale: scale))
+
+                MazeShockwaveBar(model: model)
+                    .frame(width: side, height: bottomBarHeight)
 
                 Spacer(minLength: 0)
             }
@@ -248,7 +264,7 @@ private func drawAll(ctx: GraphicsContext, size: CGSize, model: MazeGameModel) {
     drawParticles(ctx: ctx, model: model, s: s)   // ネズミ撃破パーティクル
     drawMice(ctx: ctx, model: model, s: s)        // 敵ネズミ（ダークグレー）
     drawPlayer(ctx: ctx, model: model, s: s)      // プレイヤー（白ネズミ）
-    drawHUD(ctx: ctx, model: model, s: s, size: size)  // HP・スコア・チャージバー
+    // ライフ・スコア・衝撃波ゲージは迷路の外（MazeTopBar / MazeShockwaveBar）に表示する
 
     // ゴール到達演出（delivered 状態のみ）
     if model.gameState == .delivered {
@@ -466,102 +482,157 @@ private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
     }
 }
 
-// MARK: drawHUD（スコア・HP・衝撃波バーの描画）
-//
-// レイアウト概略（論理座標 / s=1, BASE=570, T=30 時）
-//   左上:  HP三角(〜116px) → スコア(116px〜)      ※右端余裕 > 200px
-//   右上:  ブラストバー幅120px、右端14px内側         ※左端 > 420px → 被らない
-//   右下:  ハイスコア、anchor:.trailing で右端固定
-//   ※ 左右エリアの境界は画面中央（285px）付近に自然に空白ができる
+// MARK: - MazeTopBar（迷路の上：ライフ・スコア）
 
-/// HUD（残りHPの三角アイコン・スコア・衝撃波チャージバー・ハイスコア）を描く。
-private func drawHUD(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat, size: CGSize) {
-    let T  = model.T * s
-    let hp = model.cheeseHp
+/// 迷路の上に置く帯。左にライフ（チーズの三角）、右に集めたチーズの数を大きく出す。
+private struct MazeTopBar: View {
+    let model: MazeGameModel
 
-    // ══════════════════════════════════════
-    // 左上: HP アイコン（三角形）
-    // ══════════════════════════════════════
-    let iconSize: CGFloat = 16 * s   // ← アイコンサイズ（旧12s → +33%）
-    let iconY:    CGFloat = 30 * s   // ← 上端からの距離
-    let iconStep  = iconSize * 2 + 6 * s  // アイコン間隔
+    var body: some View {
+        HStack(spacing: 10) {
+            // ライフ：残りは黄色いチーズ、なくなったぶんは灰色
+            HStack(spacing: 6) {
+                ForEach(0..<3, id: \.self) { i in
+                    MazeLifeIcon(isAlive: i < model.cheeseHp)
+                        .frame(width: 34, height: 30)   // ← 変更可（ライフの大きさ）
+                }
+            }
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(Text(verbatim: "\(model.cheeseHp) / 3"))
 
-    for i in 0..<3 {
-        let cx = 18 * s + CGFloat(i) * iconStep
-        var tri = Path()
-        tri.move(to:    CGPoint(x: cx,            y: iconY - iconSize))
-        tri.addLine(to: CGPoint(x: cx + iconSize, y: iconY + iconSize * 0.65))
-        tri.addLine(to: CGPoint(x: cx - iconSize, y: iconY + iconSize * 0.65))
-        tri.closeSubpath()
-        let fillColor: Color = i < hp
-            ? Color(red: 0.95, green: 0.95, blue: 0.95)  // ← HP残: 白
-            : Color(white: 0.27)                           // ← HP消費: グレー
-        ctx.fill(tri, with: .color(fillColor))
-        ctx.stroke(tri, with: .color(Color(white: 0.52)), lineWidth: 1.4)
+            Spacer(minLength: 0)
+
+            Text(verbatim: "🧀 × \(model.score)")
+                .font(.system(size: 30, weight: .black, design: .rounded))   // ← 変更可（スコアの大きさ）
+                .monospacedDigit()
+                .foregroundStyle(DS.textPrimary)
+                .contentTransition(.numericText(value: Double(model.score)))
+                .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.score)
+        }
+        .padding(.horizontal, 14)
+        .frame(maxHeight: .infinity)
+        .background(RoundedRectangle(cornerRadius: DS.sectionRadius).fill(DS.card))
+    }
+}
+
+/// ライフ1つ分のアイコン（チーズの三角）。
+private struct MazeLifeIcon: View {
+    let isAlive: Bool
+
+    var body: some View {
+        Triangle()
+            .fill(isAlive ? Color(red: 1.0, green: 0.80, blue: 0.20) : Color(white: 0.82))
+            .overlay(Triangle().stroke(isAlive ? Color(red: 0.85, green: 0.6, blue: 0.0) : Color(white: 0.65),
+                                       lineWidth: 2))
+            .scaleEffect(isAlive ? 1.0 : 0.85)
+            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: isAlive)
     }
 
-    // ══════════════════════════════════════
-    // 左上: スコア（HP アイコン右隣）
-    // ══════════════════════════════════════
-    // HP右端 = 18s + 2*iconStep + iconSize
-    let hpRightEdge = 18 * s + 2 * iconStep + iconSize
-    let scoreText = Text("🧀×\(model.score)")
-        .font(.system(size: T * 0.80, weight: .bold))               // ← スコアフォントサイズ（旧0.62）
-        .foregroundStyle(Color(red: 1.0, green: 0.839, blue: 0.0))
-    ctx.draw(scoreText,
-             at: CGPoint(x: hpRightEdge + 10 * s, y: iconY),
-             anchor: .leading)   // 右方向にのみ伸びるので画面左に被らない
+    /// 上向きの三角形。
+    private struct Triangle: Shape {
+        func path(in rect: CGRect) -> Path {
+            var p = Path()
+            p.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            p.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            p.addLine(to: CGPoint(x: rect.minX, y: rect.maxY))
+            p.closeSubpath()
+            return p
+        }
+    }
+}
 
-    // ══════════════════════════════════════
-    // 右上: ブラストチャージバー
-    // ══════════════════════════════════════
-    let ready = model.shockwave.cool == 0
-    // チャージ進捗 0.0〜1.0（クールダウン残りから逆算）
-    let fill  = ready
-        ? CGFloat(1)
-        : CGFloat(1) - CGFloat(model.shockwave.cool) / CGFloat(model.SW_COOL)
+// MARK: - MazeShockwaveBar（迷路の下：衝撃波ゲージ）
 
-    let barW:   CGFloat = 120 * s   // ← バー幅（旧90s → +33%）
-    let barH:   CGFloat = 14  * s   // ← バー高さ（旧9s → +56%）
-    let barPad: CGFloat = 14  * s   // 右端余白
-    let bx = size.width - barW - barPad
-    let by: CGFloat = 14 * s        // 上端余白
+/// 迷路の下に置く帯。衝撃波のチャージ具合を大きなゲージで見せる。
+///
+/// ★ チャージ中と発射OKをはっきり分けている理由 ★
+///   以前は小さなバーの色の違い（オレンジ／黄色）だけで、チャージ中かどうか分かりにくかった。
+///   ・チャージ中: 灰色の文字「チャージちゅう…」と、たまっていくオレンジのゲージと残りの割合
+///   ・発射OK    : ゲージが黄色く光って脈打ち、「タップで はっしゃ！」と大きく出す
+private struct MazeShockwaveBar: View {
+    let model: MazeGameModel
 
-    // バー背景
-    ctx.fill(Path(roundedRect: CGRect(x: bx, y: by, width: barW, height: barH),
-                  cornerRadius: 5),
-             with: .color(Color(white: 0.15)))
+    /// 発射OKのときに脈打たせるためのフラグ。
+    @State private var isPulsing = false
 
-    // バー充填
-    if fill > 0 {
-        let fillColor: Color = ready
-            ? Color(red: 1.0, green: 0.922, blue: 0.271)  // ← 満タン: 黄色
-            : Color(red: 1.0, green: 0.655, blue: 0.149)  // ← チャージ中: オレンジ
-        ctx.fill(Path(roundedRect: CGRect(x: bx, y: by, width: barW * fill, height: barH),
-                      cornerRadius: 5),
-                 with: .color(fillColor))
+    private var isReady: Bool { model.shockwave.cool == 0 }
+
+    /// チャージの進み具合（0.0〜1.0）。クールダウンの残りから逆算する。
+    private var progress: CGFloat {
+        isReady ? 1 : 1 - CGFloat(model.shockwave.cool) / CGFloat(model.SW_COOL)
     }
 
-    // バーラベル（バー右端揃え・バーの下）
-    // ← HP が低いほど 💥 が増える（HP3=💥, HP2=💥💥, HP1=💥💥💥）
-    let swMaxR  = model.swRangeByHp(model.cheeseHp)
-    let swLabel = swMaxR == model.T * 8 ? "💥💥💥" : swMaxR == model.T * 6.5 ? "💥💥" : "💥"
-    let barLabel = Text(ready ? "BLAST \(swLabel)" : "Charging…")
-        .font(.system(size: 11 * s, weight: .bold))                   // ← ラベルフォントサイズ（旧9s）
-        .foregroundStyle(ready ? Color.white : Color(white: 0.67))
-    ctx.draw(barLabel,
-             at: CGPoint(x: bx + barW, y: by + barH + 13 * s),
-             anchor: .trailing)  // 右端固定 → 画面外にはみ出さない
+    /// 衝撃波の届く距離（ライフが少ないほど長い）を 💥 の数で見せる。
+    private var powerIcons: String {
+        let r = model.swRangeByHp(model.cheeseHp)
+        return r >= model.T * 8 ? "💥💥💥" : r >= model.T * 6.5 ? "💥💥" : "💥"
+    }
 
-    // ══════════════════════════════════════
-    // 右下: ハイスコア
-    // ══════════════════════════════════════
-    let hiText = Text("HI 🧀×\(model.highScore)")
-        .font(.system(size: T * 0.65, weight: .bold))                 // ← フォントサイズ（旧0.52）
-        .foregroundStyle(Color(red: 1.0, green: 0.839, blue: 0.0))
-    ctx.draw(hiText,
-             at: CGPoint(x: size.width - 14 * s, y: size.height - 16 * s),
-             anchor: .trailing)  // 右端固定 → 桁数が増えても左方向にのみ伸びる
+    var body: some View {
+        VStack(spacing: 8) {
+            HStack {
+                Text(isReady ? "maze_hud_ready" : "maze_hud_charging")
+                    .font(.system(size: 18, weight: .black, design: .rounded))   // ← 変更可
+                    .foregroundStyle(isReady ? DS.energy : DS.muted)
+                Spacer(minLength: 0)
+                Text(verbatim: powerIcons)
+                    .font(.system(size: 20))
+                    .opacity(isReady ? 1 : 0.35)
+            }
+
+            // ゲージ本体
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    Capsule().fill(Color(white: 0.88))
+                    Capsule()
+                        .fill(isReady
+                              ? LinearGradient(colors: [Color(red: 1.0, green: 0.85, blue: 0.2), DS.energy],
+                                               startPoint: .leading, endPoint: .trailing)
+                              : LinearGradient(colors: [Color(red: 1.0, green: 0.7, blue: 0.4),
+                                                        Color(red: 1.0, green: 0.6, blue: 0.25)],
+                                               startPoint: .leading, endPoint: .trailing))
+                        .frame(width: max(geo.size.height, geo.size.width * progress))
+                        .shadow(color: isReady ? DS.energy.opacity(0.6) : .clear, radius: isPulsing ? 10 : 3)
+                    if !isReady {
+                        // チャージ中は残りの割合を数字でも見せる
+                        Text(verbatim: "\(Int(progress * 100))%")
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(DS.textBody)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+            }
+            .frame(height: 24)   // ← 変更可（ゲージの太さ）
+            .scaleEffect(isReady && isPulsing ? 1.03 : 1.0)
+
+            HStack(spacing: 4) {
+                Spacer(minLength: 0)
+                Text("maze_hud_best")
+                Text(verbatim: "🧀 × \(model.highScore)")
+                    .monospacedDigit()
+            }
+            .font(.system(size: 13, weight: .bold, design: .rounded))
+            .foregroundStyle(DS.muted)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .frame(maxHeight: .infinity)
+        .background(RoundedRectangle(cornerRadius: DS.sectionRadius).fill(DS.card))
+        .onChange(of: isReady) { _, ready in
+            if ready {
+                SoundManager.shared.vibrate()   // 発射できるようになったことを手にも伝える
+                withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) { isPulsing = true }
+            } else {
+                withAnimation(.easeOut(duration: 0.2)) { isPulsing = false }
+            }
+        }
+        .onAppear {
+            if isReady {
+                withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) { isPulsing = true }
+            }
+        }
+    }
 }
 
 // MARK: drawDelivered（ゴール到達演出）

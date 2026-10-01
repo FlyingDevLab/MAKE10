@@ -460,7 +460,7 @@ final class JankenViewModel {
     /// クリアボーナス = 正解の数 × 難易度ごとの倍率。ノーミスならさらに上乗せする。
     private func awardClearBonus() {
         let corrects = totalRounds - missCount
-        var bonus = (Double(corrects) * difficulty.bonusRate).rounded()
+        var bonus = Double(corrects) * difficulty.bonusRate
         if isPerfect { bonus += EnergyRewards.perfectBonus }
         EnergyStore.shared.grantClearBonus(bonus)
     }

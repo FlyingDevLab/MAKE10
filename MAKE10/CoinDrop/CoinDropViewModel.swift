@@ -258,7 +258,7 @@ final class CoinDropViewModel {
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord    = ScoreBoard.saveIfBetter(score: score, for: UDKey.coinDropHighScore)
         // クリアボーナス = 作った $1 の数 × 倍率。$10 達成（MAKE10）ならさらに上乗せする
-        var bonus = (Double(score) * EnergyRewards.coinDropBonusRate).rounded()
+        var bonus = Double(score) * EnergyRewards.coinDropBonusRate
         if isPerfect { bonus += EnergyRewards.perfectBonus }
         EnergyStore.shared.grantClearBonus(bonus)
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
