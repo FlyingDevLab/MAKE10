@@ -6,7 +6,7 @@
 //
 
 // アプリ全画面で共通して使うレイアウトフレーム。
-// ヘッダー（戻る・閉じる・設定）・コンテンツ領域・フッター（著作権表示）の3層構造を持ち、
+// ヘッダー（戻る・閉じる・タイトル・エネルギー残高・設定）・コンテンツ領域・フッター（著作権表示）の3層構造を持ち、
 // コンテンツだけを差し替えることで一貫したUIを維持したまま画面を切り替えられる。
 // 設定パネルのオーバーレイもここで管理する。
 //
@@ -102,8 +102,13 @@ struct SharedFrame<Content: View>: View {
     // MARK: ヘッダー
 
     /// ヘッダー行。左：戻る or 閉じるボタン（どちらも nil なら透明なスペーサー）、
-    /// 中央：タイトル、右：設定ボタン（常に表示）。
+    /// 中央：タイトルとその下にエネルギー残高、右：設定ボタン（常に表示）。
     /// 左右ボタンを固定幅(52pt)にすることでタイトルが常に画面中央に配置される。
+    ///
+    /// ★ エネルギー残高をタイトルの下に置いている理由 ★
+    ///   「🔥 1,100.8kcal」は幅が約100ptある。設定ボタンの横に置くと、タイトルを中央に
+    ///   保つために左の枠も同じだけ広げることになり、タイトルの幅が足りなくなる。
+    ///   タイトルの下なら左右の枠はそのままで、高さも元のヘッダー（44pt）に収まる。
     private var headerRow: some View {
         HStack(spacing: 0) {
             Group {
@@ -137,11 +142,15 @@ struct SharedFrame<Content: View>: View {
             .frame(width: 52, height: 44)
 
             // タイトルテキスト。lineLimit(1) でタイトルが長くても1行に収める
-            Text(title ?? "")
-                .font(.system(size: 17, weight: .semibold, design: .rounded))
-                .foregroundStyle(DS.textPrimary)
-                .lineLimit(1)
-                .frame(maxWidth: .infinity)
+            VStack(spacing: 0) {
+                Text(title ?? "")
+                    .font(.system(size: 17, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+                    .lineLimit(1)
+                // エネルギー残高。プレイ中もここで数字が増えていく
+                EnergyBadge()
+            }
+            .frame(maxWidth: .infinity)
 
             // 設定ボタン（常に右端に表示）。タップで SettingsView をオーバーレイとして表示する
             Button {
