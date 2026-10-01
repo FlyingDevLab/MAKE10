@@ -29,6 +29,9 @@ struct StickerStorageView: View {
     /// 「シールやさん」ボタンが押されたときの処理（画面遷移は MakeTenContentView が行う）。
     var onOpenShop: () -> Void = {}
 
+    /// 「ガチャ」ボタンが押されたときの処理（画面遷移は MakeTenContentView が行う）。
+    var onOpenGacha: () -> Void = {}
+
     private let store = StickerStore.shared
 
     // 各行で現在選択中の「種類インデックス」（グループ配列に対するインデックス）
@@ -122,40 +125,19 @@ struct StickerStorageView: View {
                         .allowsHitTesting(false)
                 }
 
-                // シールやさん・シール画面を開くボタン（下部固定）
-                VStack {
+                // シールやさん・ガチャ・シール画面を開くボタン（下部固定）
+                VStack(spacing: 10) {
                     Spacer()
                     HStack(spacing: 12) {
-                        Button {
-                            SoundManager.shared.vibrate()
+                        bottomButton("shop_title", systemImage: "storefront", color: DS.energy) {
                             onOpenShop()
-                        } label: {
-                            Label(LocalizedStringKey("shop_title"), systemImage: "storefront")
-                                .font(.system(size: 15, weight: .bold, design: .rounded))
-                                .foregroundStyle(.white)
-                                .padding(.horizontal, 20)
-                                .padding(.vertical, 12)
-                                .background(Capsule().fill(DS.energy))
-                                .shadow(color: DS.energy.opacity(0.30), radius: 6, x: 0, y: 3)
                         }
-                        .buttonStyle(.plain)
-
-                        Button {
-                            showPlayView = true
-                            SoundManager.shared.vibrate()
-                        } label: {
-                            Label(
-                                LocalizedStringKey("sticker_open_play_mode"),
-                                systemImage: "rectangle.expand.diagonal"
-                            )
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 24)
-                            .padding(.vertical, 12)
-                            .background(Capsule().fill(DS.primary))
-                            .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
+                        bottomButton("gacha_title", systemImage: "gift", color: DS.energy) {
+                            onOpenGacha()
                         }
-                        .buttonStyle(.plain)
+                    }
+                    bottomButton("sticker_open_play_mode", systemImage: "rectangle.expand.diagonal", color: DS.primary) {
+                        showPlayView = true
                     }
                     .padding(.bottom, 20)
                 }
@@ -177,6 +159,30 @@ struct StickerStorageView: View {
             StickerPlayView()
                 .dynamicTypeSize(.large)
         }
+    }
+
+    // MARK: - 下部ボタン
+
+    /// 画面下部に並べるカプセル型のボタン。
+    private func bottomButton(
+        _ titleKey: LocalizedStringKey,
+        systemImage: String,
+        color: Color,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button {
+            SoundManager.shared.vibrate()
+            action()
+        } label: {
+            Label(titleKey, systemImage: systemImage)
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 12)
+                .background(Capsule().fill(color))
+                .shadow(color: color.opacity(0.30), radius: 6, x: 0, y: 3)
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - 行ビュー
