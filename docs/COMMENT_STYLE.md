@@ -229,7 +229,12 @@ print("⚠️ <型名>: <何に失敗したか>: \(error.localizedDescription)")
 | .animation(value:) に渡すための String 変換 | MakeTenContentView.swift |
 | .id() によるトランジション発火 / .animation(value:) | PlayingView.swift |
 | ButtonStyle / 自己完結型コンポーネント | PlayingView.swift |
-| 見えない背景での座標取得 / 座標の比率保存 | FinishedView.swift |
+| 座標の比率保存 | StickerStore.swift |
+| 0.1単位の整数で持つ理由（小数の誤差対策） | EnergyStore.swift |
+| .contentTransition(.numericText) | EnergyBadge.swift |
+| 乱数生成器を引数で受け取る / 重み付きの抽選 | StickerShop.swift |
+| TimelineView（定期的に描き直す） | StickerShopView.swift |
+| keyframeAnimator（コマ割りアニメーション） | GachaView.swift |
 | タプルでの switch | QuizData.swift |
 | Equatable の == を自分で書く理由 | QuizData.swift |
 | カスタムデコード（init(from:)） | QuizCategoryLoader.swift |
