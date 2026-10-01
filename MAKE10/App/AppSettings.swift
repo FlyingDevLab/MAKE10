@@ -52,10 +52,15 @@ final class AppSettings {
     //   値を変えるだけで自動的に UserDefaults へ保存されるため、
     //   「保存し忘れ」が構造的に起きません。
 
-    /// サウンドのON/OFF状態。変更されるたびにUserDefaultsへ自動保存し、
+    /// おと（効果音）のON/OFF状態。変更されるたびにUserDefaultsへ自動保存し、
     /// 次回起動時も設定が引き継がれるようにする。
     var isSoundOn: Bool {
         didSet { UserDefaults.standard.set(isSoundOn, forKey: UDKey.isSoundOn) }
+    }
+
+    /// ぶるぶる（振動）のON/OFF状態。1.4 以前は isSoundOn が音と振動の両方を担っていた。
+    var isHapticOn: Bool {
+        didSet { UserDefaults.standard.set(isHapticOn, forKey: UDKey.isHapticOn) }
     }
 
     /// 利用規約への同意済みフラグ。
@@ -89,7 +94,13 @@ final class AppSettings {
     /// 外部からの直接初期化を禁止し、shared経由のアクセスのみを強制する。
     /// UserDefaultsに保存済みの値があればそれを復元し、なければデフォルト値を使う。
     private init() {
-        self.isSoundOn        = UserDefaults.standard.object(forKey: UDKey.isSoundOn) as? Bool ?? true
+        let soundOn           = UserDefaults.standard.object(forKey: UDKey.isSoundOn) as? Bool ?? true
+        self.isSoundOn        = soundOn
+        // ★ 「ぶるぶる」の初期値を「おと」から引き継ぐ理由 ★
+        //   1.4 以前は1つのスイッチで音と振動をまとめてON/OFFしていた。
+        //   「おと・ぶるぶる」をOFFにしていた人が更新後に急に振動しないよう、
+        //   まだ保存されていなければ isSoundOn と同じ値から始める。
+        self.isHapticOn       = UserDefaults.standard.object(forKey: UDKey.isHapticOn) as? Bool ?? soundOn
         self.hasAgreedToTerms = UserDefaults.standard.bool(forKey: UDKey.hasAgreedToTerms)
     }
 }

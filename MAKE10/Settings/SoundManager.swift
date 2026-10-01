@@ -7,7 +7,8 @@
 
 // 効果音・ハプティクス（バイブ）を一括管理するシングルトン。
 // 各所から SoundManager.shared.playXxx() を呼ぶだけで再生でき、
-// AppSettings.isSoundOn が false のときは play / vibrate の両方が自動的にスキップされる。
+// AppSettings.isSoundOn が false のときは効果音が、isHapticOn が false のときは振動（vibrate）が
+// 自動的にスキップされる（1.5 から音と振動を別々に切り替えられるようになった）。
 //
 // シングルトンパターンの解説は AppSettings.swift 冒頭を参照。
 //
@@ -191,10 +192,10 @@ final class SoundManager {
         }
     }
 
-    /// ハプティクス（バイブ）を鳴らす。playFile() と同様に isSoundOn で無効化できる。
+    /// ハプティクス（バイブ）を鳴らす。設定の「ぶるぶる」（isHapticOn）で無効化できる。
     /// タイル選択・ボタンタップ・正誤フィードバックで呼ばれる。
     func vibrate() {
-        guard AppSettings.shared.isSoundOn else { return }
+        guard AppSettings.shared.isHapticOn else { return }
         impactGenerator.impactOccurred()
     }
 
