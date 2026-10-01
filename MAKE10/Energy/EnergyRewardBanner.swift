@@ -73,7 +73,7 @@ struct EnergyRewardBanner: View {
 
     // MARK: サブビュー
 
-    /// バナー本体。「エネルギー🔥」「+12.6kcal」と、必要なら内訳を出す。
+    /// バナー本体。「エネルギー🔥」「+42kcal」と、必要なら内訳を出す。
     private var card: some View {
         VStack(spacing: 4) {
             HStack(spacing: 2) {
@@ -105,7 +105,7 @@ struct EnergyRewardBanner: View {
     }
 
     /// 内訳の行。クリアボーナスがあるときだけ出す。
-    ///   ・プレイ中の獲得もある → 「プレイ +10.8 ・ クリアボーナス +100.0」と両方を並べる
+    ///   ・プレイ中の獲得もある → 「あそんだぶん +12 ・ クリアの ごほうび +118」と両方を並べる
     ///   ・クリアボーナスだけ   → 「クリアボーナス」の文字だけ（数字は上の大きな数字と同じなので出さない）
     @ViewBuilder
     private var breakdown: some View {

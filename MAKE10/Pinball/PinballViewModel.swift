@@ -54,6 +54,11 @@ final class PinballViewModel {
 
     /// PinballScene からスコア変化を受け取るコールバック
     func updateScore(_ newScore: Int) {
+        // 決まった点数（pinballPointsPerCorrect）を超えるたびに「正解1回」としてエネルギーを +1。
+        // 一度に大きく点が入って何段も超えたときは、そのぶんまとめて増やす
+        let step   = EnergyRewards.pinballPointsPerCorrect
+        let gained = newScore / step - score / step
+        if gained > 0 { EnergyStore.shared.earn(Double(gained) * EnergyRewards.perCorrect) }
         score = newScore
     }
 
@@ -79,8 +84,9 @@ final class PinballViewModel {
     private func endGame() {
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.pinballHighScore)
-        // スコア1000点につき1kcal。完走の参加賞として、スコア0でも必ず1kcal加算する
-        EnergyStore.shared.grantClearBonus(Double(score) / 1000.0 + 1.0)  // ← 変更可
+        // クリアボーナス = 正解の数（点数 ÷ pinballPointsPerCorrect）× 倍率
+        let corrects = Double(score / EnergyRewards.pinballPointsPerCorrect)
+        EnergyStore.shared.grantClearBonus((corrects * EnergyRewards.pinballBonusRate).rounded())
 
         // 新記録ならアンロック風の祝福音、そうでなければ通常のゲームオーバー音
         // （Scene 側で鳴らす ballDrain 音の余韻の後に、結果を告げる音として重ねる）

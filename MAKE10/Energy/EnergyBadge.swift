@@ -4,7 +4,7 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/01.
 //
-//  いまのエネルギー残高を「🔥 1,100.8kcal」の形で表示する共通部品。
+//  いまのエネルギー残高を「🔥 1,100kcal」の形で表示する共通部品。
 //  ヘッダー（SharedFrame）に常に出しておき、ショップ・ガチャ画面でも使う。
 //
 //  役割分担:
@@ -67,7 +67,7 @@ struct EnergyBadge: View {
             guard new > old else { return }
             bump()
         }
-        // VoiceOver では「エネルギー 1,100.8 kcal」と1つの値として読み上げる
+        // VoiceOver では「エネルギー 1,100 kcal」と1つの値として読み上げる
         .accessibilityElement(children: .combine)
     }
 

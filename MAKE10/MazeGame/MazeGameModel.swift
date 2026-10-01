@@ -303,6 +303,7 @@ final class MazeGameModel: NSObject {
             if sqrt(dx*dx + dy*dy) < CHEESE_R * 1.6 {
                 cheeses[i].collected = true
                 score += 1
+                EnergyStore.shared.earn(EnergyRewards.perCorrect)   // チーズを取るたびにエネルギーを +1
                 spawnParticles(cheeses[i].x, cheeses[i].y)
                 SoundManager.shared.vibrate()
                 didCollect = true
@@ -643,7 +644,7 @@ final class MazeGameModel: NSObject {
         SoundManager.shared.playMazeGameOver()   // ゲームオーバー音
         // 新記録なら ScoreBoard が保存し true を返す
         isNewRecord = ScoreBoard.saveIfBetter(score: score, for: UDKey.mazeHighScore)
-        // チーズ1個につき5kcal。完走の参加賞として、チーズ0個でも必ず1kcal加算する
-        EnergyStore.shared.grantClearBonus(Double(score) * 5.0 + 1.0)  // ← 変更可
+        // クリアボーナス = 取ったチーズの数 × 倍率（量は EnergyRewards で調整する）
+        EnergyStore.shared.grantClearBonus((Double(score) * EnergyRewards.mazeBonusRate).rounded())
     }
 }

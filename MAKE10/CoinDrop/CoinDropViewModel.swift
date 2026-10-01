@@ -233,6 +233,9 @@ final class CoinDropViewModel {
 
     /// $1 が完成してスコアが変化したとき Scene から呼ばれる
     func updateScore(_ newScore: Int) {
+        // $1 ができるたびにエネルギーを +1（スコアは $1 の数）
+        let gained = newScore - score
+        if gained > 0 { EnergyStore.shared.earn(Double(gained) * EnergyRewards.perCorrect) }
         score = newScore
     }
 
@@ -254,10 +257,10 @@ final class CoinDropViewModel {
         gameOverReason = reason
         // 新記録なら ScoreBoard が保存し true を返す。結果画面の表示に使う
         isNewRecord    = ScoreBoard.saveIfBetter(score: score, for: UDKey.coinDropHighScore)
-        // 獲得$1につき1kcal。完走の参加賞として、スコア0でも必ず1kcal加算する
-        EnergyStore.shared.grantClearBonus(Double(score) + 1.0)  // ← 変更可
-        // $10ぴったり達成（MAKE10）はさらにクリアボーナスを上乗せする
-        if isPerfect { EnergyStore.shared.grantClearBonus(EnergyTuning.clearBonusUnit) }
+        // クリアボーナス = 作った $1 の数 × 倍率。$10 達成（MAKE10）ならさらに上乗せする
+        var bonus = (Double(score) * EnergyRewards.coinDropBonusRate).rounded()
+        if isPerfect { bonus += EnergyRewards.perfectBonus }
+        EnergyStore.shared.grantClearBonus(bonus)
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
