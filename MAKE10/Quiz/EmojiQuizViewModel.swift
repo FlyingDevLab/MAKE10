@@ -100,7 +100,8 @@ final class EmojiQuizViewModel {
     init(category: QuizCategory, mode: QuizMode, totalCount: Int = 10) {   // ← 変更可（1セッションの問題数）
         self.category   = category
         self.mode       = mode
-        self.totalCount = totalCount
+        // カテゴリの問題が出題数より少ないときは、ある分だけ出す（「1 / 10」のまま5問で終わらないように）
+        self.totalCount = min(totalCount, category.items.count)
         buildQuestions()
         EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
     }
@@ -108,20 +109,50 @@ final class EmojiQuizViewModel {
     // MARK: 問題生成
 
     /// カテゴリのアイテムプールをシャッフルして totalCount 問を抽出し、
-    /// 各問題に正解1つ＋ランダムな不正解3つの選択肢セットを生成する。
+    /// 各問題に正解1つ＋不正解3つの選択肢セットを生成する。
     /// 同一プールから選択肢を作るため、全選択肢がカテゴリ内の実在アイテムになる。
     private func buildQuestions() {
         let pool   = category.items.shuffled()
         let picked = Array(pool.prefix(totalCount))
         questions  = picked.map { correct in
-            // 正解以外からランダムに3つ選んで不正解選択肢にする
-            let others  = pool.filter { $0.id != correct.id }.shuffled().prefix(3)
             // 正解と不正解を混ぜてシャッフルし、正解が毎回同じ位置に来ないようにする
-            let choices = ([correct] + others).shuffled()
+            let choices = ([correct] + wrongChoices(for: correct, from: pool)).shuffled()
             return QuizQuestion(correct: correct, choices: choices)
         }
         // results を false で初期化しておき、回答のたびに上書きする
         results = Array(repeating: false, count: questions.count)
+    }
+
+    /// 不正解の選択肢を3つ選ぶ。
+    ///
+    /// ★ 選び方 ★
+    ///   1. そっくりさん（QuizLookalikes）がカテゴリ内にあれば、先に入れる。
+    ///      似ているものを並べて、見分けるポイントに気づけるようにするため。
+    ///   2. 残りはランダムに選ぶ。
+    ///   どちらの場合も、次のものは選ばない。
+    ///     ・絵文字では見分けられない組（QuizLookalikes.neverTogether）の相手
+    ///     ・すでに選んだものと、表示（コード・絵文字）か名前が同じもの（同じ答えが2つ並ばないように）
+    private func wrongChoices(for correct: QuizItem, from pool: [QuizItem]) -> [QuizItem] {
+        let wrongCount = 3   // ← 変更可（選択肢は正解と合わせて4つ）
+        var chosen: [QuizItem] = []
+
+        func canAdd(_ item: QuizItem) -> Bool {
+            let lineup = [correct] + chosen
+            return lineup.allSatisfy { other in
+                other.id != item.id
+                    && other.emoji != item.emoji
+                    && other.name != item.name
+                    && QuizLookalikes.canBeTogether(other.emoji, item.emoji)
+            }
+        }
+
+        let lookalikes = Set(QuizLookalikes.lookalikes(of: correct.emoji))
+        let candidates = pool.filter { lookalikes.contains($0.emoji) }.shuffled()
+                       + pool.shuffled()
+        for item in candidates where chosen.count < wrongCount && canAdd(item) {
+            chosen.append(item)
+        }
+        return chosen
     }
 
     // MARK: 回答処理

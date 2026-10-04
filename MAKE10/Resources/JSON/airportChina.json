@@ -1,0 +1,2092 @@
+{
+  "gameId": "airportChina",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "中国の空港コード",
+    "en": "China Airports",
+    "de": "Chinesische Flughäfen",
+    "es": "Aeropuertos de China",
+    "fr": "Aéroports de Chine",
+    "hi": "चीन हवाई अड्डे",
+    "id": "Bandara Tiongkok",
+    "it": "Aeroporti della Cina",
+    "ko": "중국 공항",
+    "nl": "Chinese luchthavens",
+    "pt-BR": "Aeroportos da China",
+    "th": "สนามบินในจีน",
+    "vi": "Sân bay Trung Quốc",
+    "zh-Hans": "中国机场",
+    "zh-Hant": "中國機場"
+  },
+  "icon": "🇨🇳",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "AXF",
+      "name": {
+        "ja": "アルシャー左旗バヤンホト空港",
+        "en": "Alxa Left Banner Bayanhot Airport",
+        "zh-Hans": "阿拉善左旗巴彦浩特机场"
+      }
+    },
+    {
+      "display": "BZX",
+      "name": {
+        "ja": "巴中恩陽機場",
+        "en": "Bazhong Enyang Airport",
+        "zh-Hans": "巴中机场"
+      }
+    },
+    {
+      "display": "HSC",
+      "name": {
+        "ja": "韶関丹霞空港",
+        "en": "Shaoguan Danxia Airport",
+        "zh-Hans": "韶关丹霞机场"
+      }
+    },
+    {
+      "display": "JGS",
+      "name": {
+        "ja": "井岡山空港",
+        "en": "Ji'an Jinggangshan Airport",
+        "zh-Hans": "吉安井冈山机场"
+      }
+    },
+    {
+      "display": "JNH",
+      "name": {
+        "ja": "嘉興空港",
+        "en": "Jiaxing Nanhu Airport",
+        "zh-Hans": "嘉兴南湖机场"
+      }
+    },
+    {
+      "display": "DDR",
+      "name": {
+        "en": "Shigatse Tingri Airport",
+        "zh-Hans": "日喀则定日机场"
+      }
+    },
+    {
+      "display": "HQL",
+      "name": {
+        "ja": "タシュクルガン・クンジュラブ空港",
+        "en": "Tashkurgan Khunjerab Airport",
+        "zh-Hans": "塔什库尔干红其拉甫机场"
+      }
+    },
+    {
+      "display": "LSG",
+      "name": {
+        "en": "Leshan Airport"
+      }
+    },
+    {
+      "display": "ZFL",
+      "name": {
+        "en": "Zhaosu Airport",
+        "zh-Hans": "昭苏天马机场"
+      }
+    },
+    {
+      "display": "HJB",
+      "name": {
+        "en": "Hejing Bayinbuluke Airport",
+        "zh-Hans": "和静巴音布鲁克机场"
+      }
+    },
+    {
+      "display": "JBK",
+      "name": {
+        "en": "Qitai Jiangbulake Airport",
+        "zh-Hans": "奇台江布拉克机场"
+      }
+    },
+    {
+      "display": "ZAT",
+      "name": {
+        "ja": "昭通空港",
+        "en": "Zhaotong Airport",
+        "zh-Hans": "昭通机场"
+      }
+    },
+    {
+      "display": "BFY",
+      "name": {
+        "en": "Bengbu Tenghu Airport",
+        "zh-Hans": "蚌埠滕湖机场"
+      }
+    },
+    {
+      "display": "JUH",
+      "name": {
+        "ja": "池州九華山空港",
+        "en": "Chizhou Jiuhuashan Airport",
+        "zh-Hans": "池州九华山机场"
+      }
+    },
+    {
+      "display": "LZG",
+      "name": {
+        "en": "Langzhong Gucheng Airport",
+        "zh-Hans": "阆中古城机场"
+      }
+    },
+    {
+      "display": "NLH",
+      "name": {
+        "ja": "寧蒗瀘沽湖空港",
+        "en": "Ninglang Luguhu Airport",
+        "zh-Hans": "宁蒗泸沽湖机场"
+      }
+    },
+    {
+      "display": "RHT",
+      "name": {
+        "ja": "アルシャー右旗バダンジリン空港",
+        "en": "Alxa Right Banner Badanjilin Airport",
+        "zh-Hans": "阿拉善右旗巴丹吉林机场"
+      }
+    },
+    {
+      "display": "TWC",
+      "name": {
+        "ja": "トムシュク唐王城空港",
+        "en": "Tumxuk Tangwangcheng Airport",
+        "zh-Hans": "图木舒克机场"
+      }
+    },
+    {
+      "display": "PEK",
+      "name": {
+        "ja": "北京首都国際空港",
+        "en": "Beijing Capital International Airport",
+        "zh-Hans": "北京首都国际机场"
+      }
+    },
+    {
+      "display": "PKX",
+      "name": {
+        "ja": "北京大興国際空港",
+        "en": "Beijing Daxing International Airport",
+        "zh-Hans": "北京大兴国际机场"
+      }
+    },
+    {
+      "display": "CDE",
+      "name": {
+        "ja": "承徳普寧空港",
+        "en": "Chengde Airport",
+        "zh-Hans": "承德机场"
+      }
+    },
+    {
+      "display": "CIF",
+      "name": {
+        "ja": "赤峰玉竜空港",
+        "en": "Chifeng Yulong Airport",
+        "zh-Hans": "赤峰机场"
+      }
+    },
+    {
+      "display": "CIH",
+      "name": {
+        "ja": "長治",
+        "en": "Changzhi Wangcun Airport",
+        "zh-Hans": "长治王村机场"
+      }
+    },
+    {
+      "display": "BPE",
+      "name": {
+        "ja": "秦皇島北戴河空港",
+        "en": "Qinhuangdao Beidaihe Airport",
+        "zh-Hans": "秦皇岛北戴河机场"
+      }
+    },
+    {
+      "display": "DSN",
+      "name": {
+        "ja": "オルドス空港",
+        "en": "Ordos Ejin Horo Airport",
+        "zh-Hans": "鄂尔多斯机场"
+      }
+    },
+    {
+      "display": "DAT",
+      "name": {
+        "ja": "大同雲岡国際空港",
+        "en": "Datong Yungang International Airport",
+        "zh-Hans": "大同云冈国际机场"
+      }
+    },
+    {
+      "display": "ERL",
+      "name": {
+        "ja": "エレンホト・サイウス国際空港",
+        "en": "Erenhot Saiwusu International Airport",
+        "zh-Hans": "二连浩特赛乌苏国际机场"
+      }
+    },
+    {
+      "display": "YIE",
+      "name": {
+        "ja": "アルシャン伊爾施空港",
+        "en": "Arxan Yi'ershi Airport",
+        "zh-Hans": "阿尔山伊尔施机场"
+      }
+    },
+    {
+      "display": "HDG",
+      "name": {
+        "ja": "邯鄲空港",
+        "en": "Handan Airport",
+        "zh-Hans": "邯郸机场"
+      }
+    },
+    {
+      "display": "HET",
+      "name": {
+        "ja": "呼和浩特白塔国際空港",
+        "en": "Hohhot Baita International Airport",
+        "zh-Hans": "呼和浩特白塔国际机场"
+      }
+    },
+    {
+      "display": "HUO",
+      "name": {
+        "en": "Huolinhe Airport",
+        "zh-Hans": "霍林郭勒霍林河机场"
+      }
+    },
+    {
+      "display": "HLD",
+      "name": {
+        "ja": "フルンボイル・ハイラル空港",
+        "en": "Hulunbuir Hailar Airport",
+        "zh-Hans": "呼伦贝尔海拉尔机场"
+      }
+    },
+    {
+      "display": "LFQ",
+      "name": {
+        "ja": "臨汾喬李空港",
+        "en": "Linfen Qiaoli Airport",
+        "zh-Hans": "臨汾喬李機場"
+      }
+    },
+    {
+      "display": "LLV",
+      "name": {
+        "en": "Lüliang Airport",
+        "zh-Hans": "呂梁機場"
+      }
+    },
+    {
+      "display": "NZH",
+      "name": {
+        "ja": "満洲里西郊空港",
+        "en": "Manzhouli Xijiao Airport",
+        "zh-Hans": "满洲里西郊机场"
+      }
+    },
+    {
+      "display": "BAV",
+      "name": {
+        "ja": "包頭東河空港",
+        "en": "Baotou Donghe International Airport",
+        "zh-Hans": "包头东河机场"
+      }
+    },
+    {
+      "display": "SZH",
+      "name": {
+        "en": "Shuozhou Zirun Airport",
+        "zh-Hans": "朔州滋润机场"
+      }
+    },
+    {
+      "display": "SJW",
+      "name": {
+        "ja": "石家荘正定国際空港",
+        "en": "Shijiazhuang Zhengding International Airport",
+        "zh-Hans": "石家庄正定国际机场"
+      }
+    },
+    {
+      "display": "TVS",
+      "name": {
+        "ja": "唐山三女河空港",
+        "en": "Tangshan Sannühe Airport",
+        "zh-Hans": "唐山三女河机场"
+      }
+    },
+    {
+      "display": "TSN",
+      "name": {
+        "ja": "天津浜海国際空港",
+        "en": "Tianjin Binhai International Airport",
+        "zh-Hans": "天津滨海国际机场"
+      }
+    },
+    {
+      "display": "TGO",
+      "name": {
+        "ja": "通遼空港",
+        "en": "Tongliao Airport",
+        "zh-Hans": "通辽机场"
+      }
+    },
+    {
+      "display": "UCB",
+      "name": {
+        "en": "Ulanqab Jining Airport",
+        "zh-Hans": "乌兰察布集宁机场"
+      }
+    },
+    {
+      "display": "WUA",
+      "name": {
+        "ja": "烏海空港",
+        "en": "Wuhai Airport",
+        "zh-Hans": "乌海机场"
+      }
+    },
+    {
+      "display": "HLH",
+      "name": {
+        "ja": "ウランホト空港",
+        "en": "Ulanhot Yilelite Airport",
+        "zh-Hans": "乌兰浩特机场"
+      }
+    },
+    {
+      "display": "XIL",
+      "name": {
+        "ja": "シリンホト空港",
+        "en": "Xilinhot Airport",
+        "zh-Hans": "锡林浩特机场"
+      }
+    },
+    {
+      "display": "WUT",
+      "name": {
+        "en": "Xinzhou Wutaishan Airport",
+        "zh-Hans": "五台山機場"
+      }
+    },
+    {
+      "display": "YCU",
+      "name": {
+        "ja": "運城塩湖国際空港",
+        "en": "Yuncheng Yanhu International Airport",
+        "zh-Hans": "运城盐湖国际机场"
+      }
+    },
+    {
+      "display": "TYN",
+      "name": {
+        "ja": "太原武宿国際空港",
+        "en": "Taiyuan Wusu International Airport",
+        "zh-Hans": "太原武宿国际机场"
+      }
+    },
+    {
+      "display": "RLK",
+      "name": {
+        "ja": "バヤンノール天吉泰空港",
+        "en": "Bayannur Tianjitai Airport",
+        "zh-Hans": "巴彦淖尔天吉泰机场"
+      }
+    },
+    {
+      "display": "ZQZ",
+      "name": {
+        "ja": "張家口空港",
+        "en": "Zhangjiakou Ningyuan Airport",
+        "zh-Hans": "张家口宁远机场"
+      }
+    },
+    {
+      "display": "NZL",
+      "name": {
+        "ja": "ジャラントンチンギスカン空港",
+        "en": "Zhalantun Chengjisihan Airport",
+        "zh-Hans": "扎兰屯成吉思汗机场"
+      }
+    },
+    {
+      "display": "BHY",
+      "name": {
+        "ja": "北海福成空港",
+        "en": "Beihai Fucheng Airport",
+        "zh-Hans": "北海福成机场"
+      }
+    },
+    {
+      "display": "AEB",
+      "name": {
+        "ja": "百色巴馬空港",
+        "en": "Baise Bama Airport",
+        "zh-Hans": "百色巴马机场"
+      }
+    },
+    {
+      "display": "CGD",
+      "name": {
+        "ja": "常徳桃花源空港",
+        "en": "Changde Taohuayuan Airport",
+        "zh-Hans": "常德桃花源机场"
+      }
+    },
+    {
+      "display": "HJJ",
+      "name": {
+        "ja": "芷江空港",
+        "en": "Huaihua Zhijiang Airport",
+        "zh-Hans": "怀化芷江机场"
+      }
+    },
+    {
+      "display": "HCZ",
+      "name": {
+        "en": "Chenzhou Beihu Airport",
+        "zh-Hans": "郴州北湖机场"
+      }
+    },
+    {
+      "display": "DYG",
+      "name": {
+        "ja": "張家界荷花空港",
+        "en": "Zhangjiajie Hehua Airport",
+        "zh-Hans": "张家界荷花国际机场"
+      }
+    },
+    {
+      "display": "FUO",
+      "name": {
+        "ja": "仏山沙堤空港",
+        "en": "Foshan Shadi Airport",
+        "zh-Hans": "佛山沙堤機場"
+      }
+    },
+    {
+      "display": "CAN",
+      "name": {
+        "ja": "広州白雲国際空港",
+        "en": "Guangzhou Baiyun International Airport",
+        "zh-Hans": "广州白云国际机场"
+      }
+    },
+    {
+      "display": "CSX",
+      "name": {
+        "ja": "長沙黄花国際空港",
+        "en": "Changsha Huanghua International Airport",
+        "zh-Hans": "长沙黄花国际机场"
+      }
+    },
+    {
+      "display": "HCJ",
+      "name": {
+        "en": "Hechi Jinchengjiang Airport",
+        "zh-Hans": "河池金城江机场"
+      }
+    },
+    {
+      "display": "HNY",
+      "name": {
+        "ja": "衡陽南岳空港",
+        "en": "Hengyang Nanyue Airport",
+        "zh-Hans": "衡阳南岳机场"
+      }
+    },
+    {
+      "display": "HUZ",
+      "name": {
+        "ja": "恵州平潭空港",
+        "en": "Huizhou Airport",
+        "zh-Hans": "惠州平潭机场"
+      }
+    },
+    {
+      "display": "KWL",
+      "name": {
+        "ja": "桂林両江国際空港",
+        "en": "Guilin Liangjiang International Airport",
+        "zh-Hans": "桂林两江国际机场"
+      }
+    },
+    {
+      "display": "LLF",
+      "name": {
+        "ja": "永州零陵空港",
+        "en": "Yongzhou Lingling Airport",
+        "zh-Hans": "永州零陵机场"
+      }
+    },
+    {
+      "display": "MXZ",
+      "name": {
+        "ja": "梅県空港",
+        "en": "Meixian Airport",
+        "zh-Hans": "梅县机场"
+      }
+    },
+    {
+      "display": "NNG",
+      "name": {
+        "ja": "南寧呉圩国際空港",
+        "en": "Nanning Wuxu International Airport",
+        "zh-Hans": "南宁吴圩国际机场"
+      }
+    },
+    {
+      "display": "SWA",
+      "name": {
+        "ja": "掲陽潮汕空港",
+        "en": "Jieyang Chaoshan International Airport",
+        "zh-Hans": "揭阳潮汕机场"
+      }
+    },
+    {
+      "display": "ZUH",
+      "name": {
+        "ja": "珠海金湾空港",
+        "en": "Zhuhai Jinwan Airport",
+        "zh-Hans": "珠海机场"
+      }
+    },
+    {
+      "display": "WGN",
+      "name": {
+        "en": "Shaoyang Wugang Airport",
+        "zh-Hans": "邵阳武冈机场"
+      }
+    },
+    {
+      "display": "SZX",
+      "name": {
+        "ja": "深圳宝安国際空港",
+        "en": "Shenzhen Bao'an International Airport",
+        "zh-Hans": "深圳宝安国际机场"
+      }
+    },
+    {
+      "display": "WUZ",
+      "name": {
+        "ja": "梧州西江空港",
+        "en": "Wuzhou Xijiang Airport",
+        "zh-Hans": "梧州西江机场"
+      }
+    },
+    {
+      "display": "DXJ",
+      "name": {
+        "en": "Xiangxi Biancheng Airport",
+        "zh-Hans": "湘西边城机场"
+      }
+    },
+    {
+      "display": "YLX",
+      "name": {
+        "en": "Yulin Fumian Airport",
+        "zh-Hans": "玉林福绵机场"
+      }
+    },
+    {
+      "display": "YYA",
+      "name": {
+        "ja": "岳陽三荷空港",
+        "en": "Yueyang Sanhe Airport",
+        "zh-Hans": "岳阳三荷机场"
+      }
+    },
+    {
+      "display": "LZH",
+      "name": {
+        "ja": "柳州白蓮空港",
+        "en": "Liuzhou Bailian Airport",
+        "zh-Hans": "柳州白莲机场"
+      }
+    },
+    {
+      "display": "ZHA",
+      "name": {
+        "ja": "湛江空港",
+        "en": "Zhanjiang Airport",
+        "zh-Hans": "湛江机场"
+      }
+    },
+    {
+      "display": "CGO",
+      "name": {
+        "ja": "鄭州新鄭国際空港",
+        "en": "Zhengzhou Xinzheng International Airport",
+        "zh-Hans": "郑州新郑国际机场"
+      }
+    },
+    {
+      "display": "EHU",
+      "name": {
+        "ja": "鄂州花湖空港",
+        "en": "Ezhou Huahu Airport",
+        "zh-Hans": "鄂州花湖机场"
+      }
+    },
+    {
+      "display": "ENH",
+      "name": {
+        "ja": "恩施許家坪空港",
+        "en": "Enshi Xujiaping Airport",
+        "zh-Hans": "恩施许家坪机场"
+      }
+    },
+    {
+      "display": "WUH",
+      "name": {
+        "ja": "武漢天河国際空港",
+        "en": "Wuhan Tianhe International Airport",
+        "zh-Hans": "武汉天河国际机场"
+      }
+    },
+    {
+      "display": "SHS",
+      "name": {
+        "ja": "荊州沙市空港",
+        "en": "Jingzhou Shashi Airport",
+        "zh-Hans": "荊州沙市機場"
+      }
+    },
+    {
+      "display": "LYA",
+      "name": {
+        "ja": "洛陽北郊空港",
+        "en": "Luoyang Beijiao Airport",
+        "zh-Hans": "洛阳北郊机场"
+      }
+    },
+    {
+      "display": "NNY",
+      "name": {
+        "ja": "南陽姜営空港",
+        "en": "Nanyang Jiangying Airport",
+        "zh-Hans": "南阳机场"
+      }
+    },
+    {
+      "display": "HQQ",
+      "name": {
+        "en": "Anyang Hongqiqu Airport",
+        "zh-Hans": "安阳红旗渠机场"
+      }
+    },
+    {
+      "display": "HPG",
+      "name": {
+        "en": "Shennongjia Airport",
+        "zh-Hans": "神农架机场"
+      }
+    },
+    {
+      "display": "WDS",
+      "name": {
+        "ja": "十堰武当山空港",
+        "en": "Shiyan Wudangshan Airport",
+        "zh-Hans": "十堰武当山机场"
+      }
+    },
+    {
+      "display": "XFN",
+      "name": {
+        "ja": "襄陽劉集空港",
+        "en": "Xiangyang Liuji Airport",
+        "zh-Hans": "襄阳刘集机场"
+      }
+    },
+    {
+      "display": "XAI",
+      "name": {
+        "en": "Xinyang Minggang Airport",
+        "zh-Hans": "信阳明港机场"
+      }
+    },
+    {
+      "display": "YIH",
+      "name": {
+        "ja": "宜昌三峡空港",
+        "en": "Yichang Airport",
+        "zh-Hans": "宜昌三峡机场"
+      }
+    },
+    {
+      "display": "HAK",
+      "name": {
+        "ja": "海口美蘭国際空港",
+        "en": "Haikou Meilan International Airport",
+        "zh-Hans": "海口美兰国际机场"
+      }
+    },
+    {
+      "display": "BAR",
+      "name": {
+        "ja": "瓊海博鰲空港",
+        "en": "Qionghai Bo'ao Airport",
+        "zh-Hans": "琼海博鳌机场"
+      }
+    },
+    {
+      "display": "SYX",
+      "name": {
+        "ja": "三亜鳳凰国際空港",
+        "en": "Sanya Phoenix International Airport",
+        "zh-Hans": "三亚凤凰国际机场"
+      }
+    },
+    {
+      "display": "AKA",
+      "name": {
+        "en": "Ankang Fuqiang Airport",
+        "zh-Hans": "安康富強機場"
+      }
+    },
+    {
+      "display": "DNH",
+      "name": {
+        "ja": "敦煌空港",
+        "en": "Dunhuang Mogao International Airport",
+        "zh-Hans": "敦煌机场"
+      }
+    },
+    {
+      "display": "HXD",
+      "name": {
+        "en": "Delingha Airport",
+        "zh-Hans": "德令哈机场"
+      }
+    },
+    {
+      "display": "GMQ",
+      "name": {
+        "en": "Golog Airport",
+        "zh-Hans": "果洛玛沁机场"
+      }
+    },
+    {
+      "display": "GOQ",
+      "name": {
+        "ja": "ゴルムド空港",
+        "en": "Golmud Airport",
+        "zh-Hans": "格尔木机场"
+      }
+    },
+    {
+      "display": "GYU",
+      "name": {
+        "ja": "固原六盤山空港",
+        "en": "Guyuan Liupanshan Airport",
+        "zh-Hans": "固原六盘山机场"
+      }
+    },
+    {
+      "display": "HBQ",
+      "name": {
+        "en": "Qilian Airport",
+        "zh-Hans": "祁连机场"
+      }
+    },
+    {
+      "display": "HTT",
+      "name": {
+        "en": "Mangya Airport",
+        "zh-Hans": "海西茫崖机场"
+      }
+    },
+    {
+      "display": "HZG",
+      "name": {
+        "ja": "漢中城固空港",
+        "en": "Hanzhong Chenggu Airport",
+        "zh-Hans": "汉中城固机场"
+      }
+    },
+    {
+      "display": "INC",
+      "name": {
+        "ja": "銀川河東国際空港",
+        "en": "Yinchuan Hedong International Airport",
+        "zh-Hans": "银川河东机场"
+      }
+    },
+    {
+      "display": "JIC",
+      "name": {
+        "ja": "金昌金川空港",
+        "en": "Jinchang Jinchuan Airport",
+        "zh-Hans": "金昌金川机场"
+      }
+    },
+    {
+      "display": "JGN",
+      "name": {
+        "ja": "嘉峪関空港",
+        "en": "Jiayuguan Airport",
+        "zh-Hans": "嘉峪关机场"
+      }
+    },
+    {
+      "display": "LHW",
+      "name": {
+        "ja": "蘭州中川空港",
+        "en": "Lanzhou Zhongchuan International Airport",
+        "zh-Hans": "兰州中川机场"
+      }
+    },
+    {
+      "display": "LNL",
+      "name": {
+        "ja": "隴南成県空港",
+        "en": "Longnan Chengzhou Airport",
+        "zh-Hans": "陇南成州机场"
+      }
+    },
+    {
+      "display": "IQN",
+      "name": {
+        "ja": "慶陽空港",
+        "en": "Qingyang Airport",
+        "zh-Hans": "庆阳机场"
+      }
+    },
+    {
+      "display": "THQ",
+      "name": {
+        "en": "Tianshui Maijishan Airport",
+        "zh-Hans": "天水麦积山机场"
+      }
+    },
+    {
+      "display": "GXH",
+      "name": {
+        "en": "Gannan Xiahe Airport",
+        "zh-Hans": "甘南夏河机场"
+      }
+    },
+    {
+      "display": "XNN",
+      "name": {
+        "ja": "西寧曹家堡空港",
+        "en": "Xining Caojiabao Airport",
+        "zh-Hans": "西宁曹家堡机场"
+      }
+    },
+    {
+      "display": "XIY",
+      "name": {
+        "ja": "西安咸陽国際空港",
+        "en": "Xi'an Xianyang International Airport",
+        "zh-Hans": "西安咸阳国际机场"
+      }
+    },
+    {
+      "display": "ENY",
+      "name": {
+        "ja": "延安南泥湾空港",
+        "en": "Yan'an Nanniwan Airport",
+        "zh-Hans": "延安南泥湾机场"
+      }
+    },
+    {
+      "display": "UYN",
+      "name": {
+        "ja": "楡林西沙空港",
+        "en": "Yulin Xisha Airport",
+        "zh-Hans": "榆林西沙机场"
+      }
+    },
+    {
+      "display": "YUS",
+      "name": {
+        "ja": "玉樹巴塘空港",
+        "en": "Yushu Batang Airport",
+        "zh-Hans": "玉树巴塘机场"
+      }
+    },
+    {
+      "display": "ZHY",
+      "name": {
+        "ja": "中衛沙坡頭空港",
+        "en": "Zhongwei Shapotou Airport",
+        "zh-Hans": "中卫沙坡头机场"
+      }
+    },
+    {
+      "display": "YZY",
+      "name": {
+        "ja": "張掖カン州空港",
+        "en": "Zhangye Ganzhou Airport",
+        "zh-Hans": "张掖甘州机场"
+      }
+    },
+    {
+      "display": "BSD",
+      "name": {
+        "ja": "保山空港",
+        "en": "Baoshan Yunrui Airport",
+        "zh-Hans": "保山机场"
+      }
+    },
+    {
+      "display": "CWJ",
+      "name": {
+        "ja": "滄源佤山空港",
+        "en": "Cangyuan Washan Airport",
+        "zh-Hans": "沧源佤山机场"
+      }
+    },
+    {
+      "display": "DLU",
+      "name": {
+        "ja": "大理空港",
+        "en": "Dali Fengyi Airport",
+        "zh-Hans": "大理凤仪机场"
+      }
+    },
+    {
+      "display": "DIG",
+      "name": {
+        "ja": "デチェン・シャングリラ空港",
+        "en": "Diqing Shangri-La Airport",
+        "zh-Hans": "迪庆香格里拉机场"
+      }
+    },
+    {
+      "display": "JHG",
+      "name": {
+        "ja": "シーサンパンナ・ガサ空港",
+        "en": "Xishuangbanna Gasa International Airport",
+        "zh-Hans": "西双版纳嘎洒机场"
+      }
+    },
+    {
+      "display": "JMJ",
+      "name": {
+        "ja": "瀾滄景邁空港",
+        "en": "Lancang Airport",
+        "zh-Hans": "澜沧机场"
+      }
+    },
+    {
+      "display": "LNJ",
+      "name": {
+        "ja": "臨滄空港",
+        "en": "Lincang Airport",
+        "zh-Hans": "临沧机场"
+      }
+    },
+    {
+      "display": "LJG",
+      "name": {
+        "ja": "麗江三義空港",
+        "en": "Lijiang Sanyi Airport",
+        "zh-Hans": "丽江三义机场"
+      }
+    },
+    {
+      "display": "LUM",
+      "name": {
+        "ja": "徳宏芒市空港",
+        "en": "Dehong Mangshi Airport",
+        "zh-Hans": "德宏芒市机场"
+      }
+    },
+    {
+      "display": "KMG",
+      "name": {
+        "ja": "昆明長水国際空港",
+        "en": "Kunming Changshui International Airport",
+        "zh-Hans": "昆明长水国际机场"
+      }
+    },
+    {
+      "display": "SYM",
+      "name": {
+        "ja": "思茅空港",
+        "en": "Pu'er Simao Airport",
+        "zh-Hans": "普洱思茅机场"
+      }
+    },
+    {
+      "display": "WNH",
+      "name": {
+        "ja": "文山普者黒空港",
+        "en": "Wenshan Puzhehei Airport",
+        "zh-Hans": "文山普者黑机场"
+      }
+    },
+    {
+      "display": "XMN",
+      "name": {
+        "ja": "廈門高崎国際空港",
+        "en": "Xiamen Gaoqi International Airport",
+        "zh-Hans": "厦门高崎国际机场"
+      }
+    },
+    {
+      "display": "AQG",
+      "name": {
+        "ja": "安慶天柱山空港",
+        "en": "Anqing Tianzhushan Airport",
+        "zh-Hans": "天柱山机场"
+      }
+    },
+    {
+      "display": "CZX",
+      "name": {
+        "ja": "常州奔牛国際空港",
+        "en": "Changzhou Benniu Airport",
+        "zh-Hans": "常州奔牛机场"
+      }
+    },
+    {
+      "display": "KHN",
+      "name": {
+        "ja": "南昌昌北国際空港",
+        "en": "Nanchang Changbei International Airport",
+        "zh-Hans": "南昌昌北国际机场"
+      }
+    },
+    {
+      "display": "DOY",
+      "name": {
+        "ja": "東営永安空港",
+        "en": "Dongying Shengli Airport",
+        "zh-Hans": "东营胜利机场"
+      }
+    },
+    {
+      "display": "FUG",
+      "name": {
+        "ja": "阜陽空港",
+        "en": "Fuyang Airport",
+        "zh-Hans": "阜阳机场"
+      }
+    },
+    {
+      "display": "FOC",
+      "name": {
+        "ja": "福州長楽国際空港",
+        "en": "Fuzhou Changle International Airport",
+        "zh-Hans": "福州长乐国际机场"
+      }
+    },
+    {
+      "display": "KOW",
+      "name": {
+        "ja": "贛州黃金空港",
+        "en": "Ganzhou Huangjin Airport",
+        "zh-Hans": "赣州黄金机场"
+      }
+    },
+    {
+      "display": "HGH",
+      "name": {
+        "ja": "杭州蕭山国際空港",
+        "en": "Hangzhou Xiaoshan International Airport",
+        "zh-Hans": "杭州萧山国际机场"
+      }
+    },
+    {
+      "display": "HZA",
+      "name": {
+        "en": "Heze Airport",
+        "zh-Hans": "菏泽牡丹机场"
+      }
+    },
+    {
+      "display": "JDZ",
+      "name": {
+        "ja": "景徳鎮羅家空港",
+        "en": "Jingdezhen Luojia Airport",
+        "zh-Hans": "景德镇机场"
+      }
+    },
+    {
+      "display": "JNG",
+      "name": {
+        "ja": "済寧大安空港",
+        "en": "Jining Da'an Airport",
+        "zh-Hans": "济宁大安机场"
+      }
+    },
+    {
+      "display": "JIU",
+      "name": {
+        "ja": "九江廬山空港",
+        "en": "Jiujiang Lushan Airport",
+        "zh-Hans": "九江庐山机场"
+      }
+    },
+    {
+      "display": "TNA",
+      "name": {
+        "ja": "済南遥墻国際空港",
+        "en": "Jinan Yaoqiang International Airport",
+        "zh-Hans": "济南遥墙国际机场"
+      }
+    },
+    {
+      "display": "JUZ",
+      "name": {
+        "ja": "衢州空港",
+        "en": "Quzhou Airport",
+        "zh-Hans": "衢州机场"
+      }
+    },
+    {
+      "display": "LYG",
+      "name": {
+        "ja": "連雲港白塔埠空港",
+        "en": "Lianyungang Airport",
+        "zh-Hans": "连云港白塔埠机场"
+      }
+    },
+    {
+      "display": "LCX",
+      "name": {
+        "ja": "龍岩冠豸山空港",
+        "en": "Longyan Guanzhaishan Airport",
+        "zh-Hans": "龙岩冠豸山机场"
+      }
+    },
+    {
+      "display": "HYN",
+      "name": {
+        "ja": "台州路橋空港",
+        "en": "Taizhou Luqiao Airport",
+        "zh-Hans": "台州路桥机场"
+      }
+    },
+    {
+      "display": "LYI",
+      "name": {
+        "ja": "臨沂沭埠嶺空港",
+        "en": "Linyi Qiyang Airport",
+        "zh-Hans": "临沂启阳国际机场"
+      }
+    },
+    {
+      "display": "NGB",
+      "name": {
+        "ja": "寧波櫟社国際空港",
+        "en": "Ningbo Lishe International Airport",
+        "zh-Hans": "宁波栎社国际机场"
+      }
+    },
+    {
+      "display": "NKG",
+      "name": {
+        "ja": "南京禄口国際空港",
+        "en": "Nanjing Lukou International Airport",
+        "zh-Hans": "南京禄口国际机场"
+      }
+    },
+    {
+      "display": "NTG",
+      "name": {
+        "ja": "南通興東空港",
+        "en": "Nantong Xingdong International Airport",
+        "zh-Hans": "南通兴东国际机场"
+      }
+    },
+    {
+      "display": "HFE",
+      "name": {
+        "ja": "合肥新橋国際空港",
+        "en": "Hefei Xinqiao International Airport",
+        "zh-Hans": "合肥新桥国际机场"
+      }
+    },
+    {
+      "display": "PVG",
+      "name": {
+        "ja": "上海浦東国際空港",
+        "en": "Shanghai Pudong International Airport",
+        "zh-Hans": "上海浦东国际机场"
+      }
+    },
+    {
+      "display": "TAO",
+      "name": {
+        "ja": "青島流亭国際空港",
+        "en": "Qingdao Liuting International Airport",
+        "zh-Hans": "青岛流亭国际机场"
+      }
+    },
+    {
+      "display": "JJN",
+      "name": {
+        "ja": "泉州晋江国際空港",
+        "en": "Quanzhou Jinjiang Airport",
+        "zh-Hans": "泉州晋江机场"
+      }
+    },
+    {
+      "display": "RIZ",
+      "name": {
+        "ja": "日照山字河空港",
+        "en": "Rizhao Shanzihe Airport",
+        "zh-Hans": "日照機場"
+      }
+    },
+    {
+      "display": "HIA",
+      "name": {
+        "ja": "淮安漣水空港",
+        "en": "Huai'an Lianshui Airport",
+        "zh-Hans": "淮安涟水机场"
+      }
+    },
+    {
+      "display": "SQJ",
+      "name": {
+        "ja": "三明沙県空港",
+        "en": "Sanming Shaxian Airport",
+        "zh-Hans": "三明沙县机场"
+      }
+    },
+    {
+      "display": "SQD",
+      "name": {
+        "ja": "上饒三清山空港",
+        "en": "Shangrao Sanqingshan Airport",
+        "zh-Hans": "上饶三清山机场"
+      }
+    },
+    {
+      "display": "SHA",
+      "name": {
+        "ja": "上海虹橋国際空港",
+        "en": "Shanghai Hongqiao International Airport",
+        "zh-Hans": "上海虹桥国际机场"
+      }
+    },
+    {
+      "display": "TXN",
+      "name": {
+        "ja": "黄山屯渓空港",
+        "en": "Huangshan Tunxi International Airport",
+        "zh-Hans": "黄山屯溪机场"
+      }
+    },
+    {
+      "display": "WHA",
+      "name": {
+        "ja": "蕪湖宣州空港",
+        "en": "Wuhu Xuanzhou Airport",
+        "zh-Hans": "芜湖宣州机场"
+      }
+    },
+    {
+      "display": "WEF",
+      "name": {
+        "ja": "イ坊空港",
+        "en": "Weifang Airport",
+        "zh-Hans": "潍坊机场"
+      }
+    },
+    {
+      "display": "WEH",
+      "name": {
+        "ja": "威海大水泊空港",
+        "en": "Weihai Dashuipo International Airport",
+        "zh-Hans": "威海大水泊国际机场"
+      }
+    },
+    {
+      "display": "WUX",
+      "name": {
+        "ja": "蘇南碩放国際空港",
+        "en": "Wuxi Shuofang Airport",
+        "zh-Hans": "无锡硕放机场"
+      }
+    },
+    {
+      "display": "WUS",
+      "name": {
+        "ja": "武夷山空港",
+        "en": "Wuyishan Airport",
+        "zh-Hans": "武夷山机场"
+      }
+    },
+    {
+      "display": "WNZ",
+      "name": {
+        "ja": "温州竜湾国際空港",
+        "en": "Wenzhou Longwan International Airport",
+        "zh-Hans": "温州龙湾国际机场"
+      }
+    },
+    {
+      "display": "XUZ",
+      "name": {
+        "ja": "徐州観音空港",
+        "en": "Xuzhou Guanyin Airport",
+        "zh-Hans": "徐州观音机场"
+      }
+    },
+    {
+      "display": "YTY",
+      "name": {
+        "ja": "揚州泰州空港",
+        "en": "Yangzhou Taizhou Airport",
+        "zh-Hans": "扬州泰州机场"
+      }
+    },
+    {
+      "display": "YIC",
+      "name": {
+        "ja": "宜春明月山空港",
+        "en": "Yichun Mingyueshan Airport",
+        "zh-Hans": "宜春明月山机场"
+      }
+    },
+    {
+      "display": "YNZ",
+      "name": {
+        "ja": "塩城南洋空港",
+        "en": "Yancheng Nanyang Airport",
+        "zh-Hans": "盐城机场"
+      }
+    },
+    {
+      "display": "YNT",
+      "name": {
+        "ja": "煙台蓬莱国際空港",
+        "en": "Yantai Penglai International Airport",
+        "zh-Hans": "烟台蓬莱国际机场"
+      }
+    },
+    {
+      "display": "YIW",
+      "name": {
+        "ja": "義烏空港",
+        "en": "Yiwu Airport",
+        "zh-Hans": "义乌机场"
+      }
+    },
+    {
+      "display": "HSN",
+      "name": {
+        "ja": "舟山普陀山空港",
+        "en": "Zhoushan Putuoshan Airport",
+        "zh-Hans": "舟山普陀山机场"
+      }
+    },
+    {
+      "display": "NGQ",
+      "name": {
+        "ja": "ガリ空港",
+        "en": "Ngari Günsa Airport",
+        "zh-Hans": "阿里昆莎机场"
+      }
+    },
+    {
+      "display": "AVA",
+      "name": {
+        "ja": "安順黄果樹空港",
+        "en": "Anshun Huangguoshu Airport",
+        "zh-Hans": "黄果树机场"
+      }
+    },
+    {
+      "display": "BPX",
+      "name": {
+        "ja": "チャムド・バンダ空港",
+        "en": "Qamdo Bamda Airport",
+        "zh-Hans": "昌都邦达机场"
+      }
+    },
+    {
+      "display": "BFJ",
+      "name": {
+        "ja": "畢節飛雄空港",
+        "en": "Bijie Feixiong Airport",
+        "zh-Hans": "毕节飞雄机场"
+      }
+    },
+    {
+      "display": "CKG",
+      "name": {
+        "ja": "重慶江北国際空港",
+        "en": "Chongqing Jiangbei International Airport",
+        "zh-Hans": "重庆江北国际机场"
+      }
+    },
+    {
+      "display": "DZH",
+      "name": {
+        "ja": "達州金埡空港",
+        "en": "Dazhou Jinya Airport",
+        "zh-Hans": "达州金垭机场"
+      }
+    },
+    {
+      "display": "DCY",
+      "name": {
+        "ja": "稲城亜丁空港",
+        "en": "Daocheng Yading Airport",
+        "zh-Hans": "稻城亚丁机场"
+      }
+    },
+    {
+      "display": "DAX",
+      "name": {
+        "ja": "達州空港",
+        "en": "Dazhou Heshi Airport",
+        "zh-Hans": "达州河市机场"
+      }
+    },
+    {
+      "display": "GYS",
+      "name": {
+        "ja": "広元盤龍空港",
+        "en": "Guangyuan Panlong Airport",
+        "zh-Hans": "广元盘龙机场"
+      }
+    },
+    {
+      "display": "KWE",
+      "name": {
+        "ja": "貴陽龍洞堡国際空港",
+        "en": "Guiyang Longdongbao International Airport",
+        "zh-Hans": "贵阳龙洞堡国际机场"
+      }
+    },
+    {
+      "display": "GZG",
+      "name": {
+        "en": "Garzê Gesar Airport",
+        "zh-Hans": "甘孜格萨尔机场"
+      }
+    },
+    {
+      "display": "JZH",
+      "name": {
+        "ja": "四川九寨黄龍空港",
+        "en": "Jiuzhai Huanglong Airport",
+        "zh-Hans": "九寨黄龙机场"
+      }
+    },
+    {
+      "display": "KGT",
+      "name": {
+        "ja": "甘孜康定空港",
+        "en": "Garzê Kangding Airport",
+        "zh-Hans": "甘孜康定机场"
+      }
+    },
+    {
+      "display": "KJH",
+      "name": {
+        "ja": "凱里黄平空港",
+        "en": "Kaili Huangping Airport",
+        "zh-Hans": "凱里黃平機場"
+      }
+    },
+    {
+      "display": "LLB",
+      "name": {
+        "ja": "茘波空港",
+        "en": "Libo Airport",
+        "zh-Hans": "荔波机场"
+      }
+    },
+    {
+      "display": "LXA",
+      "name": {
+        "ja": "ラサ・クンガ空港",
+        "en": "Lhasa Gonggar International Airport",
+        "zh-Hans": "拉萨贡嘎国际机场"
+      }
+    },
+    {
+      "display": "LZO",
+      "name": {
+        "ja": "瀘州雲龍空港",
+        "en": "Luzhou Yunlong Airport",
+        "zh-Hans": "泸州云龙机场"
+      }
+    },
+    {
+      "display": "WMT",
+      "name": {
+        "ja": "遵義茅台空港",
+        "en": "Renhuai Maotai Airport",
+        "zh-Hans": "仁懷茅台機場"
+      }
+    },
+    {
+      "display": "MIG",
+      "name": {
+        "ja": "綿陽南郊空港",
+        "en": "Mianyang Nanjiao Airport",
+        "zh-Hans": "绵阳南郊机场"
+      }
+    },
+    {
+      "display": "NAO",
+      "name": {
+        "ja": "南充高坪空港",
+        "en": "Nanchong Gaoping Airport",
+        "zh-Hans": "南充高坪机场"
+      }
+    },
+    {
+      "display": "HZH",
+      "name": {
+        "ja": "黎平空港",
+        "en": "Liping Airport",
+        "zh-Hans": "黎平机场"
+      }
+    },
+    {
+      "display": "LZY",
+      "name": {
+        "ja": "ニンティ空港",
+        "en": "Nyingchi Mainling Airport",
+        "zh-Hans": "林芝米林机场"
+      }
+    },
+    {
+      "display": "LPF",
+      "name": {
+        "ja": "六盤水月照空港",
+        "en": "Liupanshui Yuezhao Airport",
+        "zh-Hans": "六盘水月照机场"
+      }
+    },
+    {
+      "display": "JIQ",
+      "name": {
+        "ja": "黔江武陵山空港",
+        "en": "Qianjiang Wulingshan Airport",
+        "zh-Hans": "黔江武陵山机场"
+      }
+    },
+    {
+      "display": "RKZ",
+      "name": {
+        "ja": "シガツェ平和空港",
+        "en": "Shigatse Peace Airport",
+        "zh-Hans": "日喀则和平机场"
+      }
+    },
+    {
+      "display": "LGZ",
+      "name": {
+        "en": "Shannan Lhünzê Airport",
+        "zh-Hans": "山南隆子机场"
+      }
+    },
+    {
+      "display": "TCZ",
+      "name": {
+        "ja": "騰衝駝峰空港",
+        "en": "Tengchong Tuofeng Airport",
+        "zh-Hans": "腾冲驼峰机场"
+      }
+    },
+    {
+      "display": "TFU",
+      "name": {
+        "ja": "成都天府国際空港",
+        "en": "Chengdu Tianfu International Airport",
+        "zh-Hans": "成都天府国际机场"
+      }
+    },
+    {
+      "display": "TEN",
+      "name": {
+        "ja": "銅仁鳳凰空港",
+        "en": "Tongren Fenghuang Airport",
+        "zh-Hans": "铜仁凤凰机场"
+      }
+    },
+    {
+      "display": "CTU",
+      "name": {
+        "ja": "成都双流国際空港",
+        "en": "Chengdu Shuangliu International Airport",
+        "zh-Hans": "成都双流国际机场"
+      }
+    },
+    {
+      "display": "CQW",
+      "name": {
+        "en": "Wulong Xiannüshan Airport",
+        "zh-Hans": "武隆仙女山机场"
+      }
+    },
+    {
+      "display": "WSK",
+      "name": {
+        "ja": "重慶巫山空港",
+        "en": "Wushan Shennüfeng Airport",
+        "zh-Hans": "巫山神女峰机场"
+      }
+    },
+    {
+      "display": "WXN",
+      "name": {
+        "ja": "万州五橋空港",
+        "en": "Wanzhou Wuqiao Airport",
+        "zh-Hans": "万州五桥机场"
+      }
+    },
+    {
+      "display": "XIC",
+      "name": {
+        "ja": "西昌青山空港",
+        "en": "Xichang Qingshan Airport",
+        "zh-Hans": "西昌青山机场"
+      }
+    },
+    {
+      "display": "YBP",
+      "name": {
+        "ja": "宜賓五粮液空港",
+        "en": "Yibin Wuliangye Airport",
+        "zh-Hans": "宜賓五糧液機場"
+      }
+    },
+    {
+      "display": "ACX",
+      "name": {
+        "ja": "興義空港",
+        "en": "Xingyi Wanfenglin Airport",
+        "zh-Hans": "兴义机场"
+      }
+    },
+    {
+      "display": "PZI",
+      "name": {
+        "ja": "攀枝花保安営空港",
+        "en": "Panzhihua Bao'anying Airport",
+        "zh-Hans": "攀枝花保安营机场"
+      }
+    },
+    {
+      "display": "ZYI",
+      "name": {
+        "ja": "遵義新舟空港",
+        "en": "Zunyi Xinzhou Airport",
+        "zh-Hans": "遵義新舟機場"
+      }
+    },
+    {
+      "display": "AKU",
+      "name": {
+        "ja": "アクス空港",
+        "en": "Aksu Hongqipo Airport",
+        "zh-Hans": "阿克苏红旗坡机场"
+      }
+    },
+    {
+      "display": "ACF",
+      "name": {
+        "en": "Aral Talim Airport",
+        "zh-Hans": "阿拉尔塔里木机场"
+      }
+    },
+    {
+      "display": "AAT",
+      "name": {
+        "ja": "アルタイ雪都空港",
+        "en": "Altay Airport",
+        "zh-Hans": "阿勒泰机场"
+      }
+    },
+    {
+      "display": "BPL",
+      "name": {
+        "ja": "ボルタラ阿拉山口空港",
+        "en": "Bole Alashankou Airport",
+        "zh-Hans": "阿拉山口机场"
+      }
+    },
+    {
+      "display": "IQM",
+      "name": {
+        "ja": "チャルチャン玉都空港",
+        "en": "Qiemo Yudu Airport",
+        "zh-Hans": "且末玉都机场"
+      }
+    },
+    {
+      "display": "FYN",
+      "name": {
+        "ja": "コクトカイ空港",
+        "en": "Fuyun Koktokay Airport",
+        "zh-Hans": "富蕴可可托海机场"
+      }
+    },
+    {
+      "display": "HMI",
+      "name": {
+        "ja": "ハミ伊州空港",
+        "en": "Hami Airport",
+        "zh-Hans": "哈密机场"
+      }
+    },
+    {
+      "display": "SHF",
+      "name": {
+        "ja": "石河子花園空港",
+        "en": "Shihezi Huayuan Airport",
+        "zh-Hans": "石河子花园机场"
+      }
+    },
+    {
+      "display": "KCA",
+      "name": {
+        "ja": "クチャ亀茲空港",
+        "en": "Kuqa Qiuci Airport",
+        "zh-Hans": "库车龟兹机场"
+      }
+    },
+    {
+      "display": "KRL",
+      "name": {
+        "ja": "コルラ空港",
+        "en": "Korla Airport",
+        "zh-Hans": "库尔勒机场"
+      }
+    },
+    {
+      "display": "KRY",
+      "name": {
+        "ja": "カラマイ古海空港",
+        "en": "Karamay Airport",
+        "zh-Hans": "克拉玛依机场"
+      }
+    },
+    {
+      "display": "KJI",
+      "name": {
+        "ja": "カナス空港",
+        "en": "Kanas Airport",
+        "zh-Hans": "布尔津喀纳斯机场"
+      }
+    },
+    {
+      "display": "NLT",
+      "name": {
+        "ja": "那拉提機場",
+        "en": "Xinyuan Nalati Airport",
+        "zh-Hans": "新源那拉提机场"
+      }
+    },
+    {
+      "display": "RQA",
+      "name": {
+        "ja": "若羌楼蘭空港",
+        "en": "Ruoqiang Loulan Airport",
+        "zh-Hans": "若羌楼兰机场"
+      }
+    },
+    {
+      "display": "QSZ",
+      "name": {
+        "ja": "ヤルカンド叶尔羌空港",
+        "en": "Shache Airport",
+        "zh-Hans": "莎車機場"
+      }
+    },
+    {
+      "display": "KHG",
+      "name": {
+        "ja": "カシュガル空港",
+        "en": "Kashgar Laining International Airport",
+        "zh-Hans": "喀什徕宁国际机场"
+      }
+    },
+    {
+      "display": "TCG",
+      "name": {
+        "ja": "チョチェク空港",
+        "en": "Tacheng Airport",
+        "zh-Hans": "塔城机场"
+      }
+    },
+    {
+      "display": "TLQ",
+      "name": {
+        "ja": "トルファン交河空港",
+        "en": "Turpan Jiaohe Airport",
+        "zh-Hans": "吐魯番交河機場"
+      }
+    },
+    {
+      "display": "HTN",
+      "name": {
+        "ja": "ホータン空港",
+        "en": "Hotan Airport",
+        "zh-Hans": "和田机场"
+      }
+    },
+    {
+      "display": "URC",
+      "name": {
+        "ja": "ウルムチ天山国際空港",
+        "en": "Ürümqi Tianshan International Airport",
+        "zh-Hans": "乌鲁木齐天山国际机场"
+      }
+    },
+    {
+      "display": "YIN",
+      "name": {
+        "ja": "イーニン空港",
+        "en": "Ili Yining International Airport",
+        "zh-Hans": "伊犁伊宁国际机场"
+      }
+    },
+    {
+      "display": "YTW",
+      "name": {
+        "ja": "ケリヤ万方空港",
+        "en": "Yutian Airport",
+        "zh-Hans": "于田机场"
+      }
+    },
+    {
+      "display": "AOG",
+      "name": {
+        "ja": "鞍山騰鰲空港",
+        "en": "Anshan Teng'ao Airport",
+        "zh-Hans": "鞍山腾鳌机场"
+      }
+    },
+    {
+      "display": "DBC",
+      "name": {
+        "en": "Baicheng Chang'an Airport",
+        "zh-Hans": "白城长安机场"
+      }
+    },
+    {
+      "display": "NBS",
+      "name": {
+        "ja": "長白山空港",
+        "en": "Changbaishan Airport",
+        "zh-Hans": "长白山机场"
+      }
+    },
+    {
+      "display": "CGQ",
+      "name": {
+        "ja": "長春龍嘉国際空港",
+        "en": "Changchun Longjia International Airport",
+        "zh-Hans": "长春龙嘉国际机场"
+      }
+    },
+    {
+      "display": "CNI",
+      "name": {
+        "ja": "長海大長山島空港",
+        "en": "Changhai Airport",
+        "zh-Hans": "长海大长山岛机场"
+      }
+    },
+    {
+      "display": "CHG",
+      "name": {
+        "ja": "朝陽空港",
+        "en": "Chaoyang Airport",
+        "zh-Hans": "朝阳机场"
+      }
+    },
+    {
+      "display": "DDG",
+      "name": {
+        "ja": "丹東浪頭空港",
+        "en": "Dandong Langtou Airport",
+        "zh-Hans": "丹东浪头机场"
+      }
+    },
+    {
+      "display": "DQA",
+      "name": {
+        "ja": "大慶空港",
+        "en": "Daqing Sartu Airport",
+        "zh-Hans": "大庆萨尔图机场"
+      }
+    },
+    {
+      "display": "DTU",
+      "name": {
+        "en": "Wudalianchi Airport",
+        "zh-Hans": "五大连池德都机场"
+      }
+    },
+    {
+      "display": "FYJ",
+      "name": {
+        "ja": "撫遠東極空港",
+        "en": "Fuyuan Dongji Airport",
+        "zh-Hans": "抚远东极机场"
+      }
+    },
+    {
+      "display": "HRB",
+      "name": {
+        "ja": "ハルビン太平国際空港",
+        "en": "Harbin Taiping International Airport",
+        "zh-Hans": "哈尔滨太平国际机场"
+      }
+    },
+    {
+      "display": "HEK",
+      "name": {
+        "ja": "黒河空港",
+        "en": "Heihe Aihui Airport",
+        "zh-Hans": "黑河机场"
+      }
+    },
+    {
+      "display": "JGD",
+      "name": {
+        "ja": "ジャグダチ空港",
+        "en": "Jiagedaqi Airport",
+        "zh-Hans": "加格达奇机场"
+      }
+    },
+    {
+      "display": "JMU",
+      "name": {
+        "ja": "ジャムス東郊空港",
+        "en": "Jiamusi Songjiang International Airport",
+        "zh-Hans": "佳木斯东郊机场"
+      }
+    },
+    {
+      "display": "JSJ",
+      "name": {
+        "ja": "建三江湿地空港",
+        "en": "Jiansanjiang Shidi Airport",
+        "zh-Hans": "建三江机场"
+      }
+    },
+    {
+      "display": "JXA",
+      "name": {
+        "ja": "雞西興凱湖空港",
+        "en": "Jixi Xingkaihu Airport",
+        "zh-Hans": "鸡西兴凯湖机场"
+      }
+    },
+    {
+      "display": "JNZ",
+      "name": {
+        "en": "Jinzhou Bay Airport",
+        "zh-Hans": "锦州湾机场"
+      }
+    },
+    {
+      "display": "LDS",
+      "name": {
+        "ja": "伊春林都空港",
+        "en": "Yichun Lindu Airport",
+        "zh-Hans": "伊春林都机场"
+      }
+    },
+    {
+      "display": "MDG",
+      "name": {
+        "ja": "牡丹江海浪空港",
+        "en": "Mudanjiang Hailang International Airport",
+        "zh-Hans": "牡丹江海浪机场"
+      }
+    },
+    {
+      "display": "OHE",
+      "name": {
+        "ja": "漠河空港",
+        "en": "Mohe Gulian Airport",
+        "zh-Hans": "漠河机场"
+      }
+    },
+    {
+      "display": "NDG",
+      "name": {
+        "ja": "チチハル三家子空港",
+        "en": "Qiqihar Sanjiazi Airport",
+        "zh-Hans": "齐齐哈尔三家子机场"
+      }
+    },
+    {
+      "display": "YSQ",
+      "name": {
+        "ja": "松原査乾湖空港",
+        "en": "Songyuan Chaganhu Airport",
+        "zh-Hans": "松原查干湖机场"
+      }
+    },
+    {
+      "display": "DLC",
+      "name": {
+        "ja": "大連周水子国際空港",
+        "en": "Dalian Zhoushuizi International Airport",
+        "zh-Hans": "大连周水子国际机场"
+      }
+    },
+    {
+      "display": "TNH",
+      "name": {
+        "en": "Tonghua Sanyuanpu Airport",
+        "zh-Hans": "通化三源浦機場"
+      }
+    },
+    {
+      "display": "SHE",
+      "name": {
+        "ja": "瀋陽桃仙国際空港",
+        "en": "Shenyang Taoxian International Airport",
+        "zh-Hans": "沈阳桃仙国际机场"
+      }
+    },
+    {
+      "display": "YNJ",
+      "name": {
+        "ja": "延吉朝陽川空港",
+        "en": "Yanji Chaoyangchuan Airport",
+        "zh-Hans": "延吉朝阳川机场"
+      }
+    },
+    {
+      "display": "YKH",
+      "name": {
+        "ja": "営口蘭旗空港",
+        "en": "Yingkou Lanqi Airport",
+        "zh-Hans": "营口兰旗机场"
+      }
+    }
+  ]
+}
