@@ -536,6 +536,426 @@
         "zh-Hans": "斯洛伐克",
         "zh-Hant": "斯洛伐克"
       }
+    },
+    {
+      "display": "🇦🇱",
+      "name": {
+        "ja": "あるばにあ",
+        "en": "Albania",
+        "de": "Albanien",
+        "es": "Albania",
+        "fr": "Albanie",
+        "hi": "अल्बानिया",
+        "id": "Albania",
+        "it": "Albania",
+        "ko": "알바니아",
+        "nl": "Albanië",
+        "pt-BR": "Albânia",
+        "th": "แอลเบเนีย",
+        "vi": "Albania",
+        "zh-Hans": "阿尔巴尼亚",
+        "zh-Hant": "阿爾巴尼亞"
+      }
+    },
+    {
+      "display": "🇦🇩",
+      "name": {
+        "ja": "あんどら",
+        "en": "Andorra",
+        "de": "Andorra",
+        "es": "Andorra",
+        "fr": "Andorre",
+        "hi": "अंडोरा",
+        "id": "Andorra",
+        "it": "Andorra",
+        "ko": "안도라",
+        "nl": "Andorra",
+        "pt-BR": "Andorra",
+        "th": "อันดอร์รา",
+        "vi": "Andorra",
+        "zh-Hans": "安道尔",
+        "zh-Hant": "安道爾"
+      }
+    },
+    {
+      "display": "🇧🇾",
+      "name": {
+        "ja": "べらるーし",
+        "en": "Belarus",
+        "de": "Belarus",
+        "es": "Bielorrusia",
+        "fr": "Biélorussie",
+        "hi": "बेलारूस",
+        "id": "Belarus",
+        "it": "Bielorussia",
+        "ko": "벨라루스",
+        "nl": "Belarus",
+        "pt-BR": "Bielorrússia",
+        "th": "เบลารุส",
+        "vi": "Belarus",
+        "zh-Hans": "白俄罗斯",
+        "zh-Hant": "白俄羅斯"
+      }
+    },
+    {
+      "display": "🇧🇦",
+      "name": {
+        "ja": "ぼすにあ・へるつぇごびな",
+        "en": "Bosnia and Herzegovina",
+        "de": "Bosnien und Herzegowina",
+        "es": "Bosnia y Herzegovina",
+        "fr": "Bosnie-Herzégovine",
+        "hi": "बोस्निया और हर्ज़ेगोविना",
+        "id": "Bosnia dan Herzegovina",
+        "it": "Bosnia ed Erzegovina",
+        "ko": "보스니아 헤르체고비나",
+        "nl": "Bosnië en Herzegovina",
+        "pt-BR": "Bósnia e Herzegovina",
+        "th": "บอสเนียและเฮอร์เซโกวีนา",
+        "vi": "Bosnia và Herzegovina",
+        "zh-Hans": "波斯尼亚和黑塞哥维那",
+        "zh-Hant": "波士尼亞與赫塞哥維納"
+      }
+    },
+    {
+      "display": "🇧🇬",
+      "name": {
+        "ja": "ぶるがりあ",
+        "en": "Bulgaria",
+        "de": "Bulgarien",
+        "es": "Bulgaria",
+        "fr": "Bulgarie",
+        "hi": "बुल्गारिया",
+        "id": "Bulgaria",
+        "it": "Bulgaria",
+        "ko": "불가리아",
+        "nl": "Bulgarije",
+        "pt-BR": "Bulgária",
+        "th": "บัลแกเรีย",
+        "vi": "Bulgaria",
+        "zh-Hans": "保加利亚",
+        "zh-Hant": "保加利亞"
+      }
+    },
+    {
+      "display": "🇨🇾",
+      "name": {
+        "ja": "きぷろす",
+        "en": "Cyprus",
+        "de": "Zypern",
+        "es": "Chipre",
+        "fr": "Chypre",
+        "hi": "साइप्रस",
+        "id": "Siprus",
+        "it": "Cipro",
+        "ko": "키프로스",
+        "nl": "Cyprus",
+        "pt-BR": "Chipre",
+        "th": "ไซปรัส",
+        "vi": "Síp",
+        "zh-Hans": "塞浦路斯",
+        "zh-Hant": "賽普勒斯"
+      }
+    },
+    {
+      "display": "🇪🇪",
+      "name": {
+        "ja": "えすとにあ",
+        "en": "Estonia",
+        "de": "Estland",
+        "es": "Estonia",
+        "fr": "Estonie",
+        "hi": "एस्टोनिया",
+        "id": "Estonia",
+        "it": "Estonia",
+        "ko": "에스토니아",
+        "nl": "Estland",
+        "pt-BR": "Estônia",
+        "th": "เอสโตเนีย",
+        "vi": "Estonia",
+        "zh-Hans": "爱沙尼亚",
+        "zh-Hant": "愛沙尼亞"
+      }
+    },
+    {
+      "display": "🇽🇰",
+      "name": {
+        "ja": "こそぼ",
+        "en": "Kosovo",
+        "de": "Kosovo",
+        "es": "Kosovo",
+        "fr": "Kosovo",
+        "hi": "कोसोवो",
+        "id": "Kosovo",
+        "it": "Kosovo",
+        "ko": "코소보",
+        "nl": "Kosovo",
+        "pt-BR": "Kosovo",
+        "th": "โคโซโว",
+        "vi": "Kosovo",
+        "zh-Hans": "科索沃",
+        "zh-Hant": "科索沃"
+      }
+    },
+    {
+      "display": "🇱🇻",
+      "name": {
+        "ja": "らとびあ",
+        "en": "Latvia",
+        "de": "Lettland",
+        "es": "Letonia",
+        "fr": "Lettonie",
+        "hi": "लातविया",
+        "id": "Latvia",
+        "it": "Lettonia",
+        "ko": "라트비아",
+        "nl": "Letland",
+        "pt-BR": "Letônia",
+        "th": "ลัตเวีย",
+        "vi": "Latvia",
+        "zh-Hans": "拉脱维亚",
+        "zh-Hant": "拉脫維亞"
+      }
+    },
+    {
+      "display": "🇱🇮",
+      "name": {
+        "ja": "りひてんしゅたいん",
+        "en": "Liechtenstein",
+        "de": "Liechtenstein",
+        "es": "Liechtenstein",
+        "fr": "Liechtenstein",
+        "hi": "लिकटेंस्टाइन",
+        "id": "Liechtenstein",
+        "it": "Liechtenstein",
+        "ko": "리히텐슈타인",
+        "nl": "Liechtenstein",
+        "pt-BR": "Liechtenstein",
+        "th": "ลิกเตนสไตน์",
+        "vi": "Liechtenstein",
+        "zh-Hans": "列支敦士登",
+        "zh-Hant": "列支敦斯登"
+      }
+    },
+    {
+      "display": "🇱🇹",
+      "name": {
+        "ja": "りとあにあ",
+        "en": "Lithuania",
+        "de": "Litauen",
+        "es": "Lituania",
+        "fr": "Lituanie",
+        "hi": "लिथुआनिया",
+        "id": "Lituania",
+        "it": "Lituania",
+        "ko": "리투아니아",
+        "nl": "Litouwen",
+        "pt-BR": "Lituânia",
+        "th": "ลิทัวเนีย",
+        "vi": "Litva",
+        "zh-Hans": "立陶宛",
+        "zh-Hant": "立陶宛"
+      }
+    },
+    {
+      "display": "🇱🇺",
+      "name": {
+        "ja": "るくせんぶるく",
+        "en": "Luxembourg",
+        "de": "Luxemburg",
+        "es": "Luxemburgo",
+        "fr": "Luxembourg",
+        "hi": "लक्ज़मबर्ग",
+        "id": "Luksemburg",
+        "it": "Lussemburgo",
+        "ko": "룩셈부르크",
+        "nl": "Luxemburg",
+        "pt-BR": "Luxemburgo",
+        "th": "ลักเซมเบิร์ก",
+        "vi": "Luxembourg",
+        "zh-Hans": "卢森堡",
+        "zh-Hant": "盧森堡"
+      }
+    },
+    {
+      "display": "🇲🇹",
+      "name": {
+        "ja": "まるた",
+        "en": "Malta",
+        "de": "Malta",
+        "es": "Malta",
+        "fr": "Malte",
+        "hi": "माल्टा",
+        "id": "Malta",
+        "it": "Malta",
+        "ko": "몰타",
+        "nl": "Malta",
+        "pt-BR": "Malta",
+        "th": "มอลตา",
+        "vi": "Malta",
+        "zh-Hans": "马耳他",
+        "zh-Hant": "馬爾他"
+      }
+    },
+    {
+      "display": "🇲🇩",
+      "name": {
+        "ja": "もるどば",
+        "en": "Moldova",
+        "de": "Moldau",
+        "es": "Moldavia",
+        "fr": "Moldavie",
+        "hi": "मोल्दोवा",
+        "id": "Moldova",
+        "it": "Moldavia",
+        "ko": "몰도바",
+        "nl": "Moldavië",
+        "pt-BR": "Moldávia",
+        "th": "มอลโดวา",
+        "vi": "Moldova",
+        "zh-Hans": "摩尔多瓦",
+        "zh-Hant": "摩爾多瓦"
+      }
+    },
+    {
+      "display": "🇲🇨",
+      "name": {
+        "ja": "もなこ",
+        "en": "Monaco",
+        "de": "Monaco",
+        "es": "Mónaco",
+        "fr": "Monaco",
+        "hi": "मोनाको",
+        "id": "Monako",
+        "it": "Monaco",
+        "ko": "모나코",
+        "nl": "Monaco",
+        "pt-BR": "Mônaco",
+        "th": "โมนาโก",
+        "vi": "Monaco",
+        "zh-Hans": "摩纳哥",
+        "zh-Hant": "摩納哥"
+      }
+    },
+    {
+      "display": "🇲🇪",
+      "name": {
+        "ja": "もんてねぐろ",
+        "en": "Montenegro",
+        "de": "Montenegro",
+        "es": "Montenegro",
+        "fr": "Monténégro",
+        "hi": "मोंटेनेग्रो",
+        "id": "Montenegro",
+        "it": "Montenegro",
+        "ko": "몬테네그로",
+        "nl": "Montenegro",
+        "pt-BR": "Montenegro",
+        "th": "มอนเตเนโกร",
+        "vi": "Montenegro",
+        "zh-Hans": "黑山",
+        "zh-Hant": "蒙特內哥羅"
+      }
+    },
+    {
+      "display": "🇲🇰",
+      "name": {
+        "ja": "きたまけどにあ",
+        "en": "North Macedonia",
+        "de": "Nordmazedonien",
+        "es": "Macedonia del Norte",
+        "fr": "Macédoine du Nord",
+        "hi": "उत्तर मैसेडोनिया",
+        "id": "Makedonia Utara",
+        "it": "Macedonia del Nord",
+        "ko": "북마케도니아",
+        "nl": "Noord-Macedonië",
+        "pt-BR": "Macedônia do Norte",
+        "th": "มาซิโดเนียเหนือ",
+        "vi": "Bắc Macedonia",
+        "zh-Hans": "北马其顿",
+        "zh-Hant": "北馬其頓"
+      }
+    },
+    {
+      "display": "🇸🇲",
+      "name": {
+        "ja": "さんまりの",
+        "en": "San Marino",
+        "de": "San Marino",
+        "es": "San Marino",
+        "fr": "Saint-Marin",
+        "hi": "सैन मरीनो",
+        "id": "San Marino",
+        "it": "San Marino",
+        "ko": "산마리노",
+        "nl": "San Marino",
+        "pt-BR": "San Marino",
+        "th": "ซานมารีโน",
+        "vi": "San Marino",
+        "zh-Hans": "圣马力诺",
+        "zh-Hant": "聖馬利諾"
+      }
+    },
+    {
+      "display": "🇷🇸",
+      "name": {
+        "ja": "せるびあ",
+        "en": "Serbia",
+        "de": "Serbien",
+        "es": "Serbia",
+        "fr": "Serbie",
+        "hi": "सर्बिया",
+        "id": "Serbia",
+        "it": "Serbia",
+        "ko": "세르비아",
+        "nl": "Servië",
+        "pt-BR": "Sérvia",
+        "th": "เซอร์เบีย",
+        "vi": "Serbia",
+        "zh-Hans": "塞尔维亚",
+        "zh-Hant": "塞爾維亞"
+      }
+    },
+    {
+      "display": "🇸🇮",
+      "name": {
+        "ja": "すろべにあ",
+        "en": "Slovenia",
+        "de": "Slowenien",
+        "es": "Eslovenia",
+        "fr": "Slovénie",
+        "hi": "स्लोवेनिया",
+        "id": "Slovenia",
+        "it": "Slovenia",
+        "ko": "슬로베니아",
+        "nl": "Slovenië",
+        "pt-BR": "Eslovênia",
+        "th": "สโลวีเนีย",
+        "vi": "Slovenia",
+        "zh-Hans": "斯洛文尼亚",
+        "zh-Hant": "斯洛維尼亞"
+      }
+    },
+    {
+      "display": "🇻🇦",
+      "name": {
+        "ja": "ばちかん",
+        "en": "Vatican City",
+        "de": "Vatikanstadt",
+        "es": "Ciudad del Vaticano",
+        "fr": "Vatican",
+        "hi": "वेटिकन सिटी",
+        "id": "Vatikan",
+        "it": "Città del Vaticano",
+        "ko": "바티칸",
+        "nl": "Vaticaanstad",
+        "pt-BR": "Vaticano",
+        "th": "นครรัฐวาติกัน",
+        "vi": "Vatican",
+        "zh-Hans": "梵蒂冈",
+        "zh-Hant": "梵蒂岡"
+      }
     }
   ]
 }

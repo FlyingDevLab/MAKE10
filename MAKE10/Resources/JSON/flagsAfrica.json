@@ -436,6 +436,686 @@
         "zh-Hans": "阿尔及利亚",
         "zh-Hant": "阿爾及利亞"
       }
+    },
+    {
+      "display": "🇧🇯",
+      "name": {
+        "ja": "べなん",
+        "en": "Benin",
+        "de": "Benin",
+        "es": "Benín",
+        "fr": "Bénin",
+        "hi": "बेनिन",
+        "id": "Benin",
+        "it": "Benin",
+        "ko": "베냉",
+        "nl": "Benin",
+        "pt-BR": "Benin",
+        "th": "เบนิน",
+        "vi": "Bénin",
+        "zh-Hans": "贝宁",
+        "zh-Hant": "貝南"
+      }
+    },
+    {
+      "display": "🇧🇼",
+      "name": {
+        "ja": "ぼつわな",
+        "en": "Botswana",
+        "de": "Botswana",
+        "es": "Botsuana",
+        "fr": "Botswana",
+        "hi": "बोत्सवाना",
+        "id": "Botswana",
+        "it": "Botswana",
+        "ko": "보츠와나",
+        "nl": "Botswana",
+        "pt-BR": "Botsuana",
+        "th": "บอตสวานา",
+        "vi": "Botswana",
+        "zh-Hans": "博茨瓦纳",
+        "zh-Hant": "波札那"
+      }
+    },
+    {
+      "display": "🇧🇫",
+      "name": {
+        "ja": "ぶるきなふぁそ",
+        "en": "Burkina Faso",
+        "de": "Burkina Faso",
+        "es": "Burkina Faso",
+        "fr": "Burkina Faso",
+        "hi": "बुर्किना फ़ासो",
+        "id": "Burkina Faso",
+        "it": "Burkina Faso",
+        "ko": "부르키나파소",
+        "nl": "Burkina Faso",
+        "pt-BR": "Burkina Faso",
+        "th": "บูร์กินาฟาโซ",
+        "vi": "Burkina Faso",
+        "zh-Hans": "布基纳法索",
+        "zh-Hant": "布吉納法索"
+      }
+    },
+    {
+      "display": "🇧🇮",
+      "name": {
+        "ja": "ぶるんじ",
+        "en": "Burundi",
+        "de": "Burundi",
+        "es": "Burundi",
+        "fr": "Burundi",
+        "hi": "बुरुंडी",
+        "id": "Burundi",
+        "it": "Burundi",
+        "ko": "부룬디",
+        "nl": "Burundi",
+        "pt-BR": "Burundi",
+        "th": "บุรุนดี",
+        "vi": "Burundi",
+        "zh-Hans": "布隆迪",
+        "zh-Hant": "蒲隆地"
+      }
+    },
+    {
+      "display": "🇨🇻",
+      "name": {
+        "ja": "かーぼべるで",
+        "en": "Cabo Verde",
+        "de": "Kap Verde",
+        "es": "Cabo Verde",
+        "fr": "Cap-Vert",
+        "hi": "केप वर्डे",
+        "id": "Tanjung Verde",
+        "it": "Capo Verde",
+        "ko": "카보베르데",
+        "nl": "Kaapverdië",
+        "pt-BR": "Cabo Verde",
+        "th": "เคปเวิร์ด",
+        "vi": "Cabo Verde",
+        "zh-Hans": "佛得角",
+        "zh-Hant": "維德角"
+      }
+    },
+    {
+      "display": "🇨🇫",
+      "name": {
+        "ja": "ちゅうおうあふりか",
+        "en": "Central African Republic",
+        "de": "Zentralafrikanische Republik",
+        "es": "República Centroafricana",
+        "fr": "République centrafricaine",
+        "hi": "मध्य अफ़्रीकी गणराज्य",
+        "id": "Republik Afrika Tengah",
+        "it": "Repubblica Centrafricana",
+        "ko": "중앙아프리카 공화국",
+        "nl": "Centraal-Afrikaanse Republiek",
+        "pt-BR": "República Centro-Africana",
+        "th": "สาธารณรัฐแอฟริกากลาง",
+        "vi": "Cộng hòa Trung Phi",
+        "zh-Hans": "中非",
+        "zh-Hant": "中非"
+      }
+    },
+    {
+      "display": "🇹🇩",
+      "name": {
+        "ja": "ちゃど",
+        "en": "Chad",
+        "de": "Tschad",
+        "es": "Chad",
+        "fr": "Tchad",
+        "hi": "चाड",
+        "id": "Chad",
+        "it": "Ciad",
+        "ko": "차드",
+        "nl": "Tsjaad",
+        "pt-BR": "Chade",
+        "th": "ชาด",
+        "vi": "Tchad",
+        "zh-Hans": "乍得",
+        "zh-Hant": "查德"
+      }
+    },
+    {
+      "display": "🇰🇲",
+      "name": {
+        "ja": "こもろ",
+        "en": "Comoros",
+        "de": "Komoren",
+        "es": "Comoras",
+        "fr": "Comores",
+        "hi": "कोमोरोस",
+        "id": "Komoro",
+        "it": "Comore",
+        "ko": "코모로",
+        "nl": "Comoren",
+        "pt-BR": "Comores",
+        "th": "คอโมโรส",
+        "vi": "Comoros",
+        "zh-Hans": "科摩罗",
+        "zh-Hant": "葛摩"
+      }
+    },
+    {
+      "display": "🇨🇬",
+      "name": {
+        "ja": "こんごきょうわこく",
+        "en": "Republic of the Congo",
+        "de": "Republik Kongo",
+        "es": "República del Congo",
+        "fr": "République du Congo",
+        "hi": "कांगो गणराज्य",
+        "id": "Republik Kongo",
+        "it": "Repubblica del Congo",
+        "ko": "콩고 공화국",
+        "nl": "Congo-Brazzaville",
+        "pt-BR": "República do Congo",
+        "th": "สาธารณรัฐคองโก",
+        "vi": "Cộng hòa Congo",
+        "zh-Hans": "刚果（布）",
+        "zh-Hant": "剛果共和國"
+      }
+    },
+    {
+      "display": "🇨🇩",
+      "name": {
+        "ja": "こんごみんしゅきょうわこく",
+        "en": "DR Congo",
+        "de": "Demokratische Republik Kongo",
+        "es": "República Democrática del Congo",
+        "fr": "République démocratique du Congo",
+        "hi": "कांगो लोकतांत्रिक गणराज्य",
+        "id": "Republik Demokratik Kongo",
+        "it": "Repubblica Democratica del Congo",
+        "ko": "콩고 민주 공화국",
+        "nl": "Congo-Kinshasa",
+        "pt-BR": "República Democrática do Congo",
+        "th": "สาธารณรัฐประชาธิปไตยคองโก",
+        "vi": "Cộng hòa Dân chủ Congo",
+        "zh-Hans": "刚果（金）",
+        "zh-Hant": "剛果民主共和國"
+      }
+    },
+    {
+      "display": "🇩🇯",
+      "name": {
+        "ja": "じぶち",
+        "en": "Djibouti",
+        "de": "Dschibuti",
+        "es": "Yibuti",
+        "fr": "Djibouti",
+        "hi": "जिबूती",
+        "id": "Djibouti",
+        "it": "Gibuti",
+        "ko": "지부티",
+        "nl": "Djibouti",
+        "pt-BR": "Djibuti",
+        "th": "จิบูตี",
+        "vi": "Djibouti",
+        "zh-Hans": "吉布提",
+        "zh-Hant": "吉布地"
+      }
+    },
+    {
+      "display": "🇬🇶",
+      "name": {
+        "ja": "せきどうぎにあ",
+        "en": "Equatorial Guinea",
+        "de": "Äquatorialguinea",
+        "es": "Guinea Ecuatorial",
+        "fr": "Guinée équatoriale",
+        "hi": "भूमध्यरेखीय गिनी",
+        "id": "Guinea Khatulistiwa",
+        "it": "Guinea Equatoriale",
+        "ko": "적도 기니",
+        "nl": "Equatoriaal-Guinea",
+        "pt-BR": "Guiné Equatorial",
+        "th": "อิเควทอเรียลกินี",
+        "vi": "Guinea Xích Đạo",
+        "zh-Hans": "赤道几内亚",
+        "zh-Hant": "赤道幾內亞"
+      }
+    },
+    {
+      "display": "🇪🇷",
+      "name": {
+        "ja": "えりとりあ",
+        "en": "Eritrea",
+        "de": "Eritrea",
+        "es": "Eritrea",
+        "fr": "Érythrée",
+        "hi": "इरिट्रिया",
+        "id": "Eritrea",
+        "it": "Eritrea",
+        "ko": "에리트레아",
+        "nl": "Eritrea",
+        "pt-BR": "Eritreia",
+        "th": "เอริเทรีย",
+        "vi": "Eritrea",
+        "zh-Hans": "厄立特里亚",
+        "zh-Hant": "厄利垂亞"
+      }
+    },
+    {
+      "display": "🇸🇿",
+      "name": {
+        "ja": "えすわてぃに",
+        "en": "Eswatini",
+        "de": "Eswatini",
+        "es": "Esuatini",
+        "fr": "Eswatini",
+        "hi": "एस्वातिनी",
+        "id": "Eswatini",
+        "it": "eSwatini",
+        "ko": "에스와티니",
+        "nl": "Eswatini",
+        "pt-BR": "Essuatíni",
+        "th": "เอสวาตินี",
+        "vi": "Eswatini",
+        "zh-Hans": "斯威士兰",
+        "zh-Hant": "史瓦帝尼"
+      }
+    },
+    {
+      "display": "🇬🇦",
+      "name": {
+        "ja": "がぼん",
+        "en": "Gabon",
+        "de": "Gabun",
+        "es": "Gabón",
+        "fr": "Gabon",
+        "hi": "गैबॉन",
+        "id": "Gabon",
+        "it": "Gabon",
+        "ko": "가봉",
+        "nl": "Gabon",
+        "pt-BR": "Gabão",
+        "th": "กาบอง",
+        "vi": "Gabon",
+        "zh-Hans": "加蓬",
+        "zh-Hant": "加彭"
+      }
+    },
+    {
+      "display": "🇬🇲",
+      "name": {
+        "ja": "がんびあ",
+        "en": "Gambia",
+        "de": "Gambia",
+        "es": "Gambia",
+        "fr": "Gambie",
+        "hi": "गाम्बिया",
+        "id": "Gambia",
+        "it": "Gambia",
+        "ko": "감비아",
+        "nl": "Gambia",
+        "pt-BR": "Gâmbia",
+        "th": "แกมเบีย",
+        "vi": "Gambia",
+        "zh-Hans": "冈比亚",
+        "zh-Hant": "甘比亞"
+      }
+    },
+    {
+      "display": "🇬🇳",
+      "name": {
+        "ja": "ぎにあ",
+        "en": "Guinea",
+        "de": "Guinea",
+        "es": "Guinea",
+        "fr": "Guinée",
+        "hi": "गिनी",
+        "id": "Guinea",
+        "it": "Guinea",
+        "ko": "기니",
+        "nl": "Guinee",
+        "pt-BR": "Guiné",
+        "th": "กินี",
+        "vi": "Guinea",
+        "zh-Hans": "几内亚",
+        "zh-Hant": "幾內亞"
+      }
+    },
+    {
+      "display": "🇬🇼",
+      "name": {
+        "ja": "ぎにあびさう",
+        "en": "Guinea-Bissau",
+        "de": "Guinea-Bissau",
+        "es": "Guinea-Bisáu",
+        "fr": "Guinée-Bissau",
+        "hi": "गिनी-बिसाऊ",
+        "id": "Guinea-Bissau",
+        "it": "Guinea-Bissau",
+        "ko": "기니비사우",
+        "nl": "Guinee-Bissau",
+        "pt-BR": "Guiné-Bissau",
+        "th": "กินี-บิสเซา",
+        "vi": "Guinea-Bissau",
+        "zh-Hans": "几内亚比绍",
+        "zh-Hant": "幾內亞比索"
+      }
+    },
+    {
+      "display": "🇱🇸",
+      "name": {
+        "ja": "れそと",
+        "en": "Lesotho",
+        "de": "Lesotho",
+        "es": "Lesoto",
+        "fr": "Lesotho",
+        "hi": "लेसोथो",
+        "id": "Lesotho",
+        "it": "Lesotho",
+        "ko": "레소토",
+        "nl": "Lesotho",
+        "pt-BR": "Lesoto",
+        "th": "เลโซโท",
+        "vi": "Lesotho",
+        "zh-Hans": "莱索托",
+        "zh-Hant": "賴索托"
+      }
+    },
+    {
+      "display": "🇱🇷",
+      "name": {
+        "ja": "りべりあ",
+        "en": "Liberia",
+        "de": "Liberia",
+        "es": "Liberia",
+        "fr": "Liberia",
+        "hi": "लाइबेरिया",
+        "id": "Liberia",
+        "it": "Liberia",
+        "ko": "라이베리아",
+        "nl": "Liberia",
+        "pt-BR": "Libéria",
+        "th": "ไลบีเรีย",
+        "vi": "Liberia",
+        "zh-Hans": "利比里亚",
+        "zh-Hant": "賴比瑞亞"
+      }
+    },
+    {
+      "display": "🇱🇾",
+      "name": {
+        "ja": "りびあ",
+        "en": "Libya",
+        "de": "Libyen",
+        "es": "Libia",
+        "fr": "Libye",
+        "hi": "लीबिया",
+        "id": "Libya",
+        "it": "Libia",
+        "ko": "리비아",
+        "nl": "Libië",
+        "pt-BR": "Líbia",
+        "th": "ลิเบีย",
+        "vi": "Libya",
+        "zh-Hans": "利比亚",
+        "zh-Hant": "利比亞"
+      }
+    },
+    {
+      "display": "🇲🇼",
+      "name": {
+        "ja": "まらうい",
+        "en": "Malawi",
+        "de": "Malawi",
+        "es": "Malaui",
+        "fr": "Malawi",
+        "hi": "मलावी",
+        "id": "Malawi",
+        "it": "Malawi",
+        "ko": "말라위",
+        "nl": "Malawi",
+        "pt-BR": "Malawi",
+        "th": "มาลาวี",
+        "vi": "Malawi",
+        "zh-Hans": "马拉维",
+        "zh-Hant": "馬拉威"
+      }
+    },
+    {
+      "display": "🇲🇱",
+      "name": {
+        "ja": "まり",
+        "en": "Mali",
+        "de": "Mali",
+        "es": "Malí",
+        "fr": "Mali",
+        "hi": "माली",
+        "id": "Mali",
+        "it": "Mali",
+        "ko": "말리",
+        "nl": "Mali",
+        "pt-BR": "Mali",
+        "th": "มาลี",
+        "vi": "Mali",
+        "zh-Hans": "马里",
+        "zh-Hant": "馬利"
+      }
+    },
+    {
+      "display": "🇲🇷",
+      "name": {
+        "ja": "もーりたにあ",
+        "en": "Mauritania",
+        "de": "Mauretanien",
+        "es": "Mauritania",
+        "fr": "Mauritanie",
+        "hi": "मॉरिटानिया",
+        "id": "Mauritania",
+        "it": "Mauritania",
+        "ko": "모리타니",
+        "nl": "Mauritanië",
+        "pt-BR": "Mauritânia",
+        "th": "มอริเตเนีย",
+        "vi": "Mauritania",
+        "zh-Hans": "毛里塔尼亚",
+        "zh-Hant": "茅利塔尼亞"
+      }
+    },
+    {
+      "display": "🇲🇺",
+      "name": {
+        "ja": "もーりしゃす",
+        "en": "Mauritius",
+        "de": "Mauritius",
+        "es": "Mauricio",
+        "fr": "Maurice",
+        "hi": "मॉरीशस",
+        "id": "Mauritius",
+        "it": "Mauritius",
+        "ko": "모리셔스",
+        "nl": "Mauritius",
+        "pt-BR": "Maurício",
+        "th": "มอริเชียส",
+        "vi": "Mauritius",
+        "zh-Hans": "毛里求斯",
+        "zh-Hant": "模里西斯"
+      }
+    },
+    {
+      "display": "🇳🇦",
+      "name": {
+        "ja": "なみびあ",
+        "en": "Namibia",
+        "de": "Namibia",
+        "es": "Namibia",
+        "fr": "Namibie",
+        "hi": "नामीबिया",
+        "id": "Namibia",
+        "it": "Namibia",
+        "ko": "나미비아",
+        "nl": "Namibië",
+        "pt-BR": "Namíbia",
+        "th": "นามิเบีย",
+        "vi": "Namibia",
+        "zh-Hans": "纳米比亚",
+        "zh-Hant": "納米比亞"
+      }
+    },
+    {
+      "display": "🇳🇪",
+      "name": {
+        "ja": "にじぇーる",
+        "en": "Niger",
+        "de": "Niger",
+        "es": "Níger",
+        "fr": "Niger",
+        "hi": "नाइजर",
+        "id": "Niger",
+        "it": "Niger",
+        "ko": "니제르",
+        "nl": "Niger",
+        "pt-BR": "Níger",
+        "th": "ไนเจอร์",
+        "vi": "Niger",
+        "zh-Hans": "尼日尔",
+        "zh-Hant": "尼日"
+      }
+    },
+    {
+      "display": "🇸🇹",
+      "name": {
+        "ja": "さんとめ・ぷりんしぺ",
+        "en": "São Tomé and Príncipe",
+        "de": "São Tomé und Príncipe",
+        "es": "Santo Tomé y Príncipe",
+        "fr": "Sao Tomé-et-Principe",
+        "hi": "साओ तोमे और प्रिंसिपे",
+        "id": "Sao Tome dan Principe",
+        "it": "São Tomé e Príncipe",
+        "ko": "상투메 프린시페",
+        "nl": "Sao Tomé en Principe",
+        "pt-BR": "São Tomé e Príncipe",
+        "th": "เซาตูเมและปรินซิปี",
+        "vi": "São Tomé và Príncipe",
+        "zh-Hans": "圣多美和普林西比",
+        "zh-Hant": "聖多美普林西比"
+      }
+    },
+    {
+      "display": "🇸🇨",
+      "name": {
+        "ja": "せーしぇる",
+        "en": "Seychelles",
+        "de": "Seychellen",
+        "es": "Seychelles",
+        "fr": "Seychelles",
+        "hi": "सेशेल्स",
+        "id": "Seychelles",
+        "it": "Seychelles",
+        "ko": "세이셸",
+        "nl": "Seychellen",
+        "pt-BR": "Seicheles",
+        "th": "เซเชลส์",
+        "vi": "Seychelles",
+        "zh-Hans": "塞舌尔",
+        "zh-Hant": "塞席爾"
+      }
+    },
+    {
+      "display": "🇸🇱",
+      "name": {
+        "ja": "しえられおね",
+        "en": "Sierra Leone",
+        "de": "Sierra Leone",
+        "es": "Sierra Leona",
+        "fr": "Sierra Leone",
+        "hi": "सिएरा लियोन",
+        "id": "Sierra Leone",
+        "it": "Sierra Leone",
+        "ko": "시에라리온",
+        "nl": "Sierra Leone",
+        "pt-BR": "Serra Leoa",
+        "th": "เซียร์ราลีโอน",
+        "vi": "Sierra Leone",
+        "zh-Hans": "塞拉利昂",
+        "zh-Hant": "獅子山"
+      }
+    },
+    {
+      "display": "🇸🇴",
+      "name": {
+        "ja": "そまりあ",
+        "en": "Somalia",
+        "de": "Somalia",
+        "es": "Somalia",
+        "fr": "Somalie",
+        "hi": "सोमालिया",
+        "id": "Somalia",
+        "it": "Somalia",
+        "ko": "소말리아",
+        "nl": "Somalië",
+        "pt-BR": "Somália",
+        "th": "โซมาเลีย",
+        "vi": "Somalia",
+        "zh-Hans": "索马里",
+        "zh-Hant": "索馬利亞"
+      }
+    },
+    {
+      "display": "🇸🇸",
+      "name": {
+        "ja": "みなみすーだん",
+        "en": "South Sudan",
+        "de": "Südsudan",
+        "es": "Sudán del Sur",
+        "fr": "Soudan du Sud",
+        "hi": "दक्षिण सूडान",
+        "id": "Sudan Selatan",
+        "it": "Sudan del Sud",
+        "ko": "남수단",
+        "nl": "Zuid-Soedan",
+        "pt-BR": "Sudão do Sul",
+        "th": "ซูดานใต้",
+        "vi": "Nam Sudan",
+        "zh-Hans": "南苏丹",
+        "zh-Hant": "南蘇丹"
+      }
+    },
+    {
+      "display": "🇸🇩",
+      "name": {
+        "ja": "すーだん",
+        "en": "Sudan",
+        "de": "Sudan",
+        "es": "Sudán",
+        "fr": "Soudan",
+        "hi": "सूडान",
+        "id": "Sudan",
+        "it": "Sudan",
+        "ko": "수단",
+        "nl": "Soedan",
+        "pt-BR": "Sudão",
+        "th": "ซูดาน",
+        "vi": "Sudan",
+        "zh-Hans": "苏丹",
+        "zh-Hant": "蘇丹"
+      }
+    },
+    {
+      "display": "🇹🇬",
+      "name": {
+        "ja": "とーご",
+        "en": "Togo",
+        "de": "Togo",
+        "es": "Togo",
+        "fr": "Togo",
+        "hi": "टोगो",
+        "id": "Togo",
+        "it": "Togo",
+        "ko": "토고",
+        "nl": "Togo",
+        "pt-BR": "Togo",
+        "th": "โตโก",
+        "vi": "Togo",
+        "zh-Hans": "多哥",
+        "zh-Hant": "多哥"
+      }
     }
   ]
 }

@@ -536,6 +536,486 @@
         "zh-Hans": "马尔代夫",
         "zh-Hant": "馬爾地夫"
       }
+    },
+    {
+      "display": "🇦🇫",
+      "name": {
+        "ja": "あふがにすたん",
+        "en": "Afghanistan",
+        "de": "Afghanistan",
+        "es": "Afganistán",
+        "fr": "Afghanistan",
+        "hi": "अफ़ग़ानिस्तान",
+        "id": "Afganistan",
+        "it": "Afghanistan",
+        "ko": "아프가니스탄",
+        "nl": "Afghanistan",
+        "pt-BR": "Afeganistão",
+        "th": "อัฟกานิสถาน",
+        "vi": "Afghanistan",
+        "zh-Hans": "阿富汗",
+        "zh-Hant": "阿富汗"
+      }
+    },
+    {
+      "display": "🇦🇲",
+      "name": {
+        "ja": "あるめにあ",
+        "en": "Armenia",
+        "de": "Armenien",
+        "es": "Armenia",
+        "fr": "Arménie",
+        "hi": "आर्मेनिया",
+        "id": "Armenia",
+        "it": "Armenia",
+        "ko": "아르메니아",
+        "nl": "Armenië",
+        "pt-BR": "Armênia",
+        "th": "อาร์มีเนีย",
+        "vi": "Armenia",
+        "zh-Hans": "亚美尼亚",
+        "zh-Hant": "亞美尼亞"
+      }
+    },
+    {
+      "display": "🇦🇿",
+      "name": {
+        "ja": "あぜるばいじゃん",
+        "en": "Azerbaijan",
+        "de": "Aserbaidschan",
+        "es": "Azerbaiyán",
+        "fr": "Azerbaïdjan",
+        "hi": "अज़रबैजान",
+        "id": "Azerbaijan",
+        "it": "Azerbaigian",
+        "ko": "아제르바이잔",
+        "nl": "Azerbeidzjan",
+        "pt-BR": "Azerbaijão",
+        "th": "อาเซอร์ไบจาน",
+        "vi": "Azerbaijan",
+        "zh-Hans": "阿塞拜疆",
+        "zh-Hant": "亞塞拜然"
+      }
+    },
+    {
+      "display": "🇧🇭",
+      "name": {
+        "ja": "ばーれーん",
+        "en": "Bahrain",
+        "de": "Bahrain",
+        "es": "Baréin",
+        "fr": "Bahreïn",
+        "hi": "बहरीन",
+        "id": "Bahrain",
+        "it": "Bahrein",
+        "ko": "바레인",
+        "nl": "Bahrein",
+        "pt-BR": "Bahrein",
+        "th": "บาห์เรน",
+        "vi": "Bahrain",
+        "zh-Hans": "巴林",
+        "zh-Hant": "巴林"
+      }
+    },
+    {
+      "display": "🇧🇳",
+      "name": {
+        "ja": "ぶるねい",
+        "en": "Brunei",
+        "de": "Brunei",
+        "es": "Brunéi",
+        "fr": "Brunei",
+        "hi": "ब्रुनेई",
+        "id": "Brunei",
+        "it": "Brunei",
+        "ko": "브루나이",
+        "nl": "Brunei",
+        "pt-BR": "Brunei",
+        "th": "บรูไน",
+        "vi": "Brunei",
+        "zh-Hans": "文莱",
+        "zh-Hant": "汶萊"
+      }
+    },
+    {
+      "display": "🇬🇪",
+      "name": {
+        "ja": "じょーじあ",
+        "en": "Georgia",
+        "de": "Georgien",
+        "es": "Georgia",
+        "fr": "Géorgie",
+        "hi": "जॉर्जिया",
+        "id": "Georgia",
+        "it": "Georgia",
+        "ko": "조지아",
+        "nl": "Georgië",
+        "pt-BR": "Geórgia",
+        "th": "จอร์เจีย",
+        "vi": "Gruzia",
+        "zh-Hans": "格鲁吉亚",
+        "zh-Hant": "喬治亞"
+      }
+    },
+    {
+      "display": "🇮🇱",
+      "name": {
+        "ja": "いすらえる",
+        "en": "Israel",
+        "de": "Israel",
+        "es": "Israel",
+        "fr": "Israël",
+        "hi": "इज़राइल",
+        "id": "Israel",
+        "it": "Israele",
+        "ko": "이스라엘",
+        "nl": "Israël",
+        "pt-BR": "Israel",
+        "th": "อิสราเอล",
+        "vi": "Israel",
+        "zh-Hans": "以色列",
+        "zh-Hant": "以色列"
+      }
+    },
+    {
+      "display": "🇯🇴",
+      "name": {
+        "ja": "よるだん",
+        "en": "Jordan",
+        "de": "Jordanien",
+        "es": "Jordania",
+        "fr": "Jordanie",
+        "hi": "जॉर्डन",
+        "id": "Yordania",
+        "it": "Giordania",
+        "ko": "요르단",
+        "nl": "Jordanië",
+        "pt-BR": "Jordânia",
+        "th": "จอร์แดน",
+        "vi": "Jordan",
+        "zh-Hans": "约旦",
+        "zh-Hant": "約旦"
+      }
+    },
+    {
+      "display": "🇰🇿",
+      "name": {
+        "ja": "かざふすたん",
+        "en": "Kazakhstan",
+        "de": "Kasachstan",
+        "es": "Kazajistán",
+        "fr": "Kazakhstan",
+        "hi": "कज़ाख़िस्तान",
+        "id": "Kazakhstan",
+        "it": "Kazakistan",
+        "ko": "카자흐스탄",
+        "nl": "Kazachstan",
+        "pt-BR": "Cazaquistão",
+        "th": "คาซัคสถาน",
+        "vi": "Kazakhstan",
+        "zh-Hans": "哈萨克斯坦",
+        "zh-Hant": "哈薩克"
+      }
+    },
+    {
+      "display": "🇰🇼",
+      "name": {
+        "ja": "くうぇーと",
+        "en": "Kuwait",
+        "de": "Kuwait",
+        "es": "Kuwait",
+        "fr": "Koweït",
+        "hi": "कुवैत",
+        "id": "Kuwait",
+        "it": "Kuwait",
+        "ko": "쿠웨이트",
+        "nl": "Koeweit",
+        "pt-BR": "Kuwait",
+        "th": "คูเวต",
+        "vi": "Kuwait",
+        "zh-Hans": "科威特",
+        "zh-Hant": "科威特"
+      }
+    },
+    {
+      "display": "🇰🇬",
+      "name": {
+        "ja": "きるぎす",
+        "en": "Kyrgyzstan",
+        "de": "Kirgisistan",
+        "es": "Kirguistán",
+        "fr": "Kirghizistan",
+        "hi": "किर्गिज़स्तान",
+        "id": "Kirgizstan",
+        "it": "Kirghizistan",
+        "ko": "키르기스스탄",
+        "nl": "Kirgizië",
+        "pt-BR": "Quirguistão",
+        "th": "คีร์กีซสถาน",
+        "vi": "Kyrgyzstan",
+        "zh-Hans": "吉尔吉斯斯坦",
+        "zh-Hant": "吉爾吉斯"
+      }
+    },
+    {
+      "display": "🇱🇧",
+      "name": {
+        "ja": "ればのん",
+        "en": "Lebanon",
+        "de": "Libanon",
+        "es": "Líbano",
+        "fr": "Liban",
+        "hi": "लेबनान",
+        "id": "Lebanon",
+        "it": "Libano",
+        "ko": "레바논",
+        "nl": "Libanon",
+        "pt-BR": "Líbano",
+        "th": "เลบานอน",
+        "vi": "Liban",
+        "zh-Hans": "黎巴嫩",
+        "zh-Hant": "黎巴嫩"
+      }
+    },
+    {
+      "display": "🇰🇵",
+      "name": {
+        "ja": "きたちょうせん",
+        "en": "North Korea",
+        "de": "Nordkorea",
+        "es": "Corea del Norte",
+        "fr": "Corée du Nord",
+        "hi": "उत्तर कोरिया",
+        "id": "Korea Utara",
+        "it": "Corea del Nord",
+        "ko": "북한",
+        "nl": "Noord-Korea",
+        "pt-BR": "Coreia do Norte",
+        "th": "เกาหลีเหนือ",
+        "vi": "Triều Tiên",
+        "zh-Hans": "朝鲜",
+        "zh-Hant": "北韓"
+      }
+    },
+    {
+      "display": "🇴🇲",
+      "name": {
+        "ja": "おまーん",
+        "en": "Oman",
+        "de": "Oman",
+        "es": "Omán",
+        "fr": "Oman",
+        "hi": "ओमान",
+        "id": "Oman",
+        "it": "Oman",
+        "ko": "오만",
+        "nl": "Oman",
+        "pt-BR": "Omã",
+        "th": "โอมาน",
+        "vi": "Oman",
+        "zh-Hans": "阿曼",
+        "zh-Hant": "阿曼"
+      }
+    },
+    {
+      "display": "🇶🇦",
+      "name": {
+        "ja": "かたーる",
+        "en": "Qatar",
+        "de": "Katar",
+        "es": "Catar",
+        "fr": "Qatar",
+        "hi": "क़तर",
+        "id": "Qatar",
+        "it": "Qatar",
+        "ko": "카타르",
+        "nl": "Qatar",
+        "pt-BR": "Catar",
+        "th": "กาตาร์",
+        "vi": "Qatar",
+        "zh-Hans": "卡塔尔",
+        "zh-Hant": "卡達"
+      }
+    },
+    {
+      "display": "🇱🇰",
+      "name": {
+        "ja": "すりらんか",
+        "en": "Sri Lanka",
+        "de": "Sri Lanka",
+        "es": "Sri Lanka",
+        "fr": "Sri Lanka",
+        "hi": "श्रीलंका",
+        "id": "Sri Lanka",
+        "it": "Sri Lanka",
+        "ko": "스리랑카",
+        "nl": "Sri Lanka",
+        "pt-BR": "Sri Lanka",
+        "th": "ศรีลังกา",
+        "vi": "Sri Lanka",
+        "zh-Hans": "斯里兰卡",
+        "zh-Hant": "斯里蘭卡"
+      }
+    },
+    {
+      "display": "🇸🇾",
+      "name": {
+        "ja": "しりあ",
+        "en": "Syria",
+        "de": "Syrien",
+        "es": "Siria",
+        "fr": "Syrie",
+        "hi": "सीरिया",
+        "id": "Suriah",
+        "it": "Siria",
+        "ko": "시리아",
+        "nl": "Syrië",
+        "pt-BR": "Síria",
+        "th": "ซีเรีย",
+        "vi": "Syria",
+        "zh-Hans": "叙利亚",
+        "zh-Hant": "敘利亞"
+      }
+    },
+    {
+      "display": "🇹🇯",
+      "name": {
+        "ja": "たじきすたん",
+        "en": "Tajikistan",
+        "de": "Tadschikistan",
+        "es": "Tayikistán",
+        "fr": "Tadjikistan",
+        "hi": "ताजिकिस्तान",
+        "id": "Tajikistan",
+        "it": "Tagikistan",
+        "ko": "타지키스탄",
+        "nl": "Tadzjikistan",
+        "pt-BR": "Tajiquistão",
+        "th": "ทาจิกิสถาน",
+        "vi": "Tajikistan",
+        "zh-Hans": "塔吉克斯坦",
+        "zh-Hant": "塔吉克"
+      }
+    },
+    {
+      "display": "🇹🇱",
+      "name": {
+        "ja": "ひがしてぃもーる",
+        "en": "Timor-Leste",
+        "de": "Osttimor",
+        "es": "Timor Oriental",
+        "fr": "Timor oriental",
+        "hi": "पूर्वी तिमोर",
+        "id": "Timor Leste",
+        "it": "Timor Est",
+        "ko": "동티모르",
+        "nl": "Oost-Timor",
+        "pt-BR": "Timor-Leste",
+        "th": "ติมอร์-เลสเต",
+        "vi": "Đông Timor",
+        "zh-Hans": "东帝汶",
+        "zh-Hant": "東帝汶"
+      }
+    },
+    {
+      "display": "🇹🇲",
+      "name": {
+        "ja": "とるくめにすたん",
+        "en": "Turkmenistan",
+        "de": "Turkmenistan",
+        "es": "Turkmenistán",
+        "fr": "Turkménistan",
+        "hi": "तुर्कमेनिस्तान",
+        "id": "Turkmenistan",
+        "it": "Turkmenistan",
+        "ko": "투르크메니스탄",
+        "nl": "Turkmenistan",
+        "pt-BR": "Turcomenistão",
+        "th": "เติร์กเมนิสถาน",
+        "vi": "Turkmenistan",
+        "zh-Hans": "土库曼斯坦",
+        "zh-Hant": "土庫曼"
+      }
+    },
+    {
+      "display": "🇦🇪",
+      "name": {
+        "ja": "あらぶしゅちょうこくれんぽう",
+        "en": "United Arab Emirates",
+        "de": "Vereinigte Arabische Emirate",
+        "es": "Emiratos Árabes Unidos",
+        "fr": "Émirats arabes unis",
+        "hi": "संयुक्त अरब अमीरात",
+        "id": "Uni Emirat Arab",
+        "it": "Emirati Arabi Uniti",
+        "ko": "아랍에미리트",
+        "nl": "Verenigde Arabische Emiraten",
+        "pt-BR": "Emirados Árabes Unidos",
+        "th": "สหรัฐอาหรับเอมิเรตส์",
+        "vi": "Các Tiểu vương quốc Ả Rập Thống nhất",
+        "zh-Hans": "阿联酋",
+        "zh-Hant": "阿聯酋"
+      }
+    },
+    {
+      "display": "🇺🇿",
+      "name": {
+        "ja": "うずべきすたん",
+        "en": "Uzbekistan",
+        "de": "Usbekistan",
+        "es": "Uzbekistán",
+        "fr": "Ouzbékistan",
+        "hi": "उज़्बेकिस्तान",
+        "id": "Uzbekistan",
+        "it": "Uzbekistan",
+        "ko": "우즈베키스탄",
+        "nl": "Oezbekistan",
+        "pt-BR": "Uzbequistão",
+        "th": "อุซเบกิสถาน",
+        "vi": "Uzbekistan",
+        "zh-Hans": "乌兹别克斯坦",
+        "zh-Hant": "烏茲別克"
+      }
+    },
+    {
+      "display": "🇾🇪",
+      "name": {
+        "ja": "いえめん",
+        "en": "Yemen",
+        "de": "Jemen",
+        "es": "Yemen",
+        "fr": "Yémen",
+        "hi": "यमन",
+        "id": "Yaman",
+        "it": "Yemen",
+        "ko": "예멘",
+        "nl": "Jemen",
+        "pt-BR": "Iêmen",
+        "th": "เยเมน",
+        "vi": "Yemen",
+        "zh-Hans": "也门",
+        "zh-Hant": "葉門"
+      }
+    },
+    {
+      "display": "🇵🇸",
+      "name": {
+        "ja": "ぱれすちな",
+        "en": "Palestine",
+        "de": "Palästina",
+        "es": "Palestina",
+        "fr": "Palestine",
+        "hi": "फ़िलिस्तीन",
+        "id": "Palestina",
+        "it": "Palestina",
+        "ko": "팔레스타인",
+        "nl": "Palestina",
+        "pt-BR": "Palestina",
+        "th": "ปาเลสไตน์",
+        "vi": "Palestine",
+        "zh-Hans": "巴勒斯坦",
+        "zh-Hant": "巴勒斯坦"
+      }
     }
   ]
 }
