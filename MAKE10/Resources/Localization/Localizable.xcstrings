@@ -31463,6 +31463,486 @@
           }
         }
       }
+    },
+    "shop_tip_kcal" : {
+      "comment" : "Sticker shop: shopkeeper bear's tip for young kids. Explains that kcal is a unit for an amount of energy. Keep the word kcal as is.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (Kilokalorien) zeigt dir, wie viel Energie es ist."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (kilocalories) tells you how much energy there is."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (kilocalorías) te dice cuánta energía hay."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les kcal (kilocalories) disent combien il y a d'énergie."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (किलोकैलोरी) बताता है कि कितनी ऊर्जा है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (kilokalori) menunjukkan berapa banyak energinya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le kcal (chilocalorie) dicono quanta energia c'è."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キロカロリー（kcal）は エネルギーの りょうを あらわす ことばだよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal(킬로칼로리)는 에너지의 양을 나타내는 말이에요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (kilocalorieën) zegt hoeveel energie het is."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (quilocalorias) mostra quanta energia existe."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (กิโลแคลอรี) คือคำที่บอกว่ามีพลังงานมากแค่ไหน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal (ki-lô-ca-lo) cho biết có bao nhiêu năng lượng."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal（千卡）是表示能量多少的单位。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "kcal（大卡）是表示能量多少的單位。"
+          }
+        }
+      }
+    },
+    "shop_tip_banana" : {
+      "comment" : "Sticker shop: shopkeeper bear's tip. 100 kcal is about one banana.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal sind ungefähr eine Banane. 🍌"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal is about as much as one banana. 🍌"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal es más o menos un plátano. 🍌"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal, c'est à peu près une banane. 🍌"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal लगभग एक केले जितना है। 🍌"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal kira-kira sama dengan satu pisang. 🍌"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal sono più o meno una banana. 🍌"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100キロカロリーは バナナ 1ぽんぶん ぐらいだよ 🍌"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100kcal는 바나나 1개 정도예요. 🍌"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal is ongeveer één banaan. 🍌"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal é mais ou menos uma banana. 🍌"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal ประมาณกล้วย 1 ลูก 🍌"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100 kcal khoảng bằng một quả chuối. 🍌"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100千卡大约是一根香蕉。🍌"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "100大卡大約是一根香蕉。🍌"
+          }
+        }
+      }
+    },
+    "shop_tip_milk" : {
+      "comment" : "Sticker shop: shopkeeper bear's tip. 200 kcal is about one glass of milk.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal sind ungefähr ein Glas Milch. 🥛"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal is about as much as a glass of milk. 🥛"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal es más o menos un vaso de leche. 🥛"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal, c'est à peu près un verre de lait. 🥛"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal लगभग एक गिलास दूध जितना है। 🥛"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal kira-kira sama dengan segelas susu. 🥛"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal sono più o meno un bicchiere di latte. 🥛"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200キロカロリーは ぎゅうにゅう 1ぱいぶん ぐらいだよ 🥛"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200kcal는 우유 한 잔 정도예요. 🥛"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal is ongeveer een glas melk. 🥛"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal é mais ou menos um copo de leite. 🥛"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal ประมาณนม 1 แก้ว 🥛"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200 kcal khoảng bằng một cốc sữa. 🥛"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200千卡大约是一杯牛奶。🥛"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "200大卡大約是一杯牛奶。🥛"
+          }
+        }
+      }
+    },
+    "shop_tip_sticker_price" : {
+      "comment" : "Sticker shop: shopkeeper bear's tip. One sticker in this shop costs as much energy as a glass of milk (200 kcal).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ein Sticker hier kostet so viel Energie wie ein Glas Milch."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A sticker here costs a glass of milk's worth of energy."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aquí una pegatina cuesta la energía de un vaso de leche."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ici, un autocollant coûte l'énergie d'un verre de lait."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "यहाँ एक स्टिकर एक गिलास दूध जितनी ऊर्जा का है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Satu stiker di sini seharga energi segelas susu."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Qui un adesivo costa l'energia di un bicchiere di latte."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ここの シールは 1まい ぎゅうにゅう 1ぱいぶんの エネルギーだよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "여기 스티커 1장은 우유 한 잔만큼의 에너지예요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Een sticker hier kost de energie van een glas melk."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aqui, um adesivo custa a energia de um copo de leite."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "สติกเกอร์ที่นี่ 1 แผ่น ใช้พลังงานเท่ากับนม 1 แก้ว"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Một nhãn dán ở đây tốn năng lượng bằng một cốc sữa."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "这里的一张贴纸，要用一杯牛奶那么多的能量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這裡的一張貼紙，要用一杯牛奶那麼多的能量。"
+          }
+        }
+      }
+    },
+    "shop_tip_play" : {
+      "comment" : "Sticker shop: shopkeeper bear's tip. Playing games builds up energy.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiel viel, dann sammelst du Energie!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play lots of games to build up energy!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Juega mucho y juntarás energía!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Joue beaucoup pour gagner de l'énergie !"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "खूब खेलो, ऊर्जा जमा होगी!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Main banyak game supaya energimu bertambah!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gioca tanto per accumulare energia!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲームで いっぱい あそぶと エネルギーが たまるよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임을 많이 하면 에너지가 쌓여요!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speel veel, dan spaar je energie!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogue bastante para juntar energia!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เล่นเกมเยอะๆ พลังงานจะสะสมขึ้นเรื่อยๆ!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chơi thật nhiều để tích năng lượng nhé!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多玩游戏就能攒到能量！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "多玩遊戲就能存到能量！"
+          }
+        }
+      }
     }
   },
   "version" : "1.1"
