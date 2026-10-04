@@ -17,6 +17,14 @@
 //   トレイを長押し     → ドラッグして好きな位置へ追加
 //   シールをトレイへ   → ドラッグして離すとストレージへ戻る
 //   トレイ右端のボタン → キャンバスのシールをぜんぶストレージへ戻す（確認あり）
+//   道具パネルの つまみ → ドラッグで、パネルを好きな位置へ動かす
+//   道具パネルの「ー」  → パネルを小さな 🎨 にたたむ（🎨 をタップで元に戻る。🎨 も動かせる）
+//   ヘッダーの 🖼️       → いまの絵（線＋シール）を「かべがみ」にする（WallpaperStore を参照）
+//
+// ★ 道具パネルを動かせる・たためるようにしている理由 ★
+//   色・ペン・シールの道具が画面の下にずっとあると、そこには描けない。
+//   パネルを動かしたり 🎨 にたたんだりすれば、画面ぜんぶを使って描ける。
+//   位置とたたんだかどうかは保存して、次に開いたときも同じにする。
 //
 // ★ ジェスチャー競合の解決方法 ★
 //   描画（1本指ドラッグ）と2本指操作は、キャンバス全体（シールも含む親）に
@@ -92,6 +100,21 @@ struct StickerPlayView: View {
     @State private var bgIndex: Int = UserDefaults.standard.integer(forKey: UDKey.playBoardBackground)
     @State private var showPalette: Bool = false
 
+    // 道具パネル（動かす・たたむ）
+    /// パネルを、いつもの位置（画面の下）から動かした量。保存しておき、次に開いたときも同じ位置にする。
+    @State private var panelOffset = CGSize(
+        width:  UserDefaults.standard.double(forKey: UDKey.playPanelOffsetX),
+        height: UserDefaults.standard.double(forKey: UDKey.playPanelOffsetY)
+    )
+    /// つまみをドラッグしている最中の移動量（指を離したら panelOffset に足す）
+    @State private var panelDrag: CGSize = .zero
+    /// パネルを 🎨 にたたんでいるか
+    @State private var isPanelCollapsed = UserDefaults.standard.bool(forKey: UDKey.playPanelCollapsed)
+
+    // かべがみ
+    @State private var showWallpaperConfirm = false
+    @Environment(\.displayScale) private var displayScale
+
     // MARK: - パステルカラーパレット（10色）
     // インデックスが UDKey.playBoardBackground として保存される
     private let palette: [(name: String, color: Color)] = [
@@ -154,45 +177,29 @@ struct StickerPlayView: View {
                 .simultaneousGesture(drawingGesture)
                 .simultaneousGesture(transformGesture)
 
-                // ── ヘッダーと下部バー（常に最前面）──
-                VStack(spacing: 10) {
+                // ── ヘッダー（常に最前面）──
+                VStack {
                     headerBar
                         .padding(.top, 52)  // Safe Area 上端からの余白
                     Spacer()
+                }
 
-                    if showPalette {
-                        paletteBar
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                    }
-
-                    // 下部バー：編集バー（選択中のみ）・ツールバー・トレイ
-                    VStack(spacing: 10) {
-                        if let sticker = selectedSticker {
-                            StickerEditBar(
-                                sticker:   sticker,
-                                onDone:    { deselect() },
-                                onPutAway: { putAway(sticker.id) }
-                            )
-                            .transition(.move(edge: .bottom).combined(with: .opacity))
-                        }
-
-                        DrawingToolbarView()
-
-                        StickerTrayView(
-                            isHighlighted: isOverTray,
-                            liftedEmoji:   liftedEmoji,
-                            onTap:         { emoji in addFromTray(emoji, at: nil, bounds: geo.size) },
-                            onLift:        { emoji in lift(emoji) },
-                            onPutAwayAll:  { putAwayAll() }
-                        )
-                        .background(frameReporter("tray"))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.bottom, 24)  // Safe Area 下端からの余白 ← 変更可
-                    .background(frameReporter("bottomBar"))
+                // ── 道具パネル（動かせる・たためる）──
+                VStack {
+                    Spacer()
+                    toolPanel(bounds: geo.size)
+                        // ⚠️ 変更注意: frameReporter は padding と offset より内側に置くこと。
+                        //   padding より内側 … まわりの余白を含まない、見えているパネルそのものの大きさになる
+                        //   offset より内側 … 動かしたあとの位置が "bottomBar" として伝わる（トレイへのドロップ判定などに使う）
+                        .background(frameReporter("bottomBar"))
+                        .padding(.horizontal, 16)
+                        .padding(.bottom, 24)  // Safe Area 下端からの余白 ← 変更可
+                        .offset(x: panelOffset.width + panelDrag.width,
+                                y: panelOffset.height + panelDrag.height)
                 }
                 .animation(.spring(response: 0.3, dampingFraction: 0.75), value: showPalette)
                 .animation(.spring(response: 0.3, dampingFraction: 0.75), value: selectedID)
+                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: isPanelCollapsed)
 
                 // トースト（満杯など）
                 if let msg = toastMessage {
@@ -213,8 +220,178 @@ struct StickerPlayView: View {
             .coordinateSpace(name: "playBoard")
             .simultaneousGesture(liftedDragGesture(bounds: geo.size))
             .onPreferenceChange(FrameKey.self) { frames = $0 }
+            // パネルの大きさが変わったとき・画面の大きさが変わったときは、はみ出さないよう位置を直す
+            .onChange(of: isPanelCollapsed) { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+            .onChange(of: showPalette)      { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+            .onChange(of: geo.size)         { _, size in keepPanelOnScreen(bounds: size, afterLayout: true) }
+            .onAppear { keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+            .alert("wallpaper_confirm_title", isPresented: $showWallpaperConfirm) {
+                Button("wallpaper_confirm_ok") { makeWallpaper(size: geo.size) }
+                Button("drawing_clear_cancel", role: .cancel) {}
+            } message: {
+                Text("wallpaper_confirm_message")
+            }
         }
         .ignoresSafeArea()
+    }
+
+    // MARK: - 道具パネル
+
+    /// 道具パネル。ひらいているときは つまみ・色・編集バー・ペン・シールのトレイ、たたんでいるときは 🎨 だけ。
+    @ViewBuilder
+    private func toolPanel(bounds: CGSize) -> some View {
+        if isPanelCollapsed {
+            Button {
+                SoundManager.shared.vibrate()
+                isPanelCollapsed = false
+                UserDefaults.standard.set(false, forKey: UDKey.playPanelCollapsed)
+            } label: {
+                Text(verbatim: "🎨")
+                    .font(.system(size: 30))
+                    .frame(width: 60, height: 60)
+                    .background(
+                        Circle().fill(.white.opacity(0.9))
+                            .shadow(color: .black.opacity(0.15), radius: 8, x: 0, y: 3)
+                    )
+            }
+            .buttonStyle(.plain)
+            .simultaneousGesture(panelDragGesture(bounds: bounds))
+            .accessibilityLabel(Text("sticker_panel_expand"))
+            .transition(.scale.combined(with: .opacity))
+        } else {
+            VStack(spacing: 10) {
+                panelHandle(bounds: bounds)
+
+                if showPalette {
+                    paletteBar
+                        .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+
+                // 編集バー（選択中のみ）・ツールバー・トレイ
+                if let sticker = selectedSticker {
+                    StickerEditBar(
+                        sticker:   sticker,
+                        onDone:    { deselect() },
+                        onPutAway: { putAway(sticker.id) }
+                    )
+                    .transition(.move(edge: .bottom).combined(with: .opacity))
+                }
+
+                DrawingToolbarView()
+
+                StickerTrayView(
+                    isHighlighted: isOverTray,
+                    liftedEmoji:   liftedEmoji,
+                    onTap:         { emoji in addFromTray(emoji, at: nil, bounds: bounds) },
+                    onLift:        { emoji in lift(emoji) },
+                    onPutAwayAll:  { putAwayAll() }
+                )
+                .background(frameReporter("tray"))
+            }
+            .transition(.scale(scale: 0.6, anchor: .bottom).combined(with: .opacity))
+        }
+    }
+
+    /// パネルの上の つまみ。ここをドラッグしてパネルを動かす。右の「ー」でたたむ。
+    private func panelHandle(bounds: CGSize) -> some View {
+        HStack {
+            Color.clear.frame(width: 36, height: 36)   // 「ー」ボタンと左右の釣り合いをとる
+            Spacer()
+            Capsule()
+                .fill(Color(.systemGray3))
+                .frame(width: 56, height: 6)
+            Spacer()
+            Button {
+                SoundManager.shared.vibrate()
+                isPanelCollapsed = true
+                UserDefaults.standard.set(true, forKey: UDKey.playPanelCollapsed)
+            } label: {
+                Image(systemName: "minus")
+                    .font(.system(size: 16, weight: .bold))
+                    .foregroundStyle(Color(.darkGray))
+                    .frame(width: 36, height: 36)
+                    .background(Circle().fill(.white.opacity(0.9)))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("sticker_panel_collapse"))
+        }
+        .padding(.horizontal, 6)
+        .frame(height: 40)
+        .background(
+            Capsule().fill(.white.opacity(0.82))
+                .shadow(color: .black.opacity(0.10), radius: 6, x: 0, y: 2)
+        )
+        .contentShape(Capsule())
+        .gesture(panelDragGesture(bounds: bounds))
+    }
+
+    /// パネル（または 🎨）をドラッグで動かす。指を離したら、画面からはみ出さない位置に直して保存する。
+    private func panelDragGesture(bounds: CGSize) -> some Gesture {
+        DragGesture(minimumDistance: 6, coordinateSpace: .named("playBoard"))
+            .onChanged { value in
+                panelDrag = value.translation
+            }
+            .onEnded { value in
+                panelOffset = CGSize(width:  panelOffset.width  + value.translation.width,
+                                     height: panelOffset.height + value.translation.height)
+                panelDrag = .zero
+                keepPanelOnScreen(bounds: bounds, afterLayout: true)
+            }
+    }
+
+    /// パネルが画面からはみ出していたら、内側へ戻して位置を保存する。
+    /// ヘッダー（戻るボタンなど）にはかぶらないよう、上は headerLimit までにする。
+    /// - Parameter afterLayout: true なら、パネルの位置が画面に反映されてから（少し待ってから）直す
+    private func keepPanelOnScreen(bounds: CGSize, afterLayout: Bool) {
+        guard afterLayout else { return clampPanel(bounds: bounds) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { clampPanel(bounds: bounds) }
+    }
+
+    private func clampPanel(bounds: CGSize) {
+        let f = bottomBarFrame
+        guard f != .zero, bounds.width > 0 else { return }
+        let margin:      CGFloat = 8     // ← 変更可（画面の端との すきま）
+        let headerLimit: CGFloat = 100   // ← 変更可（これより上には行かない）
+        var dx: CGFloat = 0, dy: CGFloat = 0
+        if f.minX < margin                      { dx = margin - f.minX }
+        else if f.maxX > bounds.width - margin  { dx = bounds.width - margin - f.maxX }
+        if f.minY < headerLimit                 { dy = headerLimit - f.minY }
+        else if f.maxY > bounds.height - margin { dy = bounds.height - margin - f.maxY }
+        if dx != 0 || dy != 0 {
+            withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                panelOffset = CGSize(width: panelOffset.width + dx, height: panelOffset.height + dy)
+            }
+        }
+        UserDefaults.standard.set(Double(panelOffset.width),  forKey: UDKey.playPanelOffsetX)
+        UserDefaults.standard.set(Double(panelOffset.height), forKey: UDKey.playPanelOffsetY)
+    }
+
+    // MARK: - かべがみ
+
+    /// いまの絵（背景の色・線・シール）を画像にして、かべがみにする。道具パネルやヘッダーは入れない。
+    ///
+    /// ★ ImageRenderer とは？ ★
+    ///   SwiftUI のビューを、画面に出さずに画像（UIImage）として描いてくれる仕組み。
+    ///   ここでは、キャンバスと同じものを「操作できない、ただの絵」として組み立てて画像にしている。
+    private func makeWallpaper(size: CGSize) {
+        let artwork = ZStack {
+            palette[bgIndex].color
+            DrawingCanvasView()
+            ForEach(store.playStickers) { sticker in
+                Text(sticker.emoji)
+                    .font(.system(size: PlayC.baseFontSize * CGFloat(sticker.scale)))
+                    .rotationEffect(.degrees(sticker.rotation))
+                    .position(x: sticker.xRatio * size.width, y: sticker.yRatio * size.height)
+            }
+        }
+        .frame(width: size.width, height: size.height)
+
+        let renderer = ImageRenderer(content: artwork)
+        renderer.scale = displayScale
+        guard let image = renderer.uiImage else { return }
+        WallpaperStore.shared.save(image)
+        SoundManager.shared.playUnlock()
+        showToast(String(localized: "wallpaper_done"))
     }
 
     /// 自分の矩形を "playBoard" 座標系で FrameKey に載せる透明ビュー
@@ -358,8 +535,8 @@ struct StickerPlayView: View {
     /// トレイからの追加。location が nil ならタップ（螺旋自動配置）。
     private func addFromTray(_ emoji: String, at location: CGPoint?, bounds: CGSize) {
         if let location {
-            // 下部バーの上で離した場合は「やめた」とみなして何もしない
-            guard bottomBarFrame == .zero || location.y < bottomBarFrame.minY else { return }
+            // 道具パネルの上で離した場合は「やめた」とみなして何もしない
+            guard !bottomBarFrame.contains(location) else { return }
         }
         guard !store.isPlayFull else {
             showToast(String(localized: "sticker_play_full"))
@@ -380,12 +557,12 @@ struct StickerPlayView: View {
         max(PlayC.minScale, min(PlayC.maxScale, s))
     }
 
-    /// キャンバス内（ヘッダーの下・下部バーの上）に収める
+    /// キャンバス内（ヘッダーの下・画面の下の端より上）に収める。
+    /// 道具パネルは動かせるので、パネルの下にも置ける（パネルを動かせば見える）。
     private func clampedToCanvas(_ point: CGPoint, bounds: CGSize) -> CGPoint {
-        let bottomLimit = bottomBarFrame == .zero ? bounds.height - 40 : bottomBarFrame.minY - 24
-        return CGPoint(
+        CGPoint(
             x: max(28, min(bounds.width - 28, point.x)),
-            y: max(80, min(bottomLimit, point.y))
+            y: max(80, min(bounds.height - 40, point.y))
         )
     }
 
@@ -427,6 +604,23 @@ struct StickerPlayView: View {
                 .background(Capsule().fill(.white.opacity(0.75)))
 
             Spacer()
+
+            // いまの絵を かべがみにする（確認してから）
+            Button {
+                SoundManager.shared.vibrate()
+                showWallpaperConfirm = true
+            } label: {
+                Image(systemName: "photo.on.rectangle")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundStyle(Color(.darkGray))
+                    .frame(width: 40, height: 40)
+                    .background(
+                        Circle().fill(.white.opacity(0.75))
+                            .shadow(color: .black.opacity(0.10), radius: 4, x: 0, y: 2)
+                    )
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(Text("wallpaper_button"))
 
             Button {
                 withAnimation { showPalette.toggle() }
@@ -487,7 +681,6 @@ struct StickerPlayView: View {
                 .fill(.white.opacity(0.82))
                 .shadow(color: .black.opacity(0.10), radius: 10, x: 0, y: -3)
         )
-        .padding(.horizontal, 16)
     }
 }
 

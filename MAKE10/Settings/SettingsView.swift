@@ -53,6 +53,8 @@ struct SettingsView: View {
 
     /// AppSettings.shared へのバインディング。トグルの変更が即座に UserDefaults に反映される。
     @Bindable var settings = AppSettings.shared
+    /// かべがみ（お絵かきで描いた絵を背景にする）のオン／オフ用
+    @Bindable var wallpaper = WallpaperStore.shared
 
     // MARK: ローカル状態
 
@@ -111,6 +113,16 @@ struct SettingsView: View {
                         label: "settings_break_label",
                         isOn:  $settings.isBreakReminderOn
                     )
+                    Divider().padding(.leading, 60)
+                    // お絵かき画面で「かべがみに する」を押した絵を、背景に使うか。
+                    // まだ一度も押していなければ使う絵がないので、押せないようにする
+                    settingRow(
+                        icon:  "photo.fill",
+                        label: "settings_wallpaper_label",
+                        isOn:  $wallpaper.isOn
+                    )
+                    .disabled(wallpaper.image == nil)
+                    .opacity(wallpaper.image == nil ? 0.45 : 1)
                 }
                 .background(
                     RoundedRectangle(cornerRadius: DS.sectionRadius)
@@ -213,7 +225,7 @@ struct SettingsView: View {
     // MARK: サブビュー生成ヘルパー
 
     /// 設定行を生成するヘルパー。アイコン・ラベル・トグルを横並びにしたレイアウトを返す。
-    /// 設定項目が増えた場合も同じメソッドで追加できる（いまは「おと」「ぶるぶる」「きゅうけいの おしらせ」）。
+    /// 設定項目が増えた場合も同じメソッドで追加できる（いまは「おと」「ぶるぶる」「きゅうけいの おしらせ」「かべがみ」）。
     private func settingRow(icon: String, label: LocalizedStringKey, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)

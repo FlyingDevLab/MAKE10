@@ -172,7 +172,7 @@ private struct JankenCountdownView: View {
 
     var body: some View {
         ZStack {
-            DS.bg.ignoresSafeArea()
+            AppBackground().ignoresSafeArea()
 
             if count > 0 {
                 Text("\(count)")
@@ -209,7 +209,7 @@ private struct JankenPhaseTransitionView: View {
 
     var body: some View {
         ZStack {
-            DS.bg.ignoresSafeArea()
+            AppBackground().ignoresSafeArea()
 
             Text(telop.key)
                 .font(.system(size: 38, weight: .black, design: .rounded))  // ← 変更可
@@ -333,7 +333,7 @@ private struct JankenPlayingView: View {
         ZStack {
 
             // ── 背景 ──────────────────────────────────────────
-            DS.bg.ignoresSafeArea()
+            AppBackground().ignoresSafeArea()
 
             // ── メインコンテンツ ──────────────────────────────
             VStack(spacing: 0) {
