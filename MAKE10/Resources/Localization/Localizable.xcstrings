@@ -31465,193 +31465,193 @@
       }
     },
     "shop_tip_kcal_reading" : {
-      "comment" : "Sticker shop: tip of the day (shown to kids 4-14; an adult may explain it). How to read the unit kcal in this language.",
+      "comment" : "Sticker shop tip #4: k means 1000; how to read 'kcal' in this language; 1 kcal = 1000 calories.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 „kcal“ liest man „Kilokalorie“."
+            "value" : "🔢 „k“ bedeutet 1.000. „kcal“ liest man „Kilokalorie“. 1 kcal sind 1.000 Kalorien!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" is read \"kilocalorie.\""
+            "value" : "🔢 \"k\" means 1,000. \"kcal\" is read \"kilocalorie.\" 1 kcal is 1,000 calories!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 «kcal» se lee «kilocaloría»."
+            "value" : "🔢 La «k» significa 1000. «kcal» se lee «kilocaloría». ¡1 kcal son 1000 calorías!"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 « kcal » se lit « kilocalorie »."
+            "value" : "🔢 Le « k » veut dire 1 000. « kcal » se lit « kilocalorie ». 1 kcal, c'est 1 000 calories !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" को \"किलोकैलोरी\" पढ़ते हैं।"
+            "value" : "🔢 \"k\" का मतलब 1,000 है। \"kcal\" को \"किलोकैलोरी\" पढ़ते हैं। 1 kcal = 1,000 कैलोरी!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" dibaca \"kilokalori\"."
+            "value" : "🔢 \"k\" artinya 1.000. \"kcal\" dibaca \"kilokalori\". 1 kcal = 1.000 kalori!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" si legge \"chilocaloria\"."
+            "value" : "🔢 La \"k\" vuol dire 1000. \"kcal\" si legge \"chilocaloria\". 1 kcal sono 1000 calorie!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 kcal は「キロカロリー」って よむよ"
+            "value" : "🔢 k は「1000」の いみ。「kcal」は「キロカロリー」って よむよ。1kcal は 1000カロリー なんだ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 kcal은 '킬로칼로리'라고 읽어요."
+            "value" : "🔢 k는 '1000'이라는 뜻이에요. kcal은 '킬로칼로리'라고 읽어요. 1kcal는 1000칼로리예요!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 'kcal' spreek je uit als 'kilocalorie'."
+            "value" : "🔢 'k' betekent 1000. 'kcal' spreek je uit als 'kilocalorie'. 1 kcal is 1000 calorieën!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" se lê \"quilocaloria\"."
+            "value" : "🔢 O \"k\" quer dizer 1.000. \"kcal\" se lê \"quilocaloria\". 1 kcal são 1.000 calorias!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 kcal อ่านว่า \"กิโลแคลอรี\""
+            "value" : "🔢 k แปลว่า 1,000 และ kcal อ่านว่า \"กิโลแคลอรี\" 1 kcal ก็คือ 1,000 แคลอรี!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"kcal\" đọc là \"ki-lô-ca-lo\"."
+            "value" : "🔢 \"k\" nghĩa là 1.000. \"kcal\" đọc là \"ki-lô-ca-lo\". 1 kcal là 1.000 ca-lo!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 kcal 读作“千卡”。"
+            "value" : "🔢 k 的意思是 1000。kcal 读作“千卡”。1kcal 就是 1000 卡路里！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 kcal 讀作「大卡」。"
+            "value" : "🔢 k 的意思是 1000。kcal 讀作「大卡」。1kcal 就是 1000 卡路里！"
           }
         }
       }
     },
     "shop_tip_cal_meaning" : {
-      "comment" : "Sticker shop: tip of the day. cal is a word for an amount of energy, read 'calorie'; k means 1000, so 1 kcal = 1000 calories.",
+      "comment" : "Sticker shop tip #3: the amount of energy is measured in 'cal' (calories).",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 „cal“ ist ein Wort für eine Menge Energie und heißt „Kalorie“. „k“ bedeutet 1.000 – also ist 1 kcal gleich 1.000 Kalorien!"
+            "value" : "📏 Wie viel Energie es ist, misst man in „cal“ (Kalorien)."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" is a word for an amount of energy, read \"calorie.\" \"k\" means 1,000, so 1 kcal is 1,000 calories!"
+            "value" : "📏 We measure the amount of energy in \"cal\" (calories)."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 «cal» es una palabra para la cantidad de energía y se lee «caloría». La «k» significa 1000, así que 1 kcal son 1000 calorías."
+            "value" : "📏 La cantidad de energía se mide en «cal» (calorías)."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 « cal » sert à mesurer l'énergie et se lit « calorie ». Le « k » veut dire 1 000 : 1 kcal, c'est 1 000 calories !"
+            "value" : "📏 On mesure la quantité d'énergie en « cal » (calories)."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" ऊर्जा की मात्रा बताने वाला शब्द है, इसे \"कैलोरी\" पढ़ते हैं। \"k\" का मतलब 1,000 है, यानी 1 kcal = 1,000 कैलोरी!"
+            "value" : "📏 ऊर्जा की मात्रा \"cal\" (कैलोरी) में नापते हैं।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" adalah kata untuk jumlah energi, dibaca \"kalori\". \"k\" artinya 1.000, jadi 1 kcal = 1.000 kalori!"
+            "value" : "📏 Jumlah energi diukur dengan \"cal\" (kalori)."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" indica una quantità di energia e si legge \"caloria\". La \"k\" vuol dire 1000, quindi 1 kcal sono 1000 calorie!"
+            "value" : "📏 La quantità di energia si misura in \"cal\" (calorie)."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 cal は エネルギーの りょうを あらわす ことばで「カロリー」って よむよ。k は「1000」の いみ。1kcal は 1000カロリー なんだ"
+            "value" : "📏 エネルギーの りょうは「cal（カロリー）」で あらわすよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 cal은 에너지의 양을 나타내는 말로 '칼로리'라고 읽어요. k는 '1000'이라는 뜻이라서 1kcal는 1000칼로리예요!"
+            "value" : "📏 에너지의 양은 'cal(칼로리)'로 나타내요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 'cal' is een woord voor een hoeveelheid energie en spreek je uit als 'calorie'. 'k' betekent 1000, dus 1 kcal is 1000 calorieën!"
+            "value" : "📏 Hoeveel energie het is, meet je in 'cal' (calorieën)."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" é uma palavra para a quantidade de energia e se lê \"caloria\". O \"k\" quer dizer 1.000, então 1 kcal são 1.000 calorias!"
+            "value" : "📏 A quantidade de energia é medida em \"cal\" (calorias)."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 cal คือคำที่บอกปริมาณพลังงาน อ่านว่า \"แคลอรี\" ส่วน k แปลว่า 1,000 ดังนั้น 1 kcal ก็คือ 1,000 แคลอรี!"
+            "value" : "📏 ปริมาณพลังงานวัดเป็น \"cal\" (แคลอรี)"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 \"cal\" là từ chỉ lượng năng lượng, đọc là \"ca-lo\". \"k\" nghĩa là 1.000, nên 1 kcal là 1.000 ca-lo!"
+            "value" : "📏 Lượng năng lượng được đo bằng \"cal\" (ca-lo)."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 cal 是表示能量多少的单位，读作“卡路里”。k 的意思是 1000，所以 1kcal 就是 1000 卡路里！"
+            "value" : "📏 能量的多少用“cal（卡路里）”来表示。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔥 cal 是表示能量多少的單位，讀作「卡路里」。k 的意思是 1000，所以 1kcal 就是 1000 卡路里！"
+            "value" : "📏 能量的多少用「cal（卡路里）」來表示。"
           }
         }
       }
@@ -32143,67 +32143,67 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Ein Kind mit etwa 10 Jahren braucht am Tag ungefähr 2.000 kcal."
+            "value" : "🧒 Ein Kind mit etwa 10 Jahren braucht am Tag ungefähr 2.000 kcal Energie."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 A friend about 10 years old uses about 2,000 kcal a day."
+            "value" : "🧒 A friend about 10 years old uses about 2,000 kcal of energy a day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Un niño de unos 10 años usa unas 2000 kcal al día."
+            "value" : "🧒 Un niño de unos 10 años usa unas 2000 kcal de energía al día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Un enfant d'environ 10 ans utilise à peu près 2 000 kcal par jour."
+            "value" : "🧒 Un enfant d'environ 10 ans utilise à peu près 2 000 kcal d'énergie par jour."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 लगभग 10 साल का बच्चा एक दिन में करीब 2,000 kcal इस्तेमाल करता है।"
+            "value" : "🧒 लगभग 10 साल का बच्चा एक दिन में करीब 2,000 kcal ऊर्जा इस्तेमाल करता है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Anak sekitar 10 tahun memakai kira-kira 2.000 kcal sehari."
+            "value" : "🧒 Anak sekitar 10 tahun memakai kira-kira 2.000 kcal energi sehari."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Un bambino di circa 10 anni usa circa 2000 kcal al giorno."
+            "value" : "🧒 Un bambino di circa 10 anni usa circa 2000 kcal di energia al giorno."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 10さいぐらいの おともだちは 1にち やく 2,000kcal つかうよ"
+            "value" : "🧒 10さいぐらいの おともだちは、1にちに やく 2,000kcal の エネルギーを つかうよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 10살쯤 된 친구는 하루에 약 2,000kcal를 써요."
+            "value" : "🧒 10살쯤 된 친구는 하루에 약 2,000kcal의 에너지를 써요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Een kind van ongeveer 10 jaar gebruikt zo'n 2000 kcal per dag."
+            "value" : "🧒 Een kind van ongeveer 10 jaar gebruikt zo'n 2000 kcal energie per dag."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Uma criança de uns 10 anos usa cerca de 2.000 kcal por dia."
+            "value" : "🧒 Uma criança de uns 10 anos usa cerca de 2.000 kcal de energia por dia."
           }
         },
         "th" : {
@@ -32215,19 +32215,19 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 Bạn nhỏ khoảng 10 tuổi dùng khoảng 2.000 kcal mỗi ngày."
+            "value" : "🧒 Bạn nhỏ khoảng 10 tuổi dùng khoảng 2.000 kcal năng lượng mỗi ngày."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 10 岁左右的小朋友，一天大约要用 2000kcal。"
+            "value" : "🧒 10 岁左右的小朋友，一天大约要用 2000kcal 的能量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧒 10 歲左右的小朋友，一天大約要用 2000kcal。"
+            "value" : "🧒 10 歲左右的小朋友，一天大約要用 2000kcal 的能量。"
           }
         }
       }
@@ -32239,67 +32239,67 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Ein erwachsener Mann braucht am Tag ungefähr 2.500 kcal."
+            "value" : "👨 Ein erwachsener Mann braucht am Tag ungefähr 2.500 kcal Energie."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 A grown-up man uses about 2,500 kcal a day."
+            "value" : "👨 A grown-up man uses about 2,500 kcal of energy a day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Un hombre adulto usa unas 2500 kcal al día."
+            "value" : "👨 Un hombre adulto usa unas 2500 kcal de energía al día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Un homme adulte utilise à peu près 2 500 kcal par jour."
+            "value" : "👨 Un homme adulte utilise à peu près 2 500 kcal d'énergie par jour."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 एक बड़ा आदमी एक दिन में करीब 2,500 kcal इस्तेमाल करता है।"
+            "value" : "👨 एक बड़ा आदमी एक दिन में करीब 2,500 kcal ऊर्जा इस्तेमाल करता है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Laki-laki dewasa memakai kira-kira 2.500 kcal sehari."
+            "value" : "👨 Laki-laki dewasa memakai kira-kira 2.500 kcal energi sehari."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Un uomo adulto usa circa 2500 kcal al giorno."
+            "value" : "👨 Un uomo adulto usa circa 2500 kcal di energia al giorno."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 おとなの おとこのひとは 1にち やく 2,500kcal つかうよ"
+            "value" : "👨 おとなの おとこのひとは、1にちに やく 2,500kcal の エネルギーを つかうよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 어른 남자는 하루에 약 2,500kcal를 써요."
+            "value" : "👨 어른 남자는 하루에 약 2,500kcal의 에너지를 써요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Een volwassen man gebruikt zo'n 2500 kcal per dag."
+            "value" : "👨 Een volwassen man gebruikt zo'n 2500 kcal energie per dag."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Um homem adulto usa cerca de 2.500 kcal por dia."
+            "value" : "👨 Um homem adulto usa cerca de 2.500 kcal de energia por dia."
           }
         },
         "th" : {
@@ -32311,19 +32311,19 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 Người đàn ông trưởng thành dùng khoảng 2.500 kcal mỗi ngày."
+            "value" : "👨 Người đàn ông trưởng thành dùng khoảng 2.500 kcal năng lượng mỗi ngày."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 成年男性一天大约要用 2500kcal。"
+            "value" : "👨 成年男性一天大约要用 2500kcal 的能量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 成年男性一天大約要用 2500kcal。"
+            "value" : "👨 成年男性一天大約要用 2500kcal 的能量。"
           }
         }
       }
@@ -32335,67 +32335,67 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Eine erwachsene Frau braucht am Tag ungefähr 2.000 kcal."
+            "value" : "👩 Eine erwachsene Frau braucht am Tag ungefähr 2.000 kcal Energie."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 A grown-up woman uses about 2,000 kcal a day."
+            "value" : "👩 A grown-up woman uses about 2,000 kcal of energy a day."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Una mujer adulta usa unas 2000 kcal al día."
+            "value" : "👩 Una mujer adulta usa unas 2000 kcal de energía al día."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Une femme adulte utilise à peu près 2 000 kcal par jour."
+            "value" : "👩 Une femme adulte utilise à peu près 2 000 kcal d'énergie par jour."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 एक बड़ी औरत एक दिन में करीब 2,000 kcal इस्तेमाल करती है।"
+            "value" : "👩 एक बड़ी औरत एक दिन में करीब 2,000 kcal ऊर्जा इस्तेमाल करती है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Perempuan dewasa memakai kira-kira 2.000 kcal sehari."
+            "value" : "👩 Perempuan dewasa memakai kira-kira 2.000 kcal energi sehari."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Una donna adulta usa circa 2000 kcal al giorno."
+            "value" : "👩 Una donna adulta usa circa 2000 kcal di energia al giorno."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 おとなの おんなのひとは 1にち やく 2,000kcal つかうよ"
+            "value" : "👩 おとなの おんなのひとは、1にちに やく 2,000kcal の エネルギーを つかうよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 어른 여자는 하루에 약 2,000kcal를 써요."
+            "value" : "👩 어른 여자는 하루에 약 2,000kcal의 에너지를 써요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Een volwassen vrouw gebruikt zo'n 2000 kcal per dag."
+            "value" : "👩 Een volwassen vrouw gebruikt zo'n 2000 kcal energie per dag."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Uma mulher adulta usa cerca de 2.000 kcal por dia."
+            "value" : "👩 Uma mulher adulta usa cerca de 2.000 kcal de energia por dia."
           }
         },
         "th" : {
@@ -32407,19 +32407,19 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 Người phụ nữ trưởng thành dùng khoảng 2.000 kcal mỗi ngày."
+            "value" : "👩 Người phụ nữ trưởng thành dùng khoảng 2.000 kcal năng lượng mỗi ngày."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 成年女性一天大约要用 2000kcal。"
+            "value" : "👩 成年女性一天大约要用 2000kcal 的能量。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 成年女性一天大約要用 2000kcal。"
+            "value" : "👩 成年女性一天大約要用 2000kcal 的能量。"
           }
         }
       }
@@ -38084,6 +38084,390 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自己"
+          }
+        }
+      }
+    },
+    "shop_tip_energy_what" : {
+      "comment" : "Sticker shop tip #1 (series explaining energy step by step to kids 4-14): what energy is.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Energie ist die Kraft, mit der sich dein Körper bewegt und mit der du denkst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Energy is the power your body uses to move and to think."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ La energía es la fuerza que usa tu cuerpo para moverse y para pensar."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ L'énergie, c'est la force qui permet à ton corps de bouger et de réfléchir."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ ऊर्जा वह ताकत है जिससे हमारा शरीर चलता-फिरता और सोचता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Energi adalah kekuatan untuk menggerakkan badan dan untuk berpikir."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ L'energia è la forza che il corpo usa per muoversi e per pensare."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ エネルギーは、からだを うごかしたり、かんがえたり する ための ちからだよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ 에너지는 몸을 움직이고 생각하는 데 쓰는 힘이에요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Energie is de kracht die je lichaam gebruikt om te bewegen en te denken."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Energia é a força que o corpo usa para se mexer e para pensar."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ พลังงานคือแรงที่ร่างกายใช้ในการเคลื่อนไหวและคิด"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ Năng lượng là sức mạnh giúp cơ thể vận động và suy nghĩ."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ 能量是让身体活动、让我们思考的力量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "⚡ 能量是讓身體活動、讓我們思考的力量。"
+          }
+        }
+      }
+    },
+    "shop_tip_energy_food" : {
+      "comment" : "Sticker shop tip #2: energy comes from the food we eat.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 Energie bekommt dein Körper, wenn du etwas isst."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 We get energy into our bodies by eating food."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 La energía entra en el cuerpo cuando comemos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 L'énergie entre dans ton corps quand tu manges."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 खाना खाने से शरीर को ऊर्जा मिलती है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 Energi masuk ke tubuh saat kita makan."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 L'energia entra nel corpo quando mangiamo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 エネルギーは、たべものを たべると からだに はいるよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 에너지는 음식을 먹으면 몸에 들어와요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 Energie krijg je binnen door te eten."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 A energia entra no corpo quando comemos."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 เมื่อเรากินอาหาร พลังงานก็จะเข้าสู่ร่างกาย"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 Khi ăn, năng lượng sẽ vào cơ thể mình."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 吃东西的时候，能量就会进入身体。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍙 吃東西的時候，能量就會進入身體。"
+          }
+        }
+      }
+    },
+    "shop_tip_use_all_day" : {
+      "comment" : "Sticker shop tip #10: the body uses energy all day long.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Dein Körper braucht den ganzen Tag lang Energie."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Your body uses energy all day long."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 El cuerpo usa energía durante todo el día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Ton corps utilise de l'énergie toute la journée."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 हमारा शरीर पूरे दिन ऊर्जा इस्तेमाल करता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Tubuh kita memakai energi sepanjang hari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Il corpo usa energia tutto il giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 からだは 1にちじゅう エネルギーを つかっているよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 몸은 하루 종일 에너지를 쓰고 있어요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Je lichaam gebruikt de hele dag energie."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 O corpo usa energia o dia todo."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 ร่างกายใช้พลังงานตลอดทั้งวัน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 Cơ thể dùng năng lượng suốt cả ngày."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 身体一整天都在使用能量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🏃 身體一整天都在使用能量。"
+          }
+        }
+      }
+    },
+    "shop_tip_2000_bananas" : {
+      "comment" : "Sticker shop tip #16 (last): 2,000 kcal is about 20 bananas — ties back to the banana examples.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2.000 kcal sind ungefähr 20 Bananen! Das ist ganz schön viel!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2,000 kcal is about 20 bananas! That is a lot of energy!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 ¡2000 kcal son unos 20 plátanos! ¡Usamos muchísima!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2 000 kcal, c'est environ 20 bananes ! On en utilise beaucoup !"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2,000 kcal यानी लगभग 20 केले! हम कितनी ज़्यादा ऊर्जा इस्तेमाल करते हैं!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2.000 kcal itu kira-kira 20 buah pisang! Banyak sekali, ya!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2000 kcal sono circa 20 banane! Ne usiamo davvero tanta!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2,000kcal は バナナ やく 20ぽんぶん！ たくさん つかって いるんだね"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2,000kcal는 바나나 약 20개만큼이에요! 정말 많이 쓰죠?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2000 kcal is ongeveer 20 bananen! Dat is best veel!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2.000 kcal são umas 20 bananas! Usamos bastante, né?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2,000 kcal เท่ากับกล้วยประมาณ 20 ลูก! ใช้เยอะมากเลยนะ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2.000 kcal bằng khoảng 20 quả chuối! Mình dùng nhiều thật đấy!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2000 千卡大约是 20 根香蕉！用掉的能量真多呀！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌×20 2000 大卡大約是 20 根香蕉！用掉的能量真多呀！"
           }
         }
       }

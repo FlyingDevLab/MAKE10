@@ -135,6 +135,7 @@ final class StickerShop {
     func reset() {
         state = nil
         UserDefaults.standard.removeObject(forKey: UDKey.stickerShopState)
+        UserDefaults.standard.removeObject(forKey: UDKey.shopTipIndex)   // 「ひとこと」も1話目から
     }
 
     // MARK: 品揃えの抽選

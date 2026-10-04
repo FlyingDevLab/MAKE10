@@ -15,7 +15,7 @@
 //  ★ このファイルの構成 ★
 //    StickerShopView … 画面本体（残高・棚・閉店カード・確認カード・メッセージ・紙吹雪）
 //    ShopShelfCell   … 棚の1マス（シール1種類分）
-//    ShopTipBubble   … 「きょうの ひとこと」（kcal って なに？ などの豆知識）
+//    ShopTipBubble   … 「ひとこと」（エネルギーって なに？ から順に話す、全16話の豆知識）
 
 import SwiftUI
 
@@ -433,65 +433,84 @@ private struct ShopShelfCell: View {
 
 // ★ なぜ豆知識で kcal を説明するのか ★
 //   子どもには「kcal」という単位がピンとこない。かといってお金（円・ドル）の記号は使いたくない。
-//   そこで「100kcal は バナナ 1ぽんぐらい」のように身近な食べ物で
-//   量の感覚を伝える「きょうの ひとこと」を、指さし（👆）付きの吹き出しで出している。
+//   そこで「エネルギーって なに？」から順に、身近な食べ物で量の感覚を伝えるひとことを、
+//   指さし（👆）付きの吹き出しで出している。
 //
-// ★ 1日1つにしている理由 ★
-//   子どもが読んで、わからないところを大人が説明する、という使い方を想定している。
-//   コロコロ変わると話題にしにくいので、その日のひとことは1つだけにして、0時に次のものへ進める。
+// ★ 順番に、見るたびに1話ずつ進める理由 ★
+//   いきなり「おんなのひとは 2,000kcal つかう」と言われても「何を？」となる。
+//   ① エネルギーって なに？ → ② はかりかた → ③ たべものの エネルギー → ④ からだは いつ つかう？
+//   → ⑤ 1にちに どれくらい？ の順に、前の話をふまえて次の話をする。
+//   シールやさんを開くたびに次の話へ進み、最後まで読んだら1話目に戻る（どこまで読んだかは保存する）。
 //
 // ★ 数字について ★
 //   対象年齢が 4〜14歳と広く、世界中で使われるので、特定の国の基準ではなく
 //   国際的によく使われる目安（FAO/WHO・各国の食品表示）を「やく」「ぐらい」でざっくり伝えている。
 
-/// 「きょうの ひとこと」の吹き出し。その日のひとことを1つだけ出す。
+/// 「ひとこと」の吹き出し。開くたびに、tips の次の話を1つ出す。
 private struct ShopTipBubble: View {
 
-    /// ひとことの一覧。1日に1つずつ、この順番で進む（全部出たら最初に戻る）。
-    private let tips: [LocalizedStringKey] = [
-        "shop_tip_kcal_reading",
+    /// 話の一覧。この順番に1話ずつ進む（全部出たら最初に戻る）。
+    /// ⚠️ 変更注意: 話は前の話をふまえて書いてある。並べ替えるときは流れが切れないか確かめること。
+    private static let tips: [LocalizedStringKey] = [
+        // ① エネルギーって なに？
+        "shop_tip_energy_what",
+        "shop_tip_energy_food",
+        // ② はかりかた
         "shop_tip_cal_meaning",
+        "shop_tip_kcal_reading",
+        // ③ たべものの エネルギー
         "shop_tip_100_banana",
         "shop_tip_100_apple",
         "shop_tip_100_egg",
         "shop_tip_200_banana",
         "shop_tip_200_donut",
+        // ④ からだは いつ つかう？
+        "shop_tip_use_all_day",
+        "shop_tip_sleep",
+        "shop_tip_brain",
+        // ⑤ 1にちに どれくらい？
         "shop_tip_day_child",
         "shop_tip_day_man",
         "shop_tip_day_woman",
-        "shop_tip_sleep",
-        "shop_tip_brain",
+        "shop_tip_2000_bananas",
     ]
 
-    var body: some View {
-        // 開いたまま日付が変わったときも、次のひとことに切り替わるよう1分ごとに見直す
-        TimelineView(.periodic(from: .now, by: 60)) { context in
-            HStack(alignment: .center, spacing: 10) {
-                Text(verbatim: "👆")
-                    .font(.system(size: 40))   // ← 変更可（指の大きさ）
+    /// いま出している話の番号。開いたときに決める。
+    @State private var index: Int? = nil
 
-                Text(tips[tipIndex(on: context.date)])
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.textBody)
-                    .multilineTextAlignment(.leading)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(.horizontal, 14)
-                    .padding(.vertical, 12)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.sectionRadius)
-                            .fill(DS.card)
-                            .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
-                    )
-            }
-            .accessibilityElement(children: .combine)
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Text(verbatim: "👆")
+                .font(.system(size: 40))   // ← 変更可（指の大きさ）
+
+            Text(Self.tips[index ?? 0])
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.textBody)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.sectionRadius)
+                        .fill(DS.card)
+                        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
+                )
+        }
+        .opacity(index == nil ? 0 : 1)   // 番号が決まるまでは出さない（1話目が一瞬見えないように）
+        .accessibilityElement(children: .combine)
+        .onAppear {
+            // 同じ画面のまま onAppear がもう一度呼ばれても、話を飛ばさない
+            guard index == nil else { return }
+            index = Self.takeNextIndex()
         }
     }
 
-    /// その日に出すひとことの番号。「暦の上で何日目か」を一覧の数で割った余りなので、
-    /// 毎日1つずつ進み、どの端末でも同じ日には同じひとことになる。
-    private func tipIndex(on date: Date) -> Int {
-        let day = Calendar.current.ordinality(of: .day, in: .era, for: date) ?? 0
-        return day % tips.count
+    /// 次に出す話の番号を取り出し、その次の番号を保存しておく。
+    private static func takeNextIndex() -> Int {
+        let defaults = UserDefaults.standard
+        let current  = defaults.integer(forKey: UDKey.shopTipIndex) % tips.count   // 未保存なら 0（1話目）
+        defaults.set((current + 1) % tips.count, forKey: UDKey.shopTipIndex)
+        return current
     }
 }
