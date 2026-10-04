@@ -51,6 +51,8 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     //   既存ユーザーは保存データに無い case として先頭に入る（GameRankManager.init を参照）。
     case stickerShop    // シールやさん（エネルギーでシールを買う）
     case gacha          // ガチャ（エネルギーでシールを引く）
+    // 新規インストールではシールやさん・ガチャの次の段に入る。既存ユーザーは先頭に入る（上の解説を参照）
+    case thanksNotebook // ありがとう てちょう（毎日のミッション）
     case pinball
     case coinDrop
     case janken
@@ -77,6 +79,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .stickerStorage:   return "🖼️"
         case .stickerShop:      return "🛍️"
         case .gacha:            return "🎁"
+        case .thanksNotebook:   return "📒"
         }
     }
 
@@ -103,6 +106,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .stickerStorage:    return "sticker_storage_title"
         case .stickerShop:       return "shop_title"
         case .gacha:             return "gacha_title"
+        case .thanksNotebook:    return "thanks_notebook_title"
         }
     }
 
@@ -123,6 +127,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .stickerStorage:   return .pink
         case .stickerShop:      return DS.energy
         case .gacha:            return .mint
+        case .thanksNotebook:   return Color(red: 0.80, green: 0.55, blue: 0.05)   // 📒 の黄色に合わせた山吹色
         }
     }
 }
@@ -158,7 +163,7 @@ final class GameRankManager {
 
     /// 保存済みの並び順があれば復元し、なければ定義順で初期化する。
     /// ⚠️ 既存ユーザーの保存データに無い新しい case（新ゲーム追加時など）は、
-    ///   ?? -1 により自動的に先頭へ回る。複数同時追加時は宣言順のまま先頭ブロックになる。
+    ///   自動的に先頭（ロゴが先頭ならロゴのすぐ後ろ）へ入る。複数同時追加時は宣言順のまま1つのブロックになる。
     init() {
         sortedGames = Self.loadSaved()
     }
@@ -173,10 +178,18 @@ final class GameRankManager {
         let all = GamePickerSelection.allCases
         if let data = UserDefaults.standard.data(forKey: udKey),
            let dict = try? JSONDecoder().decode([String: Int].self, from: data) {
-            // ?? -1: 辞書に無いゲーム（保存後に追加された新ゲーム）は先頭に回す。
-            // 複数を同時に追加した場合は enum の宣言順のまま先頭ブロックとして挿入される
-            // （sorted は安定ソートのため、-1 同士は元の並び＝宣言順を保つ）。
-            return all.sorted { (dict[$0.rawValue] ?? -1) < (dict[$1.rawValue] ?? -1) }
+            // 辞書に無いゲーム（保存後に追加された新ゲーム）は先頭に入れて、すぐ目に入るようにする。
+            // 複数を同時に追加した場合は enum の宣言順のまま先頭ブロックになる。
+            let known    = all.filter { dict[$0.rawValue] != nil }
+                              .sorted { dict[$0.rawValue]! < dict[$1.rawValue]! }
+            let newGames = all.filter { dict[$0.rawValue] == nil }
+            // ★ ロゴが先頭のときは、ロゴのすぐ後ろに入れる ★
+            //   ロゴより前に新しいタイルが1枚だけ入ると、ロゴ（画面幅いっぱいの段）の手前で
+            //   その1枚だけの段になり、右側がぽっかり空いてしまうため。
+            if known.first == .logoCard {
+                return [.logoCard] + newGames + known.dropFirst()
+            }
+            return newGames + known
         }
         return all
     }

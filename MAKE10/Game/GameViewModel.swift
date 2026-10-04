@@ -567,6 +567,7 @@ final class GameViewModel {
         StickerStore.shared.reset()  // シールデータもリセット（こちらは StickerStore が責任を持つ）
         EnergyStore.shared.reset()   // エネルギー残高も 0 に戻す
         StickerShop.shared.reset()   // ショップの品揃え・売り切れも消す（次に開いたとき新しく開店する）
+        ThanksNotebookStore.shared.reset()   // ありがとう てちょうの記録も消す
         gameState           = .title
     }
 

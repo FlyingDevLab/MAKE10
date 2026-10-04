@@ -51,6 +51,7 @@ private enum Screen {
     case stickerStorage
     case stickerShop
     case gacha
+    case thanksNotebook
 }
 
 // MARK: - MakeTenContentView
@@ -151,6 +152,9 @@ struct MakeTenContentView: View {
                     .transition(.opacity)
                 case .gacha:
                     GachaView()
+                        .transition(.opacity)
+                case .thanksNotebook:
+                    ThanksNotebookView()
                         .transition(.opacity)
                 }
             }
@@ -331,6 +335,7 @@ struct MakeTenContentView: View {
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         case .stickerShop:         return String(localized: "shop_title")
         case .gacha:               return String(localized: "gacha_title")
+        case .thanksNotebook:      return String(localized: "thanks_notebook_title")
         }
     }
 
@@ -356,7 +361,7 @@ struct MakeTenContentView: View {
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
              .janken, .tenPuzzle, .memory, .stickerStorage,
-             .stickerShop, .gacha:
+             .stickerShop, .gacha, .thanksNotebook:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
             }
@@ -375,7 +380,7 @@ struct MakeTenContentView: View {
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
              .janken, .tenPuzzle, .memory, .stickerStorage,
-             .stickerShop, .gacha:                                        return nil
+             .stickerShop, .gacha, .thanksNotebook:                       return nil
         }
     }
 
@@ -401,6 +406,7 @@ struct MakeTenContentView: View {
         case .stickerStorage:      return "stickerStorage"
         case .stickerShop:         return "stickerShop"
         case .gacha:               return "gacha"
+        case .thanksNotebook:      return "thanksNotebook"
         }
     }
 
@@ -434,6 +440,7 @@ struct MakeTenContentView: View {
                         case .stickerStorage: screen = .stickerStorage
                         case .stickerShop:    screen = .stickerShop
                         case .gacha:          screen = .gacha
+                        case .thanksNotebook: screen = .thanksNotebook
                         case .logoCard:       break   // ブランドタイル。タップは無反応（GamePickerTile側で既に無視）
                         }
                     }
