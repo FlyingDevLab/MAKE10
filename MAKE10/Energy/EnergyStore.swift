@@ -83,8 +83,11 @@ enum EnergyRewards {
     /// 絵文字クイズ。クリアボーナス = 正解の数 × モードごとの倍率。
     /// 全問正解で perfectBonus ＋ そのカテゴリの問題数（「4133もん」の 4133）。
     /// 問題の多いカテゴリほど、どれが出るか分からず難しいので、全問正解のごほうびを大きくしている。
+    /// ただし多くなりすぎないよう、全問正解のボーナスは quizPerfectBonusMax まで（世界の空港コードはここで止まる）。
     static let quizBonusRateBasic: Double = 1.5   // ← 変更可（ふつう）
     static let quizBonusRateHard:  Double = 2     // ← 変更可（むずかしい）
+    /// 絵文字クイズの全問正解ボーナス（perfectBonus ＋ 問題数）の上限（kcal）。
+    static let quizPerfectBonusMax: Double = 2_000   // ← 変更可
 
     /// コインドロップ。クリアボーナス = 作った$1の数 × この倍率。$10達成で perfectBonus。
     static let coinDropBonusRate: Double = 2      // ← 変更可

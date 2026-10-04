@@ -207,7 +207,10 @@ final class EmojiQuizViewModel {
             let bonusRate = mode == .textToEmoji ? EnergyRewards.quizBonusRateHard
                                                  : EnergyRewards.quizBonusRateBasic
             var bonus = Double(score) * bonusRate
-            if pct == 1.0 { bonus += EnergyRewards.perfectBonus + Double(category.items.count) }
+            if pct == 1.0 {
+                bonus += min(EnergyRewards.perfectBonus + Double(category.items.count),
+                             EnergyRewards.quizPerfectBonusMax)
+            }
             EnergyStore.shared.grantClearBonus(bonus)
             isFinished = true
         } else {
