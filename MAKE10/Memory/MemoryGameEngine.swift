@@ -59,6 +59,12 @@ final class MemoryGameEngine {
     /// 現在の局面。View はこれを見て入力可否や演出を切り替える。
     private(set) var phase: MemoryPhase = .idle
 
+    /// いま何組つづけてそろえているか。はずすと 0 に戻る。
+    private(set) var combo: Int = 0
+
+    /// 直近にそろえたときにもらったエネルギー。View はこれが変わるたびに「+◯」を浮かべる。
+    private(set) var lastReward: MemoryReward? = nil
+
     // MARK: - 非公開
 
     /// カード面の供給役。ロジックはこれ越しにしか絵柄を知らない。
@@ -109,6 +115,9 @@ final class MemoryGameEngine {
         generation += 1
         bufferedTapID    = nil
         judgingStartedAt = 0
+        combo            = 0
+        lastReward       = nil
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
 
         // 識別子をペア数ぶん受け取り、1つにつき2枚ずつカードを作る。
         let pairIDs = faceProvider.pairIdentifiers(count: MemoryTuning.pairCount)
@@ -194,6 +203,9 @@ final class MemoryGameEngine {
         // そのたびに音を鳴らすと失敗を責め続けているように聞こえるため。
         if isMatch {
             SoundManager.shared.playCorrect()
+            grantMatchReward()
+        } else {
+            combo = 0
         }
 
         generation += 1
@@ -271,6 +283,22 @@ final class MemoryGameEngine {
         if let next {
             tap(next)
         }
+    }
+
+    // MARK: - エネルギー
+
+    // ★ そろった瞬間に渡している理由 ★
+    //   決着（resolveJudging）まで待つと、先行入力で決着が早まったり遅れたりして、
+    //   ヘッダーの数字が増えるタイミングがぶれる。そろったと分かった瞬間に渡せば、
+    //   一致音と数字の増加がいつも同時になる。加算はその場で保存されるので、
+    //   途中でゲームを離れてももらった分は消えない（EnergyStore 冒頭を参照）。
+
+    /// そろえた1組ぶんのエネルギーを渡す。連続していればコンボボーナスも上乗せする。
+    private func grantMatchReward() {
+        combo += 1
+        let kcal = EnergyRewards.memoryReward(combo: combo)
+        EnergyStore.shared.earn(kcal)
+        lastReward = MemoryReward(kcal: kcal, combo: combo)
     }
 
     // MARK: - 補助

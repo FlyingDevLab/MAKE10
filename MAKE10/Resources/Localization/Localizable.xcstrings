@@ -15860,97 +15860,98 @@
         }
       }
     },
-    "memory_howto_sticker" : {
-      "comment" : "Animal Match how-to line 3: the sticker reward.",
+    "memory_howto_energy" : {
+      "comment" : "Animal Match how-to line 3: each matched pair gives energy, and matching pairs in a row gives more.",
+      "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Findest du alle Paare, bekommst du einen Sticker"
+            "value" : "Jedes Paar gibt Energie. Hintereinander noch viel mehr!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Match them all to earn a sticker"
+            "value" : "Match pairs to earn energy. In a row, you get even more!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encuentra todas las parejas y gana una pegatina"
+            "value" : "Cada pareja da energía. ¡Seguidas, mucha más!"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trouve toutes les paires et gagne un autocollant"
+            "value" : "Chaque paire donne de l'énergie. À la suite, encore plus !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सारे जोड़े मिलाओ और स्टिकर पाओ"
+            "value" : "जोड़ा मिलाओ तो ऊर्जा मिलेगी। लगातार मिलाओ तो और भी ज़्यादा!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cocokkan semuanya untuk dapat stiker"
+            "value" : "Cocokkan pasangan untuk dapat energi. Berturut-turut, makin banyak!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trova tutte le coppie e ricevi un adesivo"
+            "value" : "Ogni coppia dà energia. Di fila, ancora di più!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ぜんぶ そろったら シールが もらえるよ"
+            "value" : "そろえると エネルギーが もらえるよ。れんぞくだと どんどん ふえる！"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모두 맞히면 스티커를 받아요"
+            "value" : "짝을 맞추면 에너지를 받아요. 연속이면 더 많이!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vind alle paren en verdien een sticker"
+            "value" : "Elk paar geeft energie. Achter elkaar nog veel meer!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Encontre todos os pares e ganhe um adesivo"
+            "value" : "Cada par dá energia. Em sequência, dá ainda mais!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "จับคู่ครบทุกใบ รับสติกเกอร์"
+            "value" : "จับคู่ได้รับพลังงาน ถ้าติดกันจะได้เพิ่มขึ้นเรื่อยๆ!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ghép hết các cặp để nhận nhãn dán"
+            "value" : "Ghép đúng được năng lượng. Liên tiếp càng được nhiều!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "全部配对成功就能得到贴纸"
+            "value" : "配对成功就能得到能量，连续配对得到更多！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "全部配對成功就能得到貼紙"
+            "value" : "配對成功就能得到能量，連續配對得到更多！"
           }
         }
       }
@@ -16046,101 +16047,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "再玩一次"
-          }
-        }
-      }
-    },
-    "memory_result_choose" : {
-      "comment" : "Prompt above the sticker chooser after clearing Animal Match.",
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Such dir einen Sticker aus"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pick your favorite sticker"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Elige tu pegatina favorita"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Choisis ton autocollant préféré"
-          }
-        },
-        "hi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "अपना पसंदीदा स्टिकर चुनो"
-          }
-        },
-        "id" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pilih stiker kesukaanmu"
-          }
-        },
-        "it" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Scegli il tuo adesivo preferito"
-          }
-        },
-        "ja" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "すきな シールを えらんでね"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "좋아하는 스티커를 골라요"
-          }
-        },
-        "nl" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kies je favoriete sticker"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Escolha seu adesivo favorito"
-          }
-        },
-        "th" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "เลือกสติกเกอร์ที่ชอบ"
-          }
-        },
-        "vi" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Chọn nhãn dán con thích"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "选一张喜欢的贴纸"
-          }
-        },
-        "zh-Hant" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "選一張喜歡的貼紙"
           }
         }
       }
@@ -31458,6 +31364,102 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "難題與無解題混合。\n看穿了就點「湊不出！」。"
+          }
+        }
+      }
+    },
+    "memory_combo_label %lld" : {
+      "comment" : "Animal Match: floating label when the player matches pairs in a row. %lld is how many pairs in a row (2 or more). Keep it very short.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld hintereinander!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld in a row!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡%lld seguidas!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld à la suite !"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "लगातार %lld!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld berturut-turut!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld di fila!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld れんぞく！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld연속!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld op rij!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld seguidas!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ติดกัน %lld ครั้ง!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld lần liên tiếp!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 连击！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 連擊！"
           }
         }
       }

@@ -97,16 +97,16 @@ enum MemoryTuning {
     /// クリア時、薄くなっていたカードを元の濃さに戻すアニメーションの長さ（秒）。
     static let clearRestore:   TimeInterval = 0.40   // ← 変更可
 
-    /// クリア時、揃った盤面を見せておく長さ（秒）。この後にシール選択画面へ移る。
+    /// クリア時、揃った盤面を見せておく長さ（秒）。この後に結果画面へ移る。
     static let clearBoardHold: TimeInterval = 1.20   // ← 変更可
 
     // ★ 誤タップ防止について ★
     //   このゲームは連打を前提に作られているため、クリア直後も指が動き続けています。
-    //   シール選択画面が出た瞬間のタップで中身を見る前に決まってしまわないよう、
+    //   結果画面が出た瞬間のタップで「もういちど」が押されてしまわないよう、
     //   表示から一定時間は入力を受け付けません。
     //   FinishedView・JankenResultView と同じ 1.0 秒に揃えています。
 
-    /// シール選択画面が表示されてから、タップを受け付け始めるまでの時間（秒）。
+    /// 結果画面が表示されてから、「もういちど」を出すまでの時間（秒）。
     static let selectTapGuard: TimeInterval = 1.00   // ← 変更可
 
     // MARK: 見た目
@@ -298,4 +298,16 @@ enum MemoryPhase: Equatable {
 
     /// 全ペアが揃った状態。
     case cleared
+}
+
+// MARK: - MemoryReward
+
+/// そろえた1組ぶんのごほうび。View が「+◯」を浮かべるために使う。
+/// 同じ量が続いても毎回別のものとして扱えるよう、id を持たせている。
+struct MemoryReward: Identifiable, Equatable {
+    let id = UUID()
+    /// もらったエネルギー（kcal）
+    let kcal: Double
+    /// そのときの連続数（1 = 連続なし）
+    let combo: Int
 }

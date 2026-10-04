@@ -6,11 +6,12 @@
 //
 
 // どうぶつめくり（神経衰弱）の画面本体。
-// スタート画面 → 盤面 → シール選択画面 の3段階を切り替える。
+// スタート画面 → 盤面 → 結果画面 の3段階を切り替える。
 //
 // ★ このファイルの構成 ★
-//   MemoryGameView   … 3画面の切り替えとクリア演出の進行役
-//   MemoryCardView   … カード1枚。3D回転でめくる
+//   MemoryGameView    … 3画面の切り替えとクリア演出の進行役
+//   MemoryCardView    … カード1枚。3D回転でめくる
+//   MemoryRewardPopup … そろえたときに浮かぶ「+◯kcal」（連続ならコンボ数も）
 //
 // ★ 役割分担 ★
 //   進行の判断（めくってよいか・揃ったか・クリアか）は MemoryGameEngine が持ちます。
@@ -22,7 +23,7 @@
 //   2. 薄くなっていた一致済みカードを元の濃さに戻す
 //   3. 紙吹雪を出し、「おめでとう」を盤面に重ねる
 //   4. clearBoardHold のあいだ揃った盤面を見せる
-//   5. シール選択画面へ移る
+//   5. 結果画面（今回もらったエネルギー）へ移る
 //   紙吹雪はこのViewのZStackに置いてあるため、画面が切り替わっても降り続けます。
 
 import SwiftUI
@@ -37,7 +38,7 @@ struct MemoryGameView: View {
     private enum Stage {
         case start    // 遊び方の説明
         case playing  // 盤面
-        case result   // シール選択
+        case result   // 結果（今回もらったエネルギー）
     }
 
     // MARK: 状態
@@ -58,6 +59,9 @@ struct MemoryGameView: View {
 
     /// 一致済みカードの濃さを元に戻したか。クリア演出で true になる。
     @State private var restoreOpacity = false
+
+    /// いま浮かべている「+◯kcal」。そろえるたびに増え、演出が終わると自分で消える。
+    @State private var rewardPopups: [MemoryReward] = []
 
     // MARK: テーマ色
 
@@ -84,7 +88,14 @@ struct MemoryGameView: View {
 
             // ★ zIndex について ★
             //   アプリ全体の階層は SharedFrame.swift の表に従う。
-            //   40 は「おめでとう」用に新しく取った値、50 は既存の紙吹雪の値。
+            //   40 は「おめでとう」用、45 は「+◯kcal」用に新しく取った値、50 は既存の紙吹雪の値。
+            ForEach(rewardPopups) { reward in
+                MemoryRewardPopup(reward: reward) {
+                    rewardPopups.removeAll { $0.id == reward.id }
+                }
+                .zIndex(45)
+            }
+
             if showCongrats {
                 congratsOverlay
                     .zIndex(40)
@@ -101,6 +112,11 @@ struct MemoryGameView: View {
         .onChange(of: engine.phase) { _, newPhase in
             guard newPhase == .cleared else { return }
             runClearSequence()
+        }
+        // そろえるたびに「+◯kcal」を浮かべる（エネルギーはエンジン側で加算済み）
+        .onChange(of: engine.lastReward) { _, reward in
+            guard let reward else { return }
+            rewardPopups.append(reward)
         }
     }
 
@@ -119,7 +135,7 @@ struct MemoryGameView: View {
 
                 howToRow(emoji: "👆", textKey: "memory_howto_flip")
                 howToRow(emoji: "🐘", textKey: "memory_howto_match")
-                howToRow(emoji: "🎁", textKey: "memory_howto_sticker")
+                howToRow(emoji: "🔥", textKey: "memory_howto_energy")
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -239,7 +255,7 @@ struct MemoryGameView: View {
         }
         showConfetti = true
 
-        // 揃った盤面をしばらく見せてから、シール選択画面へ移す。
+        // 揃った盤面をしばらく見せてから、結果画面へ移す。
         DispatchQueue.main.asyncAfter(deadline: .now() + MemoryTuning.clearBoardHold) {
             withAnimation(.easeInOut(duration: 0.3)) {
                 showCongrats = false
@@ -253,8 +269,64 @@ struct MemoryGameView: View {
         showConfetti   = false
         showCongrats   = false
         restoreOpacity = false
+        rewardPopups   = []
         engine.start()
         withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
+    }
+}
+
+// MARK: - MemoryRewardPopup
+
+/// そろえたときに盤面の上へ浮かんで消える「+◯kcal」。2連続以上なら「◯れんぞく！」も添える。
+/// 表示・移動・削除の依頼までを自分で行う自己完結型（PlayingView の ReactionView と同じ作り）。
+private struct MemoryRewardPopup: View {
+    let reward:     MemoryReward
+    let onFinished: () -> Void
+
+    @State private var offsetY: CGFloat = 0
+    @State private var opacity: Double  = 0
+    @State private var scale:   CGFloat = 0.6
+
+    private let duration: Double  = 1.1   // ← 変更可（浮かんで消えるまでの秒数）
+    private let travel:   CGFloat = 70    // ← 変更可（浮かぶ距離）
+
+    var body: some View {
+        VStack(spacing: 2) {
+            if reward.combo >= 2 {
+                Text("memory_combo_label \(reward.combo)")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+            }
+            // 単位の kcal は全言語共通なので、ローカライズせずそのまま出す
+            Text(verbatim: "+\(EnergyStore.format(reward.kcal))kcal")
+                .font(.system(size: reward.combo >= 2 ? 30 : 22, weight: .black, design: .rounded))
+        }
+        .foregroundStyle(DS.energy)
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
+        .background(
+            Capsule()
+                .fill(DS.card)
+                .shadow(color: DS.energy.opacity(0.25), radius: 6, x: 0, y: 3)
+        )
+        .scaleEffect(scale)
+        .offset(y: offsetY)
+        .opacity(opacity)
+        .allowsHitTesting(false)   // 連打の邪魔をしないよう、タップは下のカードへ素通しさせる
+        .onAppear {
+            withAnimation(.spring(response: 0.25, dampingFraction: 0.55)) {
+                scale   = 1
+                opacity = 1
+            }
+            withAnimation(.easeOut(duration: duration)) {
+                offsetY = -travel
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration * 0.6) {
+                withAnimation(.easeIn(duration: duration * 0.4)) { opacity = 0 }
+            }
+            DispatchQueue.main.asyncAfter(deadline: .now() + duration + 0.1) {
+                onFinished()
+            }
+        }
     }
 }
 
