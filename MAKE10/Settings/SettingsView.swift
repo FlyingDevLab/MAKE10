@@ -104,6 +104,13 @@ struct SettingsView: View {
                         label: "settings_haptic_label",
                         isOn:  $settings.isHapticOn
                     )
+                    Divider().padding(.leading, 60)
+                    // 30分遊ぶと出る休憩カード。保護者が「集中させたいとき」に止められるようにする
+                    settingRow(
+                        icon:  "cup.and.saucer.fill",
+                        label: "settings_break_label",
+                        isOn:  $settings.isBreakReminderOn
+                    )
                 }
                 .background(
                     RoundedRectangle(cornerRadius: DS.sectionRadius)
@@ -206,7 +213,7 @@ struct SettingsView: View {
     // MARK: サブビュー生成ヘルパー
 
     /// 設定行を生成するヘルパー。アイコン・ラベル・トグルを横並びにしたレイアウトを返す。
-    /// 設定項目が増えた場合も同じメソッドで追加できる（いまは「おと」と「ぶるぶる」）。
+    /// 設定項目が増えた場合も同じメソッドで追加できる（いまは「おと」「ぶるぶる」「きゅうけいの おしらせ」）。
     private func settingRow(icon: String, label: LocalizedStringKey, isOn: Binding<Bool>) -> some View {
         HStack(spacing: 14) {
             Image(systemName: icon)

@@ -65,8 +65,6 @@ struct MakeTenContentView: View {
     @State private var screen: Screen = .make10
     /// まだ見せていないお知らせ（アップデートのお礼・はじめまして・ログインボーナス）。先頭から順に出す。
     @State private var giftNotices: [GiftNotice] = []
-    /// 休憩をうながすカードを出しているか（BreakReminder.swift を参照）。
-    @State private var showsBreakReminder = false
     // hasAgreedToTerms は AppSettings.shared 経由で参照する。
     // @Observable により body 内での参照が自動追跡され、値が変わると再描画される。
 
@@ -179,12 +177,12 @@ struct MakeTenContentView: View {
                 .zIndex(60)
             }
 
-            // 休憩をうながすカード。お知らせカードと同じく、タイトル画面にいるときだけ出す。
-            // zIndex はSharedFrameの階層表どおり（お知らせカードと同じ層。同時には出さない）
-            if showsBreakReminder, isOnTitleScreen {
+            // 休憩をうながすカード。出すかどうかは BreakReminder が「ゲームの合間」に判断する
+            // （タイトル画面・結果画面。BreakReminder.swift を参照）。
+            // zIndex はSharedFrameの階層表どおり（お知らせカードと同じ層）
+            if BreakReminder.shared.isShowing {
                 BreakReminderView(minutes: BreakReminder.shared.limitMinutes) {
-                    BreakReminder.shared.restart()   // ここからまた数え直す
-                    withAnimation(.easeInOut(duration: 0.25)) { showsBreakReminder = false }
+                    withAnimation(.easeInOut(duration: 0.25)) { BreakReminder.shared.close() }
                 }
                 .transition(.opacity)
                 .zIndex(60)
@@ -214,18 +212,17 @@ struct MakeTenContentView: View {
             for: UIApplication.didEnterBackgroundNotification)
         ) { _ in
             viewModel.suspend()
-            BreakReminder.shared.didLeave()
         }
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.willEnterForegroundNotification)
         ) { _ in
             viewModel.resume()
-            BreakReminder.shared.didReturn()   // 長く離れていたら休憩したとみなして数え直す
+            BreakReminder.shared.didReturn()   // アプリを離れていたので、休憩の時間を数え直す
             refreshGiftNotices()   // 寝る前に開いたまま翌朝戻ってきた、などのときもログインボーナスを渡す
         }
-        // ★ 休憩カードを出すタイミング ★
-        //   ゲームの途中で割り込まないよう、タイトル画面に戻ってきたときに確かめる。
-        //   タイトル画面にずっといる場合に備えて、30秒ごとにも確かめる。
+        // ★ 休憩カードを出すタイミング（タイトル画面の分）★
+        //   タイトル画面に戻ってきたときに確かめる。タイトル画面にずっといる場合に備えて、30秒ごとにも確かめる。
+        //   結果画面の分は EnergyRewardBanner が数え上げの終わりに確かめる。
         .onChange(of: isOnTitleScreen) { _, onTitle in
             if onTitle { checkBreakReminder() }
         }
@@ -256,12 +253,10 @@ struct MakeTenContentView: View {
         return false
     }
 
-    /// 続けて遊んだ時間が長くなっていたら、休憩をうながすカードを出す。
-    /// タイトル画面にいて、ほかのお知らせカードが出ていないときだけ出す。
+    /// タイトル画面にいて、ほかのお知らせカードが出ていなければ、休憩の時間かを確かめる。
     private func checkBreakReminder() {
-        guard isOnTitleScreen, giftNotices.isEmpty, !showsBreakReminder,
-              BreakReminder.shared.isDue() else { return }
-        withAnimation(.easeInOut(duration: 0.25)) { showsBreakReminder = true }
+        guard isOnTitleScreen, giftNotices.isEmpty else { return }
+        withAnimation(.easeInOut(duration: 0.25)) { BreakReminder.shared.showIfDue() }
     }
 
     /// その日のログインボーナスを受け取り、まだ見せていないお知らせを並べ直す。
@@ -420,7 +415,7 @@ struct MakeTenContentView: View {
             TitleView(
                 viewModel: viewModel,
                 // お知らせ・休憩のカードが重なっているあいだは、タイトルの自動デモを止める
-                pausesDemo: !giftNotices.isEmpty || showsBreakReminder,
+                pausesDemo: !giftNotices.isEmpty || BreakReminder.shared.isShowing,
                 onSelectGame: { selected in
                     withAnimation(.easeInOut(duration: 0.3)) {
                         switch selected {

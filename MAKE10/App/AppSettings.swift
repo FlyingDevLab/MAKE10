@@ -63,6 +63,12 @@ final class AppSettings {
         didSet { UserDefaults.standard.set(isHapticOn, forKey: UDKey.isHapticOn) }
     }
 
+    /// きゅうけいの おしらせ（30分遊ぶと休憩をうながすカード）のON/OFF。
+    /// 保護者が「集中させたいとき」に止められるようにする。初期値はON。
+    var isBreakReminderOn: Bool {
+        didSet { UserDefaults.standard.set(isBreakReminderOn, forKey: UDKey.isBreakReminderOn) }
+    }
+
     /// 利用規約への同意済みフラグ。
     /// true になるとアプリ全体で ConsentView が表示されなくなる。
     /// View から直接 UserDefaults を触らず、ここ経由で読み書きする。
@@ -102,5 +108,6 @@ final class AppSettings {
         //   まだ保存されていなければ isSoundOn と同じ値から始める。
         self.isHapticOn       = UserDefaults.standard.object(forKey: UDKey.isHapticOn) as? Bool ?? soundOn
         self.hasAgreedToTerms = UserDefaults.standard.bool(forKey: UDKey.hasAgreedToTerms)
+        self.isBreakReminderOn = UserDefaults.standard.object(forKey: UDKey.isBreakReminderOn) as? Bool ?? true
     }
 }
