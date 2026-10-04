@@ -558,6 +558,7 @@ final class MazeGameModel: NSObject {
                 // 近い敵は撃破（破片を出して消す）
                 spawnParticles(m.x, m.y)
                 mice.remove(at: i)
+                EnergyStore.shared.earn(EnergyRewards.mazeKillReward)   // 倒すたびにエネルギー
                 didKill = true
             } else {
                 // 遠い敵は中心から外向きに吹き飛ばす（距離が近いほど強く）

@@ -80,12 +80,17 @@ enum EnergyRewards {
     static let jankenBonusRateHard:      Double = 3    // ← 変更可（予想: ふつう。「負けて」は頭の切り替えが必要）
     static let jankenBonusRateChallenge: Double = 4    // ← 変更可（予想: むずかしい。30問）
 
-    /// 絵文字クイズ。クリアボーナス = 正解の数 × モードごとの倍率。全問正解で perfectBonus。
+    /// 絵文字クイズ。クリアボーナス = 正解の数 × モードごとの倍率。
+    /// 全問正解で perfectBonus ＋ そのカテゴリの問題数（「4133もん」の 4133）。
+    /// 問題の多いカテゴリほど、どれが出るか分からず難しいので、全問正解のごほうびを大きくしている。
     static let quizBonusRateBasic: Double = 1.5   // ← 変更可（ふつう）
     static let quizBonusRateHard:  Double = 2     // ← 変更可（むずかしい）
 
     /// コインドロップ。クリアボーナス = 作った$1の数 × この倍率。$10達成で perfectBonus。
     static let coinDropBonusRate: Double = 2      // ← 変更可
+
+    /// 迷路。衝撃波でネズミを1匹倒すたびに、その場で増える量（kcal）。
+    static let mazeKillReward: Double = 1         // ← 変更可
 
     /// 迷路。クリアボーナス = 取ったチーズの数 × この倍率（チーズは数が少ないので高め）。
     static let mazeBonusRate: Double = 3          // ← 変更可
