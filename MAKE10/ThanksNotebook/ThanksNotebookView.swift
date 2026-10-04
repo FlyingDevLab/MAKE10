@@ -47,7 +47,7 @@ struct ThanksNotebookView: View {
                 switch tab {
                 case .today:    ThanksTodayView()
                 case .calendar: ThanksCalendarView()
-                case .summary:  Color.clear   // ③ で作る
+                case .summary:  ThanksSummaryView()
                 }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
