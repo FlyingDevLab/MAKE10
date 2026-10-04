@@ -100,16 +100,14 @@ enum EnergyRewards {
     static let make10BonusRateBlitz:  Double = 6  // ← 変更可（10びょう）
 
     /// どうぶつめくり。クリアボーナスは無く、そろえるたびにその場で増える。
-    ///   ・1組そろえるごとに perCorrect（+1）
-    ///   ・2組つづけてそろえると、さらにコンボボーナス。2連続 +2 → 3連続 +4 → 4連続 +8 … と倍になる
-    ///   ・はずすと連続は 0 に戻る
-    static let memoryComboFirstBonus: Double = 2   // ← 変更可（2連続のときのボーナス。以降は倍々）
+    ///   ・つづけてそろえるほど倍になる: 1組目 +1 → 2連続 +2 → 3連続 +4 → … → 10連続 +512
+    ///   ・はずすと連続は 0 に戻り、次は +1 から
+    static let memoryFirstReward: Double = 1   // ← 変更可（連続なしのときの量。以降は倍々）
 
-    /// どうぶつめくりで、そろえた1組ぶんに渡す量（perCorrect + コンボボーナス）。
+    /// どうぶつめくりで、そろえた1組ぶんに渡す量。
     /// - Parameter combo: いまの連続数（1 = 1組目、2 = 2連続 …）
     static func memoryReward(combo: Int) -> Double {
-        guard combo >= 2 else { return perCorrect }
-        return perCorrect + memoryComboFirstBonus * pow(2, Double(combo - 2))
+        memoryFirstReward * pow(2, Double(max(combo, 1) - 1))
     }
 
     /// 四則テンパズル（難易度の予想: いちばんむずかしい。大人向け）。
