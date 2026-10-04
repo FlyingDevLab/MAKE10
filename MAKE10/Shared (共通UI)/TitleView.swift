@@ -60,6 +60,9 @@ struct TitleView: View {
     // MARK: 依存（呼び出し側から渡すパラメータ）
 
     var viewModel:    GameViewModel
+    /// true のあいだは自動デモを止める。上にお知らせ・休憩のカードが重なっているときに使う
+    /// （カードの後ろでデモの指が動くと、カードの指と2本になってまぎらわしいため）。
+    var pausesDemo: Bool = false
     /// タイルがタップされたときに呼ばれるコールバック。
     /// MakeTenContentView が画面遷移・ゲーム開始を担う。
     var onSelectGame: (GamePickerSelection) -> Void
@@ -194,6 +197,13 @@ struct TitleView: View {
             rankManager.reloadSaved()
             // ← 変更可：初回デモ開始までの待機時間（秒）
             scheduleDemo(delay: 2.5)
+        }
+        .onChange(of: pausesDemo) { _, paused in
+            if paused {
+                stopDemo()
+            } else {
+                scheduleDemo(delay: 2.5)
+            }
         }
         .onDisappear {
             // 世代番号を進めて、予約済みのデモをすべて無効にする（ゲーム中に裏で動かさない）
@@ -363,15 +373,21 @@ struct TitleView: View {
     /// 手動操作後も delay 秒の無操作が続けば自動デモが再開される。
     /// demoGeneration をインクリメントすることで古い世代のコールバックを無効化する。
     private func scheduleDemo(delay: Double) {
-        demoGeneration += 1
+        stopDemo()
         let gen = demoGeneration
-        // デモの途中でユーザーが触った場合、出ていた指を引っ込める
+        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
+            // カードが重なっているあいだは始めない（カードが閉じたら onChange でまた予約される）
+            guard !self.pausesDemo else { return }
+            runDemoLoop(generation: gen)
+        }
+    }
+
+    /// 進行中・予約済みのデモをすべて止め、出ていた指を引っ込める。
+    private func stopDemo() {
+        demoGeneration += 1
         withAnimation(.easeOut(duration: 0.2)) {
             fingerVisible = false
             fingerPressed = false
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            runDemoLoop(generation: gen)
         }
     }
 

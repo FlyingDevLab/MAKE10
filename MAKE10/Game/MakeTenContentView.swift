@@ -65,6 +65,8 @@ struct MakeTenContentView: View {
     @State private var screen: Screen = .make10
     /// まだ見せていないお知らせ（アップデートのお礼・はじめまして・ログインボーナス）。先頭から順に出す。
     @State private var giftNotices: [GiftNotice] = []
+    /// 休憩をうながすカードを出しているか（BreakReminder.swift を参照）。
+    @State private var showsBreakReminder = false
     // hasAgreedToTerms は AppSettings.shared 経由で参照する。
     // @Observable により body 内での参照が自動追跡され、値が変わると再描画される。
 
@@ -177,6 +179,17 @@ struct MakeTenContentView: View {
                 .zIndex(60)
             }
 
+            // 休憩をうながすカード。お知らせカードと同じく、タイトル画面にいるときだけ出す。
+            // zIndex はSharedFrameの階層表どおり（お知らせカードと同じ層。同時には出さない）
+            if showsBreakReminder, isOnTitleScreen {
+                BreakReminderView(minutes: BreakReminder.shared.limitMinutes) {
+                    BreakReminder.shared.restart()   // ここからまた数え直す
+                    withAnimation(.easeInOut(duration: 0.25)) { showsBreakReminder = false }
+                }
+                .transition(.opacity)
+                .zIndex(60)
+            }
+
             // 紙吹雪。allowsHitTesting(false) でタップを下のViewへ素通しさせる
             if viewModel.showConfetti {
                 ConfettiView(isSpecial: viewModel.score >= 100)
@@ -188,6 +201,8 @@ struct MakeTenContentView: View {
         .onDisappear { viewModel.suspend() }
         .onAppear {
             viewModel.resume()
+            // 休憩までの時間をここから数え始める（shared は初めて触ったときに作られるため、起動直後に触っておく）
+            _ = BreakReminder.shared
             refreshGiftNotices()   // 同意直後・起動直後に、その日のログインボーナスなどを確認する
         }
         // ★ onReceive / NotificationCenter とは？ ★
@@ -197,12 +212,30 @@ struct MakeTenContentView: View {
         //   （止める理由は GameViewModel.suspend() の解説を参照）。
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.didEnterBackgroundNotification)
-        ) { _ in viewModel.suspend() }
+        ) { _ in
+            viewModel.suspend()
+            BreakReminder.shared.didLeave()
+        }
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.willEnterForegroundNotification)
         ) { _ in
             viewModel.resume()
+            BreakReminder.shared.didReturn()   // 長く離れていたら休憩したとみなして数え直す
             refreshGiftNotices()   // 寝る前に開いたまま翌朝戻ってきた、などのときもログインボーナスを渡す
+        }
+        // ★ 休憩カードを出すタイミング ★
+        //   ゲームの途中で割り込まないよう、タイトル画面に戻ってきたときに確かめる。
+        //   タイトル画面にずっといる場合に備えて、30秒ごとにも確かめる。
+        .onChange(of: isOnTitleScreen) { _, onTitle in
+            if onTitle { checkBreakReminder() }
+        }
+        // ⚠️ 変更注意: Timer.publish(...).autoconnect() を body に直接書くと、画面が描き直されるたびに
+        //   タイマーが作り直されて（タイトルのデモで頻繁に起きる）いつまでも発火しない。.task のループにしている。
+        .task {
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(30))
+                checkBreakReminder()
+            }
         }
     }
 
@@ -221,6 +254,14 @@ struct MakeTenContentView: View {
     private var isOnTitleScreen: Bool {
         if case .make10 = screen { return viewModel.gameState == .title }
         return false
+    }
+
+    /// 続けて遊んだ時間が長くなっていたら、休憩をうながすカードを出す。
+    /// タイトル画面にいて、ほかのお知らせカードが出ていないときだけ出す。
+    private func checkBreakReminder() {
+        guard isOnTitleScreen, giftNotices.isEmpty, !showsBreakReminder,
+              BreakReminder.shared.isDue() else { return }
+        withAnimation(.easeInOut(duration: 0.25)) { showsBreakReminder = true }
     }
 
     /// その日のログインボーナスを受け取り、まだ見せていないお知らせを並べ直す。
@@ -378,6 +419,8 @@ struct MakeTenContentView: View {
         case .title:
             TitleView(
                 viewModel: viewModel,
+                // お知らせ・休憩のカードが重なっているあいだは、タイトルの自動デモを止める
+                pausesDemo: !giftNotices.isEmpty || showsBreakReminder,
                 onSelectGame: { selected in
                     withAnimation(.easeInOut(duration: 0.3)) {
                         switch selected {
