@@ -80,7 +80,7 @@ private struct MazeTitleView: View {
                     ("🐀", "Dark mice drain HP — game over at 0!"),
                     ("🔴", "Red and blue mice patrol along the walls!"),
                     ("💥", "Tap to fire a shockwave and repel mice!"),
-                    ("⚡", "The lower your HP, the wider the shockwave!"),
+                    ("⚡", "The lower your HP, the wider the shockwave — and the more you can store!"),
                 ]
                 ForEach(instructions, id: \.0) { emoji, desc in
                     HStack(alignment: .top, spacing: 8) {
@@ -469,10 +469,15 @@ private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
 
 // MARK: drawShockwave（衝撃波リングの描画）
 
-/// 広がる衝撃波を、外縁ほど薄く・細くなるリングとして描く。
+/// 広がる衝撃波を、外縁ほど薄く・細くなるリングとして描く（続けて撃ったときは、いくつも重なる）。
 private func drawShockwave(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
-    guard model.shockwave.active else { return }
-    let sw     = model.shockwave
+    for sw in model.shockwaves {
+        drawShockwaveRing(sw, ctx: ctx, model: model, s: s)
+    }
+}
+
+/// 衝撃波のリング1つを描く。
+private func drawShockwaveRing(_ sw: MazeShockwave, ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     let r      = sw.r * s                                  // 現在の衝撃波半径（ビューpx）
     let cx     = sw.cx * s, cy = sw.cy * s                 // 発射中心（ビューpx）
     let swMaxR = model.swRangeByHp(model.cheeseHp) * s     // 最大半径（HP依存）
@@ -558,29 +563,35 @@ private struct MazeLifeIcon: View {
 
 // MARK: - MazeShockwaveBar（迷路の下：衝撃波ゲージ）
 
-/// 迷路の下に置く帯。衝撃波のチャージ具合を大きなゲージで見せる。
+/// 迷路の下に置く帯。衝撃波のチャージ具合を大きなゲージで、ためてある数を 💥 の数で見せる。
 ///
 /// ★ チャージ中と発射OKをはっきり分けている理由 ★
 ///   以前は小さなバーの色の違い（オレンジ／黄色）だけで、チャージ中かどうか分かりにくかった。
 ///   ・チャージ中: 灰色の文字「チャージちゅう…」と、たまっていくオレンジのゲージと残りの割合
 ///   ・発射OK    : ゲージが黄色く光って脈打ち、「タップで はっしゃ！」と大きく出す
+///
+/// ★ ゲージと 💥 の役割 ★
+///   ゲージは「次の1発がたまるまで」、💥 は「いま撃てる数」（1回のタップで1つ使う）。
+///   ためられる数はライフで変わる（MazeGameModel.swMaxStockByHp）。ためられるだけたまると、ゲージは満タンで止まる。
 private struct MazeShockwaveBar: View {
     let model: MazeGameModel
 
     /// 発射OKのときに脈打たせるためのフラグ。
     @State private var isPulsing = false
 
-    private var isReady: Bool { model.shockwave.cool == 0 }
+    /// 1発以上たまっていて、撃てるか。
+    private var isReady: Bool { model.swStock > 0 }
 
-    /// チャージの進み具合（0.0〜1.0）。クールダウンの残りから逆算する。
+    /// 次の1発のチャージの進み具合（0.0〜1.0）。ためられるだけたまっていれば満タン。
     private var progress: CGFloat {
-        isReady ? 1 : 1 - CGFloat(model.shockwave.cool) / CGFloat(model.SW_COOL)
+        model.swStock >= model.swMaxStockByHp(model.cheeseHp)
+            ? 1
+            : CGFloat(model.swCharge) / CGFloat(model.SW_CHARGE)
     }
 
-    /// 衝撃波の届く距離（ライフが少ないほど長い）を 💥 の数で見せる。
+    /// いま撃てる数を 💥 の数で見せる。0発のときは薄い 💥 を1つ出す（下の opacity）。
     private var powerIcons: String {
-        let r = model.swRangeByHp(model.cheeseHp)
-        return r >= model.T * 8 ? "💥💥💥" : r >= model.T * 6.5 ? "💥💥" : "💥"
+        String(repeating: "💥", count: max(model.swStock, 1))
     }
 
     var body: some View {
@@ -591,7 +602,7 @@ private struct MazeShockwaveBar: View {
                     .foregroundStyle(isReady ? DS.energy : DS.muted)
                 Spacer(minLength: 0)
                 Text(verbatim: powerIcons)
-                    .font(.system(size: 20))
+                    .font(.system(size: 24))   // ← 変更可
                     .opacity(isReady ? 1 : 0.35)
             }
 
@@ -608,8 +619,8 @@ private struct MazeShockwaveBar: View {
                                                startPoint: .leading, endPoint: .trailing))
                         .frame(width: max(geo.size.height, geo.size.width * progress))
                         .shadow(color: isReady ? DS.energy.opacity(0.6) : .clear, radius: isPulsing ? 10 : 3)
-                    if !isReady {
-                        // チャージ中は残りの割合を数字でも見せる
+                    if progress < 1 {
+                        // チャージ中は次の1発までの割合を数字でも見せる
                         Text(verbatim: "\(Int(progress * 100))%")
                             .font(.system(size: 14, weight: .bold, design: .rounded))
                             .monospacedDigit()

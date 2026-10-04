@@ -28121,97 +28121,97 @@
         }
       }
     },
-    "The lower your HP, the wider the shockwave!" : {
+    "The lower your HP, the wider the shockwave — and the more you can store!" : {
       "comment" : "An instruction line in the maze game's How to Play section.",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Je niedriger das HP, desto breiter die Schockwelle!"
+            "value" : "Je weniger HP, desto weiter die Schockwelle – und desto mehr kannst du speichern!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The lower your HP, the wider the shockwave!"
+            "value" : "The lower your HP, the wider the shockwave — and the more you can store!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Cuanto menor sea el HP, más ancha la onda!"
+            "value" : "¡Cuanto menos HP, más amplia la onda de choque y más puedes guardar!"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Plus les PV sont bas, plus l'onde est large !"
+            "value" : "Moins tu as de PV, plus l'onde de choc est large — et plus tu peux en stocker !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP जितना कम, शॉकवेव उतनी बड़ी!"
+            "value" : "HP जितना कम, शॉकवेव उतनी चौड़ी — और उतनी ज़्यादा जमा कर सकते हो!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semakin rendah HP, semakin lebar gelombang kejut!"
+            "value" : "Makin sedikit HP, makin lebar gelombang kejut — dan makin banyak yang bisa disimpan!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Meno HP hai, più larga è l'onda d'urto!"
+            "value" : "Meno HP hai, più ampia è l'onda d'urto — e più colpi puoi accumulare!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP が低いほど衝撃波が広くなる！"
+            "value" : "HP が低いほど衝撃波が広くなり、たくさんためられる！"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP가 낮을수록 충격파가 더 넓어져요!"
+            "value" : "HP가 낮을수록 충격파가 넓어지고, 더 많이 모아 둘 수 있어요!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hoe lager het HP, hoe breder de schokgolf!"
+            "value" : "Hoe minder HP, hoe groter de schokgolf — en hoe meer je kunt opsparen!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quanto menor o HP, maior a onda de choque!"
+            "value" : "Quanto menos HP, maior a onda de choque — e mais você pode guardar!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP ยิ่งต่ำ คลื่นกระแทกยิ่งกว้าง!"
+            "value" : "HP ยิ่งน้อย คลื่นกระแทกยิ่งกว้าง และเก็บไว้ได้มากขึ้น!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP càng thấp, sóng xung kích càng rộng!"
+            "value" : "HP càng thấp, sóng xung kích càng rộng — và tích được càng nhiều!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP越低，冲击波范围越大！"
+            "value" : "HP越低，冲击波越大，能储存的也越多！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP越低，衝擊波範圍越大！"
+            "value" : "HP越低，衝擊波越大，能儲存的也越多！"
           }
         }
       }

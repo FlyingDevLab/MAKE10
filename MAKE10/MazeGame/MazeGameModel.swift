@@ -57,11 +57,9 @@ struct Mouse {
     var touchesWall = false                // 手を壁につけたか（つけるまでは、まっすぐ進んで壁を探す）
 }
 
-/// プレイヤーが放つ衝撃波（リング状の攻撃）1つ分のデータ
+/// プレイヤーが放つ衝撃波（リング状の攻撃）1つ分のデータ。広がり終わると消える（見た目だけ）
 struct MazeShockwave {
-    var active = false         // 現在広がっている最中かどうか
     var r:    CGFloat = 0      // 現在の半径（フレームごとに SW_EXPAND ずつ拡大）
-    var cool: Int     = 0      // 次に撃てるまでのクールダウン残りフレーム数
     var cx:   CGFloat = 0      // 発生中心X（タップ位置）
     var cy:   CGFloat = 0      // 発生中心Y
 }
@@ -113,13 +111,13 @@ final class MazeGameModel: NSObject {
     /// ネズミ（プレイヤー）の移動速度（px/frame）
     let MOUSE_SPD: CGFloat = 1.05   // ← 変更可
     /// 各ステージで、この匹数目から「赤 → 青 → いつもの敵」の順に出す（膠着を防ぎ、難しくするため）
-    let WALL_FOLLOWER_FROM = 16     // ← 変更可
-    /// 16匹目からの出る順番（この並びをくり返す）
+    let WALL_FOLLOWER_FROM = 11     // ← 変更可
+    /// 11匹目からの出る順番（この並びをくり返す）
     let LATE_SPAWN_ORDER: [MouseKind] = [.rightHand, .leftHand, .chaser]   // ← 変更可
     /// 衝撃波が1フレームごとに広がる量（px）
     let SW_EXPAND: CGFloat = 7      // ← 変更可
-    /// 衝撃波のクールダウン（frames。60fps なので 180 = 約3秒）
-    let SW_COOL   = 180             // ← 変更可
+    /// 衝撃波1発がたまるまでのチャージ時間（frames。60fps なので 180 = 3秒）
+    let SW_CHARGE = 180             // ← 変更可
     /// ダメージを受けてからの無敵時間（frames。連続ヒットで即死しないための猶予）
     let DMG_COOL  = 60             // ← 変更可
     /// slideMove の1回の移動を何分割して判定するか（多いほど壁すり抜けが起きにくい）
@@ -131,6 +129,16 @@ final class MazeGameModel: NSObject {
     var CHEESE_R: CGFloat { T * 0.44 }
     /// ネズミ（プレイヤー・敵共通）の当たり判定半径（タイルサイズ比）
     var MOUSE_R:  CGFloat { T * 0.33 }
+
+    /// 残りHPに応じて、衝撃波をためておける数を返す。
+    /// 届く距離（swRangeByHp）と同じく、追い込まれたプレイヤーほど強くする救済。
+    func swMaxStockByHp(_ hp: Int) -> Int {
+        switch hp {
+        case 3: return 1      // ← 変更可
+        case 2: return 2      // ← 変更可
+        default:return 3      // ← 変更可
+        }
+    }
 
     /// 残りHPに応じて衝撃波の最大到達距離を返す。
     /// HPが減るほど射程を伸ばし、追い込まれたプレイヤーを救済する難易度調整。
@@ -195,13 +203,17 @@ final class MazeGameModel: NSObject {
     var mice:      [Mouse]      = []
     /// 飛散中のパーティクル
     var particles: [Particle]   = []
-    /// 現在の衝撃波（同時に1つだけ）
-    var shockwave: MazeShockwave = MazeShockwave()
+    /// 広がっている最中の衝撃波（続けて撃つと、いくつも同時に広がる）
+    var shockwaves: [MazeShockwave] = []
+    /// ためてある衝撃波の数（0 なら撃てない）
+    var swStock    = 0
+    /// 次の1発がたまるまでのチャージ（frames。SW_CHARGE に達すると1発たまる）
+    var swCharge   = 0
 
     // ── 敵スポーン用タイマー ─────────────────────────────────
     /// 次の敵を出現させるまでの残りフレーム数（0 で1匹スポーン）
     var spawnTimer = 0
-    /// このステージで出した敵ネズミの数（16匹目から赤・青を混ぜるために数える）
+    /// このステージで出した敵ネズミの数（WALL_FOLLOWER_FROM 匹目から赤・青を混ぜるために数える）
     var spawnedThisStage = 0
 
     // MARK: - 内部参照（ループ）
@@ -255,7 +267,10 @@ final class MazeGameModel: NSObject {
         ]
         mice         = []; particles = []
         spawnedThisStage = 0
-        shockwave    = MazeShockwave()
+        // ステージが始まったらすぐ撃てるよう、ためられるだけためた状態にする
+        shockwaves   = []
+        swStock      = swMaxStockByHp(cheeseHp)
+        swCharge     = 0
         let (_, si)  = getDifficulty()
         spawnTimer   = si
         deliveredTimer = 0
@@ -275,6 +290,10 @@ final class MazeGameModel: NSObject {
     private func startLoop() {
         stopLoop()
         displayLink = CADisplayLink(target: self, selector: #selector(tick))
+        // ★ 60コマ/秒に固定する理由 ★
+        //   このゲームは「1コマで何px動く」「何コマで1匹出る」とコマ数で作っている。
+        //   iPad Pro など画面が120コマで動く端末では、何もしないとゲーム全体が2倍速になってしまう。
+        displayLink?.preferredFrameRateRange = CAFrameRateRange(minimum: 60, maximum: 60, preferred: 60)
         displayLink?.add(to: .main, forMode: .default)
     }
 
@@ -515,12 +534,12 @@ final class MazeGameModel: NSObject {
 
     /// タップ位置（論理座標）に衝撃波を発射する
     func fireShockwave(at logicalPos: CGPoint) {
-        // プレイ中かつクールダウン明けのときだけ発射できる
-        guard gameState == .playing, shockwave.cool == 0 else { return }
+        // プレイ中で、1発以上ためてあるときだけ発射できる（1回のタップで1発使う）
+        guard gameState == .playing, swStock > 0 else { return }
         let swMaxR = swRangeByHp(cheeseHp)   // 最大到達距離（HPが低いほど広い）
         let killR  = swMaxR * 0.55           // この距離以内の敵は撃破、外側は吹き飛ばし
-        shockwave  = MazeShockwave(active: true, r: 5, cool: SW_COOL,
-                                    cx: logicalPos.x, cy: logicalPos.y)
+        swStock   -= 1
+        shockwaves.append(MazeShockwave(r: 5, cx: logicalPos.x, cy: logicalPos.y))
         SoundManager.shared.vibrate()
 
         // この発射で1匹でも撃破したか。撃破音（maze_hit）を「1回だけ」重ねるために使う。
@@ -577,7 +596,7 @@ final class MazeGameModel: NSObject {
         }
     }
 
-    /// 次に出す敵ネズミの種類。15匹目までは いつもの敵、16匹目からは 赤 → 青 → いつもの敵 をくり返す。
+    /// 次に出す敵ネズミの種類。WALL_FOLLOWER_FROM 匹目（いまは11匹目）からは 赤 → 青 → いつもの敵 をくり返す。それまでは いつもの敵。
     /// （spawnedThisStage を数えたあとに呼ぶ）
     private func nextMouseKind() -> MouseKind {
         guard spawnedThisStage >= WALL_FOLLOWER_FROM else { return .chaser }
@@ -722,13 +741,24 @@ final class MazeGameModel: NSObject {
 
     // MARK: - 衝撃波
 
-    /// 衝撃波のクールダウン減算と、広がりの更新を1フレーム分処理する。
+    /// 衝撃波のチャージと、広がりの更新を1フレーム分処理する。
     private func updateShockwave() {
-        if shockwave.cool > 0 { shockwave.cool -= 1 }
-        guard shockwave.active else { return }
-        shockwave.r += SW_EXPAND
-        // 最大半径まで広がったら消す
-        if shockwave.r >= swRangeByHp(cheeseHp) { shockwave.active = false }
+        // チャージ：ためられる数に届いていなければ、ためていく
+        if swStock < swMaxStockByHp(cheeseHp) {
+            swCharge += 1
+            if swCharge >= SW_CHARGE {
+                swStock += 1
+                swCharge = 0
+            }
+        } else {
+            swCharge = 0
+        }
+
+        // 広がっている衝撃波を広げ、最大半径まで広がったものは消す
+        for i in shockwaves.indices.reversed() {
+            shockwaves[i].r += SW_EXPAND
+            if shockwaves[i].r >= swRangeByHp(cheeseHp) { shockwaves.remove(at: i) }
+        }
     }
 
     // MARK: - パーティクル（粒子エフェクト）
