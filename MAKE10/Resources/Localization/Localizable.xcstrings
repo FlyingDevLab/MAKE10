@@ -22133,6 +22133,101 @@
         }
       }
     },
+    "Red and blue mice patrol along the walls!" : {
+      "comment" : "An instruction line in the maze game's How to Play section.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rote und blaue Mäuse laufen an den Wänden entlang!"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Red and blue mice patrol along the walls!"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "¡Los ratones rojos y azules patrullan junto a las paredes!"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les souris rouges et bleues patrouillent le long des murs !"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "लाल और नीले चूहे दीवारों के साथ-साथ गश्त करते हैं!"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tikus merah dan biru berpatroli menyusuri dinding!"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I topi rossi e blu pattugliano lungo i muri!"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赤いネズミと青いネズミは、壁に沿って迷路をまわる！"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간 쥐와 파란 쥐는 벽을 따라 순찰해요!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rode en blauwe muizen patrouilleren langs de muren!"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ratos vermelhos e azuis patrulham ao longo das paredes!"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "หนูสีแดงและสีน้ำเงินเดินลาดตระเวนเลียบกำแพง!"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chuột đỏ và chuột xanh đi tuần dọc theo tường!"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "红色和蓝色的老鼠会沿着墙壁巡逻！"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紅色和藍色的老鼠會沿著牆壁巡邏！"
+          }
+        }
+      }
+    },
     "Remaining" : {
       "comment" : "A HUD label in Whack-a-Mole for the remaining time.",
       "localizations" : {
