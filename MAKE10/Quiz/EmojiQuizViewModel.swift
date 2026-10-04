@@ -202,11 +202,12 @@ final class EmojiQuizViewModel {
             default:     SoundManager.shared.playGameOver()  // 80%未満
             }
             // クリアボーナス = 正解の数 × モードごとの倍率（textToEmoji は文字を読むぶん難しいので高め）。
-            // 全問正解ならさらに上乗せする。リザルト画面でまとめて増える演出を見せる
+            // 全問正解なら perfectBonus ＋ カテゴリの問題数を上乗せする（EnergyRewards の解説を参照）。
+            // リザルト画面でまとめて増える演出を見せる
             let bonusRate = mode == .textToEmoji ? EnergyRewards.quizBonusRateHard
                                                  : EnergyRewards.quizBonusRateBasic
             var bonus = Double(score) * bonusRate
-            if pct == 1.0 { bonus += EnergyRewards.perfectBonus }
+            if pct == 1.0 { bonus += EnergyRewards.perfectBonus + Double(category.items.count) }
             EnergyStore.shared.grantClearBonus(bonus)
             isFinished = true
         } else {
