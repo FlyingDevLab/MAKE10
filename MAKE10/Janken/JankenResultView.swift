@@ -156,7 +156,7 @@ struct JankenResultView: View {
                         .foregroundStyle(DS.muted)
                         .padding(.horizontal, 36)
                         .padding(.vertical, 11)
-                        .background(Capsule().fill(Color.black.opacity(0.05)))
+                        .background(Capsule().tintFill(Color.black.opacity(0.05)))
                 }
                 .buttonStyle(.plain)
                 .disabled(!canTap)

@@ -121,7 +121,7 @@ private struct ModeCard: View {
             .padding(.vertical, 16)
             .background(
                 RoundedRectangle(cornerRadius: DS.tagRadius)
-                    .fill(mode.color.opacity(0.08))
+                    .tintFill(mode.color.opacity(0.08))
                     .overlay(
                         RoundedRectangle(cornerRadius: DS.tagRadius)
                             .stroke(mode.color.opacity(0.25), lineWidth: 1.5)
@@ -228,7 +228,7 @@ private struct ProblemCounter: View {
                 .foregroundStyle(mode.color)
                 .padding(.horizontal, 10)
                 .padding(.vertical, 4)
-                .background(mode.color.opacity(0.1), in: Capsule())
+                .background(Capsule().tintFill(mode.color.opacity(0.1)))
         }
     }
 }
@@ -338,7 +338,7 @@ private struct HintBanner: View {
         .padding(.vertical, 10)
         .background(
             RoundedRectangle(cornerRadius: DS.tagRadius)
-                .fill(Color.orange.opacity(0.10))
+                .tintFill(Color.orange.opacity(0.10))
                 .overlay(
                     RoundedRectangle(cornerRadius: DS.tagRadius)
                         .stroke(Color.orange.opacity(0.3), lineWidth: 1.2)
@@ -364,7 +364,7 @@ private struct ExpressionDisplay: View {
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: DS.tagRadius)
-                .fill(bgColor)
+                .tintFill(bgColor)   // かべがみの上でも透けない（DesignSystem の tintFill）
                 .overlay(
                     RoundedRectangle(cornerRadius: DS.tagRadius)
                         .stroke(borderColor, lineWidth: 1.5)
@@ -465,7 +465,7 @@ private struct TokenChip: View {
             .foregroundStyle(token.isDigit ? DS.primary : DS.textPrimary)
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(bg, in: RoundedRectangle(cornerRadius: 6))
+            .background(RoundedRectangle(cornerRadius: 6).tintFill(bg))
     }
 }
 
@@ -514,7 +514,7 @@ private struct OperatorKeyboard: View {
                         .foregroundStyle(DS.textPrimary)
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .background(DS.muted.opacity(0.10), in: RoundedRectangle(cornerRadius: DS.tagRadius))
+                        .background(RoundedRectangle(cornerRadius: DS.tagRadius).tintFill(DS.muted.opacity(0.10)))
                 }
                 .buttonStyle(.plain)
                 .disabled(disabled)
@@ -525,7 +525,7 @@ private struct OperatorKeyboard: View {
                         .foregroundStyle(DS.gaugeWarn.opacity(0.85))
                         .frame(maxWidth: .infinity)
                         .frame(height: 50)
-                        .background(DS.gaugeWarn.opacity(0.08), in: RoundedRectangle(cornerRadius: DS.tagRadius))
+                        .background(RoundedRectangle(cornerRadius: DS.tagRadius).tintFill(DS.gaugeWarn.opacity(0.08)))
                 }
                 .buttonStyle(.plain)
                 .disabled(disabled)
@@ -548,7 +548,7 @@ private struct KeyboardButton: View {
                 .foregroundStyle(color)
                 .frame(maxWidth: .infinity)
                 .frame(height: 50)
-                .background(color.opacity(0.10), in: RoundedRectangle(cornerRadius: DS.tagRadius))
+                .background(RoundedRectangle(cornerRadius: DS.tagRadius).tintFill(color.opacity(0.10)))
         }
         .buttonStyle(.plain)
     }
@@ -580,7 +580,7 @@ private struct SubmitArea: View {
                     .frame(height: 54)
                     .background(
                         RoundedRectangle(cornerRadius: DS.btnRadius)
-                            .fill(canSubmit ? DS.primary : DS.muted.opacity(0.3))
+                            .tintFill(canSubmit ? DS.primary : DS.muted.opacity(0.3))
                     )
             }
             .buttonStyle(.plain)
@@ -632,7 +632,7 @@ private struct ActionButton: View {
             .foregroundStyle(color)
             .frame(maxWidth: .infinity)
             .frame(height: 44)
-            .background(color.opacity(disabled ? 0.05 : 0.10), in: RoundedRectangle(cornerRadius: DS.tagRadius))
+            .background(RoundedRectangle(cornerRadius: DS.tagRadius).tintFill(color.opacity(disabled ? 0.05 : 0.10)))
         }
         .buttonStyle(.plain)
         .disabled(disabled)

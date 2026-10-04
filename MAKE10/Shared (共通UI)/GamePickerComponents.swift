@@ -325,9 +325,10 @@ struct GamePickerTile: View {
         }
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)   // 行内の最大高さまで背景を伸ばす
+        // かべがみの上でも透けないよう tintFill で塗る（DesignSystem の tintFill を参照）
         .background(
-            game == .logoCard ? DS.card : game.color.opacity(0.1),
-            in: RoundedRectangle(cornerRadius: DS.tagRadius)
+            RoundedRectangle(cornerRadius: DS.tagRadius)
+                .tintFill(game == .logoCard ? DS.card : game.color.opacity(0.1))
         )
         // 押下中は少し縮めて「押している感」を出す（吹き飛び演出中は縮小しない）
         .scaleEffect(isPressed && flyOffset == .zero ? 0.94 : 1.0)   // ← 変更可（押下時の縮小率）

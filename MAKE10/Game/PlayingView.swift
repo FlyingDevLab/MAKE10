@@ -297,7 +297,7 @@ struct TileButton: View {
             ZStack {
                 // ── 背景 + 枠線 ──────────────────────────────
                 RoundedRectangle(cornerRadius: DS.btnRadius)
-                    .fill(bgColor)
+                    .tintFill(bgColor)   // かべがみの上でも透けない（DesignSystem の tintFill）
                     .overlay(
                         RoundedRectangle(cornerRadius: DS.btnRadius)
                             .stroke(borderColor, lineWidth: 1.8)

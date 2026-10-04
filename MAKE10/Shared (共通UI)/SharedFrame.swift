@@ -175,8 +175,8 @@ struct SharedFrame<Content: View>: View {
             .frame(width: 52, height: 44)
         }
         .padding(.horizontal, 8)
-        // かべがみを使うときは、ヘッダーの後ろも絵を見せる（帯で絵が切れないように）
-        .background(WallpaperStore.shared.isShowing ? Color.clear : DS.bg)
+        // かべがみを使うときも、ヘッダーはいつもの色で塗る（タイトルや設定ボタンが絵にまぎれないように）
+        .background(DS.bg)
     }
 
     // MARK: エネルギー残高
@@ -207,7 +207,7 @@ struct SharedFrame<Content: View>: View {
     /// 著作権表示をフッターに固定表示する。
     /// zIndex(30) で StickerBoardView(zIndex 20) より前面に配置し、
     /// background(DS.bg) を塗ることでシールがフッターを透過して見えるのを防ぐ。
-    /// ただし、かべがみを使うときは塗らない（フッターの帯で絵が切れないように。絵を見せる方を優先する）。
+    /// かべがみを使うときも塗る（文字が絵にまぎれて読みにくくならないように）。
     private var footerRow: some View {
         Text("© 空飛ぶ研究室 / Flying Dev Lab")
             // ⚠️ 変更注意: size 22 は意図的な設計判断。
@@ -219,7 +219,7 @@ struct SharedFrame<Content: View>: View {
             .frame(maxWidth: .infinity)
             .padding(.top, 28)
             .padding(.bottom, 0)
-            .background(WallpaperStore.shared.isShowing ? Color.clear : DS.bg)
+            .background(DS.bg)
             .zIndex(30)
     }
 }
