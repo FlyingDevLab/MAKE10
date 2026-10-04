@@ -5,6 +5,8 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/04.
 //
 //  ありがとう てちょう の「きょう」のページ。その日の3つのミッションを並べ、チェックできる。
+//  きのうのページにチェックもれがあれば、下に「きのうの ページ」として並べ、ふりかえってチェックできる
+//  （「おやすみ」のように、その日のうちにチェックできないミッションのため。ThanksNotebookStore を参照）。
 //
 //  ★ このファイルの構成 ★
 //    ThanksTodayView     … ページ本体（ごほうびの目安・ミッション・引き直し・演出）
@@ -32,16 +34,30 @@ struct ThanksTodayView: View {
 
     // MARK: ローカル状態
 
-    /// 相手を選んでいるミッション。nil のときは選ぶカードを出さない。
-    @State private var pickingFor: ThanksMission? = nil
+    /// 相手を選んでいるミッション（どの日のページか も持つ）。nil のときは選ぶカードを出さない。
+    @State private var pickingFor: Target? = nil
     /// チェックを外すか確かめているミッション。
-    @State private var uncheckingFor: ThanksMission? = nil
+    @State private var uncheckingFor: Target? = nil
+    /// この画面を開いてから、きのうのページを触ったか。
+    /// 触ったあとは、ぜんぶチェックしても「きのうの ページ」をすぐには消さない（急に消えると驚くため）。
+    @State private var touchedYesterday = false
     /// いま浮かべている「+◯kcal」。
     @State private var rewardPopup: RewardPopup? = nil
     /// 全部できたときの紙吹雪。
     @State private var showsConfetti = false
     /// 日付が変わったら描き直すための、きょうの日付。
     @State private var today = Date()
+
+    /// 操作の対象（どの日のページの、どのミッションか）。
+    private struct Target: Equatable {
+        let mission: ThanksMission
+        let day:     Date
+    }
+
+    /// きのうの日付。
+    private var yesterday: Date {
+        Calendar.current.date(byAdding: .day, value: -1, to: today) ?? today
+    }
 
     /// 浮かべる「+◯kcal」1つ分。同じ量が続いても演出をやり直せるよう id を持たせる。
     private struct RewardPopup: Identifiable, Equatable {
@@ -65,12 +81,14 @@ struct ThanksTodayView: View {
                             ThanksMissionRow(
                                 mission: mission,
                                 people:  page.checks[mission],
-                                onTap:   { tap(mission, page: page) }
+                                onTap:   { tap(mission, page: page, day: today) }
                             )
                         }
                     }
 
                     rerollButton(page: page)
+
+                    yesterdaySection
                 }
                 .padding(.horizontal, 20)
                 .padding(.top, 16)
@@ -85,10 +103,10 @@ struct ThanksTodayView: View {
                     .zIndex(5)
             }
 
-            if let mission = pickingFor {
-                ThanksPersonPicker(mission: mission) { people in
+            if let target = pickingFor {
+                ThanksPersonPicker(mission: target.mission) { people in
                     pickingFor = nil
-                    check(mission, people: people)
+                    check(target, people: people)
                 } onCancel: {
                     pickingFor = nil
                 }
@@ -96,9 +114,9 @@ struct ThanksTodayView: View {
                 .zIndex(10)
             }
 
-            if let mission = uncheckingFor {
-                ThanksUncheckDialog(mission: mission) {
-                    store.uncheck(mission)
+            if let target = uncheckingFor {
+                ThanksUncheckDialog(mission: target.mission) {
+                    store.uncheck(target.mission, on: target.day)
                     uncheckingFor = nil
                 } onCancel: {
                     uncheckingFor = nil
@@ -202,6 +220,35 @@ struct ThanksTodayView: View {
         }
     }
 
+    /// きのうのページ。チェックもれがあるときだけ出す（引き直しは無し）。
+    @ViewBuilder
+    private var yesterdaySection: some View {
+        if let page = store.page(on: yesterday), !page.missions.isEmpty,
+           !page.isComplete || touchedYesterday {
+            VStack(alignment: .leading, spacing: 12) {
+                HStack(spacing: 6) {
+                    Text(verbatim: "📖")
+                    Text("thanks_yesterday_title")
+                    Spacer()
+                    Text(verbatim: "\(page.checkedCount) / \(page.missions.count)")
+                        .monospacedDigit()
+                }
+                .font(.system(size: 16, weight: .black, design: .rounded))
+                .foregroundStyle(DS.muted)
+
+                ForEach(page.missions) { mission in
+                    ThanksMissionRow(
+                        mission: mission,
+                        people:  page.checks[mission],
+                        onTap:   { tap(mission, page: page, day: yesterday) }
+                    )
+                }
+            }
+            .padding(.top, 16)
+            .opacity(0.92)
+        }
+    }
+
     /// チェックしたときに浮かべる「+◯kcal」。全部できたときは大きく出す。
     private func rewardPopupView(_ reward: RewardPopup) -> some View {
         VStack(spacing: 4) {
@@ -234,30 +281,33 @@ struct ThanksTodayView: View {
     }
 
     /// ミッションの行をタップしたとき。
-    private func tap(_ mission: ThanksMission, page: ThanksDayPage) {
+    private func tap(_ mission: ThanksMission, page: ThanksDayPage, day: Date) {
         SoundManager.shared.playTap()
+        let target = Target(mission: mission, day: day)
         if page.isChecked(mission) {
-            uncheckingFor = mission
+            uncheckingFor = target
         } else if mission.asksWho {
-            pickingFor = mission
+            pickingFor = target
         } else {
-            check(mission, people: [])
+            check(target, people: [])
         }
     }
 
     /// チェックして、ごほうびがあれば演出を出す。
-    private func check(_ mission: ThanksMission, people: [ThanksPerson]) {
-        // 開いたまま日付が変わっていたら、きのうのページではなく新しいページにする
+    private func check(_ target: Target, people: [ThanksPerson]) {
+        // 開いたまま日付が変わっていたら、新しい日のページに切り替えるだけにする
+        // （表示とずれた日のページにチェックしてしまわないように）
         if DayKey.string(for: Date()) != DayKey.string(for: today) {
             openToday()
             return
         }
+        if !Calendar.current.isDate(target.day, inSameDayAs: today) { touchedYesterday = true }
         let reward = withAnimation(.spring(response: 0.35, dampingFraction: 0.6)) {
-            store.check(mission, people: people)
+            store.check(target.mission, people: people, on: target.day)
         }
         SoundManager.shared.vibrate()
 
-        let isComplete = store.page(on: today)?.isComplete ?? false
+        let isComplete = store.page(on: target.day)?.isComplete ?? false
         guard reward > 0 else {
             SoundManager.shared.playCorrect()
             return
