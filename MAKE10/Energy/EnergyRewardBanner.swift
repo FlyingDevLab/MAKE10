@@ -138,7 +138,12 @@ struct EnergyRewardBanner: View {
     private func playCountUp() async {
         let play  = energy.sessionEarned
         let bonus = energy.sessionClearBonus
-        guard play + bonus > 0 else { return }
+        // 結果画面は「ゲームの合間」なので、数え上げが終わったところで休憩の時間かを確かめる
+        // （BreakReminder.swift を参照）。増えた量が 0 で数え上げをしないときは、すぐに確かめる
+        guard play + bonus > 0 else {
+            BreakReminder.shared.showIfDue()
+            return
+        }
 
         withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
             playKcal  = play
@@ -161,5 +166,9 @@ struct EnergyRewardBanner: View {
         withAnimation(.spring(response: 0.18, dampingFraction: 0.5)) { isBumped = true }
         try? await Task.sleep(for: .seconds(0.18))
         withAnimation(.spring(response: 0.3, dampingFraction: 0.6)) { isBumped = false }
+
+        try? await Task.sleep(for: .seconds(0.5))   // 数え終わりの余韻を見せてから
+        guard !Task.isCancelled else { return }
+        withAnimation(.easeInOut(duration: 0.25)) { BreakReminder.shared.showIfDue() }
     }
 }
