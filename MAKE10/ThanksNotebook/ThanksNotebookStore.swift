@@ -158,6 +158,7 @@ final class ThanksNotebookStore {
     func reset() {
         pages = [:]
         UserDefaults.standard.removeObject(forKey: UDKey.thanksNotebook)
+        UserDefaults.standard.removeObject(forKey: UDKey.thanksNotebookBackup)
     }
 
     // MARK: 保存／読み込み
@@ -168,8 +169,18 @@ final class ThanksNotebookStore {
     }
 
     private func load() {
-        guard let data = UserDefaults.standard.data(forKey: UDKey.thanksNotebook),
-              let saved = try? JSONDecoder().decode([String: ThanksDayPage].self, from: data) else { return }
+        guard let data = UserDefaults.standard.data(forKey: UDKey.thanksNotebook) else { return }
+        guard let saved = try? JSONDecoder().decode([String: ThanksDayPage].self, from: data) else {
+            // ★ 読めなかった記録を控えに残す理由 ★
+            //   このあと手帳を開くと、空の手帳として保存し直されて、元の記録が上書きで消えてしまう。
+            //   知らない名前は ThanksDayPage の読み込みで読み飛ばすので、ここに来るのは
+            //   データの形そのものが変わったときだけ。直せるように、元のデータを別の場所に残しておく。
+            //   控えがすでにあるときは、いちばん最初に読めなかったものを残す（上書きしない）。
+            if UserDefaults.standard.data(forKey: UDKey.thanksNotebookBackup) == nil {
+                UserDefaults.standard.set(data, forKey: UDKey.thanksNotebookBackup)
+            }
+            return
+        }
         pages = saved
     }
 }

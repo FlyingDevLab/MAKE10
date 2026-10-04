@@ -231,3 +231,30 @@ struct ThanksDayPage: Codable, Equatable {
             .randomElement()
     }
 }
+
+// MARK: - ThanksDayPage の読み込み
+
+// ★ 知らないミッション・相手を読み飛ばす理由 ★
+//   ふつうの読み込みでは、保存データの中に1つでも知らない名前（将来ミッションや相手を
+//   減らしたり名前を変えたりしたときの古い名前）があると、手帳ぜんぶが読めなくなってしまう。
+//   名前をいったん文字列として読み、知っているものだけ残すことで、ほかの記録は守る。
+//   書き出し（Encodable）はいつもどおり自動で作られる形のまま。
+extension ThanksDayPage {
+    private enum CodingKeys: String, CodingKey {
+        case missions, checks, rewardedStage
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let missionNames = try container.decode([String].self, forKey: .missions)
+        let checkNames   = try container.decode([String: [String]].self, forKey: .checks)
+
+        missions = missionNames.compactMap(ThanksMission.init(rawValue:))
+        checks   = [:]
+        for (missionName, personNames) in checkNames {
+            guard let mission = ThanksMission(rawValue: missionName) else { continue }
+            checks[mission] = personNames.compactMap(ThanksPerson.init(rawValue:))
+        }
+        rewardedStage = try container.decode(Int.self, forKey: .rewardedStage)
+    }
+}

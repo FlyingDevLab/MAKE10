@@ -78,6 +78,7 @@ enum UDKey {
     static let energyDeciKcal      = "energyDeciKcal"      // エネルギー残高（0.1kcal 単位の Int）
     static let stickerShopState    = "stickerShopState"    // ショップ：その日の品揃えと売り切れ（JSON）
     static let thanksNotebook      = "thanksNotebook"      // ありがとう てちょう：日付ごとのページ（JSON）
+    static let thanksNotebookBackup = "thanksNotebookBackup" // ありがとう てちょう：読めなかった記録の控え（消さずに残す）
     static let shopTipIndex        = "shopTipIndex"        // シールやさん：次に出す「ひとこと」の番号
     static let migration150Done    = "migration_1_5_0_done"       // 1.5.0 への更新時の処理を済ませたか
     static let updateGiftPending   = "updateGiftNoticePending"    // アップデートのプレゼントのお知らせを未表示か
