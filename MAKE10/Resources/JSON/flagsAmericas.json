@@ -436,6 +436,306 @@
         "zh-Hans": "多米尼加共和国",
         "zh-Hant": "多明尼加"
       }
+    },
+    {
+      "display": "🇦🇬",
+      "name": {
+        "ja": "あんてぃぐあ・ばーぶーだ",
+        "en": "Antigua and Barbuda",
+        "de": "Antigua und Barbuda",
+        "es": "Antigua y Barbuda",
+        "fr": "Antigua-et-Barbuda",
+        "hi": "एंटीगुआ और बारबुडा",
+        "id": "Antigua dan Barbuda",
+        "it": "Antigua e Barbuda",
+        "ko": "앤티가 바부다",
+        "nl": "Antigua en Barbuda",
+        "pt-BR": "Antígua e Barbuda",
+        "th": "แอนทีกาและบาร์บิวดา",
+        "vi": "Antigua và Barbuda",
+        "zh-Hans": "安提瓜和巴布达",
+        "zh-Hant": "安地卡及巴布達"
+      }
+    },
+    {
+      "display": "🇧🇸",
+      "name": {
+        "ja": "ばはま",
+        "en": "Bahamas",
+        "de": "Bahamas",
+        "es": "Bahamas",
+        "fr": "Bahamas",
+        "hi": "बहामास",
+        "id": "Bahama",
+        "it": "Bahamas",
+        "ko": "바하마",
+        "nl": "Bahama's",
+        "pt-BR": "Bahamas",
+        "th": "บาฮามาส",
+        "vi": "Bahamas",
+        "zh-Hans": "巴哈马",
+        "zh-Hant": "巴哈馬"
+      }
+    },
+    {
+      "display": "🇧🇧",
+      "name": {
+        "ja": "ばるばどす",
+        "en": "Barbados",
+        "de": "Barbados",
+        "es": "Barbados",
+        "fr": "Barbade",
+        "hi": "बारबाडोस",
+        "id": "Barbados",
+        "it": "Barbados",
+        "ko": "바베이도스",
+        "nl": "Barbados",
+        "pt-BR": "Barbados",
+        "th": "บาร์เบโดส",
+        "vi": "Barbados",
+        "zh-Hans": "巴巴多斯",
+        "zh-Hant": "巴貝多"
+      }
+    },
+    {
+      "display": "🇧🇿",
+      "name": {
+        "ja": "べりーず",
+        "en": "Belize",
+        "de": "Belize",
+        "es": "Belice",
+        "fr": "Belize",
+        "hi": "बेलीज़",
+        "id": "Belize",
+        "it": "Belize",
+        "ko": "벨리즈",
+        "nl": "Belize",
+        "pt-BR": "Belize",
+        "th": "เบลีซ",
+        "vi": "Belize",
+        "zh-Hans": "伯利兹",
+        "zh-Hant": "貝里斯"
+      }
+    },
+    {
+      "display": "🇩🇲",
+      "name": {
+        "ja": "どみにかこく",
+        "en": "Dominica",
+        "de": "Dominica",
+        "es": "Dominica",
+        "fr": "Dominique",
+        "hi": "डोमिनिका",
+        "id": "Dominika",
+        "it": "Dominica",
+        "ko": "도미니카 연방",
+        "nl": "Dominica",
+        "pt-BR": "Dominica",
+        "th": "ดอมินีกา",
+        "vi": "Dominica",
+        "zh-Hans": "多米尼克",
+        "zh-Hant": "多米尼克"
+      }
+    },
+    {
+      "display": "🇸🇻",
+      "name": {
+        "ja": "えるさるばどる",
+        "en": "El Salvador",
+        "de": "El Salvador",
+        "es": "El Salvador",
+        "fr": "Salvador",
+        "hi": "अल सल्वाडोर",
+        "id": "El Salvador",
+        "it": "El Salvador",
+        "ko": "엘살바도르",
+        "nl": "El Salvador",
+        "pt-BR": "El Salvador",
+        "th": "เอลซัลวาดอร์",
+        "vi": "El Salvador",
+        "zh-Hans": "萨尔瓦多",
+        "zh-Hant": "薩爾瓦多"
+      }
+    },
+    {
+      "display": "🇬🇩",
+      "name": {
+        "ja": "ぐれなだ",
+        "en": "Grenada",
+        "de": "Grenada",
+        "es": "Granada",
+        "fr": "Grenade",
+        "hi": "ग्रेनाडा",
+        "id": "Grenada",
+        "it": "Grenada",
+        "ko": "그레나다",
+        "nl": "Grenada",
+        "pt-BR": "Granada",
+        "th": "เกรเนดา",
+        "vi": "Grenada",
+        "zh-Hans": "格林纳达",
+        "zh-Hant": "格瑞那達"
+      }
+    },
+    {
+      "display": "🇬🇾",
+      "name": {
+        "ja": "がいあな",
+        "en": "Guyana",
+        "de": "Guyana",
+        "es": "Guyana",
+        "fr": "Guyana",
+        "hi": "गयाना",
+        "id": "Guyana",
+        "it": "Guyana",
+        "ko": "가이아나",
+        "nl": "Guyana",
+        "pt-BR": "Guiana",
+        "th": "กายอานา",
+        "vi": "Guyana",
+        "zh-Hans": "圭亚那",
+        "zh-Hant": "蓋亞那"
+      }
+    },
+    {
+      "display": "🇭🇳",
+      "name": {
+        "ja": "ほんじゅらす",
+        "en": "Honduras",
+        "de": "Honduras",
+        "es": "Honduras",
+        "fr": "Honduras",
+        "hi": "होंडुरास",
+        "id": "Honduras",
+        "it": "Honduras",
+        "ko": "온두라스",
+        "nl": "Honduras",
+        "pt-BR": "Honduras",
+        "th": "ฮอนดูรัส",
+        "vi": "Honduras",
+        "zh-Hans": "洪都拉斯",
+        "zh-Hant": "宏都拉斯"
+      }
+    },
+    {
+      "display": "🇳🇮",
+      "name": {
+        "ja": "にからぐあ",
+        "en": "Nicaragua",
+        "de": "Nicaragua",
+        "es": "Nicaragua",
+        "fr": "Nicaragua",
+        "hi": "निकारागुआ",
+        "id": "Nikaragua",
+        "it": "Nicaragua",
+        "ko": "니카라과",
+        "nl": "Nicaragua",
+        "pt-BR": "Nicarágua",
+        "th": "นิการากัว",
+        "vi": "Nicaragua",
+        "zh-Hans": "尼加拉瓜",
+        "zh-Hant": "尼加拉瓜"
+      }
+    },
+    {
+      "display": "🇰🇳",
+      "name": {
+        "ja": "せんとくりすとふぁー・ねーびす",
+        "en": "Saint Kitts and Nevis",
+        "de": "St. Kitts und Nevis",
+        "es": "San Cristóbal y Nieves",
+        "fr": "Saint-Christophe-et-Niévès",
+        "hi": "सेंट किट्स और नेविस",
+        "id": "Saint Kitts dan Nevis",
+        "it": "Saint Kitts e Nevis",
+        "ko": "세인트키츠 네비스",
+        "nl": "Saint Kitts en Nevis",
+        "pt-BR": "São Cristóvão e Névis",
+        "th": "เซนต์คิตส์และเนวิส",
+        "vi": "Saint Kitts và Nevis",
+        "zh-Hans": "圣基茨和尼维斯",
+        "zh-Hant": "聖克里斯多福及尼維斯"
+      }
+    },
+    {
+      "display": "🇱🇨",
+      "name": {
+        "ja": "せんとるしあ",
+        "en": "Saint Lucia",
+        "de": "St. Lucia",
+        "es": "Santa Lucía",
+        "fr": "Sainte-Lucie",
+        "hi": "सेंट लूसिया",
+        "id": "Saint Lucia",
+        "it": "Saint Lucia",
+        "ko": "세인트루시아",
+        "nl": "Saint Lucia",
+        "pt-BR": "Santa Lúcia",
+        "th": "เซนต์ลูเซีย",
+        "vi": "Saint Lucia",
+        "zh-Hans": "圣卢西亚",
+        "zh-Hant": "聖露西亞"
+      }
+    },
+    {
+      "display": "🇻🇨",
+      "name": {
+        "ja": "せんとびんせんと・ぐれなでぃーん",
+        "en": "Saint Vincent and the Grenadines",
+        "de": "St. Vincent und die Grenadinen",
+        "es": "San Vicente y las Granadinas",
+        "fr": "Saint-Vincent-et-les-Grenadines",
+        "hi": "सेंट विंसेंट और ग्रेनेडाइंस",
+        "id": "Saint Vincent dan Grenadine",
+        "it": "Saint Vincent e Grenadine",
+        "ko": "세인트빈센트 그레나딘",
+        "nl": "Saint Vincent en de Grenadines",
+        "pt-BR": "São Vicente e Granadinas",
+        "th": "เซนต์วินเซนต์และเกรนาดีนส์",
+        "vi": "Saint Vincent và Grenadines",
+        "zh-Hans": "圣文森特和格林纳丁斯",
+        "zh-Hant": "聖文森及格瑞那丁"
+      }
+    },
+    {
+      "display": "🇸🇷",
+      "name": {
+        "ja": "すりなむ",
+        "en": "Suriname",
+        "de": "Suriname",
+        "es": "Surinam",
+        "fr": "Suriname",
+        "hi": "सूरीनाम",
+        "id": "Suriname",
+        "it": "Suriname",
+        "ko": "수리남",
+        "nl": "Suriname",
+        "pt-BR": "Suriname",
+        "th": "ซูรินาม",
+        "vi": "Suriname",
+        "zh-Hans": "苏里南",
+        "zh-Hant": "蘇利南"
+      }
+    },
+    {
+      "display": "🇹🇹",
+      "name": {
+        "ja": "とりにだーど・とばご",
+        "en": "Trinidad and Tobago",
+        "de": "Trinidad und Tobago",
+        "es": "Trinidad y Tobago",
+        "fr": "Trinité-et-Tobago",
+        "hi": "त्रिनिदाद और टोबैगो",
+        "id": "Trinidad dan Tobago",
+        "it": "Trinidad e Tobago",
+        "ko": "트리니다드 토바고",
+        "nl": "Trinidad en Tobago",
+        "pt-BR": "Trinidad e Tobago",
+        "th": "ตรินิแดดและโตเบโก",
+        "vi": "Trinidad và Tobago",
+        "zh-Hans": "特立尼达和多巴哥",
+        "zh-Hant": "千里達及托巴哥"
+      }
     }
   ]
 }
