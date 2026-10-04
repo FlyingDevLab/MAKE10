@@ -92,6 +92,10 @@ enum UDKey {
     static let playStickers        = "playStickers"        // シール用：シール画面位置データ
     static let pendingStickers     = "pendingStickers"     // 1.4以前の配置待ちシール。1.5で起動時にストレージへ移して削除される
     static let playBoardBackground = "playBoardBackground" // シール用：シール画面背景色インデックス
+    static let playPanelOffsetX    = "playPanelOffsetX"    // シール用：道具パネルを動かした量（横）
+    static let playPanelOffsetY    = "playPanelOffsetY"    // シール用：道具パネルを動かした量（縦）
+    static let playPanelCollapsed  = "playPanelCollapsed"  // シール用：道具パネルをたたんでいるか
+    static let isWallpaperOn       = "isWallpaperOn"       // かべがみ（じぶんの絵）を背景に使うか
     static let mazeHighScore          = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア
     static let pinballHighScore       = "fdl_pinball_hi"               // ピンボールの歴代最高スコア
     static let whackHighScore         = "flyingdevlab_mogura_highscore" // モグラ叩きの歴代最高スコア
