@@ -53,12 +53,27 @@ final class ThanksNotebookStore {
 
     // MARK: チェック
 
-    /// きょうのミッションをチェックする。チェックの数が増えたら、その分のごほうびを渡す。
-    /// - Parameter people: 相手（相手を選ばないミッションは空）
+    // ★ きのうのページもチェックできる理由 ★
+    //   「おやすみ」を いったあとに手帳を開くことはまず無いように、夜のミッションは
+    //   その日のうちにチェックできないことがある。そこで、きのうのページだけは
+    //   次の日にふりかえってチェックできるようにしている（チェックもれを防ぐため）。
+    //   引き直しは「きょう」だけ。おととい より前のページは見るだけ。
+
+    /// その日のページをチェック・取り消しできるか（きょう か きのう）。
+    func isEditable(_ day: Date, now: Date = Date()) -> Bool {
+        let key = DayKey.string(for: day)
+        return key == DayKey.string(for: now) || key == DayKey.previousDay(of: now)
+    }
+
+    /// ミッションをチェックする。チェックの数が増えたら、その分のごほうびを渡す。
+    /// - Parameters:
+    ///   - people: 相手（相手を選ばないミッションは空）
+    ///   - day: どの日のページか（きょう か きのう）
     /// - Returns: 今回渡したごほうび（kcal）。渡さなかったら 0。
     @discardableResult
-    func check(_ mission: ThanksMission, people: [ThanksPerson], now: Date = Date()) -> Double {
-        let key = DayKey.string(for: now)
+    func check(_ mission: ThanksMission, people: [ThanksPerson], on day: Date, now: Date = Date()) -> Double {
+        guard isEditable(day, now: now) else { return 0 }
+        let key = DayKey.string(for: day)
         guard var page = pages[key], page.missions.contains(mission) else { return 0 }
         page.checks[mission] = people
 
@@ -81,10 +96,11 @@ final class ThanksNotebookStore {
         return reward
     }
 
-    /// きょうのミッションのチェックを外す（押しまちがえたとき用）。
+    /// ミッションのチェックを外す（押しまちがえたとき用）。きょう か きのう のページだけ。
     /// もらったエネルギーは減らさない。
-    func uncheck(_ mission: ThanksMission, now: Date = Date()) {
-        let key = DayKey.string(for: now)
+    func uncheck(_ mission: ThanksMission, on day: Date, now: Date = Date()) {
+        guard isEditable(day, now: now) else { return }
+        let key = DayKey.string(for: day)
         guard var page = pages[key] else { return }
         page.checks[mission] = nil
         pages[key] = page
