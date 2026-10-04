@@ -15,6 +15,7 @@
 //  ★ このファイルの構成 ★
 //    StickerShopView … 画面本体（残高・棚・閉店カード・確認カード・メッセージ・紙吹雪）
 //    ShopShelfCell   … 棚の1マス（シール1種類分）
+//    ShopTipBubble   … お店のくまさんの「ひとこと」（kcal って なに？ などの雑談）
 
 import SwiftUI
 
@@ -70,6 +71,8 @@ struct StickerShopView: View {
                     shelf
                     remainingText
                 }
+
+                ShopTipBubble()
 
                 Spacer(minLength: 0)
             }
@@ -423,5 +426,79 @@ private struct ShopShelfCell: View {
         }
         .buttonStyle(.plain)
         .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSoldOut)
+    }
+}
+
+// MARK: - ShopTipBubble
+
+// ★ なぜ雑談で kcal を説明するのか ★
+//   子どもには「kcal」という単位がピンとこない。かといってお金（円・ドル）の記号は使いたくない。
+//   そこで、お店のくまさんが「100kcal は バナナ 1ぽんぶん」のように身近な食べ物で
+//   量の感覚を教えてくれる、という形にしている。説明書きではなく雑談なので、押しつけにならない。
+//
+// ⚠️ 変更注意: tips の中の「100 = バナナ」「200 = ぎゅうにゅう」「シール1まい = ぎゅうにゅう1ぱい」は
+//   EnergyTuning.gachaPrice（100）/ shopPrice（200）に合わせた文言。値段を変えたら文言も見直すこと。
+
+/// お店のくまさんの吹き出し。ひとことが一定時間ごとに入れ替わり、タップでも次へ進む。
+private struct ShopTipBubble: View {
+
+    /// 話す内容。並び順に一周する（最初の1つは毎回ランダム）。
+    private let tips: [LocalizedStringKey] = [
+        "shop_tip_kcal",
+        "shop_tip_banana",
+        "shop_tip_milk",
+        "shop_tip_sticker_price",
+        "shop_tip_play",
+    ]
+
+    /// 次のひとことへ自動で進むまでの秒数。
+    private let interval: Double = 6   // ← 変更可
+
+    @State private var index = 0
+    /// タップや自動送りのたびに増やす。.task(id:) の待ち時間をやり直すために使う。
+    @State private var turn = 0
+
+    var body: some View {
+        HStack(alignment: .center, spacing: 10) {
+            Text(verbatim: "🐻")
+                .font(.system(size: 40))   // ← 変更可（くまさんの大きさ）
+
+            Text(tips[index])
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.textBody)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 12)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.sectionRadius)
+                        .fill(DS.card)
+                        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
+                )
+                .id(index)   // 文が変わるたびに別の View として差し替え、フェードで入れ替える
+                .transition(.opacity)
+        }
+        .contentShape(Rectangle())
+        .onTapGesture {
+            SoundManager.shared.playTap()
+            next()
+        }
+        // turn が変わるたびに待ち直す。タップした直後にすぐ次へ進んでしまわないようにするため
+        .task(id: turn) {
+            try? await Task.sleep(for: .seconds(interval))
+            guard !Task.isCancelled else { return }
+            next()
+        }
+        .onAppear { index = Int.random(in: 0..<tips.count) }
+        .accessibilityElement(children: .combine)
+        .accessibilityAddTraits(.isButton)
+    }
+
+    private func next() {
+        withAnimation(.easeInOut(duration: 0.3)) {
+            index = (index + 1) % tips.count
+        }
+        turn += 1
     }
 }
