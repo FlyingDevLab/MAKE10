@@ -31,10 +31,15 @@ import SwiftUI
 struct PlayingView: View {
     var viewModel: GameViewModel
 
+    /// iPad で部品を大きくするための拡大率（iPhone は 1。DesignSystem.swift の layoutScale を参照）
+    @Environment(\.layoutScale) private var s
+
     /// タイルを2列グリッドで並べる定義。列間隔は EmojiQuizHomeView と統一している。
     /// GridItem(.flexible()) = 利用可能な横幅を均等に分割する列。
     /// （LazyVGrid 自体の解説は TitleView.swift を参照）
-    let columns = [GridItem(.flexible(), spacing: 14), GridItem(.flexible(), spacing: 14)]
+    private var columns: [GridItem] {
+        [GridItem(.flexible(), spacing: 14 * s), GridItem(.flexible(), spacing: 14 * s)]
+    }
 
     var body: some View {
         // ZStack でカード・タイル・リアクション・正誤マークを重ねる
@@ -52,12 +57,12 @@ struct PlayingView: View {
                     warnThreshold:      viewModel.gaugeWarnThreshold,
                     gameMode:           viewModel.gameMode
                 )
-                .padding(.horizontal, 24)
-                .padding(.top, 12)
-                .padding(.bottom, 20)
+                .padding(.horizontal, 24 * s)
+                .padding(.top, 12 * s)
+                .padding(.bottom, 20 * s)
 
                 // ── タイルグリッド（4枚）────────────────────
-                LazyVGrid(columns: columns, spacing: 12) {
+                LazyVGrid(columns: columns, spacing: 12 * s) {
                     ForEach(0..<4, id: \.self) { index in
                         TileButton(
                             value:          viewModel.tiles[index],
@@ -86,7 +91,7 @@ struct PlayingView: View {
                         ))
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 20 * s)
 
                 Spacer()
             }
@@ -106,7 +111,7 @@ struct PlayingView: View {
             if let mark = viewModel.answerMark {
                 AnswerMarkView(mark: mark)
                     .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .padding(.top, 122) // カード下端(192) - マーク半高(22) ≈ 隙間中央
+                    .padding(.top, 122 * s) // カード下端(192) - マーク半高(22) ≈ 隙間中央
                     .transition(.asymmetric(
                         insertion: .scale(scale: 0.5).combined(with: .opacity),  // 小→等倍でポップイン
                         removal:   .scale(scale: 1.3).combined(with: .opacity)   // 等倍→大でポップアウト
@@ -140,8 +145,10 @@ struct ProblemCardView: View {
     /// 計算プロパティにすることで gameMode が変わると自動で追従する。
     private var mainColor: Color { gameMode == .blitz ? DS.blitzColor : DS.primary }
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
-        // 絵文字クイズのカードと同じ 180pt 固定
+        // 絵文字クイズのカードと同じ 180pt 固定（iPad では拡大率を掛ける）
         VStack(spacing: 0) {
             Spacer(minLength: 0)
 
@@ -149,14 +156,14 @@ struct ProblemCardView: View {
             // nextQuestionNumber が変わるたびに上からスライドインするトランジションを適用する
             HStack(alignment: .lastTextBaseline, spacing: 6) {
                 Text("playing_next_label")
-                    .font(.system(size: 11, weight: .black, design: .rounded))
+                    .font(.system(size: 11 * s, weight: .black, design: .rounded))
                     .foregroundStyle(mainColor.opacity(0.45))
                     .tracking(1.0)  // 文字間隔を広げて「NEXT」の視認性を上げる
 
                 // .id(nextQuestionNumber): 値の変化で .transition を発火させるためのトリック
                 // （.id() の詳しい役割は PlayingView のタイルグリッドの解説を参照）
                 Text("\(nextQuestionNumber)")
-                    .font(.system(size: 36, weight: .bold, design: .rounded))
+                    .font(.system(size: 36 * s, weight: .bold, design: .rounded))
                     .foregroundStyle(mainColor.opacity(0.32))
                     .id(nextQuestionNumber)
                     .transition(.asymmetric(
@@ -167,16 +174,16 @@ struct ProblemCardView: View {
                 // Blitz モードのときのみ右上にモードラベルを表示する
                 if gameMode == .blitz {
                     Text("playing_blitz_mode_label")
-                        .font(.system(size: 11, weight: .bold, design: .rounded))
+                        .font(.system(size: 11 * s, weight: .bold, design: .rounded))
                         .foregroundStyle(DS.blitzColor)
                 }
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 20 * s)
 
             // ── メイン数字（現在の問題番号）────────────────
             // questionNumber が変わると上からスライドインして、古い数字は下にスライドアウトする
             Text("\(questionNumber)")
-                .font(.system(size: 80, weight: .bold, design: .rounded))
+                .font(.system(size: 80 * s, weight: .bold, design: .rounded))
                 .foregroundStyle(mainColor)
                 .frame(maxWidth: .infinity, alignment: .center)
                 .id(questionNumber)
@@ -193,10 +200,10 @@ struct ProblemCardView: View {
                 maxTime:       maxTime,
                 warnThreshold: warnThreshold
             )
-            .padding(.horizontal, 20)
-            .padding(.bottom, 14)
+            .padding(.horizontal, 20 * s)
+            .padding(.bottom, 14 * s)
         }
-        .frame(height: 180)
+        .frame(height: 180 * s)
         .background(DS.cardShadow())
         // .clipShape でカードの角丸を適用し、.clipped() でコンテンツのはみ出しを防ぐ
         // ★ なぜ両方必要か ★
@@ -223,6 +230,8 @@ struct InlineGaugeView: View {
     /// 残り時間が閾値以下になったら警告色（赤系）、それ以外は良好色（緑系）に切り替える
     private var color: Color   { timeRemaining <= warnThreshold ? DS.gaugeWarn : DS.gaugeFull }
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
         // GeometryReader でこのViewが表示される実際の幅を取得し、
         // geo.size.width を使ってゲージバーの幅を計算する
@@ -232,19 +241,19 @@ struct InlineGaugeView: View {
                 // 背景トラック（薄いグレーの全幅バー）
                 RoundedRectangle(cornerRadius: DS.gaugeRadius)
                     .fill(DS.gaugeBg)
-                    .frame(height: 13)
+                    .frame(height: 13 * s)
 
                 // 前景バー（残り時間に比例した幅）
                 // max(0, ...) で幅が負にならないよう保護する（わずかな誤差でクラッシュしないため）
                 RoundedRectangle(cornerRadius: DS.gaugeRadius)
                     .fill(color)
-                    .frame(width: max(0, geo.size.width * ratio), height: 13)
+                    .frame(width: max(0, geo.size.width * ratio), height: 13 * s)
                     // タイマー更新間隔（0.01秒）に合わせた短いアニメーション時間で
                     // 滑らかな減少に見せる（0.01秒より長くすると「ガクガク」感が出る）
                     .animation(.linear(duration: 0.01), value: ratio)
             }
         }
-        .frame(height: 13)
+        .frame(height: 13 * s)
     }
 }
 
@@ -262,6 +271,8 @@ struct TileButton: View {
     /// 正解=緑 / 不正解=赤 / nil=通常。GameViewModelの tappedTileValue と answerMark から決まる
     var highlightState: AnswerMark? = nil
     let action: () -> Void
+
+    @Environment(\.layoutScale) private var s
 
     /// state に応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う。
     private var bgColor: Color {
@@ -299,7 +310,7 @@ struct TileButton: View {
 
                 // ── 数字 ────────────────────────────────────
                 Text("\(value)")
-                    .font(.system(size: 40, weight: .bold, design: .rounded))
+                    .font(.system(size: 40 * s, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.textPrimary)
                     .frame(maxWidth: .infinity)
 
@@ -307,21 +318,21 @@ struct TileButton: View {
                 if highlightState == .correct {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DS.gaugeFull)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * s, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding(8)
+                        .padding(8 * s)
                 }
 
                 // ── 不正解アイコン（右上） ────────────────────
                 if highlightState == .wrong {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(DS.gaugeWarn)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * s, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding(8)
+                        .padding(8 * s)
                 }
             }
-            .frame(height: 76)
+            .frame(height: 76 * s)
         }
         .buttonStyle(TileButtonStyle())
         // 正解ボタンのみわずかに拡大して正解を視覚的に強調する（クイズと同じ 1.03）
@@ -358,8 +369,10 @@ struct AnswerMarkView: View {
     /// 正解は⭕️、不正解は❌。絵文字で直感的に結果を伝える。
     private var emoji: String { mark == .correct ? "⭕️" : "❌" }
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
-        Text(emoji).font(.system(size: 100))
+        Text(emoji).font(.system(size: 100 * s))
     }
 }
 
@@ -385,22 +398,24 @@ struct ReactionView: View {
     private let duration: Double  = 2.0   // アニメーション全体の所要時間（秒）← 変更可
     private let travel:   CGFloat = 150   // 浮かび上がる縦移動距離（ポイント）← 変更可
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
         Text(reaction.emoji)
-            .font(.system(size: 24))
+            .font(.system(size: 24 * s))
             .offset(y: offsetY)   // 上方向にずれるアニメーション値
             .opacity(opacity)     // フェードアウトするアニメーション値
             // 右端を基準に、xOffset で各リアクションの横位置を少しずらして重なりを避ける
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-            .padding(.top, 140 + reaction.xOffset * 0.5)
-            .padding(.trailing, 44)
+            .padding(.top, (140 + reaction.xOffset * 0.5) * s)
+            .padding(.trailing, 44 * s)
             // タッチイベントをすり抜けさせてタイル操作を妨げない
             .allowsHitTesting(false)
             .onAppear {
                 // ── 上方向への移動アニメーション ──────────────
                 // duration 秒かけて 150pt 浮き上がる（easeOut = 最初は速く、徐々に遅くなる）
                 withAnimation(.easeOut(duration: duration)) {
-                    offsetY = -travel
+                    offsetY = -travel * s
                 }
 
                 // ── フェードアウト（60%経過後から開始）────────

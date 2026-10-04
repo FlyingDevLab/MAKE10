@@ -161,3 +161,60 @@ enum DS {
             .shadow(color: .black.opacity(0.07), radius: 14, x: 0, y: 5)
     }
 }
+
+// MARK: - 大きな画面（iPad）向けの拡大
+
+// ★ なぜ拡大率を配るのか ★
+//   ゲーム画面の部品（カード・ボタン・文字）は iPhone の画面に合わせた固定の大きさで作っている。
+//   そのまま iPad に出すと、部品が上に小さく固まり、下ががらんと空いてしまう。
+//   そこで「iPhone の何倍の画面か」を拡大率として求め、各部品の大きさに掛けて使う。
+//   こうすると iPad でも iPhone と同じ割合（下の余白も同じ割合）の見た目になる。
+//
+// ★ @Entry とは？ ★
+//   EnvironmentValues に自前の値を追加するためのマクロです。
+//   親で .environment(\.layoutScale, 1.5) と書くと、子孫の View すべてが
+//   @Environment(\.layoutScale) で同じ値を受け取れます（引数で何段もバケツリレーせずに済む）。
+
+extension EnvironmentValues {
+    /// iPhone を 1.0 としたゲーム画面の拡大率。iPad では 1 より大きくなる。
+    @Entry var layoutScale: CGFloat = 1
+}
+
+extension DS {
+    /// 拡大率の基準にする、iPhone でのゲーム画面（ヘッダーとフッターを除いた部分）の大きさ。
+    static let baseContentSize = CGSize(width: 390, height: 660)
+    /// 拡大しすぎて部品が大味にならないよう、上限を決めておく。← 変更可
+    static let maxLayoutScale: CGFloat = 1.8
+}
+
+/// 横幅が広い画面（iPad）のときだけ、拡大率を子孫の View に配る ViewModifier。
+/// あわせて横幅を「iPhone の幅 × 拡大率」までに抑えて中央に置き、iPhone と同じ縦横の比率を保つ。
+/// iPhone（横幅が compact）では拡大率 1 のままで、見た目は一切変わらない。
+private struct LargeScreenScaling: ViewModifier {
+    @Environment(\.horizontalSizeClass) private var sizeClass
+
+    func body(content: Content) -> some View {
+        GeometryReader { geo in
+            let scale = scale(for: geo.size)
+            content
+                .environment(\.layoutScale, scale)
+                .frame(maxWidth: DS.baseContentSize.width * scale)
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        }
+    }
+
+    /// 縦・横のうち、余裕が少ない方に合わせて拡大率を決める（はみ出さないように）。
+    private func scale(for size: CGSize) -> CGFloat {
+        guard sizeClass == .regular else { return 1 }
+        let fit = min(size.width  / DS.baseContentSize.width,
+                      size.height / DS.baseContentSize.height)
+        return min(max(fit, 1), DS.maxLayoutScale)
+    }
+}
+
+extension View {
+    /// iPad では画面の大きさに合わせて部品を拡大する（LargeScreenScaling を参照）。
+    func scalesForLargeScreen() -> some View {
+        modifier(LargeScreenScaling())
+    }
+}
