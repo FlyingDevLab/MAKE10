@@ -31471,91 +31471,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 „k“ bedeutet 1.000. „kcal“ liest man „Kilokalorie“. 1 kcal sind 1.000 Kalorien!"
+            "value" : "„k“ bedeutet 1.000. „kcal“ liest man „Kilokalorie“. 1 kcal sind 1.000 Kalorien!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 \"k\" means 1,000. \"kcal\" is read \"kilocalorie.\" 1 kcal is 1,000 calories!"
+            "value" : "\"k\" means 1,000. \"kcal\" is read \"kilocalorie.\" 1 kcal is 1,000 calories!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 La «k» significa 1000. «kcal» se lee «kilocaloría». ¡1 kcal son 1000 calorías!"
+            "value" : "La «k» significa 1000. «kcal» se lee «kilocaloría». ¡1 kcal son 1000 calorías!"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 Le « k » veut dire 1 000. « kcal » se lit « kilocalorie ». 1 kcal, c'est 1 000 calories !"
+            "value" : "Le « k » veut dire 1 000. « kcal » se lit « kilocalorie ». 1 kcal, c'est 1 000 calories !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 \"k\" का मतलब 1,000 है। \"kcal\" को \"किलोकैलोरी\" पढ़ते हैं। 1 kcal = 1,000 कैलोरी!"
+            "value" : "\"k\" का मतलब 1,000 है। \"kcal\" को \"किलोकैलोरी\" पढ़ते हैं। 1 kcal = 1,000 कैलोरी!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 \"k\" artinya 1.000. \"kcal\" dibaca \"kilokalori\". 1 kcal = 1.000 kalori!"
+            "value" : "\"k\" artinya 1.000. \"kcal\" dibaca \"kilokalori\". 1 kcal = 1.000 kalori!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 La \"k\" vuol dire 1000. \"kcal\" si legge \"chilocaloria\". 1 kcal sono 1000 calorie!"
+            "value" : "La \"k\" vuol dire 1000. \"kcal\" si legge \"chilocaloria\". 1 kcal sono 1000 calorie!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 「k」 は「1000」の いみ。「kcal」は「キロカロリー」って よむよ。1kcal は 1000カロリー なんだ"
+            "value" : "「k」 は「1000」の いみ。「kcal」は「キロカロリー」って よむよ。1kcal は 1000カロリー なんだ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 'k'는 '1000'이라는 뜻이에요. 'kcal'은 '킬로칼로리'라고 읽어요. 1kcal는 1000칼로리예요!"
+            "value" : "'k'는 '1000'이라는 뜻이에요. 'kcal'은 '킬로칼로리'라고 읽어요. 1kcal는 1000칼로리예요!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 'k' betekent 1000. 'kcal' spreek je uit als 'kilocalorie'. 1 kcal is 1000 calorieën!"
+            "value" : "'k' betekent 1000. 'kcal' spreek je uit als 'kilocalorie'. 1 kcal is 1000 calorieën!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 O \"k\" quer dizer 1.000. \"kcal\" se lê \"quilocaloria\". 1 kcal são 1.000 calorias!"
+            "value" : "O \"k\" quer dizer 1.000. \"kcal\" se lê \"quilocaloria\". 1 kcal são 1.000 calorias!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 \"k\" แปลว่า 1,000 และ \"kcal\" อ่านว่า \"กิโลแคลอรี\" 1 kcal ก็คือ 1,000 แคลอรี!"
+            "value" : "\"k\" แปลว่า 1,000 และ \"kcal\" อ่านว่า \"กิโลแคลอรี\" 1 kcal ก็คือ 1,000 แคลอรี!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 \"k\" nghĩa là 1.000. \"kcal\" đọc là \"ki-lô-ca-lo\". 1 kcal là 1.000 ca-lo!"
+            "value" : "\"k\" nghĩa là 1.000. \"kcal\" đọc là \"ki-lô-ca-lo\". 1 kcal là 1.000 ca-lo!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 “k”的意思是 1000。“kcal”读作“千卡”。1kcal 就是 1000 卡路里！"
+            "value" : "“k”的意思是 1000。“kcal”读作“千卡”。1kcal 就是 1000 卡路里！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 「k」的意思是 1000。「kcal」讀作「大卡」。1kcal 就是 1000 卡路里！"
+            "value" : "「k」的意思是 1000。「kcal」讀作「大卡」。1kcal 就是 1000 卡路里！"
           }
         }
       }
