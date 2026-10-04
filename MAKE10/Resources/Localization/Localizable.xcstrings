@@ -31464,482 +31464,1154 @@
         }
       }
     },
-    "shop_tip_kcal" : {
-      "comment" : "Sticker shop: shopkeeper bear's tip for young kids. Explains that kcal is a unit for an amount of energy. Keep the word kcal as is.",
+    "shop_tip_kcal_reading" : {
+      "comment" : "Sticker shop: tip of the day (shown to kids 4-14; an adult may explain it). How to read the unit kcal in this language.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (Kilokalorien) zeigt dir, wie viel Energie es ist."
+            "value" : "🔥 „kcal“ liest man „Kilokalorie“."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (kilocalories) tells you how much energy there is."
+            "value" : "🔥 \"kcal\" is read \"kilocalorie.\""
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (kilocalorías) te dice cuánta energía hay."
+            "value" : "🔥 «kcal» se lee «kilocaloría»."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les kcal (kilocalories) disent combien il y a d'énergie."
+            "value" : "🔥 « kcal » se lit « kilocalorie »."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (किलोकैलोरी) बताता है कि कितनी ऊर्जा है।"
+            "value" : "🔥 \"kcal\" को \"किलोकैलोरी\" पढ़ते हैं।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (kilokalori) menunjukkan berapa banyak energinya."
+            "value" : "🔥 \"kcal\" dibaca \"kilokalori\"."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Le kcal (chilocalorie) dicono quanta energia c'è."
+            "value" : "🔥 \"kcal\" si legge \"chilocaloria\"."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "キロカロリー（kcal）は エネルギーの りょうを あらわす ことばだよ"
+            "value" : "🔥 kcal は「キロカロリー」って よむよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal(킬로칼로리)는 에너지의 양을 나타내는 말이에요."
+            "value" : "🔥 kcal은 '킬로칼로리'라고 읽어요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (kilocalorieën) zegt hoeveel energie het is."
+            "value" : "🔥 'kcal' spreek je uit als 'kilocalorie'."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (quilocalorias) mostra quanta energia existe."
+            "value" : "🔥 \"kcal\" se lê \"quilocaloria\"."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (กิโลแคลอรี) คือคำที่บอกว่ามีพลังงานมากแค่ไหน"
+            "value" : "🔥 kcal อ่านว่า \"กิโลแคลอรี\""
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal (ki-lô-ca-lo) cho biết có bao nhiêu năng lượng."
+            "value" : "🔥 \"kcal\" đọc là \"ki-lô-ca-lo\"."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal（千卡）是表示能量多少的单位。"
+            "value" : "🔥 kcal 读作“千卡”。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "kcal（大卡）是表示能量多少的單位。"
+            "value" : "🔥 kcal 讀作「大卡」。"
           }
         }
       }
     },
-    "shop_tip_banana" : {
-      "comment" : "Sticker shop: shopkeeper bear's tip. 100 kcal is about one banana.",
+    "shop_tip_cal_meaning" : {
+      "comment" : "Sticker shop: tip of the day. cal is a word for an amount of energy, read 'calorie'; k means 1000, so 1 kcal = 1000 calories.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal sind ungefähr eine Banane. 🍌"
+            "value" : "🔥 „cal“ ist ein Wort für eine Menge Energie und heißt „Kalorie“. „k“ bedeutet 1.000 – also ist 1 kcal gleich 1.000 Kalorien!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal is about as much as one banana. 🍌"
+            "value" : "🔥 \"cal\" is a word for an amount of energy, read \"calorie.\" \"k\" means 1,000, so 1 kcal is 1,000 calories!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal es más o menos un plátano. 🍌"
+            "value" : "🔥 «cal» es una palabra para la cantidad de energía y se lee «caloría». La «k» significa 1000, así que 1 kcal son 1000 calorías."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal, c'est à peu près une banane. 🍌"
+            "value" : "🔥 « cal » sert à mesurer l'énergie et se lit « calorie ». Le « k » veut dire 1 000 : 1 kcal, c'est 1 000 calories !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal लगभग एक केले जितना है। 🍌"
+            "value" : "🔥 \"cal\" ऊर्जा की मात्रा बताने वाला शब्द है, इसे \"कैलोरी\" पढ़ते हैं। \"k\" का मतलब 1,000 है, यानी 1 kcal = 1,000 कैलोरी!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal kira-kira sama dengan satu pisang. 🍌"
+            "value" : "🔥 \"cal\" adalah kata untuk jumlah energi, dibaca \"kalori\". \"k\" artinya 1.000, jadi 1 kcal = 1.000 kalori!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal sono più o meno una banana. 🍌"
+            "value" : "🔥 \"cal\" indica una quantità di energia e si legge \"caloria\". La \"k\" vuol dire 1000, quindi 1 kcal sono 1000 calorie!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100キロカロリーは バナナ 1ぽんぶん ぐらいだよ 🍌"
+            "value" : "🔥 cal は エネルギーの りょうを あらわす ことばで「カロリー」って よむよ。k は「1000」の いみ。1kcal は 1000カロリー なんだ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100kcal는 바나나 1개 정도예요. 🍌"
+            "value" : "🔥 cal은 에너지의 양을 나타내는 말로 '칼로리'라고 읽어요. k는 '1000'이라는 뜻이라서 1kcal는 1000칼로리예요!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal is ongeveer één banaan. 🍌"
+            "value" : "🔥 'cal' is een woord voor een hoeveelheid energie en spreek je uit als 'calorie'. 'k' betekent 1000, dus 1 kcal is 1000 calorieën!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal é mais ou menos uma banana. 🍌"
+            "value" : "🔥 \"cal\" é uma palavra para a quantidade de energia e se lê \"caloria\". O \"k\" quer dizer 1.000, então 1 kcal são 1.000 calorias!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal ประมาณกล้วย 1 ลูก 🍌"
+            "value" : "🔥 cal คือคำที่บอกปริมาณพลังงาน อ่านว่า \"แคลอรี\" ส่วน k แปลว่า 1,000 ดังนั้น 1 kcal ก็คือ 1,000 แคลอรี!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100 kcal khoảng bằng một quả chuối. 🍌"
+            "value" : "🔥 \"cal\" là từ chỉ lượng năng lượng, đọc là \"ca-lo\". \"k\" nghĩa là 1.000, nên 1 kcal là 1.000 ca-lo!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100千卡大约是一根香蕉。🍌"
+            "value" : "🔥 cal 是表示能量多少的单位，读作“卡路里”。k 的意思是 1000，所以 1kcal 就是 1000 卡路里！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "100大卡大約是一根香蕉。🍌"
+            "value" : "🔥 cal 是表示能量多少的單位，讀作「卡路里」。k 的意思是 1000，所以 1kcal 就是 1000 卡路里！"
           }
         }
       }
     },
-    "shop_tip_milk" : {
-      "comment" : "Sticker shop: shopkeeper bear's tip. 200 kcal is about one glass of milk.",
+    "shop_tip_100_banana" : {
+      "comment" : "Sticker shop: tip of the day. 100 kcal is about one banana.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal sind ungefähr ein Glas Milch. 🥛"
+            "value" : "🍌 100 kcal sind ungefähr 1 Banane."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal is about as much as a glass of milk. 🥛"
+            "value" : "🍌 100 kcal is about 1 banana."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal es más o menos un vaso de leche. 🥛"
+            "value" : "🍌 100 kcal son más o menos 1 plátano."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal, c'est à peu près un verre de lait. 🥛"
+            "value" : "🍌 100 kcal, c'est à peu près 1 banane."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal लगभग एक गिलास दूध जितना है। 🥛"
+            "value" : "🍌 100 kcal लगभग 1 केले जितना है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal kira-kira sama dengan segelas susu. 🥛"
+            "value" : "🍌 100 kcal kira-kira 1 buah pisang."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal sono più o meno un bicchiere di latte. 🥛"
+            "value" : "🍌 100 kcal sono più o meno 1 banana."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200キロカロリーは ぎゅうにゅう 1ぱいぶん ぐらいだよ 🥛"
+            "value" : "🍌 100kcal は バナナ 1ぽんぐらい"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200kcal는 우유 한 잔 정도예요. 🥛"
+            "value" : "🍌 100kcal는 바나나 1개 정도예요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal is ongeveer een glas melk. 🥛"
+            "value" : "🍌 100 kcal is ongeveer 1 banaan."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal é mais ou menos um copo de leite. 🥛"
+            "value" : "🍌 100 kcal é mais ou menos 1 banana."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal ประมาณนม 1 แก้ว 🥛"
+            "value" : "🍌 100 kcal ประมาณกล้วย 1 ลูก"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200 kcal khoảng bằng một cốc sữa. 🥛"
+            "value" : "🍌 100 kcal khoảng bằng 1 quả chuối."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200千卡大约是一杯牛奶。🥛"
+            "value" : "🍌 100kcal 大约是 1 根香蕉。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "200大卡大約是一杯牛奶。🥛"
+            "value" : "🍌 100kcal 大約是 1 根香蕉。"
           }
         }
       }
     },
-    "shop_tip_sticker_price" : {
-      "comment" : "Sticker shop: shopkeeper bear's tip. One sticker in this shop costs as much energy as a glass of milk (200 kcal).",
+    "shop_tip_100_apple" : {
+      "comment" : "Sticker shop: tip of the day. 100 kcal is about one apple.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ein Sticker hier kostet so viel Energie wie ein Glas Milch."
+            "value" : "🍎 100 kcal sind ungefähr 1 Apfel."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A sticker here costs a glass of milk's worth of energy."
+            "value" : "🍎 100 kcal is about 1 apple."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aquí una pegatina cuesta la energía de un vaso de leche."
+            "value" : "🍎 100 kcal son más o menos 1 manzana."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ici, un autocollant coûte l'énergie d'un verre de lait."
+            "value" : "🍎 100 kcal, c'est à peu près 1 pomme."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "यहाँ एक स्टिकर एक गिलास दूध जितनी ऊर्जा का है।"
+            "value" : "🍎 100 kcal लगभग 1 सेब जितना है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Satu stiker di sini seharga energi segelas susu."
+            "value" : "🍎 100 kcal kira-kira 1 buah apel."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Qui un adesivo costa l'energia di un bicchiere di latte."
+            "value" : "🍎 100 kcal sono più o meno 1 mela."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ここの シールは 1まい ぎゅうにゅう 1ぱいぶんの エネルギーだよ"
+            "value" : "🍎 100kcal は りんご 1こぐらい"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "여기 스티커 1장은 우유 한 잔만큼의 에너지예요."
+            "value" : "🍎 100kcal는 사과 1개 정도예요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Een sticker hier kost de energie van een glas melk."
+            "value" : "🍎 100 kcal is ongeveer 1 appel."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aqui, um adesivo custa a energia de um copo de leite."
+            "value" : "🍎 100 kcal é mais ou menos 1 maçã."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "สติกเกอร์ที่นี่ 1 แผ่น ใช้พลังงานเท่ากับนม 1 แก้ว"
+            "value" : "🍎 100 kcal ประมาณแอปเปิล 1 ลูก"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Một nhãn dán ở đây tốn năng lượng bằng một cốc sữa."
+            "value" : "🍎 100 kcal khoảng bằng 1 quả táo."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "这里的一张贴纸，要用一杯牛奶那么多的能量。"
+            "value" : "🍎 100kcal 大约是 1 个苹果。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "這裡的一張貼紙，要用一杯牛奶那麼多的能量。"
+            "value" : "🍎 100kcal 大約是 1 顆蘋果。"
           }
         }
       }
     },
-    "shop_tip_play" : {
-      "comment" : "Sticker shop: shopkeeper bear's tip. Playing games builds up energy.",
+    "shop_tip_100_egg" : {
+      "comment" : "Sticker shop: tip of the day. 100 kcal is about one and a half eggs.",
       "extractionState" : "manual",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spiel viel, dann sammelst du Energie!"
+            "value" : "🥚🥚 100 kcal sind ungefähr anderthalb Eier."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play lots of games to build up energy!"
+            "value" : "🥚🥚 100 kcal is about 1 and a half eggs."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Juega mucho y juntarás energía!"
+            "value" : "🥚🥚 100 kcal son más o menos un huevo y medio."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Joue beaucoup pour gagner de l'énergie !"
+            "value" : "🥚🥚 100 kcal, c'est à peu près un œuf et demi."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "खूब खेलो, ऊर्जा जमा होगी!"
+            "value" : "🥚🥚 100 kcal लगभग डेढ़ अंडे जितना है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Main banyak game supaya energimu bertambah!"
+            "value" : "🥚🥚 100 kcal kira-kira satu setengah butir telur."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gioca tanto per accumulare energia!"
+            "value" : "🥚🥚 100 kcal sono più o meno un uovo e mezzo."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ゲームで いっぱい あそぶと エネルギーが たまるよ"
+            "value" : "🥚🥚 100kcal は たまご 1こと はんぶんぐらい"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "게임을 많이 하면 에너지가 쌓여요!"
+            "value" : "🥚🥚 100kcal는 달걀 1개 반 정도예요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Speel veel, dan spaar je energie!"
+            "value" : "🥚🥚 100 kcal is ongeveer anderhalf ei."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Jogue bastante para juntar energia!"
+            "value" : "🥚🥚 100 kcal é mais ou menos um ovo e meio."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "เล่นเกมเยอะๆ พลังงานจะสะสมขึ้นเรื่อยๆ!"
+            "value" : "🥚🥚 100 kcal ประมาณไข่ 1 ฟองครึ่ง"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chơi thật nhiều để tích năng lượng nhé!"
+            "value" : "🥚🥚 100 kcal khoảng bằng 1 quả trứng rưỡi."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "多玩游戏就能攒到能量！"
+            "value" : "🥚🥚 100kcal 大约是 1 个半鸡蛋。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "多玩遊戲就能存到能量！"
+            "value" : "🥚🥚 100kcal 大約是 1 顆半雞蛋。"
+          }
+        }
+      }
+    },
+    "shop_tip_200_banana" : {
+      "comment" : "Sticker shop: tip of the day. 200 kcal is about two bananas.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal sind ungefähr 2 Bananen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal is about 2 bananas."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal son más o menos 2 plátanos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal, c'est à peu près 2 bananes."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal लगभग 2 केलों जितना है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal kira-kira 2 buah pisang."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal sono più o meno 2 banane."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200kcal は バナナ 2ほんぐらい"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200kcal는 바나나 2개 정도예요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal is ongeveer 2 bananen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal é mais ou menos 2 bananas."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal ประมาณกล้วย 2 ลูก"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200 kcal khoảng bằng 2 quả chuối."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200kcal 大约是 2 根香蕉。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍌🍌 200kcal 大約是 2 根香蕉。"
+          }
+        }
+      }
+    },
+    "shop_tip_200_donut" : {
+      "comment" : "Sticker shop: tip of the day. 200 kcal is about one donut.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal sind ungefähr 1 Donut."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal is about 1 donut."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal son más o menos 1 dónut."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal, c'est à peu près 1 donut."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal लगभग 1 डोनट जितना है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal kira-kira 1 donat."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal sono più o meno 1 ciambella."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200kcal は ドーナツ 1こぐらい"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200kcal는 도넛 1개 정도예요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal is ongeveer 1 donut."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal é mais ou menos 1 donut."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal ประมาณโดนัท 1 ชิ้น"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200 kcal khoảng bằng 1 chiếc bánh donut."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200kcal 大约是 1 个甜甜圈。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🍩 200kcal 大約是 1 個甜甜圈。"
+          }
+        }
+      }
+    },
+    "shop_tip_day_child" : {
+      "comment" : "Sticker shop: tip of the day. A child of about 10 uses about 2,000 kcal a day (rough international guideline). Talk about 'a friend about 10', not 'you'.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Ein Kind mit etwa 10 Jahren braucht am Tag ungefähr 2.000 kcal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 A friend about 10 years old uses about 2,000 kcal a day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Un niño de unos 10 años usa unas 2000 kcal al día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Un enfant d'environ 10 ans utilise à peu près 2 000 kcal par jour."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 लगभग 10 साल का बच्चा एक दिन में करीब 2,000 kcal इस्तेमाल करता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Anak sekitar 10 tahun memakai kira-kira 2.000 kcal sehari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Un bambino di circa 10 anni usa circa 2000 kcal al giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 10さいぐらいの おともだちは 1にち やく 2,000kcal つかうよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 10살쯤 된 친구는 하루에 약 2,000kcal를 써요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Een kind van ongeveer 10 jaar gebruikt zo'n 2000 kcal per dag."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Uma criança de uns 10 anos usa cerca de 2.000 kcal por dia."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 เด็กอายุประมาณ 10 ขวบ ใช้พลังงานวันละประมาณ 2,000 kcal"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 Bạn nhỏ khoảng 10 tuổi dùng khoảng 2.000 kcal mỗi ngày."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 10 岁左右的小朋友，一天大约要用 2000kcal。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧒 10 歲左右的小朋友，一天大約要用 2000kcal。"
+          }
+        }
+      }
+    },
+    "shop_tip_day_man" : {
+      "comment" : "Sticker shop: tip of the day. A grown-up man uses about 2,500 kcal a day (rough international guideline).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Ein erwachsener Mann braucht am Tag ungefähr 2.500 kcal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 A grown-up man uses about 2,500 kcal a day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Un hombre adulto usa unas 2500 kcal al día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Un homme adulte utilise à peu près 2 500 kcal par jour."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 एक बड़ा आदमी एक दिन में करीब 2,500 kcal इस्तेमाल करता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Laki-laki dewasa memakai kira-kira 2.500 kcal sehari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Un uomo adulto usa circa 2500 kcal al giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 おとなの おとこのひとは 1にち やく 2,500kcal つかうよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 어른 남자는 하루에 약 2,500kcal를 써요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Een volwassen man gebruikt zo'n 2500 kcal per dag."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Um homem adulto usa cerca de 2.500 kcal por dia."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 ผู้ชายผู้ใหญ่ใช้พลังงานวันละประมาณ 2,500 kcal"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 Người đàn ông trưởng thành dùng khoảng 2.500 kcal mỗi ngày."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 成年男性一天大约要用 2500kcal。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👨 成年男性一天大約要用 2500kcal。"
+          }
+        }
+      }
+    },
+    "shop_tip_day_woman" : {
+      "comment" : "Sticker shop: tip of the day. A grown-up woman uses about 2,000 kcal a day (rough international guideline).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Eine erwachsene Frau braucht am Tag ungefähr 2.000 kcal."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 A grown-up woman uses about 2,000 kcal a day."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Una mujer adulta usa unas 2000 kcal al día."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Une femme adulte utilise à peu près 2 000 kcal par jour."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 एक बड़ी औरत एक दिन में करीब 2,000 kcal इस्तेमाल करती है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Perempuan dewasa memakai kira-kira 2.000 kcal sehari."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Una donna adulta usa circa 2000 kcal al giorno."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 おとなの おんなのひとは 1にち やく 2,000kcal つかうよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 어른 여자는 하루에 약 2,000kcal를 써요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Een volwassen vrouw gebruikt zo'n 2000 kcal per dag."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Uma mulher adulta usa cerca de 2.000 kcal por dia."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 ผู้หญิงผู้ใหญ่ใช้พลังงานวันละประมาณ 2,000 kcal"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 Người phụ nữ trưởng thành dùng khoảng 2.000 kcal mỗi ngày."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 成年女性一天大约要用 2000kcal。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "👩 成年女性一天大約要用 2000kcal。"
+          }
+        }
+      }
+    },
+    "shop_tip_sleep" : {
+      "comment" : "Sticker shop: tip of the day. Even while sleeping, we use energy to breathe and keep the heart beating.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Auch im Schlaf brauchen wir Energie – zum Atmen und für den Herzschlag."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Even when we sleep, we use energy to breathe and keep our hearts beating."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Incluso dormidos usamos energía para respirar y para que el corazón lata."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Même en dormant, on utilise de l'énergie pour respirer et faire battre le cœur."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 सोते समय भी हम साँस लेने और दिल धड़कने के लिए ऊर्जा इस्तेमाल करते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Saat tidur pun, kita memakai energi untuk bernapas dan membuat jantung berdetak."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Anche quando dormiamo usiamo energia per respirare e far battere il cuore."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 ねている あいだも、いきや しんぞうで エネルギーを つかっているよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 잠자는 동안에도 숨 쉬고 심장이 뛰는 데 에너지를 써요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Ook als we slapen gebruiken we energie om te ademen en ons hart te laten kloppen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Mesmo dormindo, usamos energia para respirar e fazer o coração bater."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 แม้ตอนนอนหลับ เราก็ใช้พลังงานในการหายใจและให้หัวใจเต้น"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 Ngay cả khi ngủ, chúng ta vẫn dùng năng lượng để thở và để tim đập."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 就算在睡觉，我们呼吸和心跳也在用能量哦。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "😴💤 就算在睡覺，我們呼吸和心跳也在用能量喔。"
+          }
+        }
+      }
+    },
+    "shop_tip_brain" : {
+      "comment" : "Sticker shop: tip of the day. Thinking uses energy too; the brain uses about one fifth of the whole body's energy.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Auch Denken braucht Energie! Das Gehirn verbraucht etwa ein Fünftel der Energie des ganzen Körpers."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Thinking uses energy too! The brain uses about 1/5 of all the body's energy."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ ¡Pensar también usa energía! El cerebro usa más o menos la quinta parte de la energía de todo el cuerpo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Réfléchir utilise aussi de l'énergie ! Le cerveau utilise environ un cinquième de l'énergie de tout le corps."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ सोचने में भी ऊर्जा लगती है! दिमाग पूरे शरीर की लगभग 1/5 ऊर्जा इस्तेमाल करता है।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Berpikir juga memakai energi! Otak memakai kira-kira 1/5 energi seluruh tubuh."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Anche pensare usa energia! Il cervello usa circa un quinto dell'energia di tutto il corpo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ あたまを つかうと、のうみそも エネルギーを つかうよ。のうみそは からだ ぜんぶの エネルギーの 5ぶんの1ぐらいを つかうんだ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ 머리를 쓰면 뇌도 에너지를 써요. 뇌는 온몸 에너지의 5분의 1 정도를 쓴답니다!"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Ook denken kost energie! Je hersenen gebruiken ongeveer een vijfde van alle energie van je lichaam."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Pensar também gasta energia! O cérebro usa cerca de 1/5 da energia do corpo todo."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ การคิดก็ใช้พลังงานนะ! สมองใช้พลังงานประมาณ 1 ใน 5 ของทั้งร่างกาย"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ Suy nghĩ cũng tốn năng lượng! Bộ não dùng khoảng 1/5 năng lượng của cả cơ thể."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ 动脑筋也会用能量！大脑大约用掉全身五分之一的能量。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🧠✨ 動腦筋也會用能量！大腦大約用掉全身五分之一的能量。"
           }
         }
       }
