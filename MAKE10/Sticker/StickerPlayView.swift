@@ -389,7 +389,7 @@ struct StickerPlayView: View {
         let renderer = ImageRenderer(content: artwork)
         renderer.scale = displayScale
         guard let image = renderer.uiImage else { return }
-        WallpaperStore.shared.save(image)
+        WallpaperStore.shared.save(image, paper: palette[bgIndex].color)
         SoundManager.shared.playUnlock()
         showToast(String(localized: "wallpaper_done"))
     }

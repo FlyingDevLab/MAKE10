@@ -96,6 +96,7 @@ enum UDKey {
     static let playPanelOffsetY    = "playPanelOffsetY"    // シール用：道具パネルを動かした量（縦）
     static let playPanelCollapsed  = "playPanelCollapsed"  // シール用：道具パネルをたたんでいるか
     static let isWallpaperOn       = "isWallpaperOn"       // かべがみ（じぶんの絵）を背景に使うか
+    static let wallpaperBandRGB    = "wallpaperBandRGB"    // かべがみの絵の背景色（ヘッダー・フッターの帯に使う。[r, g, b]）
     static let mazeHighScore          = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア
     static let pinballHighScore       = "fdl_pinball_hi"               // ピンボールの歴代最高スコア
     static let whackHighScore         = "flyingdevlab_mogura_highscore" // モグラ叩きの歴代最高スコア
