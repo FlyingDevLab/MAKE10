@@ -22519,91 +22519,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Spielrekorde werden gelöscht. Deine Sticker, deine Energie und dein Danke-Heft bleiben erhalten."
+            "value" : "Alle Spielrekorde werden gelöscht. Deine Sticker, deine Energie, dein Danke-Heft, deine Zeichnung und das Hintergrundbild bleiben erhalten."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All game records will be erased. Your stickers, energy and Thank-You Notebook will stay."
+            "value" : "All game records will be erased. Your stickers, energy, Thank-You Notebook, drawing and wallpaper will stay."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se borrarán los récords de todos los juegos. Tus pegatinas, tu energía y tu cuaderno de gracias se conservarán."
+            "value" : "Se borrarán los récords de todos los juegos. Tus pegatinas, tu energía, tu cuaderno de gracias, tu dibujo y el fondo se conservarán."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tous les records seront effacés. Tes autocollants, ton énergie et ton carnet de mercis seront conservés."
+            "value" : "Tous les records seront effacés. Tes autocollants, ton énergie, ton carnet de mercis, ton dessin et le fond seront conservés."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सभी गेम के रिकॉर्ड मिट जाएंगे। आपके स्टिकर, ऊर्जा और धन्यवाद डायरी बने रहेंगे।"
+            "value" : "सभी गेम के रिकॉर्ड मिट जाएंगे। आपके स्टिकर, ऊर्जा, धन्यवाद डायरी, चित्र और वॉलपेपर बने रहेंगे।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semua rekor permainan akan dihapus. Stiker, energi, dan Buku Terima Kasih tetap ada."
+            "value" : "Semua rekor permainan akan dihapus. Stiker, energi, Buku Terima Kasih, gambar, dan wallpaper tetap ada."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutti i record dei giochi verranno cancellati. I tuoi adesivi, la tua energia e il quaderno dei grazie resteranno."
+            "value" : "Tutti i record dei giochi verranno cancellati. I tuoi adesivi, la tua energia, il quaderno dei grazie, il disegno e lo sfondo resteranno."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ぜんぶのゲームの きろくが きえます。シールと エネルギーと ありがとう てちょうは のこります。"
+            "value" : "ぜんぶのゲームの きろくが きえます。シールと エネルギーと ありがとう てちょうと おえかき・かべがみは のこります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모든 게임의 기록이 사라집니다. 스티커와 에너지와 고마워 수첩은 그대로 남아요."
+            "value" : "모든 게임의 기록이 사라집니다. 스티커와 에너지와 고마워 수첩, 그림과 배경은 그대로 남아요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle spelrecords worden gewist. Je stickers, energie en dankjewel-boekje blijven bewaard."
+            "value" : "Alle spelrecords worden gewist. Je stickers, energie, dankjewel-boekje, tekening en achtergrond blijven bewaard."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Os recordes de todos os jogos serão apagados. Seus adesivos, sua energia e seu caderno do obrigado serão mantidos."
+            "value" : "Os recordes de todos os jogos serão apagados. Seus adesivos, sua energia, seu caderno do obrigado, seu desenho e o fundo serão mantidos."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "สถิติของทุกเกมจะถูกลบ สติกเกอร์ พลังงาน และสมุดขอบคุณของคุณจะยังอยู่"
+            "value" : "สถิติของทุกเกมจะถูกลบ สติกเกอร์ พลังงาน สมุดขอบคุณ ภาพวาด และวอลเปเปอร์ของคุณจะยังอยู่"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kỷ lục của tất cả trò chơi sẽ bị xóa. Nhãn dán, năng lượng và sổ cảm ơn của bạn vẫn được giữ lại."
+            "value" : "Kỷ lục của tất cả trò chơi sẽ bị xóa. Nhãn dán, năng lượng, sổ cảm ơn, tranh vẽ và hình nền của bạn vẫn được giữ lại."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有游戏的记录都会被清除。贴纸、能量和感谢手帐会保留。"
+            "value" : "所有游戏的记录都会被清除。贴纸、能量、感谢手帐、画和壁纸会保留。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有遊戲的紀錄都會被清除。貼紙、能量和感謝手帳會保留。"
+            "value" : "所有遊戲的紀錄都會被清除。貼紙、能量、感謝手帳、畫和桌布會保留。"
           }
         }
       }
@@ -22709,91 +22709,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Rekorde, Sticker, die Energie und das Danke-Heft werden gelöscht. Bist du sicher?"
+            "value" : "Alle Rekorde, Sticker, die Energie, das Danke-Heft, deine Zeichnung und das Hintergrundbild werden gelöscht. Bist du sicher?"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All records, stickers, energy and the Thank-You Notebook will be erased. Are you sure?"
+            "value" : "All records, stickers, energy, the Thank-You Notebook, your drawing and wallpaper will be erased. Are you sure?"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se borrarán todos los récords, las pegatinas, la energía y el cuaderno de gracias. ¿Estás seguro?"
+            "value" : "Se borrarán todos los récords, las pegatinas, la energía, el cuaderno de gracias, tu dibujo y el fondo. ¿Estás seguro?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tous les records, autocollants, l'énergie et le carnet de mercis seront effacés. Es-tu sûr ?"
+            "value" : "Tous les records, autocollants, l'énergie, le carnet de mercis, ton dessin et le fond seront effacés. Es-tu sûr ?"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सभी रिकॉर्ड, स्टिकर, ऊर्जा और धन्यवाद डायरी मिट जाएंगे। क्या आप निश्चित हैं?"
+            "value" : "सभी रिकॉर्ड, स्टिकर, ऊर्जा, धन्यवाद डायरी, तुम्हारा चित्र और वॉलपेपर मिट जाएंगे। क्या आप निश्चित हैं?"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Semua rekor, stiker, energi, dan Buku Terima Kasih akan dihapus. Yakin?"
+            "value" : "Semua rekor, stiker, energi, Buku Terima Kasih, gambar, dan wallpaper akan dihapus. Yakin?"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutti i record, gli adesivi, l'energia e il quaderno dei grazie verranno cancellati. Sei sicuro?"
+            "value" : "Tutti i record, gli adesivi, l'energia, il quaderno dei grazie, il tuo disegno e lo sfondo verranno cancellati. Sei sicuro?"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "きろくも シールも エネルギーも ありがとう てちょうも ぜんぶ きえます。よろしいですか？"
+            "value" : "きろくも シールも エネルギーも ありがとう てちょうも おえかきと かべがみも ぜんぶ きえます。よろしいですか？"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "기록도 스티커도 에너지도 고마워 수첩도 모두 사라집니다. 괜찮으세요?"
+            "value" : "기록도 스티커도 에너지도 고마워 수첩도 그림과 배경도 모두 사라집니다. 괜찮으세요?"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle records, stickers, energie en het dankjewel-boekje worden gewist. Weet je het zeker?"
+            "value" : "Alle records, stickers, energie, het dankjewel-boekje, je tekening en de achtergrond worden gewist. Weet je het zeker?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Todos os recordes, adesivos, a energia e o caderno do obrigado serão apagados. Tem certeza?"
+            "value" : "Todos os recordes, adesivos, a energia, o caderno do obrigado, seu desenho e o fundo serão apagados. Tem certeza?"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "สถิติ สติกเกอร์ พลังงาน และสมุดขอบคุณทั้งหมดจะถูกลบ แน่ใจหรือไม่?"
+            "value" : "สถิติ สติกเกอร์ พลังงาน สมุดขอบคุณ ภาพวาด และวอลเปเปอร์ทั้งหมดจะถูกลบ แน่ใจหรือไม่?"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toàn bộ kỷ lục, nhãn dán, năng lượng và sổ cảm ơn sẽ bị xóa. Bạn có chắc không?"
+            "value" : "Toàn bộ kỷ lục, nhãn dán, năng lượng, sổ cảm ơn, tranh vẽ và hình nền sẽ bị xóa. Bạn có chắc không?"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有记录、贴纸、能量和感谢手帐都会被清除。确定吗？"
+            "value" : "所有记录、贴纸、能量、感谢手帐、画和壁纸都会被清除。确定吗？"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "所有紀錄、貼紙、能量和感謝手帳都會被清除。確定嗎？"
+            "value" : "所有紀錄、貼紙、能量、感謝手帳、畫和桌布都會被清除。確定嗎？"
           }
         }
       }

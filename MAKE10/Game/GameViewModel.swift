@@ -568,6 +568,13 @@ final class GameViewModel {
         EnergyStore.shared.reset()   // エネルギー残高も 0 に戻す
         StickerShop.shared.reset()   // ショップの品揃え・売り切れも消す（次に開いたとき新しく開店する）
         ThanksNotebookStore.shared.reset()   // ありがとう てちょうの記録も消す
+        DrawingStore.shared.clearAll()       // お絵かきの線も消す
+        WallpaperStore.shared.reset()        // かべがみも消して、いつもの背景に戻す
+        // お絵かき画面の背景色・道具パネルの位置とたたみ具合も、はじめの状態に戻す
+        for key in [UDKey.playBoardBackground, UDKey.playPanelOffsetX,
+                    UDKey.playPanelOffsetY, UDKey.playPanelCollapsed] {
+            UserDefaults.standard.removeObject(forKey: key)
+        }
         gameState           = .title
     }
 
