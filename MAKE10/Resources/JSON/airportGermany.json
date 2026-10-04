@@ -1,0 +1,339 @@
+{
+  "gameId": "airportGermany",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "ドイツの空港コード",
+    "en": "Germany Airports",
+    "de": "Deutsche Flughäfen",
+    "es": "Aeropuertos de Alemania",
+    "fr": "Aéroports d'Allemagne",
+    "hi": "जर्मनी हवाई अड्डे",
+    "id": "Bandara Jerman",
+    "it": "Aeroporti della Germania",
+    "ko": "독일 공항",
+    "nl": "Duitse luchthavens",
+    "pt-BR": "Aeroportos da Alemanha",
+    "th": "สนามบินในเยอรมนี",
+    "vi": "Sân bay Đức",
+    "zh-Hans": "德国机场",
+    "zh-Hant": "德國機場"
+  },
+  "icon": "🇩🇪",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "HDF",
+      "name": {
+        "ja": "ヘリングスドルフ空港",
+        "en": "Heringsdorf Airport",
+        "de": "Flughafen Heringsdorf"
+      }
+    },
+    {
+      "display": "BER",
+      "name": {
+        "ja": "ベルリン・ブランデンブルク国際空港",
+        "en": "Berlin Brandenburg Airport",
+        "de": "Flughafen Berlin Brandenburg"
+      }
+    },
+    {
+      "display": "DRS",
+      "name": {
+        "ja": "ドレスデン空港",
+        "en": "Dresden Airport",
+        "de": "Flughafen Dresden"
+      }
+    },
+    {
+      "display": "ERF",
+      "name": {
+        "ja": "エアフルト空港",
+        "en": "Erfurt-Weimar Airport",
+        "de": "Flughafen Erfurt-Weimar"
+      }
+    },
+    {
+      "display": "FRA",
+      "name": {
+        "ja": "フランクフルト空港",
+        "en": "Frankfurt Airport",
+        "de": "Flughafen Frankfurt Main"
+      }
+    },
+    {
+      "display": "FMO",
+      "name": {
+        "ja": "ミュンスター・オスナブリュック国際空港",
+        "en": "Münster/Osnabrück Airport",
+        "de": "Flughafen Münster/Osnabrück"
+      }
+    },
+    {
+      "display": "HAM",
+      "name": {
+        "ja": "ハンブルク空港",
+        "en": "Hamburg Airport",
+        "de": "Flughafen Hamburg"
+      }
+    },
+    {
+      "display": "CGN",
+      "name": {
+        "ja": "ケルン・ボン空港",
+        "en": "Cologne Bonn Airport",
+        "de": "Flughafen Köln/Bonn"
+      }
+    },
+    {
+      "display": "DUS",
+      "name": {
+        "ja": "デュッセルドルフ空港",
+        "en": "Düsseldorf Airport",
+        "de": "Flughafen Düsseldorf"
+      }
+    },
+    {
+      "display": "MUC",
+      "name": {
+        "ja": "ミュンヘン空港",
+        "en": "Munich Airport",
+        "de": "Flughafen München"
+      }
+    },
+    {
+      "display": "NUE",
+      "name": {
+        "ja": "ニュルンベルク空港",
+        "en": "Nuremberg Airport",
+        "de": "Flughafen Nürnberg"
+      }
+    },
+    {
+      "display": "LEJ",
+      "name": {
+        "ja": "ライプツィヒ・ハレ空港",
+        "en": "Leipzig/Halle Airport",
+        "de": "Flughafen Leipzig/Halle"
+      }
+    },
+    {
+      "display": "SCN",
+      "name": {
+        "ja": "ザールブリュッケン空港",
+        "en": "Saarbrücken Airport",
+        "de": "Flughafen Saarbrücken"
+      }
+    },
+    {
+      "display": "STR",
+      "name": {
+        "ja": "シュトゥットガルト空港",
+        "en": "Stuttgart Airport",
+        "de": "Flughafen Stuttgart"
+      }
+    },
+    {
+      "display": "HAJ",
+      "name": {
+        "ja": "ハノーファー空港",
+        "en": "Hannover Airport",
+        "de": "Flughafen Hannover"
+      }
+    },
+    {
+      "display": "BRE",
+      "name": {
+        "ja": "ブレーメン空港",
+        "en": "Bremen Airport",
+        "de": "Flughafen Bremen"
+      }
+    },
+    {
+      "display": "HHN",
+      "name": {
+        "ja": "フランクフルト・ハーン空港",
+        "en": "Hahn Airport",
+        "de": "Flughafen Frankfurt-Hahn"
+      }
+    },
+    {
+      "display": "MHG",
+      "name": {
+        "ja": "マンハイム・シティ空港",
+        "en": "Mannheim City Airport",
+        "de": "Flugplatz Mannheim City"
+      }
+    },
+    {
+      "display": "LBC",
+      "name": {
+        "ja": "リューベック空港",
+        "en": "Lübeck-Blankensee Airport",
+        "de": "Flughafen Lübeck-Blankensee"
+      }
+    },
+    {
+      "display": "FMM",
+      "name": {
+        "ja": "メミンゲン空港",
+        "en": "Memmingen Airport",
+        "de": "Flughafen Memmingen"
+      }
+    },
+    {
+      "display": "PAD",
+      "name": {
+        "ja": "パーダーボルン・リップシュタット空港",
+        "en": "Paderborn/Lippstadt Airport",
+        "de": "Flughafen Paderborn/Lippstadt"
+      }
+    },
+    {
+      "display": "NRN",
+      "name": {
+        "ja": "ヴェーツェ空港",
+        "en": "Niederrhein Airport",
+        "de": "Flughafen Niederrhein"
+      }
+    },
+    {
+      "display": "DTM",
+      "name": {
+        "ja": "ドルトムント空港",
+        "en": "Dortmund Airport",
+        "de": "Flughafen Dortmund"
+      }
+    },
+    {
+      "display": "FDH",
+      "name": {
+        "ja": "フリードリヒスハーフェン空港",
+        "en": "Friedrichshafen Airport",
+        "de": "Flughafen Friedrichshafen"
+      }
+    },
+    {
+      "display": "FKB",
+      "name": {
+        "ja": "バーデン・エアパーク",
+        "en": "Baden Airport",
+        "de": "Flughafen Karlsruhe/Baden-Baden"
+      }
+    },
+    {
+      "display": "KSF",
+      "name": {
+        "ja": "カッセル空港",
+        "en": "Kassel Airport",
+        "de": "Flughafen Kassel-Calden"
+      }
+    },
+    {
+      "display": "EME",
+      "name": {
+        "ja": "エムデン空港",
+        "en": "Emden airfield",
+        "de": "Flugplatz Emden"
+      }
+    },
+    {
+      "display": "AGE",
+      "name": {
+        "en": "Wangerooge airfield",
+        "de": "Flugplatz Wangerooge"
+      }
+    },
+    {
+      "display": "JUI",
+      "name": {
+        "en": "Juist airfield",
+        "de": "Flugplatz Juist"
+      }
+    },
+    {
+      "display": "BMK",
+      "name": {
+        "ja": "ボルクム飛行場",
+        "en": "Borkum airfield",
+        "de": "Flugplatz Borkum"
+      }
+    },
+    {
+      "display": "NOD",
+      "name": {
+        "en": "Norden-Norddeich airfield",
+        "de": "Flugplatz Norden-Norddeich"
+      }
+    },
+    {
+      "display": "NRD",
+      "name": {
+        "en": "Norderney airfield",
+        "de": "Flugplatz Norderney"
+      }
+    },
+    {
+      "display": "BMR",
+      "name": {
+        "en": "Baltrum airfield",
+        "de": "Flugplatz Baltrum"
+      }
+    },
+    {
+      "display": "HEI",
+      "name": {
+        "ja": "ハイデ・ビューズム空港",
+        "en": "Heide-Büsum airfield",
+        "de": "Flugplatz Heide-Büsum"
+      }
+    },
+    {
+      "display": "HGL",
+      "name": {
+        "ja": "ヘルゴラント空港",
+        "en": "Heligoland-Düne airfield",
+        "de": "Flugplatz Helgoland-Düne"
+      }
+    },
+    {
+      "display": "GWT",
+      "name": {
+        "ja": "ズュルト空港",
+        "en": "Sylt Airport",
+        "de": "Flughafen Sylt"
+      }
+    },
+    {
+      "display": "FCN",
+      "name": {
+        "en": "Sea-Airport Cuxhaven/Nordholz",
+        "de": "Sea-Airport Cuxhaven/Nordholz"
+      }
+    },
+    {
+      "display": "RLG",
+      "name": {
+        "ja": "ロストック＝ラーゲ空港",
+        "en": "Rostock Airport",
+        "de": "Flughafen Rostock-Laage"
+      }
+    }
+  ]
+}

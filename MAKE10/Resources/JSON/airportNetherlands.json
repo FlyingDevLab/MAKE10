@@ -1,0 +1,129 @@
+{
+  "gameId": "airportNetherlands",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "オランダの空港コード",
+    "en": "Netherlands Airports",
+    "de": "Niederländische Flughäfen",
+    "es": "Aeropuertos de los Países Bajos",
+    "fr": "Aéroports des Pays-Bas",
+    "hi": "नीदरलैंड हवाई अड्डे",
+    "id": "Bandara Belanda",
+    "it": "Aeroporti dei Paesi Bassi",
+    "ko": "네덜란드 공항",
+    "nl": "Nederlandse luchthavens",
+    "pt-BR": "Aeroportos dos Países Baixos",
+    "th": "สนามบินในเนเธอร์แลนด์",
+    "vi": "Sân bay Hà Lan",
+    "zh-Hans": "荷兰机场",
+    "zh-Hant": "荷蘭機場"
+  },
+  "icon": "🇳🇱",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "AMS",
+      "name": {
+        "ja": "アムステルダム・スキポール空港",
+        "en": "Amsterdam Schiphol Airport",
+        "nl": "Luchthaven Schiphol"
+      }
+    },
+    {
+      "display": "MST",
+      "name": {
+        "ja": "マーストリヒト・アーヘン空港",
+        "en": "Maastricht Aachen Airport",
+        "nl": "Maastricht Aachen Airport"
+      }
+    },
+    {
+      "display": "EIN",
+      "name": {
+        "ja": "アイントホーフェン空港",
+        "en": "Eindhoven Airport",
+        "nl": "Vliegbasis Eindhoven"
+      }
+    },
+    {
+      "display": "GRQ",
+      "name": {
+        "ja": "フローニンゲン・エールデ空港",
+        "en": "Groningen Airport Eelde",
+        "nl": "Groningen Airport Eelde"
+      }
+    },
+    {
+      "display": "RTM",
+      "name": {
+        "ja": "ロッテルダム・ハーグ空港",
+        "en": "Rotterdam The Hague Airport",
+        "nl": "Rotterdam The Hague Airport"
+      }
+    },
+    {
+      "display": "AUA",
+      "name": {
+        "ja": "クィーン・ベアトリクス国際空港",
+        "en": "Queen Beatrix International Airport",
+        "nl": "Internationale luchthaven Koningin Beatrix"
+      }
+    },
+    {
+      "display": "BON",
+      "name": {
+        "ja": "フラミンゴ空港",
+        "en": "Flamingo International Airport",
+        "nl": "Bonaire International Airport"
+      }
+    },
+    {
+      "display": "CUR",
+      "name": {
+        "ja": "ハト国際空港",
+        "en": "Hato International Airport",
+        "nl": "Curaçao International Airport"
+      }
+    },
+    {
+      "display": "EUX",
+      "name": {
+        "ja": "F・D・ルーズベルト飛行場",
+        "en": "F.D. Roosevelt Airport",
+        "nl": "F.D. Roosevelt Airport"
+      }
+    },
+    {
+      "display": "SXM",
+      "name": {
+        "ja": "プリンセス・ジュリアナ国際空港",
+        "en": "Princess Juliana International Airport",
+        "nl": "Princess Juliana International Airport"
+      }
+    },
+    {
+      "display": "SAB",
+      "name": {
+        "ja": "ファンチョ・E・ヨラウスクィン飛行場",
+        "en": "Juancho E. Yrausquin Airport",
+        "nl": "Juancho E. Yrausquin Airport"
+      }
+    }
+  ]
+}

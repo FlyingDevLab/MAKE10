@@ -1,0 +1,430 @@
+{
+  "gameId": "airportFrance",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "フランスの空港コード",
+    "en": "France Airports",
+    "de": "Französische Flughäfen",
+    "es": "Aeropuertos de Francia",
+    "fr": "Aéroports de France",
+    "hi": "फ़्रांस हवाई अड्डे",
+    "id": "Bandara Prancis",
+    "it": "Aeroporti della Francia",
+    "ko": "프랑스 공항",
+    "nl": "Franse luchthavens",
+    "pt-BR": "Aeroportos da França",
+    "th": "สนามบินในฝรั่งเศส",
+    "vi": "Sân bay Pháp",
+    "zh-Hans": "法国机场",
+    "zh-Hant": "法國機場"
+  },
+  "icon": "🇫🇷",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "BOD",
+      "name": {
+        "ja": "ボルドー・メリニャック空港",
+        "en": "Bordeaux–Mérignac Airport",
+        "fr": "Aéroport de Bordeaux-Mérignac"
+      }
+    },
+    {
+      "display": "EGC",
+      "name": {
+        "ja": "ベルジュラク",
+        "en": "Bergerac Dordogne Périgord Airport",
+        "fr": "Aéroport de Bergerac-Dordogne-Périgord"
+      }
+    },
+    {
+      "display": "LRH",
+      "name": {
+        "ja": "ラ・ロシェル",
+        "en": "La Rochelle – Île de Ré Airport",
+        "fr": "Aéroport de La Rochelle - île de Ré"
+      }
+    },
+    {
+      "display": "PIS",
+      "name": {
+        "ja": "ポワチエ",
+        "en": "Poitiers – Biard Airport",
+        "fr": "Aéroport de Poitiers-Biard"
+      }
+    },
+    {
+      "display": "LIG",
+      "name": {
+        "ja": "リモージュ",
+        "en": "Limoges – Bellegarde Airport",
+        "fr": "Aéroport de Limoges-Bellegarde"
+      }
+    },
+    {
+      "display": "TLS",
+      "name": {
+        "ja": "トゥールーズ・ブラニャック空港",
+        "en": "Toulouse-Blagnac",
+        "fr": "Aéroport de Toulouse-Blagnac"
+      }
+    },
+    {
+      "display": "PUF",
+      "name": {
+        "ja": "ポー・ピレネー空港",
+        "en": "Pau Pyrénées Airport",
+        "fr": "Aéroport de Pau-Pyrénées"
+      }
+    },
+    {
+      "display": "LDE",
+      "name": {
+        "ja": "タルブ·ルルド・ピレネー空港",
+        "en": "Tarbes-Lourdes-Pyrénées Airport",
+        "fr": "Aéroport de Tarbes-Lourdes-Pyrénées"
+      }
+    },
+    {
+      "display": "BIQ",
+      "name": {
+        "ja": "ビアリッツ＝アングレット＝バイヨンヌ空港",
+        "en": "Biarritz – Anglet – Bayonne Airport",
+        "fr": "Aéroport de Biarritz-Pays basque"
+      }
+    },
+    {
+      "display": "DCM",
+      "name": {
+        "ja": "カストル・マザメ空港",
+        "en": "Castres–Mazamet Airport",
+        "fr": "Aéroport de Castres-Mazamet"
+      }
+    },
+    {
+      "display": "RDZ",
+      "name": {
+        "ja": "ロデーズ・マルシャック空港",
+        "en": "Rodez-Aveyron Airport",
+        "fr": "Aéroport de Rodez-Aveyron"
+      }
+    },
+    {
+      "display": "OUI",
+      "name": {
+        "en": "Ushant Airport",
+        "fr": "Aérodrome d'Ouessant"
+      }
+    },
+    {
+      "display": "DLE",
+      "name": {
+        "ja": "ドル＝ジュラ空港",
+        "en": "Dole–Jura Airport",
+        "fr": "Aéroport de Dole-Jura"
+      }
+    },
+    {
+      "display": "LPY",
+      "name": {
+        "ja": "ル・ピュイ空港",
+        "en": "Le Puy – Loudes Airport",
+        "fr": "Aéroport du Puy - Loudes"
+      }
+    },
+    {
+      "display": "ETZ",
+      "name": {
+        "ja": "メス＝ナンシー＝ロレーヌ空港",
+        "en": "Metz-Nancy-Lorraine Airport",
+        "fr": "Aéroport de Metz-Nancy-Lorraine"
+      }
+    },
+    {
+      "display": "BIA",
+      "name": {
+        "ja": "バスティア・ポエタ空港",
+        "en": "Bastia – Poretta Airport",
+        "fr": "Aéroport de Bastia Poretta"
+      }
+    },
+    {
+      "display": "CLY",
+      "name": {
+        "ja": "カルヴィ",
+        "en": "Calvi – Sainte-Catherine Airport",
+        "fr": "Aéroport de Calvi-Sainte-Catherine"
+      }
+    },
+    {
+      "display": "FSC",
+      "name": {
+        "ja": "フィガリ＝シュド・コルス空港",
+        "en": "Figari Sud-Corse Airport",
+        "fr": "Aéroport de Figari Sud Corse"
+      }
+    },
+    {
+      "display": "AJA",
+      "name": {
+        "ja": "アジャクシオ・ナポレオン・ポナパルト空港",
+        "en": "Ajaccio Napoleon Bonaparte Airport",
+        "fr": "Aéroport d'Ajaccio Napoléon-Bonaparte"
+      }
+    },
+    {
+      "display": "CMF",
+      "name": {
+        "ja": "シャンベリー",
+        "en": "Chambéry Airport",
+        "fr": "Aéroport de Chambéry-Savoie"
+      }
+    },
+    {
+      "display": "CFE",
+      "name": {
+        "ja": "クレルモン＝フェラン・オーベルニュ空港",
+        "en": "Clermont-Ferrand Auvergne Airport",
+        "fr": "Aéroport de Clermont-Ferrand Auvergne"
+      }
+    },
+    {
+      "display": "LYS",
+      "name": {
+        "ja": "サン＝テグジュペリ国際空港",
+        "en": "Lyon–Saint-Exupéry Airport",
+        "fr": "Aéroport Lyon-Saint-Exupéry"
+      }
+    },
+    {
+      "display": "NCY",
+      "name": {
+        "en": "Annecy – Haute-Savoie – Mont Blanc Airport",
+        "fr": "Aéroport d'Annecy Haute-Savoie Mont-Blanc"
+      }
+    },
+    {
+      "display": "GNB",
+      "name": {
+        "ja": "グルノーブル空港",
+        "en": "Grenoble-Isère Airport",
+        "fr": "Aéroport de Grenoble-Isère"
+      }
+    },
+    {
+      "display": "AUR",
+      "name": {
+        "ja": "オーリヤック・トロンキレ空港",
+        "en": "Aurillac Airport",
+        "fr": "Aéroport d'Aurillac"
+      }
+    },
+    {
+      "display": "CCF",
+      "name": {
+        "ja": "カルカソンヌ",
+        "en": "Carcassonne Airport",
+        "fr": "Aéroport de Carcassonne-Salvaza"
+      }
+    },
+    {
+      "display": "MRS",
+      "name": {
+        "ja": "マルセイユ・プロヴァンス空港",
+        "en": "Marseille Provence Airport",
+        "fr": "Aéroport Marseille-Provence"
+      }
+    },
+    {
+      "display": "NCE",
+      "name": {
+        "ja": "コート・ダジュール空港",
+        "en": "Nice Côte d'Azur Airport",
+        "fr": "Aéroport de Nice-Côte d'Azur"
+      }
+    },
+    {
+      "display": "PGF",
+      "name": {
+        "ja": "ペルピニャン＝リヴザルト空港",
+        "en": "Perpignan–Rivesaltes Airport",
+        "fr": "Aéroport de Perpignan-Rivesaltes"
+      }
+    },
+    {
+      "display": "MPL",
+      "name": {
+        "ja": "モンペリエ・メディテラネ空港",
+        "en": "Montpellier – Méditerranée Airport",
+        "fr": "Aéroport de Montpellier-Méditerranée"
+      }
+    },
+    {
+      "display": "BZR",
+      "name": {
+        "ja": "ベジエ空港",
+        "en": "Béziers Cap d'Agde Airport",
+        "fr": "Aéroport de Béziers - Vias"
+      }
+    },
+    {
+      "display": "AVN",
+      "name": {
+        "ja": "アヴィニョン＝コーモン空港",
+        "en": "Avignon – Caumont Airport",
+        "fr": "Aéroport d'Avignon - Provence"
+      }
+    },
+    {
+      "display": "BVA",
+      "name": {
+        "ja": "パリ・ボーヴェ・ティレ空港",
+        "en": "Beauvais-Tillé Airport",
+        "fr": "Aéroport de Paris-Beauvais"
+      }
+    },
+    {
+      "display": "XCR",
+      "name": {
+        "ja": "ヴァトリー国際空港",
+        "en": "Châlons Vatry Airport",
+        "fr": "Aéroport de Châlons-Vatry"
+      }
+    },
+    {
+      "display": "TUF",
+      "name": {
+        "ja": "トゥール",
+        "en": "Tours Val de Loire Airport",
+        "fr": "Aéroport de Tours Val de Loire"
+      }
+    },
+    {
+      "display": "CDG",
+      "name": {
+        "ja": "パリ＝シャルル・ド・ゴール空港",
+        "en": "Paris-Charles de Gaulle Airport",
+        "fr": "Aéroport Paris-Charles-de-Gaulle"
+      }
+    },
+    {
+      "display": "ORY",
+      "name": {
+        "ja": "パリ＝オルリー空港",
+        "en": "Orly Airport",
+        "fr": "Aéroport de Paris-Orly"
+      }
+    },
+    {
+      "display": "LIL",
+      "name": {
+        "ja": "リール空港",
+        "en": "Lille Airport",
+        "fr": "Aéroport de Lille-Lesquin"
+      }
+    },
+    {
+      "display": "BES",
+      "name": {
+        "ja": "ブレスト･ブルターニュ空港",
+        "en": "Brest Bretagne Airport",
+        "fr": "Aéroport Brest Bretagne"
+      }
+    },
+    {
+      "display": "DOL",
+      "name": {
+        "ja": "ドーヴィル＝ノルマンディー空港",
+        "en": "Deauville – Saint-Gatien Airport",
+        "fr": "Aéroport de Deauville-Normandie"
+      }
+    },
+    {
+      "display": "CFR",
+      "name": {
+        "ja": "カーン・カルピケ空港",
+        "en": "Caen – Carpiquet Airport",
+        "fr": "Aéroport de Caen - Carpiquet"
+      }
+    },
+    {
+      "display": "RNS",
+      "name": {
+        "ja": "レンヌ＝サン・ジャック空港",
+        "en": "Rennes – Saint-Jacques Airport",
+        "fr": "Aéroport de Rennes-Bretagne"
+      }
+    },
+    {
+      "display": "NTE",
+      "name": {
+        "ja": "ナント・アトランティック空港",
+        "en": "Nantes Atlantique Airport",
+        "fr": "Aéroport de Nantes Atlantique"
+      }
+    },
+    {
+      "display": "BSL",
+      "name": {
+        "ja": "ユーロエアポート",
+        "en": "EuroAirport Basel-Mulhouse-Freiburg",
+        "fr": "Aéroport de Bâle-Mulhouse-Fribourg"
+      }
+    },
+    {
+      "display": "BVE",
+      "name": {
+        "ja": "ブリーヴ空港",
+        "en": "Brive – Souillac Airport",
+        "fr": "Aéroport de Brive-Vallée de la Dordogne"
+      }
+    },
+    {
+      "display": "SXB",
+      "name": {
+        "ja": "ストラスブール国際空港",
+        "en": "Strasbourg Airport",
+        "fr": "Aéroport de Strasbourg-Entzheim"
+      }
+    },
+    {
+      "display": "TLN",
+      "name": {
+        "ja": "トゥーロン空港",
+        "en": "Toulon-Hyères Airport",
+        "fr": "Aéroport de Toulon-Hyères"
+      }
+    },
+    {
+      "display": "FNI",
+      "name": {
+        "ja": "ニーム空港",
+        "en": "Nîmes-Alès-Camargue-Cévennes Airport",
+        "fr": "Aéroport de Nîmes-Garons"
+      }
+    },
+    {
+      "display": "LTT",
+      "name": {
+        "en": "La Môle – Saint-Tropez Airport",
+        "fr": "Aéroport du Golfe de Saint-Tropez - La Môle"
+      }
+    }
+  ]
+}

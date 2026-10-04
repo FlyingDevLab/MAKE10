@@ -1,0 +1,4455 @@
+{
+  "gameId": "airportUSA",
+  "group": {
+    "ja": "くうこうコード",
+    "en": "Airport Codes",
+    "de": "Flughafencodes",
+    "es": "Códigos de aeropuerto",
+    "fr": "Codes d'aéroport",
+    "hi": "हवाई अड्डा कोड",
+    "id": "Kode bandara",
+    "it": "Codici aeroporto",
+    "ko": "공항 코드",
+    "nl": "Luchthavencodes",
+    "pt-BR": "Códigos de aeroporto",
+    "th": "รหัสสนามบิน",
+    "vi": "Mã sân bay",
+    "zh-Hans": "机场代码",
+    "zh-Hant": "機場代碼"
+  },
+  "title": {
+    "ja": "アメリカの空港コード",
+    "en": "USA Airports",
+    "de": "US-Flughäfen",
+    "es": "Aeropuertos de EE. UU.",
+    "fr": "Aéroports des États-Unis",
+    "hi": "अमेरिका हवाई अड्डे",
+    "id": "Bandara Amerika Serikat",
+    "it": "Aeroporti degli Stati Uniti",
+    "ko": "미국 공항",
+    "nl": "Amerikaanse luchthavens",
+    "pt-BR": "Aeroportos dos EUA",
+    "th": "สนามบินในสหรัฐอเมริกา",
+    "vi": "Sân bay Hoa Kỳ",
+    "zh-Hans": "美国机场",
+    "zh-Hant": "美國機場"
+  },
+  "icon": "🇺🇸",
+  "displayStyle": "code",
+  "items": [
+    {
+      "display": "NUP",
+      "name": {
+        "en": "Nunapitchuk Airport"
+      }
+    },
+    {
+      "display": "PPV",
+      "name": {
+        "en": "Port Protection Seaplane Base"
+      }
+    },
+    {
+      "display": "BYW",
+      "name": {
+        "en": "Blakely Island Airport"
+      }
+    },
+    {
+      "display": "ATT",
+      "name": {
+        "en": "Atmautluak Airport"
+      }
+    },
+    {
+      "display": "PDB",
+      "name": {
+        "ja": "ペドロ・ベイ空港",
+        "en": "Pedro Bay Airport"
+      }
+    },
+    {
+      "display": "KOZ",
+      "name": {
+        "en": "Ouzinkie Airport"
+      }
+    },
+    {
+      "display": "TNK",
+      "name": {
+        "en": "Tununak Airport"
+      }
+    },
+    {
+      "display": "WHD",
+      "name": {
+        "en": "Hyder Seaplane Base"
+      }
+    },
+    {
+      "display": "MNT",
+      "name": {
+        "en": "Minto Al Wright Airport"
+      }
+    },
+    {
+      "display": "WKK",
+      "name": {
+        "en": "Aleknagik Airport"
+      }
+    },
+    {
+      "display": "WFB",
+      "name": {
+        "en": "Ketchikan Harbor Seaplane Base"
+      }
+    },
+    {
+      "display": "BKF",
+      "name": {
+        "en": "Lake Brooks Seaplane Base"
+      }
+    },
+    {
+      "display": "TSS",
+      "name": {
+        "en": "East 34th Street Heliport"
+      }
+    },
+    {
+      "display": "NYS",
+      "name": {
+        "en": "New York Skyports Inc. Seaplane Base"
+      }
+    },
+    {
+      "display": "CWS",
+      "name": {
+        "en": "Center Island Airport"
+      }
+    },
+    {
+      "display": "TEK",
+      "name": {
+        "ja": "タティトレク空港",
+        "en": "Tatitlek Airport"
+      }
+    },
+    {
+      "display": "SSW",
+      "name": {
+        "en": "Stuart Island Airpark"
+      }
+    },
+    {
+      "display": "WDN",
+      "name": {
+        "en": "Waldron Airstrip"
+      }
+    },
+    {
+      "display": "WWP",
+      "name": {
+        "en": "North Whale Seaplane Base"
+      }
+    },
+    {
+      "display": "CHU",
+      "name": {
+        "en": "Chuathbaluk Airport"
+      }
+    },
+    {
+      "display": "WTL",
+      "name": {
+        "en": "Tuntutuliak Airport"
+      }
+    },
+    {
+      "display": "TWA",
+      "name": {
+        "en": "Twin Hills Airport"
+      }
+    },
+    {
+      "display": "KCQ",
+      "name": {
+        "en": "Chignik Lake Airport"
+      }
+    },
+    {
+      "display": "NKI",
+      "name": {
+        "en": "Naukati Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "AOS",
+      "name": {
+        "en": "Amook Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "ALZ",
+      "name": {
+        "en": "Alitak Seaplane Base"
+      }
+    },
+    {
+      "display": "CGA",
+      "name": {
+        "ja": "クレイグ水上機基地",
+        "en": "Craig Seaplane Base"
+      }
+    },
+    {
+      "display": "CKD",
+      "name": {
+        "en": "Crooked Creek Airport"
+      }
+    },
+    {
+      "display": "CKX",
+      "name": {
+        "en": "Chicken Airport"
+      }
+    },
+    {
+      "display": "CYM",
+      "name": {
+        "en": "Chatham Seaplane Base"
+      }
+    },
+    {
+      "display": "DHB",
+      "name": {
+        "en": "Deer Harbor Sea Plane Base"
+      }
+    },
+    {
+      "display": "DIO",
+      "name": {
+        "en": "Diomede Heliport"
+      }
+    },
+    {
+      "display": "EDA",
+      "name": {
+        "en": "Edna Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "EXI",
+      "name": {
+        "en": "Excursion Inlet Seaplane Base"
+      }
+    },
+    {
+      "display": "GNU",
+      "name": {
+        "en": "Goodnews Airport"
+      }
+    },
+    {
+      "display": "HYL",
+      "name": {
+        "ja": "ホリス水上機基地",
+        "en": "Hollis Seaplane Base"
+      }
+    },
+    {
+      "display": "JRA",
+      "name": {
+        "en": "West 30th Street Heliport"
+      }
+    },
+    {
+      "display": "BLD",
+      "name": {
+        "en": "Boulder City Municipal Airport"
+      }
+    },
+    {
+      "display": "OTS",
+      "name": {
+        "en": "Anacortes Airport"
+      }
+    },
+    {
+      "display": "ABE",
+      "name": {
+        "ja": "リーハイ・バレー国際空港",
+        "en": "Lehigh Valley International Airport"
+      }
+    },
+    {
+      "display": "ABI",
+      "name": {
+        "ja": "アビリーン地域空港",
+        "en": "Abilene Regional Airport"
+      }
+    },
+    {
+      "display": "ABQ",
+      "name": {
+        "ja": "アルバカーキ国際空港",
+        "en": "Albuquerque International Sunport"
+      }
+    },
+    {
+      "display": "ABR",
+      "name": {
+        "ja": "アバディーン地域空港",
+        "en": "Aberdeen Regional Airport"
+      }
+    },
+    {
+      "display": "ABY",
+      "name": {
+        "ja": "サウスウェスト・ジョージア・リージョナル空港",
+        "en": "Southwest Georgia Regional Airport"
+      }
+    },
+    {
+      "display": "ACK",
+      "name": {
+        "ja": "ナンタケット記念空港",
+        "en": "Nantucket Memorial Airport"
+      }
+    },
+    {
+      "display": "ACT",
+      "name": {
+        "ja": "ウェーコ地域空港",
+        "en": "Waco Regional Airport"
+      }
+    },
+    {
+      "display": "ACV",
+      "name": {
+        "ja": "アーケータ＝ユーレカ空港",
+        "en": "Arcata-Eureka Airport"
+      }
+    },
+    {
+      "display": "ACY",
+      "name": {
+        "ja": "アトランティックシティ国際空港",
+        "en": "Atlantic City International Airport"
+      }
+    },
+    {
+      "display": "KAE",
+      "name": {
+        "en": "Kake Seaplane Base"
+      }
+    },
+    {
+      "display": "AEX",
+      "name": {
+        "ja": "アレクサンドリア国際空港 (ルイジアナ州)",
+        "en": "Alexandria International Airport"
+      }
+    },
+    {
+      "display": "AGS",
+      "name": {
+        "ja": "オーガスタ地域空港",
+        "en": "Augusta Regional Airport"
+      }
+    },
+    {
+      "display": "AIA",
+      "name": {
+        "ja": "アライアンス市営空港",
+        "en": "Alliance Municipal Airport"
+      }
+    },
+    {
+      "display": "ALB",
+      "name": {
+        "ja": "オールバニ国際空港",
+        "en": "Albany International Airport"
+      }
+    },
+    {
+      "display": "ALO",
+      "name": {
+        "ja": "ウォータールー地方空港",
+        "en": "Waterloo Regional Airport"
+      }
+    },
+    {
+      "display": "ALS",
+      "name": {
+        "en": "San Luis Valley Regional Airport"
+      }
+    },
+    {
+      "display": "ALW",
+      "name": {
+        "ja": "ワラワラ空港",
+        "en": "Walla Walla Regional Airport"
+      }
+    },
+    {
+      "display": "AMA",
+      "name": {
+        "ja": "リック・ハズバンド・アマリロ国際空港",
+        "en": "Rick Husband Amarillo International Airport"
+      }
+    },
+    {
+      "display": "AOO",
+      "name": {
+        "ja": "アルトゥーナ＝ブレア郡空港",
+        "en": "Altoona–Blair County Airport"
+      }
+    },
+    {
+      "display": "APN",
+      "name": {
+        "en": "Alpena County Regional Airport"
+      }
+    },
+    {
+      "display": "ART",
+      "name": {
+        "ja": "ウォータータウン国際空港",
+        "en": "Watertown International Airport"
+      }
+    },
+    {
+      "display": "ASE",
+      "name": {
+        "ja": "アスペン空港",
+        "en": "Aspen/Pitkin County Airport"
+      }
+    },
+    {
+      "display": "ATL",
+      "name": {
+        "ja": "ハーツフィールド・ジャクソン・アトランタ国際空港",
+        "en": "Hartsfield–Jackson Atlanta International Airport"
+      }
+    },
+    {
+      "display": "ATW",
+      "name": {
+        "ja": "アップルトン国際空港",
+        "en": "Appleton International Airport"
+      }
+    },
+    {
+      "display": "ATY",
+      "name": {
+        "ja": "ウォータータウン地域空港",
+        "en": "Watertown Regional Airport"
+      }
+    },
+    {
+      "display": "AUG",
+      "name": {
+        "ja": "オーガスタ州空港",
+        "en": "Augusta State Airport"
+      }
+    },
+    {
+      "display": "AUS",
+      "name": {
+        "ja": "オースチン・バーグストロム国際空港",
+        "en": "Austin-Bergstrom International Airport"
+      }
+    },
+    {
+      "display": "AVL",
+      "name": {
+        "ja": "アシュビル地域空港",
+        "en": "Asheville"
+      }
+    },
+    {
+      "display": "AVP",
+      "name": {
+        "ja": "ウィルクス＝バレ・スクラントン国際空港",
+        "en": "Wilkes-Barre/Scranton International Airport"
+      }
+    },
+    {
+      "display": "AZO",
+      "name": {
+        "ja": "カラマズー/バトルクリーク国際空港",
+        "en": "Kalamazoo/Battle Creek International Airport"
+      }
+    },
+    {
+      "display": "BKG",
+      "name": {
+        "ja": "ブランソン空港",
+        "en": "Branson Airport"
+      }
+    },
+    {
+      "display": "BDL",
+      "name": {
+        "ja": "ブラッドレー国際空港",
+        "en": "Bradley International Airport"
+      }
+    },
+    {
+      "display": "BED",
+      "name": {
+        "en": "Hanscom Field"
+      }
+    },
+    {
+      "display": "BFD",
+      "name": {
+        "en": "Bradford Regional Airport"
+      }
+    },
+    {
+      "display": "BFF",
+      "name": {
+        "ja": "ネブラスカ西部地方空港",
+        "en": "Western Nebraska Regional Airport"
+      }
+    },
+    {
+      "display": "BFI",
+      "name": {
+        "ja": "キング郡国際空港",
+        "en": "Boeing Field"
+      }
+    },
+    {
+      "display": "BFL",
+      "name": {
+        "en": "Meadows Field Airport"
+      }
+    },
+    {
+      "display": "BGM",
+      "name": {
+        "en": "Greater Binghamton Airport"
+      }
+    },
+    {
+      "display": "BGR",
+      "name": {
+        "ja": "バンゴー国際空港",
+        "en": "Bangor International Airport"
+      }
+    },
+    {
+      "display": "BHB",
+      "name": {
+        "en": "Hancock County-Bar Harbor Airport"
+      }
+    },
+    {
+      "display": "BHM",
+      "name": {
+        "ja": "バーミングハム国際空港",
+        "en": "Birmingham-Shuttlesworth International Airport"
+      }
+    },
+    {
+      "display": "BID",
+      "name": {
+        "ja": "ブロック島州空港",
+        "en": "Block Island State Airport"
+      }
+    },
+    {
+      "display": "BIH",
+      "name": {
+        "en": "Eastern Sierra Regional Airport"
+      }
+    },
+    {
+      "display": "BIL",
+      "name": {
+        "ja": "ビリングス・ローガン国際空港",
+        "en": "Billings Logan International Airport"
+      }
+    },
+    {
+      "display": "BIS",
+      "name": {
+        "ja": "ビスマーク市営空港",
+        "en": "Bismarck Municipal Airport"
+      }
+    },
+    {
+      "display": "BJC",
+      "name": {
+        "ja": "ジェフコ空港",
+        "en": "Rocky Mountain Metropolitan Airport"
+      }
+    },
+    {
+      "display": "BKW",
+      "name": {
+        "en": "Raleigh County Memorial Airport"
+      }
+    },
+    {
+      "display": "BLI",
+      "name": {
+        "ja": "ベリンハム空港",
+        "en": "Bellingham International Airport"
+      }
+    },
+    {
+      "display": "BLV",
+      "name": {
+        "ja": "スコット空軍基地",
+        "en": "Scott Air Force Base"
+      }
+    },
+    {
+      "display": "BMI",
+      "name": {
+        "en": "Central Illinois Regional Airport"
+      }
+    },
+    {
+      "display": "BNA",
+      "name": {
+        "ja": "ナッシュビル国際空港",
+        "en": "Nashville International Airport"
+      }
+    },
+    {
+      "display": "BOI",
+      "name": {
+        "ja": "ボイシ空港",
+        "en": "Boise Airport"
+      }
+    },
+    {
+      "display": "BOS",
+      "name": {
+        "ja": "ジェネラル・エドワード・ローレンス・ローガン国際空港",
+        "en": "Logan International Airport"
+      }
+    },
+    {
+      "display": "BPT",
+      "name": {
+        "en": "Jack Brooks Regional Airport"
+      }
+    },
+    {
+      "display": "BQK",
+      "name": {
+        "en": "Brunswick Golden Isles Airport"
+      }
+    },
+    {
+      "display": "BRD",
+      "name": {
+        "en": "Brainerd Lakes Regional Airport"
+      }
+    },
+    {
+      "display": "BRL",
+      "name": {
+        "en": "Southeast Iowa Regional Airport"
+      }
+    },
+    {
+      "display": "BRO",
+      "name": {
+        "en": "Brownsville/South Padre Island International Airport"
+      }
+    },
+    {
+      "display": "BTM",
+      "name": {
+        "ja": "バート・ムーニー空港",
+        "en": "Bert Mooney Airport"
+      }
+    },
+    {
+      "display": "BTR",
+      "name": {
+        "ja": "バトンルージュ・メトロポリタン空港",
+        "en": "Baton Rouge Metropolitan Airport"
+      }
+    },
+    {
+      "display": "BTV",
+      "name": {
+        "ja": "バーリントン国際空港",
+        "en": "Patrick Leahy Burlington International Airport"
+      }
+    },
+    {
+      "display": "BUF",
+      "name": {
+        "ja": "バッファロー・ナイアガラ国際空港",
+        "en": "Buffalo Niagara International Airport"
+      }
+    },
+    {
+      "display": "BUR",
+      "name": {
+        "ja": "ハリウッド・バーバンク空港",
+        "en": "Hollywood Burbank Airport"
+      }
+    },
+    {
+      "display": "BWI",
+      "name": {
+        "ja": "ボルチモア・ワシントン国際空港",
+        "en": "Baltimore/Washington International Thurgood Marshall Airport"
+      }
+    },
+    {
+      "display": "BZN",
+      "name": {
+        "ja": "ギャラティンフィールド空港",
+        "en": "Bozeman Yellowstone International Airport"
+      }
+    },
+    {
+      "display": "CAE",
+      "name": {
+        "ja": "コロンビア都市圏空港",
+        "en": "Columbia Metropolitan Airport"
+      }
+    },
+    {
+      "display": "CAK",
+      "name": {
+        "en": "Akron-Canton Airport"
+      }
+    },
+    {
+      "display": "KCC",
+      "name": {
+        "en": "Coffman Cove Seaplane Base"
+      }
+    },
+    {
+      "display": "CCR",
+      "name": {
+        "en": "Buchanan Field Airport"
+      }
+    },
+    {
+      "display": "CDC",
+      "name": {
+        "en": "Cedar City Regional Airport"
+      }
+    },
+    {
+      "display": "CDR",
+      "name": {
+        "en": "Chadron Municipal Airport"
+      }
+    },
+    {
+      "display": "CEC",
+      "name": {
+        "en": "Del Norte County Airport"
+      }
+    },
+    {
+      "display": "CEZ",
+      "name": {
+        "en": "Cortez Municipal Airport"
+      }
+    },
+    {
+      "display": "CGI",
+      "name": {
+        "en": "Cape Girardeau Regional Airport"
+      }
+    },
+    {
+      "display": "CHA",
+      "name": {
+        "ja": "チャタヌーガ都市圏空港",
+        "en": "Chattanooga Metropolitan Airport"
+      }
+    },
+    {
+      "display": "CHO",
+      "name": {
+        "ja": "シャーロッツヴィル-アルベマール空港",
+        "en": "Charlottesville Albemarle Airport"
+      }
+    },
+    {
+      "display": "CHS",
+      "name": {
+        "ja": "チャールストン国際空港",
+        "en": "Charleston International Airport"
+      }
+    },
+    {
+      "display": "CID",
+      "name": {
+        "ja": "イースタン・アイオワ空港",
+        "en": "The Eastern Iowa Airport"
+      }
+    },
+    {
+      "display": "CIU",
+      "name": {
+        "en": "Chippewa County International Airport"
+      }
+    },
+    {
+      "display": "CKB",
+      "name": {
+        "ja": "ノースセントラル・ウェストバージニア空港",
+        "en": "North Central West Virginia Airport"
+      }
+    },
+    {
+      "display": "CLE",
+      "name": {
+        "ja": "クリーブランド・ホプキンス国際空港",
+        "en": "Cleveland Hopkins International Airport"
+      }
+    },
+    {
+      "display": "CLL",
+      "name": {
+        "en": "Easterwood Airport"
+      }
+    },
+    {
+      "display": "CLT",
+      "name": {
+        "ja": "シャーロット・ダグラス国際空港",
+        "en": "Charlotte Douglas International Airport"
+      }
+    },
+    {
+      "display": "CMH",
+      "name": {
+        "ja": "ポート・コロンバス国際空港",
+        "en": "John Glenn Columbus International Airport"
+      }
+    },
+    {
+      "display": "CMI",
+      "name": {
+        "ja": "イリノイ大学ウィラード空港",
+        "en": "University of Illinois Willard Airport"
+      }
+    },
+    {
+      "display": "CMX",
+      "name": {
+        "en": "Houghton County Memorial Airport"
+      }
+    },
+    {
+      "display": "CNM",
+      "name": {
+        "en": "Cavern City Air Terminal"
+      }
+    },
+    {
+      "display": "CNY",
+      "name": {
+        "en": "Canyonlands Regional Airport"
+      }
+    },
+    {
+      "display": "COD",
+      "name": {
+        "en": "Yellowstone Regional Airport"
+      }
+    },
+    {
+      "display": "COS",
+      "name": {
+        "ja": "コロラドスプリングス空港",
+        "en": "Colorado Springs Airport"
+      }
+    },
+    {
+      "display": "COU",
+      "name": {
+        "en": "Columbia Regional Airport"
+      }
+    },
+    {
+      "display": "CPR",
+      "name": {
+        "en": "Casper–Natrona County International Airport"
+      }
+    },
+    {
+      "display": "CRP",
+      "name": {
+        "ja": "コーパスクリスティ国際空港",
+        "en": "Corpus Christi International Airport"
+      }
+    },
+    {
+      "display": "CLD",
+      "name": {
+        "ja": "マクレラン・パロマ空港",
+        "en": "McClellan–Palomar Airport"
+      }
+    },
+    {
+      "display": "CRW",
+      "name": {
+        "ja": "イェーガー空港",
+        "en": "West Virginia International Yeager Airport"
+      }
+    },
+    {
+      "display": "CSG",
+      "name": {
+        "ja": "コロンバス空港",
+        "en": "Columbus Airport"
+      }
+    },
+    {
+      "display": "CVG",
+      "name": {
+        "ja": "シンシナティ・ノーザンケンタッキー国際空港",
+        "en": "Cincinnati/Northern Kentucky International Airport"
+      }
+    },
+    {
+      "display": "CVN",
+      "name": {
+        "en": "Clovis Municipal Airport"
+      }
+    },
+    {
+      "display": "CWA",
+      "name": {
+        "en": "Central Wisconsin Airport"
+      }
+    },
+    {
+      "display": "CYS",
+      "name": {
+        "ja": "シャイアン空港",
+        "en": "Cheyenne Regional Airport"
+      }
+    },
+    {
+      "display": "DAB",
+      "name": {
+        "ja": "デイトナビーチ国際空港",
+        "en": "Daytona Beach International Airport"
+      }
+    },
+    {
+      "display": "DAL",
+      "name": {
+        "ja": "ダラス・ラブフィールド空港",
+        "en": "Dallas Love Field"
+      }
+    },
+    {
+      "display": "DAY",
+      "name": {
+        "ja": "デイトン国際空港",
+        "en": "Dayton International Airport"
+      }
+    },
+    {
+      "display": "DBQ",
+      "name": {
+        "en": "Dubuque Regional Airport"
+      }
+    },
+    {
+      "display": "DCA",
+      "name": {
+        "ja": "ロナルド・レーガン・ワシントン・ナショナル空港",
+        "en": "Ronald Reagan Washington National Airport"
+      }
+    },
+    {
+      "display": "DDC",
+      "name": {
+        "en": "Dodge City Regional Airport"
+      }
+    },
+    {
+      "display": "DEC",
+      "name": {
+        "ja": "ディケーター空港",
+        "en": "Decatur Airport"
+      }
+    },
+    {
+      "display": "DEN",
+      "name": {
+        "ja": "デンバー国際空港",
+        "en": "Denver International Airport"
+      }
+    },
+    {
+      "display": "DFW",
+      "name": {
+        "ja": "ダラス・フォートワース国際空港",
+        "en": "Dallas/Fort Worth International Airport"
+      }
+    },
+    {
+      "display": "DHN",
+      "name": {
+        "en": "Dothan Regional Airport"
+      }
+    },
+    {
+      "display": "DIK",
+      "name": {
+        "en": "Dickinson Theodore Roosevelt Regional Airport"
+      }
+    },
+    {
+      "display": "DLH",
+      "name": {
+        "ja": "ダルース国際空港",
+        "en": "Duluth International Airport"
+      }
+    },
+    {
+      "display": "DOV",
+      "name": {
+        "ja": "ドーバー空軍基地",
+        "en": "Dover Air Force Base"
+      }
+    },
+    {
+      "display": "DRO",
+      "name": {
+        "en": "Durango–La Plata County Airport"
+      }
+    },
+    {
+      "display": "DSM",
+      "name": {
+        "ja": "デモイン国際空港",
+        "en": "Des Moines International Airport"
+      }
+    },
+    {
+      "display": "DSI",
+      "name": {
+        "en": "Destin Executive Airport"
+      }
+    },
+    {
+      "display": "DTW",
+      "name": {
+        "ja": "デトロイト・メトロポリタン・ウェイン・カウンティ空港",
+        "en": "Detroit Metropolitan Wayne County Airport"
+      }
+    },
+    {
+      "display": "DUJ",
+      "name": {
+        "en": "DuBois Regional Airport"
+      }
+    },
+    {
+      "display": "DVL",
+      "name": {
+        "en": "Devils Lake Regional Airport"
+      }
+    },
+    {
+      "display": "EAR",
+      "name": {
+        "en": "Kearney Regional Airport"
+      }
+    },
+    {
+      "display": "EAT",
+      "name": {
+        "ja": "パングボーン・メモリアル空港",
+        "en": "Pangborn Memorial Airport"
+      }
+    },
+    {
+      "display": "EAU",
+      "name": {
+        "en": "Chippewa Valley Regional Airport"
+      }
+    },
+    {
+      "display": "KEB",
+      "name": {
+        "ja": "ナンワレク空港",
+        "en": "Nanwalek Airport"
+      }
+    },
+    {
+      "display": "ECP",
+      "name": {
+        "ja": "ノースウエスト・フロリダ・ビーチズ国際空港",
+        "en": "Northwest Florida Beaches International Airport"
+      }
+    },
+    {
+      "display": "EGE",
+      "name": {
+        "en": "Eagle County Regional Airport"
+      }
+    },
+    {
+      "display": "EKO",
+      "name": {
+        "en": "Elko Regional Airport"
+      }
+    },
+    {
+      "display": "ELD",
+      "name": {
+        "en": "South Arkansas Regional Airport at Goodwin Field"
+      }
+    },
+    {
+      "display": "ELM",
+      "name": {
+        "ja": "エルマイラ・コーニング地域空港",
+        "en": "Elmira Corning Regional Airport"
+      }
+    },
+    {
+      "display": "ELP",
+      "name": {
+        "ja": "エルパソ国際空港",
+        "en": "El Paso International Airport"
+      }
+    },
+    {
+      "display": "ERI",
+      "name": {
+        "ja": "エリー国際空港",
+        "en": "Erie International Airport"
+      }
+    },
+    {
+      "display": "ESC",
+      "name": {
+        "en": "Delta County Airport"
+      }
+    },
+    {
+      "display": "EUG",
+      "name": {
+        "ja": "ユージーン空港",
+        "en": "Eugene Airport"
+      }
+    },
+    {
+      "display": "EVV",
+      "name": {
+        "en": "Evansville Regional Airport"
+      }
+    },
+    {
+      "display": "EWB",
+      "name": {
+        "ja": "ニュー・ベッドフォード地域空港",
+        "en": "New Bedford Regional Airport"
+      }
+    },
+    {
+      "display": "EWN",
+      "name": {
+        "en": "Coastal Carolina Regional Airport"
+      }
+    },
+    {
+      "display": "EWR",
+      "name": {
+        "ja": "ニューアーク・リバティー国際空港",
+        "en": "Newark Liberty International Airport"
+      }
+    },
+    {
+      "display": "EYW",
+      "name": {
+        "ja": "キーウェスト国際空港",
+        "en": "Key West International Airport"
+      }
+    },
+    {
+      "display": "FAR",
+      "name": {
+        "ja": "ヘクター国際空港",
+        "en": "Hector International Airport"
+      }
+    },
+    {
+      "display": "FAT",
+      "name": {
+        "ja": "フレズノ・ヨセミテ国際空港",
+        "en": "Fresno Yosemite International Airport"
+      }
+    },
+    {
+      "display": "FAY",
+      "name": {
+        "ja": "ファイエットヴィル地域空港",
+        "en": "Fayetteville Regional Airport"
+      }
+    },
+    {
+      "display": "FRD",
+      "name": {
+        "ja": "フライデーハーバー空港",
+        "en": "Friday Harbor Airport"
+      }
+    },
+    {
+      "display": "FLG",
+      "name": {
+        "ja": "フラッグスタッフ プリアム空港",
+        "en": "Flagstaff Pulliam Airport"
+      }
+    },
+    {
+      "display": "FLL",
+      "name": {
+        "ja": "フォートローダーデール・ハリウッド国際空港",
+        "en": "Fort Lauderdale–Hollywood"
+      }
+    },
+    {
+      "display": "FLO",
+      "name": {
+        "en": "Florence Regional Airport"
+      }
+    },
+    {
+      "display": "FNT",
+      "name": {
+        "en": "Bishop International Airport"
+      }
+    },
+    {
+      "display": "FOD",
+      "name": {
+        "en": "Fort Dodge Regional Airport"
+      }
+    },
+    {
+      "display": "FSD",
+      "name": {
+        "ja": "スーフォールズ地域空港",
+        "en": "Sioux Falls Regional Airport"
+      }
+    },
+    {
+      "display": "FSM",
+      "name": {
+        "en": "Fort Smith Regional Airport"
+      }
+    },
+    {
+      "display": "FTW",
+      "name": {
+        "en": "Fort Worth Meacham International Airport"
+      }
+    },
+    {
+      "display": "FWA",
+      "name": {
+        "ja": "フォートウェイン国際空港",
+        "en": "Fort Wayne International Airport"
+      }
+    },
+    {
+      "display": "GCC",
+      "name": {
+        "en": "Gillette–Campbell County Airport"
+      }
+    },
+    {
+      "display": "GCK",
+      "name": {
+        "en": "Garden City Regional Airport"
+      }
+    },
+    {
+      "display": "GCN",
+      "name": {
+        "ja": "グランド・キャニオン国立公園空港",
+        "en": "Grand Canyon National Park Airport"
+      }
+    },
+    {
+      "display": "GDV",
+      "name": {
+        "ja": "ドーソン・コミュニティ空港",
+        "en": "Dawson Community Airport"
+      }
+    },
+    {
+      "display": "GEG",
+      "name": {
+        "ja": "スポケーン国際空港",
+        "en": "Spokane International Airport"
+      }
+    },
+    {
+      "display": "GFK",
+      "name": {
+        "ja": "グランド・フォークス国際空港",
+        "en": "Grand Forks International Airport"
+      }
+    },
+    {
+      "display": "GGG",
+      "name": {
+        "en": "East Texas Regional Airport"
+      }
+    },
+    {
+      "display": "GGW",
+      "name": {
+        "ja": "グラスゴー空港 (アメリカ合衆国)",
+        "en": "Glasgow Valley County Airport"
+      }
+    },
+    {
+      "display": "GJT",
+      "name": {
+        "en": "Grand Junction Regional Airport"
+      }
+    },
+    {
+      "display": "GLH",
+      "name": {
+        "en": "Mid Delta Regional Airport"
+      }
+    },
+    {
+      "display": "GNV",
+      "name": {
+        "en": "Gainesville Regional Airport"
+      }
+    },
+    {
+      "display": "FCA",
+      "name": {
+        "ja": "グレイシャーパーク国際空港",
+        "en": "Glacier Park International Airport"
+      }
+    },
+    {
+      "display": "GPT",
+      "name": {
+        "ja": "ガルフポート・ビロキシ空港",
+        "en": "Gulfport-Biloxi International Airport"
+      }
+    },
+    {
+      "display": "GRB",
+      "name": {
+        "ja": "オースチン・ストローベル国際空港",
+        "en": "Green Bay–Austin Straubel International Airport"
+      }
+    },
+    {
+      "display": "GRI",
+      "name": {
+        "en": "Central Nebraska Regional Airport"
+      }
+    },
+    {
+      "display": "GRK",
+      "name": {
+        "en": "Killeen Regional Airport"
+      }
+    },
+    {
+      "display": "GRR",
+      "name": {
+        "ja": "グランドラピッズ国際空港",
+        "en": "Gerald R. Ford International Airport"
+      }
+    },
+    {
+      "display": "GSO",
+      "name": {
+        "ja": "ピードモント・トライアド国際空港",
+        "en": "Piedmont Triad International Airport"
+      }
+    },
+    {
+      "display": "GSP",
+      "name": {
+        "ja": "グリーンビル・スパータンバーグ国際空港",
+        "en": "Greenville-Spartanburg International Airport"
+      }
+    },
+    {
+      "display": "GTF",
+      "name": {
+        "ja": "グレートフォールズ国際空港",
+        "en": "Great Falls International Airport"
+      }
+    },
+    {
+      "display": "GTR",
+      "name": {
+        "en": "Golden Triangle Regional Airport"
+      }
+    },
+    {
+      "display": "GUC",
+      "name": {
+        "en": "Gunnison–Crested Butte Regional Airport"
+      }
+    },
+    {
+      "display": "GUP",
+      "name": {
+        "ja": "ギャラップ市営空港",
+        "en": "Gallup Municipal Airport"
+      }
+    },
+    {
+      "display": "KGX",
+      "name": {
+        "en": "Grayling Airport"
+      }
+    },
+    {
+      "display": "GYY",
+      "name": {
+        "ja": "ゲーリー・シカゴ国際空港",
+        "en": "Gary/Chicago International Airport"
+      }
+    },
+    {
+      "display": "HDN",
+      "name": {
+        "ja": "ヤンパバレー空港",
+        "en": "Yampa Valley Airport"
+      }
+    },
+    {
+      "display": "HGR",
+      "name": {
+        "en": "Hagerstown Regional Airport"
+      }
+    },
+    {
+      "display": "HHR",
+      "name": {
+        "ja": "ホーソーン市営空港",
+        "en": "Hawthorne Municipal Airport"
+      }
+    },
+    {
+      "display": "HIB",
+      "name": {
+        "ja": "レンジ・リージョナル空港",
+        "en": "Range Regional Airport"
+      }
+    },
+    {
+      "display": "HII",
+      "name": {
+        "ja": "レイクハバスシティ空港",
+        "en": "Lake Havasu City Airport"
+      }
+    },
+    {
+      "display": "HLN",
+      "name": {
+        "en": "Helena Regional Airport"
+      }
+    },
+    {
+      "display": "HOB",
+      "name": {
+        "en": "Lea County Regional Airport"
+      }
+    },
+    {
+      "display": "HOT",
+      "name": {
+        "ja": "メモリアル・フィールド空港",
+        "en": "Memorial Field Airport"
+      }
+    },
+    {
+      "display": "HOU",
+      "name": {
+        "ja": "ウィリアム・P・ホビー空港",
+        "en": "William P. Hobby Airport"
+      }
+    },
+    {
+      "display": "HPN",
+      "name": {
+        "ja": "ウェストチェスター郡空港",
+        "en": "Westchester County Airport"
+      }
+    },
+    {
+      "display": "HRL",
+      "name": {
+        "ja": "バレー国際空港",
+        "en": "Valley International Airport"
+      }
+    },
+    {
+      "display": "HRO",
+      "name": {
+        "en": "Boone County Airport"
+      }
+    },
+    {
+      "display": "HSV",
+      "name": {
+        "ja": "ハンツビル国際空港",
+        "en": "Huntsville International Airport"
+      }
+    },
+    {
+      "display": "HTS",
+      "name": {
+        "en": "Tri-State Airport"
+      }
+    },
+    {
+      "display": "HVN",
+      "name": {
+        "ja": "トゥウィード・ニューヘイブン空港",
+        "en": "Tweed-New Haven Regional Airport"
+      }
+    },
+    {
+      "display": "HVR",
+      "name": {
+        "en": "Havre City-County Airport"
+      }
+    },
+    {
+      "display": "HHH",
+      "name": {
+        "ja": "ヒルトンヘッド空港",
+        "en": "Hilton Head Airport"
+      }
+    },
+    {
+      "display": "HYA",
+      "name": {
+        "en": "Cape Cod Gateway Airport"
+      }
+    },
+    {
+      "display": "HYS",
+      "name": {
+        "en": "Hays Regional Airport"
+      }
+    },
+    {
+      "display": "IAD",
+      "name": {
+        "ja": "ワシントン・ダレス国際空港",
+        "en": "Washington Dulles International Airport"
+      }
+    },
+    {
+      "display": "IAG",
+      "name": {
+        "ja": "ナイアガラフォールズ国際空港",
+        "en": "Niagara Falls International Airport"
+      }
+    },
+    {
+      "display": "IAH",
+      "name": {
+        "ja": "ジョージ・ブッシュ・インターコンチネンタル空港",
+        "en": "George Bush Intercontinental Airport"
+      }
+    },
+    {
+      "display": "ICT",
+      "name": {
+        "ja": "ウィチタ・ミッド・コンティエント空港",
+        "en": "Wichita Dwight D. Eisenhower National Airport"
+      }
+    },
+    {
+      "display": "IDA",
+      "name": {
+        "ja": "アイダホフォールズ地域空港",
+        "en": "Idaho Falls Regional Airport"
+      }
+    },
+    {
+      "display": "ILG",
+      "name": {
+        "ja": "ニューキャッスル空港",
+        "en": "New Castle Airport"
+      }
+    },
+    {
+      "display": "ILM",
+      "name": {
+        "ja": "ウィルミントン国際空港",
+        "en": "Wilmington International Airport"
+      }
+    },
+    {
+      "display": "IMT",
+      "name": {
+        "en": "Ford Airport"
+      }
+    },
+    {
+      "display": "IND",
+      "name": {
+        "ja": "インディアナポリス国際空港",
+        "en": "Indianapolis International Airport"
+      }
+    },
+    {
+      "display": "INL",
+      "name": {
+        "ja": "フォールズ国際空港",
+        "en": "Falls International Airport"
+      }
+    },
+    {
+      "display": "IPL",
+      "name": {
+        "ja": "インペリアル郡空港",
+        "en": "Imperial County Airport"
+      }
+    },
+    {
+      "display": "IPT",
+      "name": {
+        "en": "Williamsport Regional Airport"
+      }
+    },
+    {
+      "display": "IRK",
+      "name": {
+        "ja": "カークスビル地域空港",
+        "en": "Kirksville Regional Airport"
+      }
+    },
+    {
+      "display": "ISP",
+      "name": {
+        "ja": "ロングアイランド・マッカーサー空港",
+        "en": "Long Island MacArthur Airport"
+      }
+    },
+    {
+      "display": "ITH",
+      "name": {
+        "en": "Ithaca Tompkins Regional Airport"
+      }
+    },
+    {
+      "display": "AZA",
+      "name": {
+        "en": "Phoenix–Mesa Gateway Airport"
+      }
+    },
+    {
+      "display": "IWD",
+      "name": {
+        "en": "Gogebic–Iron County Airport"
+      }
+    },
+    {
+      "display": "JAC",
+      "name": {
+        "ja": "ジャクソンホール空港",
+        "en": "Jackson Hole Airport"
+      }
+    },
+    {
+      "display": "JAN",
+      "name": {
+        "ja": "ジャクソン・エヴァース国際空港",
+        "en": "Jackson-Evers International Airport"
+      }
+    },
+    {
+      "display": "JAX",
+      "name": {
+        "ja": "ジャクソンビル国際空港",
+        "en": "Jacksonville International Airport"
+      }
+    },
+    {
+      "display": "JBR",
+      "name": {
+        "en": "Jonesboro Municipal Airport"
+      }
+    },
+    {
+      "display": "JFK",
+      "name": {
+        "ja": "ジョン・F・ケネディ国際空港",
+        "en": "John F. Kennedy International Airport"
+      }
+    },
+    {
+      "display": "JLN",
+      "name": {
+        "en": "Joplin Regional Airport"
+      }
+    },
+    {
+      "display": "JMS",
+      "name": {
+        "en": "Jamestown Regional Airport"
+      }
+    },
+    {
+      "display": "USA",
+      "name": {
+        "en": "Concord Regional Airport"
+      }
+    },
+    {
+      "display": "JST",
+      "name": {
+        "en": "Johnstown–Cambria County Airport"
+      }
+    },
+    {
+      "display": "KKB",
+      "name": {
+        "en": "Kitoi Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "LAF",
+      "name": {
+        "ja": "パデュー大学空港",
+        "en": "Purdue University Airport"
+      }
+    },
+    {
+      "display": "LAL",
+      "name": {
+        "en": "Lakeland Linder Regional Airport"
+      }
+    },
+    {
+      "display": "LAN",
+      "name": {
+        "ja": "ランシング首都圏国際空港",
+        "en": "Capital Region International Airport"
+      }
+    },
+    {
+      "display": "LAR",
+      "name": {
+        "en": "Laramie Regional Airport"
+      }
+    },
+    {
+      "display": "LAS",
+      "name": {
+        "ja": "ハリー・リード国際空港",
+        "en": "Harry Reid International Airport"
+      }
+    },
+    {
+      "display": "LAW",
+      "name": {
+        "en": "Lawton–Fort Sill Regional Airport"
+      }
+    },
+    {
+      "display": "LAX",
+      "name": {
+        "ja": "ロサンゼルス国際空港",
+        "en": "Los Angeles International Airport"
+      }
+    },
+    {
+      "display": "LBB",
+      "name": {
+        "ja": "ラボック・プレストン・スミス国際空港",
+        "en": "Lubbock Preston Smith International Airport"
+      }
+    },
+    {
+      "display": "LBE",
+      "name": {
+        "en": "Arnold Palmer Regional Airport"
+      }
+    },
+    {
+      "display": "LBF",
+      "name": {
+        "en": "North Platte Regional Airport"
+      }
+    },
+    {
+      "display": "LBL",
+      "name": {
+        "en": "Liberal Mid-America Regional Airport"
+      }
+    },
+    {
+      "display": "LCH",
+      "name": {
+        "ja": "レイクチャールズ地域空港",
+        "en": "Lake Charles Regional Airport"
+      }
+    },
+    {
+      "display": "LCK",
+      "name": {
+        "en": "Rickenbacker International Airport"
+      }
+    },
+    {
+      "display": "LEB",
+      "name": {
+        "en": "Lebanon Municipal Airport"
+      }
+    },
+    {
+      "display": "LEX",
+      "name": {
+        "ja": "ブルーグラス空港",
+        "en": "Blue Grass Airport"
+      }
+    },
+    {
+      "display": "LFT",
+      "name": {
+        "ja": "ラファイエット地域空港",
+        "en": "Lafayette Regional Airport"
+      }
+    },
+    {
+      "display": "LGA",
+      "name": {
+        "ja": "ラガーディア空港",
+        "en": "LaGuardia Airport"
+      }
+    },
+    {
+      "display": "LGB",
+      "name": {
+        "ja": "ロングビーチ空港",
+        "en": "Long Beach Airport"
+      }
+    },
+    {
+      "display": "LIT",
+      "name": {
+        "ja": "ビル・アンド・ヒラリー・クリントン・ナショナル空港",
+        "en": "Bill and Hillary Clinton National Airport"
+      }
+    },
+    {
+      "display": "LNK",
+      "name": {
+        "ja": "リンカーン空港 (ネブラスカ州)",
+        "en": "Lincoln Airport"
+      }
+    },
+    {
+      "display": "LNS",
+      "name": {
+        "ja": "ランカスター空港 (ペンシルベニア州)",
+        "en": "Lancaster Airport"
+      }
+    },
+    {
+      "display": "LRD",
+      "name": {
+        "ja": "ラレド国際空港",
+        "en": "Laredo International Airport"
+      }
+    },
+    {
+      "display": "LRU",
+      "name": {
+        "ja": "ラスクルーセス国際空港",
+        "en": "Las Cruces International Airport"
+      }
+    },
+    {
+      "display": "LSE",
+      "name": {
+        "ja": "ラクロス地域空港",
+        "en": "La Crosse Regional Airport"
+      }
+    },
+    {
+      "display": "LUK",
+      "name": {
+        "ja": "シンシナティ市営空港",
+        "en": "Cincinnati Municipal Lunken Airport"
+      }
+    },
+    {
+      "display": "LWB",
+      "name": {
+        "en": "Greenbrier Valley Airport"
+      }
+    },
+    {
+      "display": "LWS",
+      "name": {
+        "en": "Lewiston – Nez Perce County Airport"
+      }
+    },
+    {
+      "display": "LYH",
+      "name": {
+        "ja": "リンチバーグ地域空港",
+        "en": "Lynchburg Regional Airport"
+      }
+    },
+    {
+      "display": "MAF",
+      "name": {
+        "ja": "ミッドランド国際空港",
+        "en": "Midland International Airport"
+      }
+    },
+    {
+      "display": "MBL",
+      "name": {
+        "en": "Manistee County Blacker Airport"
+      }
+    },
+    {
+      "display": "MBS",
+      "name": {
+        "en": "MBS International Airport"
+      }
+    },
+    {
+      "display": "MCE",
+      "name": {
+        "en": "Merced Regional Airport"
+      }
+    },
+    {
+      "display": "MCI",
+      "name": {
+        "ja": "カンザスシティ国際空港",
+        "en": "Kansas City International Airport"
+      }
+    },
+    {
+      "display": "MCK",
+      "name": {
+        "en": "McCook Ben Nelson Regional Airport"
+      }
+    },
+    {
+      "display": "MCN",
+      "name": {
+        "en": "Middle Georgia Regional Airport"
+      }
+    },
+    {
+      "display": "MCO",
+      "name": {
+        "ja": "オーランド国際空港",
+        "en": "Orlando International Airport"
+      }
+    },
+    {
+      "display": "MCW",
+      "name": {
+        "ja": "メイソンシティ市営空港",
+        "en": "Mason City Municipal Airport"
+      }
+    },
+    {
+      "display": "MDT",
+      "name": {
+        "ja": "ハリスバーグ国際空港",
+        "en": "Harrisburg International Airport"
+      }
+    },
+    {
+      "display": "MDW",
+      "name": {
+        "ja": "シカゴ・ミッドウェー国際空港",
+        "en": "Midway International Airport"
+      }
+    },
+    {
+      "display": "MEI",
+      "name": {
+        "en": "Meridian Regional Airport"
+      }
+    },
+    {
+      "display": "MEM",
+      "name": {
+        "ja": "メンフィス国際空港",
+        "en": "Memphis International Airport"
+      }
+    },
+    {
+      "display": "MFE",
+      "name": {
+        "en": "McAllen-Miller International Airport"
+      }
+    },
+    {
+      "display": "MFR",
+      "name": {
+        "ja": "ローグバレー国際メド空港",
+        "en": "Rogue Valley International-Medford Airport"
+      }
+    },
+    {
+      "display": "MGC",
+      "name": {
+        "en": "Michigan City Municipal Airport"
+      }
+    },
+    {
+      "display": "MGM",
+      "name": {
+        "en": "Montgomery Regional Airport"
+      }
+    },
+    {
+      "display": "MGW",
+      "name": {
+        "en": "Morgantown Municipal Airport"
+      }
+    },
+    {
+      "display": "MHK",
+      "name": {
+        "ja": "マンハッタン地域空港",
+        "en": "Manhattan Regional Airport"
+      }
+    },
+    {
+      "display": "MHT",
+      "name": {
+        "ja": "マンチェスター・ボストン地域空港",
+        "en": "Manchester–Boston Regional Airport"
+      }
+    },
+    {
+      "display": "MIA",
+      "name": {
+        "ja": "マイアミ国際空港",
+        "en": "Miami International Airport"
+      }
+    },
+    {
+      "display": "MKE",
+      "name": {
+        "ja": "ジェネラル・ミッチェル国際空港",
+        "en": "Milwaukee Mitchell International Airport"
+      }
+    },
+    {
+      "display": "MKG",
+      "name": {
+        "en": "Muskegon County Airport"
+      }
+    },
+    {
+      "display": "MKL",
+      "name": {
+        "ja": "マッケラー・サイプス地域空港",
+        "en": "McKellar-Sipes Regional Airport"
+      }
+    },
+    {
+      "display": "MLB",
+      "name": {
+        "ja": "メルボルン・オーランド国際空港",
+        "en": "Melbourne Orlando International Airport"
+      }
+    },
+    {
+      "display": "MLI",
+      "name": {
+        "en": "Quad Cities International Airport"
+      }
+    },
+    {
+      "display": "MLU",
+      "name": {
+        "ja": "モンロー地域空港 (ルイジアナ州)",
+        "en": "Monroe Regional Airport"
+      }
+    },
+    {
+      "display": "MMH",
+      "name": {
+        "ja": "マンモス・ヨセミテ空港",
+        "en": "Mammoth Yosemite Airport"
+      }
+    },
+    {
+      "display": "MOB",
+      "name": {
+        "ja": "モービル地域空港",
+        "en": "Mobile Regional Airport"
+      }
+    },
+    {
+      "display": "MOT",
+      "name": {
+        "ja": "マイノット国際空港",
+        "en": "Minot International Airport"
+      }
+    },
+    {
+      "display": "MRY",
+      "name": {
+        "ja": "モントレー地域空港",
+        "en": "Monterey Regional Airport"
+      }
+    },
+    {
+      "display": "MSL",
+      "name": {
+        "en": "Northwest Alabama Regional Airport"
+      }
+    },
+    {
+      "display": "MSN",
+      "name": {
+        "ja": "デーン・カウンティ地方空港",
+        "en": "Dane County Regional Airport"
+      }
+    },
+    {
+      "display": "MSO",
+      "name": {
+        "ja": "ミズーラ国際空港",
+        "en": "Missoula International Airport"
+      }
+    },
+    {
+      "display": "MSP",
+      "name": {
+        "ja": "ミネアポリス・セントポール国際空港",
+        "en": "Minneapolis–Saint Paul International Airport"
+      }
+    },
+    {
+      "display": "MSS",
+      "name": {
+        "en": "Massena International Airport"
+      }
+    },
+    {
+      "display": "MSY",
+      "name": {
+        "ja": "ルイ・アームストロング・ニューオーリンズ国際空港",
+        "en": "Louis Armstrong New Orleans International Airport"
+      }
+    },
+    {
+      "display": "MTJ",
+      "name": {
+        "en": "Montrose Regional Airport"
+      }
+    },
+    {
+      "display": "MTP",
+      "name": {
+        "en": "Montauk Airport"
+      }
+    },
+    {
+      "display": "MVY",
+      "name": {
+        "ja": "マーサズ・ヴィニヤード空港",
+        "en": "Martha's Vineyard Airport"
+      }
+    },
+    {
+      "display": "MWA",
+      "name": {
+        "en": "Veterans Airport of Southern Illinois"
+      }
+    },
+    {
+      "display": "MWL",
+      "name": {
+        "ja": "ミネラル・ウェルズ空港",
+        "en": "Mineral Wells Airport"
+      }
+    },
+    {
+      "display": "KMY",
+      "name": {
+        "en": "Moser Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "MYL",
+      "name": {
+        "en": "McCall Municipal Airport"
+      }
+    },
+    {
+      "display": "MYR",
+      "name": {
+        "ja": "マートルビーチ国際空港",
+        "en": "Myrtle Beach International Airport"
+      }
+    },
+    {
+      "display": "YUM",
+      "name": {
+        "ja": "ユマ海兵隊航空基地",
+        "en": "Marine Corps Air Station Yuma"
+      }
+    },
+    {
+      "display": "OAJ",
+      "name": {
+        "en": "Albert J. Ellis Airport"
+      }
+    },
+    {
+      "display": "OAK",
+      "name": {
+        "ja": "オークランド・サンフランシスコ・ベイ空港",
+        "en": "Oakland San Francisco Bay Airport"
+      }
+    },
+    {
+      "display": "OGD",
+      "name": {
+        "en": "Ogden-Hinckley Airport"
+      }
+    },
+    {
+      "display": "OGS",
+      "name": {
+        "en": "Ogdensburg International Airport"
+      }
+    },
+    {
+      "display": "OKC",
+      "name": {
+        "ja": "ウィル・ロジャース・ワールド空港",
+        "en": "Will Rogers World Airport"
+      }
+    },
+    {
+      "display": "OLF",
+      "name": {
+        "en": "L. M. Clayton Airport"
+      }
+    },
+    {
+      "display": "OLM",
+      "name": {
+        "ja": "オリンピア空港",
+        "en": "Olympia Regional Airport"
+      }
+    },
+    {
+      "display": "OMA",
+      "name": {
+        "ja": "エプリー・エアフィールド",
+        "en": "Eppley Airfield"
+      }
+    },
+    {
+      "display": "ONT",
+      "name": {
+        "ja": "オンタリオ国際空港",
+        "en": "Ontario International Airport"
+      }
+    },
+    {
+      "display": "OPF",
+      "name": {
+        "ja": "オパ＝ロッカ空港",
+        "en": "Miami-Opa Locka Executive Airport"
+      }
+    },
+    {
+      "display": "ORD",
+      "name": {
+        "ja": "シカゴ・オヘア国際空港",
+        "en": "O'Hare International Airport"
+      }
+    },
+    {
+      "display": "ORF",
+      "name": {
+        "ja": "ノーフォーク国際空港",
+        "en": "Norfolk International Airport"
+      }
+    },
+    {
+      "display": "ORH",
+      "name": {
+        "en": "Worcester Regional Airport"
+      }
+    },
+    {
+      "display": "ESD",
+      "name": {
+        "en": "Orcas Island Airport"
+      }
+    },
+    {
+      "display": "OTH",
+      "name": {
+        "en": "Southwest Oregon Regional Airport"
+      }
+    },
+    {
+      "display": "OWB",
+      "name": {
+        "en": "Owensboro-Daviess County Regional Airport"
+      }
+    },
+    {
+      "display": "OCE",
+      "name": {
+        "ja": "オーシャンシティ市営空港 (メリーランド州)",
+        "en": "Ocean City Municipal Airport"
+      }
+    },
+    {
+      "display": "KOY",
+      "name": {
+        "en": "Olga Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "PAE",
+      "name": {
+        "ja": "ペイン・フィールド",
+        "en": "Paine Field"
+      }
+    },
+    {
+      "display": "PAH",
+      "name": {
+        "en": "Barkley Regional Airport"
+      }
+    },
+    {
+      "display": "KPB",
+      "name": {
+        "en": "Point Baker Seaplane Base"
+      }
+    },
+    {
+      "display": "PBG",
+      "name": {
+        "ja": "プラッツバーグ国際空港",
+        "en": "Plattsburgh International Airport"
+      }
+    },
+    {
+      "display": "DJT",
+      "name": {
+        "en": "President Donald J. Trump International Airport"
+      }
+    },
+    {
+      "display": "PDK",
+      "name": {
+        "ja": "ディカルブ・ピーチツリー空港",
+        "en": "DeKalb-Peachtree Airport"
+      }
+    },
+    {
+      "display": "PDT",
+      "name": {
+        "ja": "東オレゴン地域空港",
+        "en": "Eastern Oregon Regional Airport"
+      }
+    },
+    {
+      "display": "PDX",
+      "name": {
+        "ja": "ポートランド国際空港",
+        "en": "Portland International Airport"
+      }
+    },
+    {
+      "display": "PGA",
+      "name": {
+        "en": "Page Municipal Airport"
+      }
+    },
+    {
+      "display": "PGD",
+      "name": {
+        "en": "Punta Gorda Airport"
+      }
+    },
+    {
+      "display": "PGV",
+      "name": {
+        "ja": "ピット＝グリーンビル空港",
+        "en": "Pitt-Greenville Airport"
+      }
+    },
+    {
+      "display": "PHF",
+      "name": {
+        "en": "Newport News/Williamsburg International Airport"
+      }
+    },
+    {
+      "display": "PHL",
+      "name": {
+        "ja": "フィラデルフィア国際空港",
+        "en": "Philadelphia International Airport"
+      }
+    },
+    {
+      "display": "PHX",
+      "name": {
+        "ja": "フェニックス・スカイハーバー国際空港",
+        "en": "Phoenix Sky Harbor International Airport"
+      }
+    },
+    {
+      "display": "PIA",
+      "name": {
+        "en": "Peoria International Airport"
+      }
+    },
+    {
+      "display": "PIB",
+      "name": {
+        "en": "Hattiesburg-Laurel Regional Airport"
+      }
+    },
+    {
+      "display": "PIE",
+      "name": {
+        "en": "St. Petersburg–Clearwater International Airport"
+      }
+    },
+    {
+      "display": "PIH",
+      "name": {
+        "ja": "ポカテッロ地域空港",
+        "en": "Pocatello Regional Airport"
+      }
+    },
+    {
+      "display": "PIR",
+      "name": {
+        "en": "Pierre Regional Airport"
+      }
+    },
+    {
+      "display": "PIT",
+      "name": {
+        "ja": "ピッツバーグ国際空港",
+        "en": "Pittsburgh International Airport"
+      }
+    },
+    {
+      "display": "PKB",
+      "name": {
+        "en": "Mid-Ohio Valley Regional Airport"
+      }
+    },
+    {
+      "display": "PLN",
+      "name": {
+        "en": "Pellston Regional Airport"
+      }
+    },
+    {
+      "display": "PNS",
+      "name": {
+        "ja": "ペンサコーラ国際空港",
+        "en": "Pensacola International Airport"
+      }
+    },
+    {
+      "display": "PQI",
+      "name": {
+        "en": "Presque Isle International Airport"
+      }
+    },
+    {
+      "display": "KPR",
+      "name": {
+        "en": "Port Williams Seaplane Base"
+      }
+    },
+    {
+      "display": "PRC",
+      "name": {
+        "en": "Ernest A. Love Field"
+      }
+    },
+    {
+      "display": "PSC",
+      "name": {
+        "ja": "トリシティ空港",
+        "en": "Tri-Cities Airport"
+      }
+    },
+    {
+      "display": "PSM",
+      "name": {
+        "ja": "ピース空軍州兵基地",
+        "en": "Pease Air National Guard Base"
+      }
+    },
+    {
+      "display": "PSP",
+      "name": {
+        "ja": "パームスプリングス国際空港",
+        "en": "Palm Springs International Airport"
+      }
+    },
+    {
+      "display": "PUB",
+      "name": {
+        "ja": "プエブロ記念空港",
+        "en": "Pueblo Memorial Airport"
+      }
+    },
+    {
+      "display": "PUW",
+      "name": {
+        "ja": "プルマン・モスクワ地域空港",
+        "en": "Pullman-Moscow Regional Airport"
+      }
+    },
+    {
+      "display": "PVD",
+      "name": {
+        "ja": "ロードアイランド・T・F・グリーン国際空港",
+        "en": "Rhode Island T. F. Green International Airport"
+      }
+    },
+    {
+      "display": "PVU",
+      "name": {
+        "en": "Provo Municipal Airport"
+      }
+    },
+    {
+      "display": "PWM",
+      "name": {
+        "ja": "ポートランド国際ジェットポート",
+        "en": "Portland International Jetport"
+      }
+    },
+    {
+      "display": "KPY",
+      "name": {
+        "en": "Port Bailey Seaplane Base"
+      }
+    },
+    {
+      "display": "RAP",
+      "name": {
+        "en": "Rapid City Regional Airport"
+      }
+    },
+    {
+      "display": "RDD",
+      "name": {
+        "ja": "レディング市営空港",
+        "en": "Redding Municipal Airport"
+      }
+    },
+    {
+      "display": "RDM",
+      "name": {
+        "ja": "ロバーツ・フィールド空港",
+        "en": "Roberts Field"
+      }
+    },
+    {
+      "display": "RDU",
+      "name": {
+        "ja": "ローリー・ダーラム国際空港",
+        "en": "Raleigh–Durham International Airport"
+      }
+    },
+    {
+      "display": "RFD",
+      "name": {
+        "ja": "シカゴ・ロックフォード国際空港",
+        "en": "Chicago Rockford International Airport"
+      }
+    },
+    {
+      "display": "RHI",
+      "name": {
+        "en": "Rhinelander–Oneida County Airport"
+      }
+    },
+    {
+      "display": "RIC",
+      "name": {
+        "ja": "リッチモンド国際空港",
+        "en": "Richmond International Airport"
+      }
+    },
+    {
+      "display": "RIW",
+      "name": {
+        "en": "Riverton Regional Airport"
+      }
+    },
+    {
+      "display": "RKD",
+      "name": {
+        "en": "Knox County Regional Airport"
+      }
+    },
+    {
+      "display": "RKS",
+      "name": {
+        "en": "Southwest Wyoming Regional Airport"
+      }
+    },
+    {
+      "display": "RNO",
+      "name": {
+        "ja": "リノ・タホ国際空港",
+        "en": "Reno–Tahoe International Airport"
+      }
+    },
+    {
+      "display": "ROA",
+      "name": {
+        "ja": "ロアノーク・ブラックスバーグ地方空港",
+        "en": "Roanoke–Blacksburg Regional Airport"
+      }
+    },
+    {
+      "display": "ROC",
+      "name": {
+        "ja": "グレーター・ロチェスター国際空港",
+        "en": "Frederick Douglass Greater Rochester International Airport"
+      }
+    },
+    {
+      "display": "ROW",
+      "name": {
+        "ja": "ロズウェル国際航空センター",
+        "en": "Roswell International Air Center"
+      }
+    },
+    {
+      "display": "RST",
+      "name": {
+        "ja": "ロチェスター国際空港",
+        "en": "Rochester International Airport"
+      }
+    },
+    {
+      "display": "RSW",
+      "name": {
+        "ja": "サウスウエスト・フロリダ国際空港",
+        "en": "Southwest Florida International Airport"
+      }
+    },
+    {
+      "display": "RUT",
+      "name": {
+        "ja": "ラトランド郡空港",
+        "en": "Rutland Southern Vermont Regional Airport"
+      }
+    },
+    {
+      "display": "SAF",
+      "name": {
+        "en": "Santa Fe Regional Airport"
+      }
+    },
+    {
+      "display": "SAN",
+      "name": {
+        "ja": "サンディエゴ国際空港",
+        "en": "San Diego International Airport"
+      }
+    },
+    {
+      "display": "SAT",
+      "name": {
+        "ja": "サンアントニオ国際空港",
+        "en": "San Antonio International Airport"
+      }
+    },
+    {
+      "display": "SAV",
+      "name": {
+        "en": "Savannah/Hilton Head International Airport"
+      }
+    },
+    {
+      "display": "MQT",
+      "name": {
+        "ja": "ソーヤー国際空港",
+        "en": "Marquette Sawyer Regional Airport"
+      }
+    },
+    {
+      "display": "SBA",
+      "name": {
+        "ja": "サンタバーバラ空港",
+        "en": "Santa Barbara Municipal Airport"
+      }
+    },
+    {
+      "display": "SBD",
+      "name": {
+        "ja": "サンバーナディーノ国際空港",
+        "en": "San Bernardino International Airport"
+      }
+    },
+    {
+      "display": "SBN",
+      "name": {
+        "ja": "サウスベンド国際空港",
+        "en": "South Bend Regional Airport"
+      }
+    },
+    {
+      "display": "SBP",
+      "name": {
+        "ja": "サンルイスオビスポ郡地域空港",
+        "en": "San Luis Obispo County Regional Airport"
+      }
+    },
+    {
+      "display": "SBY",
+      "name": {
+        "en": "Salisbury–Ocean City–Wicomico Regional Airport"
+      }
+    },
+    {
+      "display": "SCK",
+      "name": {
+        "ja": "ストックトン都市空港",
+        "en": "Stockton Metropolitan Airport"
+      }
+    },
+    {
+      "display": "SDF",
+      "name": {
+        "ja": "ルイビル・モハメド・アリ国際空港",
+        "en": "Louisville International Airport"
+      }
+    },
+    {
+      "display": "SDY",
+      "name": {
+        "en": "Sidney-Richland Municipal Airport"
+      }
+    },
+    {
+      "display": "SEA",
+      "name": {
+        "ja": "シアトル・タコマ国際空港",
+        "en": "Seattle–Tacoma International Airport"
+      }
+    },
+    {
+      "display": "SFB",
+      "name": {
+        "ja": "オーランド・サンフォード国際空港",
+        "en": "Orlando Sanford International Airport"
+      }
+    },
+    {
+      "display": "SFO",
+      "name": {
+        "ja": "サンフランシスコ国際空港",
+        "en": "San Francisco International Airport"
+      }
+    },
+    {
+      "display": "SGF",
+      "name": {
+        "ja": "スプリングフィールド・ブランソン・ナショナル空港",
+        "en": "Springfield-Branson National Airport"
+      }
+    },
+    {
+      "display": "UST",
+      "name": {
+        "ja": "セントオーガスティン空港",
+        "en": "Northeast Florida Regional Airport"
+      }
+    },
+    {
+      "display": "SGU",
+      "name": {
+        "ja": "セント・ジョージ地域空港",
+        "en": "St. George Regional Airport"
+      }
+    },
+    {
+      "display": "SHD",
+      "name": {
+        "en": "Shenandoah Valley Regional Airport"
+      }
+    },
+    {
+      "display": "SHR",
+      "name": {
+        "ja": "シェリダン郡空港",
+        "en": "Sheridan County Airport"
+      }
+    },
+    {
+      "display": "SHV",
+      "name": {
+        "ja": "シュリーヴポート地域空港",
+        "en": "Shreveport Regional Airport"
+      }
+    },
+    {
+      "display": "SJC",
+      "name": {
+        "ja": "ノーマン・Y・ミネタ・サンノゼ国際空港",
+        "en": "San Jose International Airport"
+      }
+    },
+    {
+      "display": "SJT",
+      "name": {
+        "en": "San Angelo Regional Airport"
+      }
+    },
+    {
+      "display": "TSM",
+      "name": {
+        "en": "Taos Regional Airport"
+      }
+    },
+    {
+      "display": "SLC",
+      "name": {
+        "ja": "ソルトレイクシティ国際空港",
+        "en": "Salt Lake City International Airport"
+      }
+    },
+    {
+      "display": "SLE",
+      "name": {
+        "en": "McNary Field"
+      }
+    },
+    {
+      "display": "SLK",
+      "name": {
+        "en": "Adirondack Regional Airport"
+      }
+    },
+    {
+      "display": "SLN",
+      "name": {
+        "ja": "サリナ空港",
+        "en": "Salina Regional Airport"
+      }
+    },
+    {
+      "display": "SMF",
+      "name": {
+        "ja": "サクラメント国際空港",
+        "en": "Sacramento International Airport"
+      }
+    },
+    {
+      "display": "SMN",
+      "name": {
+        "en": "Lemhi County Airport"
+      }
+    },
+    {
+      "display": "SMX",
+      "name": {
+        "ja": "サンタマリア公共空港",
+        "en": "Santa Maria Public Airport"
+      }
+    },
+    {
+      "display": "SNA",
+      "name": {
+        "ja": "ジョン・ウェイン空港",
+        "en": "John Wayne Airport"
+      }
+    },
+    {
+      "display": "SOW",
+      "name": {
+        "en": "Show Low Regional Airport"
+      }
+    },
+    {
+      "display": "SPI",
+      "name": {
+        "ja": "アブラハム・リンカーン・キャピタル空港",
+        "en": "Abraham Lincoln Capital Airport"
+      }
+    },
+    {
+      "display": "SPS",
+      "name": {
+        "ja": "シェパード空軍基地",
+        "en": "Sheppard Air Force Base"
+      }
+    },
+    {
+      "display": "SQL",
+      "name": {
+        "ja": "サン・カルロス空港 (カリフォルニア州)",
+        "en": "San Carlos Airport"
+      }
+    },
+    {
+      "display": "SRQ",
+      "name": {
+        "ja": "サラソータ＝ブレイデントン国際空港",
+        "en": "Sarasota–Bradenton International Airport"
+      }
+    },
+    {
+      "display": "STC",
+      "name": {
+        "en": "St. Cloud Regional Airport"
+      }
+    },
+    {
+      "display": "STL",
+      "name": {
+        "ja": "セントルイス・ランバート国際空港",
+        "en": "St. Louis Lambert International Airport"
+      }
+    },
+    {
+      "display": "STS",
+      "name": {
+        "ja": "チャールズ・M・シュルツ・ソノマカウンティ空港",
+        "en": "Charles M. Schulz–Sonoma County Airport"
+      }
+    },
+    {
+      "display": "SUN",
+      "name": {
+        "ja": "フリードマン記念空港",
+        "en": "Friedman Memorial Airport"
+      }
+    },
+    {
+      "display": "SUX",
+      "name": {
+        "ja": "スー・ゲートウェイ空港",
+        "en": "Sioux Gateway Airport"
+      }
+    },
+    {
+      "display": "SVC",
+      "name": {
+        "en": "Grant County Airport"
+      }
+    },
+    {
+      "display": "SWF",
+      "name": {
+        "ja": "スチュワート国際空港",
+        "en": "New York Stewart International Airport"
+      }
+    },
+    {
+      "display": "SWO",
+      "name": {
+        "en": "Stillwater Regional Airport"
+      }
+    },
+    {
+      "display": "SYR",
+      "name": {
+        "ja": "シラキュース・ハンコック国際空港",
+        "en": "Syracuse Hancock International Airport"
+      }
+    },
+    {
+      "display": "KTB",
+      "name": {
+        "en": "Thorne Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "TBN",
+      "name": {
+        "en": "Waynesville-St. Robert Regional Airport"
+      }
+    },
+    {
+      "display": "TEB",
+      "name": {
+        "ja": "テターボロ空港",
+        "en": "Teterboro Airport"
+      }
+    },
+    {
+      "display": "TEX",
+      "name": {
+        "en": "Telluride Regional Airport"
+      }
+    },
+    {
+      "display": "TIW",
+      "name": {
+        "en": "Tacoma Narrows Airport"
+      }
+    },
+    {
+      "display": "TLH",
+      "name": {
+        "ja": "タラハシー地域空港",
+        "en": "Bobby Bowden-Tallahassee International Airport"
+      }
+    },
+    {
+      "display": "TOL",
+      "name": {
+        "ja": "トレド・エクスプレス空港",
+        "en": "Toledo Express Airport"
+      }
+    },
+    {
+      "display": "TPA",
+      "name": {
+        "ja": "タンパ国際空港",
+        "en": "Tampa International Airport"
+      }
+    },
+    {
+      "display": "TRI",
+      "name": {
+        "en": "Tri-Cities Regional Airport"
+      }
+    },
+    {
+      "display": "TKF",
+      "name": {
+        "en": "Truckee Tahoe Airport"
+      }
+    },
+    {
+      "display": "TTN",
+      "name": {
+        "ja": "トレントン・マーサー空港",
+        "en": "Trenton-Mercer Airport"
+      }
+    },
+    {
+      "display": "TUL",
+      "name": {
+        "ja": "タルサ国際空港",
+        "en": "Tulsa International Airport"
+      }
+    },
+    {
+      "display": "TUP",
+      "name": {
+        "ja": "テューペロ地域空港",
+        "en": "Tupelo Regional Airport"
+      }
+    },
+    {
+      "display": "TUS",
+      "name": {
+        "ja": "ツーソン国際空港",
+        "en": "Tucson International Airport"
+      }
+    },
+    {
+      "display": "TVC",
+      "name": {
+        "ja": "チェリー・キャピタル空港",
+        "en": "Cherry Capital Airport"
+      }
+    },
+    {
+      "display": "TVF",
+      "name": {
+        "en": "Thief River Falls Regional Airport"
+      }
+    },
+    {
+      "display": "TWF",
+      "name": {
+        "en": "Magic Valley Regional Airport"
+      }
+    },
+    {
+      "display": "TXK",
+      "name": {
+        "en": "Texarkana Regional Airport"
+      }
+    },
+    {
+      "display": "TYR",
+      "name": {
+        "en": "Tyler Pounds Regional Airport"
+      }
+    },
+    {
+      "display": "TYS",
+      "name": {
+        "ja": "ノックスビル",
+        "en": "McGhee Tyson Airport"
+      }
+    },
+    {
+      "display": "UIN",
+      "name": {
+        "en": "Quincy Regional Airport"
+      }
+    },
+    {
+      "display": "SCE",
+      "name": {
+        "ja": "ユニバーシティパーク空港",
+        "en": "State College Regional Airport"
+      }
+    },
+    {
+      "display": "NPT",
+      "name": {
+        "ja": "ニューポート州空港 (ロードアイランド州)",
+        "en": "Newport State Airport"
+      }
+    },
+    {
+      "display": "VCT",
+      "name": {
+        "en": "Victoria Regional Airport"
+      }
+    },
+    {
+      "display": "VEL",
+      "name": {
+        "en": "Vernal Regional Airport"
+      }
+    },
+    {
+      "display": "VLD",
+      "name": {
+        "en": "Valdosta Regional Airport"
+      }
+    },
+    {
+      "display": "VPS",
+      "name": {
+        "ja": "エグリン空軍基地",
+        "en": "Eglin Air Force Base"
+      }
+    },
+    {
+      "display": "VRB",
+      "name": {
+        "en": "Vero Beach Regional Airport"
+      }
+    },
+    {
+      "display": "KWP",
+      "name": {
+        "en": "West Point Village Seaplane Base"
+      }
+    },
+    {
+      "display": "WST",
+      "name": {
+        "ja": "ウェスタリー州空港",
+        "en": "Westerly State Airport"
+      }
+    },
+    {
+      "display": "WYS",
+      "name": {
+        "en": "Yellowstone Airport"
+      }
+    },
+    {
+      "display": "KXA",
+      "name": {
+        "en": "Kasaan Seaplane Base"
+      }
+    },
+    {
+      "display": "XNA",
+      "name": {
+        "ja": "ノースウエストアーカンソー地方空港",
+        "en": "Northwest Arkansas Regional Airport"
+      }
+    },
+    {
+      "display": "XWA",
+      "name": {
+        "en": "Williston Basin International Airport"
+      }
+    },
+    {
+      "display": "YKM",
+      "name": {
+        "ja": "ヤキマ航空ターミナル",
+        "en": "Yakima Air Terminal"
+      }
+    },
+    {
+      "display": "KZB",
+      "name": {
+        "en": "Zachar Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "MYK",
+      "name": {
+        "en": "May Creek Airport"
+      }
+    },
+    {
+      "display": "OLH",
+      "name": {
+        "en": "Old Harbor Airport"
+      }
+    },
+    {
+      "display": "ORI",
+      "name": {
+        "en": "Port Lions Airport"
+      }
+    },
+    {
+      "display": "AKB",
+      "name": {
+        "ja": "アトカ空港",
+        "en": "Atka Airport"
+      }
+    },
+    {
+      "display": "PTD",
+      "name": {
+        "en": "Port Alexander Seaplane Base"
+      }
+    },
+    {
+      "display": "BTI",
+      "name": {
+        "en": "Barter Island LRRS Airport"
+      }
+    },
+    {
+      "display": "BET",
+      "name": {
+        "ja": "ベセル空港",
+        "en": "Bethel Airport"
+      }
+    },
+    {
+      "display": "BKC",
+      "name": {
+        "ja": "バックランド空港",
+        "en": "Buckland Airport"
+      }
+    },
+    {
+      "display": "BRW",
+      "name": {
+        "ja": "ウィリー・ポスト＝ウィル・ロジャース記念空港",
+        "en": "Wiley Post–Will Rogers Memorial Airport"
+      }
+    },
+    {
+      "display": "BTT",
+      "name": {
+        "en": "Bettles Airport"
+      }
+    },
+    {
+      "display": "CDB",
+      "name": {
+        "ja": "コールドベイ空港",
+        "en": "Cold Bay Airport"
+      }
+    },
+    {
+      "display": "CEM",
+      "name": {
+        "en": "Central Airport"
+      }
+    },
+    {
+      "display": "CIK",
+      "name": {
+        "en": "Chalkyitsik Airport"
+      }
+    },
+    {
+      "display": "CYF",
+      "name": {
+        "ja": "チェフォーナク空港",
+        "en": "Chefornak Airport"
+      }
+    },
+    {
+      "display": "SCM",
+      "name": {
+        "en": "Scammon Bay Airport"
+      }
+    },
+    {
+      "display": "IRC",
+      "name": {
+        "en": "Circle City Airport"
+      }
+    },
+    {
+      "display": "CDV",
+      "name": {
+        "ja": "マール・K（マッドホール）スミス空港",
+        "en": "Merle K. (Mudhole) Smith Airport"
+      }
+    },
+    {
+      "display": "CYT",
+      "name": {
+        "ja": "ヤカタガ空港",
+        "en": "Yakataga Airport"
+      }
+    },
+    {
+      "display": "DRG",
+      "name": {
+        "en": "Deering Airport"
+      }
+    },
+    {
+      "display": "ADK",
+      "name": {
+        "ja": "アダク飛行場",
+        "en": "Adak Airport"
+      }
+    },
+    {
+      "display": "DLG",
+      "name": {
+        "ja": "ディリンハム空港",
+        "en": "Dillingham Airport"
+      }
+    },
+    {
+      "display": "MLL",
+      "name": {
+        "en": "Marshall Don Hunter Sr. Airport"
+      }
+    },
+    {
+      "display": "ADQ",
+      "name": {
+        "ja": "コディアック空港",
+        "en": "Kodiak Airport"
+      }
+    },
+    {
+      "display": "DUT",
+      "name": {
+        "ja": "ウナラスカ空港",
+        "en": "Unalaska Airport"
+      }
+    },
+    {
+      "display": "KKH",
+      "name": {
+        "en": "Kongiganak Airport"
+      }
+    },
+    {
+      "display": "EEK",
+      "name": {
+        "en": "Eek Airport"
+      }
+    },
+    {
+      "display": "EAA",
+      "name": {
+        "en": "Eagle Airport"
+      }
+    },
+    {
+      "display": "ELV",
+      "name": {
+        "en": "Elfin Cove Seaplane Base"
+      }
+    },
+    {
+      "display": "EMK",
+      "name": {
+        "ja": "エモナック",
+        "en": "Emmonak Airport"
+      }
+    },
+    {
+      "display": "ENA",
+      "name": {
+        "ja": "キナイ市営空港",
+        "en": "Kenai Municipal Airport"
+      }
+    },
+    {
+      "display": "WWT",
+      "name": {
+        "en": "Newtok Airport"
+      }
+    },
+    {
+      "display": "FAI",
+      "name": {
+        "ja": "フェアバンクス国際空港",
+        "en": "Fairbanks International Airport"
+      }
+    },
+    {
+      "display": "ABL",
+      "name": {
+        "en": "Ambler Airport"
+      }
+    },
+    {
+      "display": "NIB",
+      "name": {
+        "en": "Nikolai Airport"
+      }
+    },
+    {
+      "display": "GAL",
+      "name": {
+        "ja": "ガリーナ（ガレーナ）空軍基地",
+        "en": "Edward G. Pitka Sr. Airport"
+      }
+    },
+    {
+      "display": "KWK",
+      "name": {
+        "en": "Kwigillingok Airport"
+      }
+    },
+    {
+      "display": "SHG",
+      "name": {
+        "en": "Shungnak Airport"
+      }
+    },
+    {
+      "display": "GKN",
+      "name": {
+        "en": "Gulkana Airport"
+      }
+    },
+    {
+      "display": "GLV",
+      "name": {
+        "en": "Golovin Airport"
+      }
+    },
+    {
+      "display": "GAM",
+      "name": {
+        "ja": "ガンベル空港",
+        "en": "Gambell Airport"
+      }
+    },
+    {
+      "display": "AGN",
+      "name": {
+        "en": "Angoon Seaplane Base"
+      }
+    },
+    {
+      "display": "GST",
+      "name": {
+        "en": "Gustavus Airport"
+      }
+    },
+    {
+      "display": "NME",
+      "name": {
+        "en": "Nightmute Airport"
+      }
+    },
+    {
+      "display": "SGY",
+      "name": {
+        "ja": "スカグウェイ空港",
+        "en": "Skagway Airport"
+      }
+    },
+    {
+      "display": "HCR",
+      "name": {
+        "en": "Holy Cross Airport"
+      }
+    },
+    {
+      "display": "HSL",
+      "name": {
+        "en": "Huslia Airport"
+      }
+    },
+    {
+      "display": "HNS",
+      "name": {
+        "en": "Haines Airport"
+      }
+    },
+    {
+      "display": "HOM",
+      "name": {
+        "ja": "ホーマー空港",
+        "en": "Homer Airport"
+      }
+    },
+    {
+      "display": "HPB",
+      "name": {
+        "en": "Hooper Bay Airport"
+      }
+    },
+    {
+      "display": "HUS",
+      "name": {
+        "en": "Hughes Airport"
+      }
+    },
+    {
+      "display": "HYG",
+      "name": {
+        "en": "Hydaburg Seaplane Base"
+      }
+    },
+    {
+      "display": "IGG",
+      "name": {
+        "en": "Igiugig Airport"
+      }
+    },
+    {
+      "display": "EGX",
+      "name": {
+        "en": "Egegik Airport"
+      }
+    },
+    {
+      "display": "IAN",
+      "name": {
+        "en": "Bob Baker Memorial Airport"
+      }
+    },
+    {
+      "display": "ILI",
+      "name": {
+        "ja": "イリアムナ",
+        "en": "Iliamna Airport"
+      }
+    },
+    {
+      "display": "UTO",
+      "name": {
+        "en": "Indian Mountain LRRS Airport"
+      }
+    },
+    {
+      "display": "WAA",
+      "name": {
+        "en": "Wales Airport"
+      }
+    },
+    {
+      "display": "KCG",
+      "name": {
+        "en": "Chignik Airport"
+      }
+    },
+    {
+      "display": "JNU",
+      "name": {
+        "ja": "ジュノー国際空港",
+        "en": "Juneau International Airport"
+      }
+    },
+    {
+      "display": "KGK",
+      "name": {
+        "en": "Koliganek Airport"
+      }
+    },
+    {
+      "display": "KFP",
+      "name": {
+        "en": "False Pass Airport"
+      }
+    },
+    {
+      "display": "AKK",
+      "name": {
+        "ja": "アクヒオック空港",
+        "en": "Akhiok Airport"
+      }
+    },
+    {
+      "display": "KPN",
+      "name": {
+        "en": "Kipnuk Airport"
+      }
+    },
+    {
+      "display": "KKA",
+      "name": {
+        "en": "Koyuk Alfred Adams Airport"
+      }
+    },
+    {
+      "display": "AKN",
+      "name": {
+        "ja": "キングサーモン空港",
+        "en": "King Salmon Airport"
+      }
+    },
+    {
+      "display": "IKO",
+      "name": {
+        "ja": "ニオルスキー飛行場",
+        "en": "Nikolski Air Station"
+      }
+    },
+    {
+      "display": "AKP",
+      "name": {
+        "en": "Anaktuvuk Pass Airport"
+      }
+    },
+    {
+      "display": "KTN",
+      "name": {
+        "ja": "ケチカン国際空港",
+        "en": "Ketchikan International Airport"
+      }
+    },
+    {
+      "display": "KAL",
+      "name": {
+        "en": "Kaltag Airport"
+      }
+    },
+    {
+      "display": "KLW",
+      "name": {
+        "ja": "クレイグ空港",
+        "en": "Klawock Airport"
+      }
+    },
+    {
+      "display": "KYK",
+      "name": {
+        "en": "Karluk Airport"
+      }
+    },
+    {
+      "display": "KLN",
+      "name": {
+        "en": "Larsen Bay Airport"
+      }
+    },
+    {
+      "display": "KLG",
+      "name": {
+        "en": "Kalskag Airport"
+      }
+    },
+    {
+      "display": "PTA",
+      "name": {
+        "en": "Port Alsworth Airport"
+      }
+    },
+    {
+      "display": "LUR",
+      "name": {
+        "en": "Cape Lisburne LRRS Airport"
+      }
+    },
+    {
+      "display": "KMO",
+      "name": {
+        "en": "Manokotak Airport"
+      }
+    },
+    {
+      "display": "MCG",
+      "name": {
+        "en": "McGrath Airport"
+      }
+    },
+    {
+      "display": "LMA",
+      "name": {
+        "en": "Minchumina Airport"
+      }
+    },
+    {
+      "display": "SMK",
+      "name": {
+        "en": "St. Michael Airport"
+      }
+    },
+    {
+      "display": "MLY",
+      "name": {
+        "en": "Manley Hot Springs Airport"
+      }
+    },
+    {
+      "display": "MTM",
+      "name": {
+        "en": "Metlakatla Seaplane Base"
+      }
+    },
+    {
+      "display": "MOU",
+      "name": {
+        "en": "Mountain Village Airport"
+      }
+    },
+    {
+      "display": "MRI",
+      "name": {
+        "en": "Merrill Field"
+      }
+    },
+    {
+      "display": "MYU",
+      "name": {
+        "en": "Mekoryuk Airport"
+      }
+    },
+    {
+      "display": "WNA",
+      "name": {
+        "en": "Napakiak Airport"
+      }
+    },
+    {
+      "display": "ANC",
+      "name": {
+        "ja": "テッド・スティーブンス・アンカレッジ国際空港",
+        "en": "Ted Stevens Anchorage International Airport"
+      }
+    },
+    {
+      "display": "ANI",
+      "name": {
+        "ja": "アニアック空港",
+        "en": "Aniak Airport"
+      }
+    },
+    {
+      "display": "FNR",
+      "name": {
+        "en": "Funter Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "NUL",
+      "name": {
+        "en": "Nulato Airport"
+      }
+    },
+    {
+      "display": "ANV",
+      "name": {
+        "ja": "アンビク空港",
+        "en": "Anvik Airport"
+      }
+    },
+    {
+      "display": "KNW",
+      "name": {
+        "en": "New Stuyahok Airport"
+      }
+    },
+    {
+      "display": "OBU",
+      "name": {
+        "en": "Kobuk Airport"
+      }
+    },
+    {
+      "display": "HNH",
+      "name": {
+        "en": "Hoonah Airport"
+      }
+    },
+    {
+      "display": "OME",
+      "name": {
+        "ja": "ノーム空港",
+        "en": "Nome Airport"
+      }
+    },
+    {
+      "display": "OOK",
+      "name": {
+        "en": "Toksook Bay Airport"
+      }
+    },
+    {
+      "display": "ORT",
+      "name": {
+        "en": "Northway Airport"
+      }
+    },
+    {
+      "display": "OTZ",
+      "name": {
+        "ja": "コッツェブエ",
+        "en": "Ralph Wien Memorial Airport"
+      }
+    },
+    {
+      "display": "NLG",
+      "name": {
+        "en": "Nelson Lagoon Airport"
+      }
+    },
+    {
+      "display": "STG",
+      "name": {
+        "ja": "セント・ジョージ島",
+        "en": "St. George Airport"
+      }
+    },
+    {
+      "display": "KPV",
+      "name": {
+        "en": "Perryville Airport"
+      }
+    },
+    {
+      "display": "PSG",
+      "name": {
+        "en": "Petersburg James A. Johnson Airport"
+      }
+    },
+    {
+      "display": "PTH",
+      "name": {
+        "ja": "ポート・ヘイデン",
+        "en": "Port Heiden Airport"
+      }
+    },
+    {
+      "display": "PKA",
+      "name": {
+        "en": "Napaskiak Airport"
+      }
+    },
+    {
+      "display": "PTU",
+      "name": {
+        "en": "Platinum Airport"
+      }
+    },
+    {
+      "display": "PIP",
+      "name": {
+        "ja": "パイロット・ポイント空港",
+        "en": "Pilot Point Airport"
+      }
+    },
+    {
+      "display": "PHO",
+      "name": {
+        "en": "Point Hope Airport"
+      }
+    },
+    {
+      "display": "KWN",
+      "name": {
+        "en": "Quinhagak Airport"
+      }
+    },
+    {
+      "display": "NUI",
+      "name": {
+        "ja": "ナイーキュース空港",
+        "en": "Nuiqsut Airport"
+      }
+    },
+    {
+      "display": "ARC",
+      "name": {
+        "ja": "アークティック・ビレッジ空港",
+        "en": "Arctic Village Airport"
+      }
+    },
+    {
+      "display": "RSH",
+      "name": {
+        "en": "Russian Mission Airport"
+      }
+    },
+    {
+      "display": "RBY",
+      "name": {
+        "en": "Ruby Airport"
+      }
+    },
+    {
+      "display": "SVA",
+      "name": {
+        "ja": "サボオンガ空港",
+        "en": "Savoonga Airport"
+      }
+    },
+    {
+      "display": "SCC",
+      "name": {
+        "ja": "デッドホース空港",
+        "en": "Deadhorse Airport"
+      }
+    },
+    {
+      "display": "SDP",
+      "name": {
+        "ja": "サンド・ポイント",
+        "en": "Sand Point Airport"
+      }
+    },
+    {
+      "display": "SHH",
+      "name": {
+        "ja": "シシュマレフ空港",
+        "en": "Shishmaref Airport"
+      }
+    },
+    {
+      "display": "SIT",
+      "name": {
+        "ja": "シトカ・ロッキー・グティエレス空港",
+        "en": "Sitka Rocky Gutierrez Airport"
+      }
+    },
+    {
+      "display": "WLK",
+      "name": {
+        "en": "Selawik Airport"
+      }
+    },
+    {
+      "display": "SLQ",
+      "name": {
+        "en": "Sleetmute Airport"
+      }
+    },
+    {
+      "display": "KSM",
+      "name": {
+        "en": "St. Mary's Airport"
+      }
+    },
+    {
+      "display": "SNP",
+      "name": {
+        "ja": "セント・ポール島",
+        "en": "St. Paul Island Airport"
+      }
+    },
+    {
+      "display": "SOV",
+      "name": {
+        "en": "Seldovia Airport"
+      }
+    },
+    {
+      "display": "TAL",
+      "name": {
+        "ja": "ラルフ・M・カルフーン記念空港",
+        "en": "Ralph M. Calhoun Memorial Airport"
+      }
+    },
+    {
+      "display": "TNC",
+      "name": {
+        "en": "Tin City LRRS Airport"
+      }
+    },
+    {
+      "display": "TLA",
+      "name": {
+        "ja": "テラー空港",
+        "en": "Teller Airport"
+      }
+    },
+    {
+      "display": "TOG",
+      "name": {
+        "en": "Togiak Airport"
+      }
+    },
+    {
+      "display": "ATK",
+      "name": {
+        "en": "Atqasuk Edward Burnell Sr. Memorial Airport"
+      }
+    },
+    {
+      "display": "AUK",
+      "name": {
+        "en": "Alakanuk Airport"
+      }
+    },
+    {
+      "display": "UNK",
+      "name": {
+        "ja": "ウナラクリート",
+        "en": "Unalakleet Airport"
+      }
+    },
+    {
+      "display": "KQA",
+      "name": {
+        "ja": "アクタン空港",
+        "en": "Akutan Airport"
+      }
+    },
+    {
+      "display": "VAK",
+      "name": {
+        "en": "Chevak Airport"
+      }
+    },
+    {
+      "display": "KVC",
+      "name": {
+        "en": "King Cove Airport"
+      }
+    },
+    {
+      "display": "VDZ",
+      "name": {
+        "en": "Valdez Airport"
+      }
+    },
+    {
+      "display": "VEE",
+      "name": {
+        "en": "Venetie Airport"
+      }
+    },
+    {
+      "display": "KVL",
+      "name": {
+        "en": "Kivalina Airport"
+      }
+    },
+    {
+      "display": "WBQ",
+      "name": {
+        "ja": "ビーバー空港",
+        "en": "Beaver Airport"
+      }
+    },
+    {
+      "display": "WRG",
+      "name": {
+        "ja": "ランゲル空港",
+        "en": "Wrangell Airport"
+      }
+    },
+    {
+      "display": "AIN",
+      "name": {
+        "ja": "ウェインライト空港",
+        "en": "Wainwright Airport"
+      }
+    },
+    {
+      "display": "WMO",
+      "name": {
+        "en": "White Mountain Airport"
+      }
+    },
+    {
+      "display": "WTK",
+      "name": {
+        "en": "Noatak Airport"
+      }
+    },
+    {
+      "display": "YAK",
+      "name": {
+        "ja": "ヤクタト空港",
+        "en": "Yakutat Airport"
+      }
+    },
+    {
+      "display": "PEC",
+      "name": {
+        "ja": "ペリカン水上飛行場",
+        "en": "Pelican Seaplane Base"
+      }
+    },
+    {
+      "display": "AKI",
+      "name": {
+        "en": "Akiak Airport"
+      }
+    },
+    {
+      "display": "AET",
+      "name": {
+        "en": "Allakaket Airport"
+      }
+    },
+    {
+      "display": "NCN",
+      "name": {
+        "en": "Chenega Bay Airport"
+      }
+    },
+    {
+      "display": "CLP",
+      "name": {
+        "en": "Clarks Point Airport"
+      }
+    },
+    {
+      "display": "ELI",
+      "name": {
+        "ja": "エリム空港",
+        "en": "Elim Airport"
+      }
+    },
+    {
+      "display": "KUK",
+      "name": {
+        "en": "Kasigluk Airport"
+      }
+    },
+    {
+      "display": "KNK",
+      "name": {
+        "ja": "コカーノク空港",
+        "en": "Kokhanok Airport"
+      }
+    },
+    {
+      "display": "KOT",
+      "name": {
+        "ja": "コトリク空港",
+        "en": "Kotlik Airport"
+      }
+    },
+    {
+      "display": "KTS",
+      "name": {
+        "en": "Brevig Mission Airport"
+      }
+    },
+    {
+      "display": "KYU",
+      "name": {
+        "en": "Koyukuk Airport"
+      }
+    },
+    {
+      "display": "KWT",
+      "name": {
+        "en": "Kwethluk Airport"
+      }
+    },
+    {
+      "display": "ORV",
+      "name": {
+        "en": "Robert (Bob) Curtis Memorial Airport"
+      }
+    },
+    {
+      "display": "SKK",
+      "name": {
+        "en": "Shaktoolik Airport"
+      }
+    },
+    {
+      "display": "TKJ",
+      "name": {
+        "en": "Tok Junction Airport"
+      }
+    },
+    {
+      "display": "WSN",
+      "name": {
+        "en": "South Naknek Airport"
+      }
+    },
+    {
+      "display": "FYU",
+      "name": {
+        "ja": "フォートユーコン空港",
+        "en": "Fort Yukon Airport"
+      }
+    },
+    {
+      "display": "PGM",
+      "name": {
+        "ja": "ポート・グレアム空港",
+        "en": "Port Graham Airport"
+      }
+    },
+    {
+      "display": "HNM",
+      "name": {
+        "ja": "ハナ空港",
+        "en": "Hana Airport"
+      }
+    },
+    {
+      "display": "JHM",
+      "name": {
+        "ja": "カパルア空港",
+        "en": "Kapalua Airport"
+      }
+    },
+    {
+      "display": "KOA",
+      "name": {
+        "ja": "コナ国際空港",
+        "en": "Ellison Onizuka Kona International Airport"
+      }
+    },
+    {
+      "display": "LIH",
+      "name": {
+        "ja": "リフエ空港",
+        "en": "Lihue Airport"
+      }
+    },
+    {
+      "display": "LUP",
+      "name": {
+        "ja": "カラウパパ空港",
+        "en": "Kalaupapa Airport"
+      }
+    },
+    {
+      "display": "MKK",
+      "name": {
+        "ja": "モロカイ空港",
+        "en": "Molokai Airport"
+      }
+    },
+    {
+      "display": "MUE",
+      "name": {
+        "ja": "ワイメア・コハラ空港",
+        "en": "Waimea-Kohala Airport"
+      }
+    },
+    {
+      "display": "HNL",
+      "name": {
+        "ja": "ホノルル国際空港",
+        "en": "Daniel K. Inouye International Airport"
+      }
+    },
+    {
+      "display": "LNY",
+      "name": {
+        "ja": "ラナイ空港",
+        "en": "Lanai Airport"
+      }
+    },
+    {
+      "display": "OGG",
+      "name": {
+        "ja": "カフルイ空港",
+        "en": "Kahului Airport"
+      }
+    },
+    {
+      "display": "ITO",
+      "name": {
+        "ja": "ヒロ国際空港",
+        "en": "Hilo International Airport"
+      }
+    },
+    {
+      "display": "PIZ",
+      "name": {
+        "en": "Point Lay LRRS Airport"
+      }
+    },
+    {
+      "display": "RDV",
+      "name": {
+        "en": "Red Devil Airport"
+      }
+    },
+    {
+      "display": "RMP",
+      "name": {
+        "en": "Rampart Airport"
+      }
+    },
+    {
+      "display": "LPS",
+      "name": {
+        "en": "Fishermans Bay/LPS Seaplane Base"
+      }
+    },
+    {
+      "display": "KEH",
+      "name": {
+        "en": "Kenmore Air Harbor"
+      }
+    },
+    {
+      "display": "SRV",
+      "name": {
+        "en": "Stony River Airport"
+      }
+    },
+    {
+      "display": "SVS",
+      "name": {
+        "en": "Stevens Village Airport"
+      }
+    },
+    {
+      "display": "SXP",
+      "name": {
+        "en": "Sheldon Point Airport"
+      }
+    },
+    {
+      "display": "SYB",
+      "name": {
+        "en": "Seal Bay Seaplane Base"
+      }
+    },
+    {
+      "display": "TCT",
+      "name": {
+        "en": "Takotna Airport"
+      }
+    },
+    {
+      "display": "TKE",
+      "name": {
+        "en": "Tenakee Seaplane Base"
+      }
+    },
+    {
+      "display": "TLT",
+      "name": {
+        "en": "Tuluksak Airport"
+      }
+    },
+    {
+      "display": "PQS",
+      "name": {
+        "en": "Pilot Station Airport"
+      }
+    },
+    {
+      "display": "FBS",
+      "name": {
+        "en": "Friday Harbor Seaplane Base"
+      }
+    },
+    {
+      "display": "RSJ",
+      "name": {
+        "en": "Rosario Seaplane Base"
+      }
+    },
+    {
+      "display": "LKE",
+      "name": {
+        "en": "Kenmore Air Harbor Seaplane Base"
+      }
+    },
+    {
+      "display": "RCE",
+      "name": {
+        "en": "Roche Harbor Seaplane Base"
+      }
+    },
+    {
+      "display": "WSX",
+      "name": {
+        "en": "Westsound/WSX Seaplane Base"
+      }
+    },
+    {
+      "display": "WBB",
+      "name": {
+        "en": "Stebbins Airport"
+      }
+    },
+    {
+      "display": "DTR",
+      "name": {
+        "en": "Decatur Shores Airport"
+      }
+    },
+    {
+      "display": "UGI",
+      "name": {
+        "en": "San Juan (Uganik) Seaplane Base"
+      }
+    },
+    {
+      "display": "KKI",
+      "name": {
+        "en": "Akiachak Airport"
+      }
+    },
+    {
+      "display": "KBC",
+      "name": {
+        "en": "Birch Creek Airport"
+      }
+    }
+  ]
+}
