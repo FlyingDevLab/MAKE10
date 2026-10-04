@@ -31513,13 +31513,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 k は「1000」の いみ。「kcal」は「キロカロリー」って よむよ。1kcal は 1000カロリー なんだ"
+            "value" : "🔢 「k」 は「1000」の いみ。「kcal」は「キロカロリー」って よむよ。1kcal は 1000カロリー なんだ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 k는 '1000'이라는 뜻이에요. kcal은 '킬로칼로리'라고 읽어요. 1kcal는 1000칼로리예요!"
+            "value" : "🔢 'k'는 '1000'이라는 뜻이에요. 'kcal'은 '킬로칼로리'라고 읽어요. 1kcal는 1000칼로리예요!"
           }
         },
         "nl" : {
@@ -31537,7 +31537,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 k แปลว่า 1,000 และ kcal อ่านว่า \"กิโลแคลอรี\" 1 kcal ก็คือ 1,000 แคลอรี!"
+            "value" : "🔢 \"k\" แปลว่า 1,000 และ \"kcal\" อ่านว่า \"กิโลแคลอรี\" 1 kcal ก็คือ 1,000 แคลอรี!"
           }
         },
         "vi" : {
@@ -31549,13 +31549,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 k 的意思是 1000。kcal 读作“千卡”。1kcal 就是 1000 卡路里！"
+            "value" : "🔢 “k”的意思是 1000。“kcal”读作“千卡”。1kcal 就是 1000 卡路里！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🔢 k 的意思是 1000。kcal 讀作「大卡」。1kcal 就是 1000 卡路里！"
+            "value" : "🔢 「k」的意思是 1000。「kcal」讀作「大卡」。1kcal 就是 1000 卡路里！"
           }
         }
       }
@@ -38468,6 +38468,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "🍌×20 2000 大卡大約是 20 根香蕉！用掉的能量真多呀！"
+          }
+        }
+      }
+    },
+    "shop_tip_game_energy" : {
+      "comment" : "Sticker shop tip #1 (first of the series): in this game, energy (kcal) is used to spin the gacha and to trade for stickers.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 In diesem Spiel drehst du mit Energie (kcal) die Gacha und tauschst sie gegen Sticker."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 In this game, you use energy (kcal) to spin the gacha and trade for stickers."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 En este juego usas energía (kcal) para girar la gacha y cambiarla por pegatinas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 Dans ce jeu, tu utilises l'énergie (kcal) pour tourner la gacha et l'échanger contre des autocollants."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 इस गेम में ऊर्जा (kcal) से गाचा घुमाते हैं और स्टिकर लेते हैं।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 Di game ini, energi (kcal) dipakai untuk memutar gacha dan ditukar dengan stiker."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 In questo gioco usi l'energia (kcal) per girare la gacha e scambiarla con adesivi."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 このゲームでは、エネルギー（kcal）で ガチャを まわしたり、シールと こうかん したり するよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 이 게임에서는 에너지(kcal)로 가챠를 돌리거나 스티커와 바꿔요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 In dit spel gebruik je energie (kcal) om de gacha te draaien en te ruilen voor stickers."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 Neste jogo, você usa energia (kcal) para girar a gacha e trocar por adesivos."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 ในเกมนี้ ใช้พลังงาน (kcal) หมุนกาชาและแลกสติกเกอร์ได้นะ"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 Trong trò chơi này, dùng năng lượng (kcal) để quay gacha và đổi lấy nhãn dán."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 在这个游戏里，可以用能量（kcal）转扭蛋、换贴纸哦。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "🎁 在這個遊戲裡，可以用能量（kcal）轉扭蛋、換貼紙喔。"
           }
         }
       }
