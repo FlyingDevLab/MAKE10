@@ -335,7 +335,7 @@ private struct QuizCategoryRow: View {
             .padding(.vertical, 9)
             .background(
                 RoundedRectangle(cornerRadius: DS.rowRadius)
-                    .fill(DS.muted.opacity(0.06))
+                    .tintFill(DS.muted.opacity(0.06))
             )
         }
         .buttonStyle(.plain)
@@ -378,7 +378,7 @@ private struct QuizModeRow: View {
             .background(
                 RoundedRectangle(cornerRadius: DS.rowRadius)
                     // 選択中は薄いプライマリ色で塗り、枠線も付けて選択状態を強調する
-                    .fill(isSelected ? DS.primary.opacity(0.08) : DS.muted.opacity(0.06))
+                    .tintFill(isSelected ? DS.primary.opacity(0.08) : DS.muted.opacity(0.06))
                     .overlay(
                         RoundedRectangle(cornerRadius: DS.rowRadius)
                             .stroke(isSelected ? DS.primary.opacity(0.40) : Color.clear, lineWidth: 1.5)
@@ -549,7 +549,7 @@ struct QuizQuestionCard: View {
                 .padding(.vertical, 8 * s)
                 .background(
                     RoundedRectangle(cornerRadius: DS.inputRadius)
-                        .fill(DS.primary.opacity(0.08))
+                        .tintFill(DS.primary.opacity(0.08))
                 )
         case .text:
             // テキストカテゴリ：文字列を大きく表示。長い文字列でも縮小して収める
@@ -647,7 +647,7 @@ struct QuizChoiceButton: View {
         Button(action: action) {
             ZStack {
                 RoundedRectangle(cornerRadius: DS.btnRadius)
-                    .fill(bgColor)
+                    .tintFill(bgColor)   // かべがみの上でも透けない（DesignSystem の tintFill）
                     .overlay(
                         RoundedRectangle(cornerRadius: DS.btnRadius)
                             .stroke(borderColor, lineWidth: 1.8)

@@ -271,7 +271,7 @@ private struct JankenHandButton: View {
             ZStack {
                 // ── 背景 + 枠線 ──────────────────────────────
                 RoundedRectangle(cornerRadius: DS.cardRadius)
-                    .fill(bgColor)
+                    .tintFill(bgColor)   // かべがみの上でも透けない（DesignSystem の tintFill）
                     .overlay(
                         RoundedRectangle(cornerRadius: DS.cardRadius)
                             .stroke(borderColor, lineWidth: 1.8)

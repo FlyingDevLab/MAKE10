@@ -182,7 +182,7 @@ struct GachaView: View {
             .background(
                 RoundedRectangle(cornerRadius: DS.btnRadius)
                     // 足りないときも押せる（押すと「あと◯kcal」を教える）が、見た目は控えめにする
-                    .fill(canAfford ? DS.energy : DS.muted.opacity(0.45))
+                    .tintFill(canAfford ? DS.energy : DS.muted.opacity(0.45))
                     .shadow(color: canAfford ? DS.energy.opacity(0.35) : .clear, radius: 8, x: 0, y: 4)
             )
         }
@@ -283,7 +283,7 @@ struct GachaView: View {
                         .padding(.vertical, 14)
                         .background(
                             RoundedRectangle(cornerRadius: DS.btnRadius)
-                                .fill(Color.black.opacity(0.05))
+                                .tintFill(Color.black.opacity(0.05))
                         )
                 }
                 .buttonStyle(.plain)

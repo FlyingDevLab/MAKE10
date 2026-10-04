@@ -708,8 +708,7 @@ private struct MazeResultView: View {
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(DS.gold)
                     .padding(.horizontal, 24).padding(.vertical, 10)
-                    .background(DS.gold.opacity(0.12),
-                                in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+                    .background(RoundedRectangle(cornerRadius: DS.sectionRadius).tintFill(DS.gold.opacity(0.12)))
             }
 
             // ── スコア表示 ────────────────────────────────────

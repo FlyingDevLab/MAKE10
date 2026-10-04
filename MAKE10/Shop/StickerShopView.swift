@@ -323,7 +323,7 @@ struct StickerShopView: View {
                 .padding(.vertical, 14)
                 .background(
                     RoundedRectangle(cornerRadius: DS.btnRadius)
-                        .fill(Color.black.opacity(0.05))
+                        .tintFill(Color.black.opacity(0.05))
                 )
         }
         .buttonStyle(.plain)

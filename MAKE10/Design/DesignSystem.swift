@@ -218,3 +218,23 @@ extension View {
         modifier(LargeScreenScaling())
     }
 }
+
+// MARK: - 半透明の塗り（かべがみの上でも透けない）
+
+extension Shape {
+    /// 色を薄く重ねた塗り（例: `color.opacity(0.1)`）。
+    ///
+    /// ★ かべがみを使うときだけ、下にいつもの背景色を敷く理由 ★
+    ///   カードやボタンの多くは「背景色の上に色を薄く重ねる」ことで淡い色を出している。
+    ///   かべがみ（じぶんの絵）を背景にすると、その薄い色の向こうに絵が透けて、カードやボタンが見にくくなる。
+    ///   下にいつもの背景色（DS.bg）を敷けば、かべがみのときもいつもと同じ見た目になる（絵はカードの後ろに隠れる）。
+    ///   かべがみを使わないときは何も敷かないので、見た目は以前とまったく同じ。
+    func tintFill(_ color: Color) -> some View {
+        ZStack {
+            if WallpaperStore.shared.isShowing {
+                self.fill(DS.bg)
+            }
+            self.fill(color)
+        }
+    }
+}

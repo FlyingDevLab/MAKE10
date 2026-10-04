@@ -208,7 +208,7 @@ private struct PBResultView: View {
                     .padding(.horizontal, 24).padding(.vertical, 12)
                     .background(
                         RoundedRectangle(cornerRadius: DS.sectionRadius)
-                            .fill(DS.accent.opacity(0.12))
+                            .tintFill(DS.accent.opacity(0.12))
                     )
                     .transition(.scale.combined(with: .opacity))
             }

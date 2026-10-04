@@ -186,7 +186,7 @@ struct GiftNoticeView: View {
                 .padding(.vertical, notice.celebrates ? 12 : 14)
                 .background(
                     RoundedRectangle(cornerRadius: DS.btnRadius)
-                        .fill(notice.celebrates ? Color.black.opacity(0.05) : DS.energy)
+                        .tintFill(notice.celebrates ? Color.black.opacity(0.05) : DS.energy)
                 )
         }
         .buttonStyle(.plain)
