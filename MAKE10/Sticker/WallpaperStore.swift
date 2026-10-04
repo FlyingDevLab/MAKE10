@@ -12,6 +12,8 @@
 //    - StickerPlayView              : 「かべがみに する」ボタンで、いまの絵（線＋シール）を画像にして渡す
 //    - SettingsView                 : 「かべがみ」のオン／オフ
 //
+//  「さいしょから はじめる」では、お絵かきの線と一緒にかべがみも消す（GameViewModel.resetProgress）。
+//
 //  ★ 画像で保存している理由 ★
 //    お絵かきの線は「指でなぞった点の列」として、描いた画面の大きさのまま保存されている。
 //    背景に使うたびに描き直すと、画面の大きさや向きが違うときに位置がずれてしまう。
@@ -50,6 +52,13 @@ final class WallpaperStore {
         try? data.write(to: Self.fileURL, options: .atomic)
         image = newImage
         isOn  = true
+    }
+
+    /// 「さいしょから はじめる」で、かべがみを消して、いつもの背景に戻す。
+    func reset() {
+        try? FileManager.default.removeItem(at: Self.fileURL)
+        image = nil
+        isOn  = false
     }
 
     /// 保存先: Documents/wallpaper.png（お絵かきの drawing_canvas.json と同じ場所）
