@@ -14,9 +14,11 @@
 //    PageTurn           … ページめくりの見た目（左の綴じ目を軸に回る）
 //
 //  ★ ページのめくり方 ★
-//    右の付箋へ進むとき … いまのページが左の綴じ目を軸にめくれて去り、下から次のページが出る
-//    左の付箋へ戻るとき … 前のページが左からめくれて戻ってきて、いまのページの上に重なる
-//    本物の手帳と同じく、どちらの向きでも「左の綴じ目」を軸に回す。
+//    本物の手帳と同じく、3ページを重ねておき、左の付箋のページほど上に置く。
+//    いま開いているページより前（左の付箋）のページは「めくれた状態」で、見えない。
+//      右の付箋へ進むとき … いまのページが左の綴じ目を軸にめくれて去り、下から次のページが出る
+//      左の付箋へ戻るとき … 前のページが左からめくれて戻ってきて、いまのページの上に重なる
+//    開いているページを変えるだけで、あいだのページが自然にめくれる。
 
 import SwiftUI
 
@@ -69,9 +71,8 @@ struct ThanksNotebookView: View {
 
     /// 開いているページ。
     @State private var tab: ThanksNotebookTab = .today
-    /// 次のめくりが「右へ進む」向きか。ページの入れ替えの前に決めておく（selectTab を参照）。
-    @State private var turningForward = true
-    /// めくっている最中か。めくり終わるまで次の付箋を受け付けない（ページが重なって崩れないように）。
+    /// めくっている最中か。めくり終わるまで次の付箋とページのタップを受け付けない
+    /// （付箋をトントンとたたいたとき、2回目がページの行に当たらないように）。
     @State private var isTurning = false
 
     /// ページめくりの長さ（秒）。← 変更可
@@ -86,14 +87,22 @@ struct ThanksNotebookView: View {
                 .zIndex(1)   // いま開いているページの付箋を、紙の上に重ねて「紙から生えている」ように見せる
 
             ZStack {
-                page(for: tab)
-                    .id(tab)
-                    .transition(pageTransition)
-                    // ★ 重なりの順 ★
-                    //   右へ進むときは、去っていく「いまのページ」を上に置いて、めくれて去る様子を見せる。
-                    //   左へ戻るときは、戻ってくる「前のページ」を上に置いて、めくれて重なる様子を見せる。
-                    //   付箋の番号が小さいページほど上に来るようにすると、どちらの向きでもそうなる。
-                    .zIndex(Double(-tab.rawValue))
+                // ★ 3ページとも置いたままにしている理由 ★
+                //   ページを出し入れ（transition）でめくると、去っていくページのめくり方が
+                //   「最後に描かれたときの向き」で決まってしまい、向きが変わると動かなくなる。
+                //   ページを置いたままにして、めくれ具合（PageTurn の progress）だけを変えれば、
+                //   どちらの向きでも毎回同じようにめくれる。
+                //   置いたままなので、カレンダーの月やまとめの期間も、ページを行き来しても保たれる。
+                ForEach(ThanksNotebookTab.allCases) { item in
+                    let isOpen = item == tab
+                    page(for: item)
+                        // いまのページより前のページは、めくれた状態（見えない）
+                        .modifier(PageTurn(progress: item.rawValue < tab.rawValue ? 1 : 0))
+                        // ★ 重なりの順 ★ 付箋の番号が小さいページほど上に来る（本物の手帳と同じ）
+                        .zIndex(Double(-item.rawValue))
+                        .allowsHitTesting(isOpen && !isTurning)
+                        .accessibilityHidden(!isOpen)
+                }
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .background(
@@ -123,20 +132,15 @@ struct ThanksNotebookView: View {
         .padding(.bottom, -10)
     }
 
-    /// 付箋をタップしたとき。向きを先に決めてから、次の瞬間にページを入れ替える。
-    ///
-    /// ★ 向きの設定とページの入れ替えを分けている理由 ★
-    ///   去っていくページのめくり方は、そのページが最後に描かれたときの transition で決まる。
-    ///   向きとページを同時に変えると、去るページは古い向きのままめくれてしまう。
-    ///   向きだけ先に変えて描き直させ、次の瞬間にページを入れ替えると、正しい向きでめくれる。
+    /// 付箋をタップしたとき。開いているページを変えると、あいだのページがめくれる。
     private func selectTab(_ item: ThanksNotebookTab) {
         guard item != tab, !isTurning else { return }
         SoundManager.shared.playTap()
         isTurning = true
-        turningForward = item.rawValue > tab.rawValue
-        DispatchQueue.main.async {
-            withAnimation(.easeInOut(duration: turnDuration)) { tab = item }
-            DispatchQueue.main.asyncAfter(deadline: .now() + turnDuration) { isTurning = false }
+        withAnimation(.easeInOut(duration: turnDuration)) {
+            tab = item
+        } completion: {
+            isTurning = false
         }
     }
 
@@ -155,17 +159,6 @@ struct ThanksNotebookView: View {
         // めくれるあいだも紙として見えるよう、ページごとに紙を敷く
         .background(paperColor)
         .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
-    }
-
-    /// 向きに応じたページめくり。めくれるのは「上に重なっているページ」だけ。
-    private var pageTransition: AnyTransition {
-        let turn = AnyTransition.modifier(
-            active:   PageTurn(progress: 1),
-            identity: PageTurn(progress: 0)
-        )
-        return turningForward
-            ? .asymmetric(insertion: .identity, removal: turn)   // いまのページがめくれて去る
-            : .asymmetric(insertion: turn, removal: .identity)   // 前のページがめくれて戻る
     }
 
     /// 手帳の綴じ目（左の端に並ぶリング）。飾り。
@@ -233,8 +226,17 @@ private struct StickyNoteTab: View {
 
 /// ページめくりの見た目。左の綴じ目を軸に、紙が手前へ持ち上がって裏返っていく。
 /// progress 0 = 平らに開いている、1 = 真横を向いて見えなくなった。
-private struct PageTurn: ViewModifier {
-    let progress: Double
+///
+/// ★ Animatable にしている理由 ★
+///   めくれ具合を1コマずつ受け取って描くため。こうしないと、最後に消す（opacity を 0 にする）
+///   切り替えが、めくり始めの時点で決まってしまい、ページが回りながら薄くなってしまう。
+private struct PageTurn: ViewModifier, Animatable {
+    var progress: Double
+
+    var animatableData: Double {
+        get { progress }
+        set { progress = newValue }
+    }
 
     func body(content: Content) -> some View {
         content
