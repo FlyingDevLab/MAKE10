@@ -165,9 +165,6 @@ struct QuizHomeContent: View {
 struct QuizPlayingContent: View {
     var viewModel: EmojiQuizViewModel
 
-    /// カテゴリごとに定義された表示スタイル（絵文字 / コード / テキスト）を参照する。
-    private var displayStyle: DisplayStyle { viewModel.category.displayStyle }
-
     var body: some View {
         Group {
             if viewModel.isFinished {
@@ -180,44 +177,56 @@ struct QuizPlayingContent: View {
                     ))
             } else if let question = viewModel.currentQuestion {
                 // 現在の問題番号（currentIndex）が変わるたびにフェードアニメーションを適用する
-                playingContent(question: question)
+                QuizPlayingLayout(viewModel: viewModel, question: question)
+                    .scalesForLargeScreen()   // iPad では部品を大きくする
                     .animation(.easeInOut(duration: 0.25), value: viewModel.currentIndex)
             }
         }
         // isFinished の変化をトリガーに、プレイ中↔結果間のトランジションをアニメーションさせる
         .animation(.easeInOut(duration: 0.35), value: viewModel.isFinished)
     }
+}
 
-    /// プレイ中のメインレイアウト。進捗・問題カード・選択肢・フィードバック・次問ボタンを縦に並べる。
-    /// @ViewBuilder で複数の View を条件分岐しながら返せるようにしている
-    /// （@ViewBuilder の解説は SharedFrame.swift を参照）。
-    @ViewBuilder
-    private func playingContent(question: QuizQuestion) -> some View {
+// MARK: - QuizPlayingLayout
+
+/// プレイ中のメインレイアウト。進捗・問題カード・選択肢・フィードバック・次問ボタンを縦に並べる。
+/// iPad 用の拡大率（layoutScale）を受け取るため、QuizPlayingContent から別の View に分けている
+/// （拡大率は .scalesForLargeScreen() を付けた View の「中」にしか届かないため）。
+private struct QuizPlayingLayout: View {
+    var viewModel: EmojiQuizViewModel
+    let question:  QuizQuestion
+
+    @Environment(\.layoutScale) private var s
+
+    /// カテゴリごとに定義された表示スタイル（絵文字 / コード / テキスト）を参照する。
+    private var displayStyle: DisplayStyle { viewModel.category.displayStyle }
+
+    var body: some View {
         VStack(spacing: 0) {
             // ── 進捗 + 問題カード ─────────────────────────
-            VStack(spacing: 8) {
+            VStack(spacing: 8 * s) {
                 QuizProgressSection(viewModel: viewModel)
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 24 * s)
                 QuizQuestionCard(question: question, mode: viewModel.mode, displayStyle: displayStyle)
-                    .padding(.horizontal, 24)
+                    .padding(.horizontal, 24 * s)
             }
-            .padding(.top, 8)
-            .padding(.bottom, 16)
+            .padding(.top, 8 * s)
+            .padding(.bottom, 16 * s)
 
             // ── 選択肢 + フィードバック ────────────────────
             QuizChoiceGrid(
                 question: question, mode: viewModel.mode, displayStyle: displayStyle,
                 answerState: viewModel.answerState, selectedItem: viewModel.selectedItem
             ) { viewModel.select($0) }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 20 * s)
 
             QuizFeedbackLabel(
                 answerState: viewModel.answerState, correct: question.correct,
                 mode: viewModel.mode, displayStyle: displayStyle
             )
-            .frame(minHeight: 60)  // フィードバック有無でレイアウトが跳ねないよう最小高さを確保
-            .padding(.top, 10)
-            .padding(.horizontal, 24)
+            .frame(minHeight: 60 * s)  // フィードバック有無でレイアウトが跳ねないよう最小高さを確保
+            .padding(.top, 10 * s)
+            .padding(.horizontal, 24 * s)
 
             // ── 不正解時：つぎのもんだいボタン ──────────────
             // 正解時は自動的に次問に進むため、このボタンは不正解時のみ表示する
@@ -228,10 +237,10 @@ struct QuizPlayingContent: View {
                     }
                 } label: {
                     Label("quiz_next_question", systemImage: "arrow.right.circle.fill")
-                        .font(.system(size: 22, weight: .black, design: .rounded))
+                        .font(.system(size: 22 * s, weight: .black, design: .rounded))
                         .foregroundStyle(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
+                        .padding(.vertical, 18 * s)
                         .background(
                             RoundedRectangle(cornerRadius: DS.btnRadius)
                                 .fill(DS.primary)
@@ -239,8 +248,8 @@ struct QuizPlayingContent: View {
                         )
                 }
                 .buttonStyle(.plain)
-                .padding(.horizontal, 24)
-                .padding(.top, 8)
+                .padding(.horizontal, 24 * s)
+                .padding(.top, 8 * s)
                 // スケール＋フェードの組み合わせでボタンが自然に現れるよう演出する
                 .transition(.scale(scale: 0.85).combined(with: .opacity))
             }
@@ -387,21 +396,23 @@ private struct QuizModeRow: View {
 struct QuizProgressSection: View {
     var viewModel: EmojiQuizViewModel
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 8 * s) {
             HStack {
                 // 「1 / 10」形式の問題番号テキスト。viewModel 側でフォーマット済みの文字列を返す
                 Text(viewModel.progressText)
-                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .font(.system(size: 14 * s, weight: .semibold, design: .rounded))
                     .foregroundStyle(DS.muted)
                 Spacer()
                 // 現在の正解数をゴールドの星アイコンとともに表示する
-                HStack(spacing: 5) {
+                HStack(spacing: 5 * s) {
                     Image(systemName: "star.fill")
-                        .font(.system(size: 13))
+                        .font(.system(size: 13 * s))
                         .foregroundStyle(DS.gold)
                     Text("\(viewModel.score)")
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .font(.system(size: 15 * s, weight: .bold, design: .rounded))
                         .foregroundStyle(DS.textBody)
                 }
             }
@@ -488,30 +499,32 @@ struct QuizQuestionCard: View {
     let mode:         QuizMode
     let displayStyle: DisplayStyle
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
-        VStack(spacing: 10) {
+        VStack(spacing: 10 * s) {
             switch mode {
             case .emojiToText:
                 // 絵文字→テキストモード：正解の絵文字（またはコード）を大きく表示する
                 primaryDisplay(question.correct.emoji)
                 Text(mode.questionLabel(for: displayStyle))
-                    .font(.system(size: 26, weight: .medium, design: .rounded))
+                    .font(.system(size: 26 * s, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
             case .textToEmoji:
                 // テキスト→絵文字モード：正解の名前テキストを表示し、絵文字を当てさせる
                 Text(question.correct.name)
-                    .font(.system(size: 34, weight: .bold, design: .rounded))
+                    .font(.system(size: 34 * s, weight: .bold, design: .rounded))
                     .minimumScaleFactor(0.4)  // 長い名前でもカードからはみ出さないよう縮小する
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, 8)
+                    .padding(.horizontal, 8 * s)
                     .foregroundStyle(DS.textPrimary)
                 Text(mode.questionLabel(for: displayStyle))
-                    .font(.system(size: 26, weight: .medium, design: .rounded))
+                    .font(.system(size: 26 * s, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 180)  // カード高さを固定して問題切り替え時にレイアウトが跳ねるのを防ぐ
+        .frame(height: 180 * s)  // カード高さを固定して問題切り替え時にレイアウトが跳ねるのを防ぐ
         .background(
             RoundedRectangle(cornerRadius: DS.cardRadius)
                 .fill(DS.card)
@@ -526,14 +539,14 @@ struct QuizQuestionCard: View {
         switch displayStyle {
         case .emoji:
             // 通常の絵文字カテゴリ：96ptの大きな絵文字をそのまま表示する
-            Text(text).font(.system(size: 96))
+            Text(text).font(.system(size: 96 * s))
         case .code:
             // コードカテゴリ（国旗コードなど）：等幅フォントでコードブロック風に表示する
             Text(text)
-                .font(.system(size: 46, weight: .black, design: .monospaced))
+                .font(.system(size: 46 * s, weight: .black, design: .monospaced))
                 .foregroundStyle(DS.primary)
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
+                .padding(.horizontal, 16 * s)
+                .padding(.vertical, 8 * s)
                 .background(
                     RoundedRectangle(cornerRadius: DS.inputRadius)
                         .fill(DS.primary.opacity(0.08))
@@ -541,11 +554,11 @@ struct QuizQuestionCard: View {
         case .text:
             // テキストカテゴリ：文字列を大きく表示。長い文字列でも縮小して収める
             Text(text)
-                .font(.system(size: 80, weight: .black, design: .rounded))
+                .font(.system(size: 80 * s, weight: .black, design: .rounded))
                 .foregroundStyle(DS.primary)
                 .minimumScaleFactor(0.5)
                 .multilineTextAlignment(.center)
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 16 * s)
         }
     }
 }
@@ -563,14 +576,15 @@ struct QuizChoiceGrid: View {
     let selectedItem: QuizItem?
     let onSelect:    (QuizItem) -> Void
 
-    /// 2列固定のグリッド定義。static にして全インスタンスで共有する。
-    private static let columns = [
-        GridItem(.flexible(), spacing: 12),
-        GridItem(.flexible(), spacing: 12)
-    ]
+    @Environment(\.layoutScale) private var s
+
+    /// 2列固定のグリッド定義。iPad では拡大率に合わせて間隔も広げる。
+    private var columns: [GridItem] {
+        [GridItem(.flexible(), spacing: 12 * s), GridItem(.flexible(), spacing: 12 * s)]
+    }
 
     var body: some View {
-        LazyVGrid(columns: Self.columns, spacing: 12) {
+        LazyVGrid(columns: columns, spacing: 12 * s) {
             ForEach(question.choices) { item in
                 QuizChoiceButton(
                     item: item, mode: mode, displayStyle: displayStyle,
@@ -606,6 +620,8 @@ struct QuizChoiceButton: View {
     let displayStyle: DisplayStyle
     let state:       QuizChoiceButtonState
     let action:      () -> Void
+
+    @Environment(\.layoutScale) private var s
 
     /// state に応じた背景色を返す。正解は薄緑、不正解は薄赤、dimmed はさらに薄く。
     private var bgColor: Color {
@@ -643,20 +659,20 @@ struct QuizChoiceButton: View {
                 if state == .correct {
                     Image(systemName: "checkmark.circle.fill")
                         .foregroundStyle(DS.gaugeFull)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * s, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding(8)
+                        .padding(8 * s)
                 }
                 // 不正解で選択したボタンの右上にバツマークアイコンを重ねて表示する
                 if state == .wrong {
                     Image(systemName: "xmark.circle.fill")
                         .foregroundStyle(DS.gaugeWarn)
-                        .font(.system(size: 18, weight: .bold))
+                        .font(.system(size: 18 * s, weight: .bold))
                         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topTrailing)
-                        .padding(8)
+                        .padding(8 * s)
                 }
             }
-            .frame(height: 76)
+            .frame(height: 76 * s)
         }
         .buttonStyle(.plain)
         .disabled(state != .normal)  // 回答後は再タップを無効化する
@@ -673,34 +689,34 @@ struct QuizChoiceButton: View {
         case .emojiToText:
             // 絵文字→テキストモード：選択肢はテキスト名で表示する
             Text(item.name)
-                .font(.system(size: 17, weight: .bold, design: .rounded))
+                .font(.system(size: 17 * s, weight: .bold, design: .rounded))
                 .minimumScaleFactor(0.5)
                 .multilineTextAlignment(.center)
                 .foregroundStyle(state == .dimmed ? DS.muted : DS.textPrimary)
-                .padding(10)
+                .padding(10 * s)
         case .textToEmoji:
             // テキスト→絵文字モード：displayStyle に応じてさらに3通りに分岐する
             switch displayStyle {
             case .emoji:
                 // 通常の絵文字で選択肢を表示する
                 Text(item.emoji)
-                    .font(.system(size: 50))
+                    .font(.system(size: 50 * s))
                     .opacity(state == .dimmed ? 0.40 : 1.0)
-                    .padding(8)
+                    .padding(8 * s)
             case .code:
                 // コードカテゴリ：等幅フォントでコード文字列を表示する
                 Text(item.emoji)
-                    .font(.system(size: 20, weight: .black, design: .monospaced))
+                    .font(.system(size: 20 * s, weight: .black, design: .monospaced))
                     .foregroundStyle(state == .dimmed ? DS.muted : DS.primary)
-                    .padding(10)
+                    .padding(10 * s)
             case .text:
                 // テキストカテゴリ：大きめのテキストとして選択肢を表示する
                 Text(item.emoji)
-                    .font(.system(size: 28, weight: .bold, design: .rounded))
+                    .font(.system(size: 28 * s, weight: .bold, design: .rounded))
                     .minimumScaleFactor(0.5)
                     .multilineTextAlignment(.center)
                     .foregroundStyle(state == .dimmed ? DS.muted : DS.textPrimary)
-                    .padding(10)
+                    .padding(10 * s)
             }
         }
     }
@@ -719,25 +735,27 @@ struct QuizFeedbackLabel: View {
     /// モードに応じて正解の表示形式を決める。emojiToText なら名前、textToEmoji なら絵文字を表示する。
     private var correctDisplay: String { mode == .emojiToText ? correct.name : correct.emoji }
 
+    @Environment(\.layoutScale) private var s
+
     var body: some View {
         switch answerState {
         case .unanswered:
             // 未回答時は空文字で高さだけ確保し、レイアウトのガタつきを防ぐ
-            Text("").font(.system(size: 26, design: .rounded))
+            Text("").font(.system(size: 26 * s, design: .rounded))
         case .correct:
             // 正解時：丸アイコン＋正解ラベルを緑で表示する
             Label("quiz_feedback_correct", systemImage: "circle")
-                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .font(.system(size: 26 * s, weight: .bold, design: .rounded))
                 .foregroundStyle(DS.gaugeFull)
         case .wrong:
             // 不正解時：バツアイコン＋不正解ラベルと、正解を赤で表示する
-            VStack(spacing: 4) {
+            VStack(spacing: 4 * s) {
                 Label("quiz_feedback_incorrect", systemImage: "xmark")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .font(.system(size: 26 * s, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.gaugeWarn)
                 // 「こたえは〇〇だよ」形式で正解を表示する
                 Text(String(format: String(localized: "quiz_feedback_answer_is"), correctDisplay))
-                    .font(.system(size: 22, weight: .semibold, design: .rounded))
+                    .font(.system(size: 22 * s, weight: .semibold, design: .rounded))
                     .foregroundStyle(DS.gaugeWarn)
                     .multilineTextAlignment(.center)
             }

@@ -405,7 +405,9 @@ struct MakeTenContentView: View {
         case .starting:
             MakeTenStartView(viewModel: viewModel).transition(.opacity)
         case .playing:
-            PlayingView(viewModel: viewModel).transition(.opacity)
+            PlayingView(viewModel: viewModel)
+                .scalesForLargeScreen()   // iPad では部品を大きくする
+                .transition(.opacity)
         case .finished:
             FinishedView(viewModel: viewModel).transition(.opacity)
         }
