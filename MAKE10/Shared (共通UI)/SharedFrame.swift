@@ -110,6 +110,7 @@ struct SharedFrame<Content: View>: View {
         .animation(.easeInOut(duration: 0.25), value: showSettings)
         // 設定パネルの開閉に応じてゲームのタイマーを一時停止・再開する
         .onChange(of: showSettings) { _, isOpen in
+            BreakReminder.shared.isSettingsOpen = isOpen   // 設定を開いているあいだは休憩カードを出さない
             isOpen ? onSettingsOpen?() : onSettingsClose?()
         }
     }

@@ -136,6 +136,7 @@ struct MemoryGameView: View {
                 howToRow(emoji: "👆", textKey: "memory_howto_flip")
                 howToRow(emoji: "🐘", textKey: "memory_howto_match")
                 howToRow(emoji: "🔥", textKey: "memory_howto_energy")
+                howToRow(emoji: "🎁", textKey: "memory_howto_sticker")
             }
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)

@@ -192,6 +192,12 @@ private struct StickyNoteTab: View {
     let isSelected: Bool
     let onTap:      () -> Void
 
+    /// 付箋の形（上の角だけ丸い）。
+    private var noteShape: UnevenRoundedRectangle {
+        UnevenRoundedRectangle(topLeadingRadius: 6, bottomLeadingRadius: 0,
+                               bottomTrailingRadius: 0, topTrailingRadius: 6)
+    }
+
     var body: some View {
         Button(action: onTap) {
             HStack(spacing: 4) {
@@ -207,9 +213,11 @@ private struct StickyNoteTab: View {
             // 開いている付箋は下に長くのびて、紙にもぐりこむ
             .padding(.bottom, isSelected ? 20 : 12)
             .background(
-                UnevenRoundedRectangle(topLeadingRadius: 6, bottomLeadingRadius: 0,
-                                       bottomTrailingRadius: 0, topTrailingRadius: 6)
-                    .fill(tab.noteColor.opacity(isSelected ? 1 : 0.75))
+                // 開いていない付箋は淡くする。ただし透明にすると、スクロールしたページの文字が
+                // 透けて見えるので、白い台紙の上に色を薄く重ねて、透けない淡い色にしている
+                noteShape
+                    .fill(Color.white)
+                    .overlay(noteShape.fill(tab.noteColor.opacity(isSelected ? 1 : 0.75)))
                     .shadow(color: .black.opacity(isSelected ? 0.14 : 0.06), radius: 3, x: 0, y: 2)
             )
             // 開いていない付箋は、少し下がって紙の後ろに隠れ気味にする

@@ -41,6 +41,10 @@ final class BreakReminder {
     /// カードを出しているか。MakeTenContentView がこれを見て重ねて出す。
     private(set) var isShowing = false
 
+    /// 設定パネルを開いているか。開いているあいだはカードを出さない（SharedFrame が知らせる）。
+    /// 保護者が設定を触っている最中に、カードが設定の上へ重なって出てこないようにするため。
+    @ObservationIgnored var isSettingsOpen = false
+
     /// 数え始めた時刻。
     @ObservationIgnored private var startedAt = Date()
 
@@ -54,6 +58,7 @@ final class BreakReminder {
     func showIfDue(now: Date = Date()) {
         guard AppSettings.shared.isBreakReminderOn,
               !isShowing,
+              !isSettingsOpen,
               now.timeIntervalSince(startedAt) >= BreakReminderTuning.playLimit else { return }
         isShowing = true
     }

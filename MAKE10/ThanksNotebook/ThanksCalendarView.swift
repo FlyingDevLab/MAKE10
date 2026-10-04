@@ -96,7 +96,7 @@ struct ThanksCalendarView: View {
     /// 記録のいちばん古い月（記録が無ければきょうの月）。
     private var earliestMonth: Date {
         let thisMonth = calendar.startOfMonth(for: Date())
-        let oldest = store.pages.keys.sorted().first.flatMap(DayKey.date(from:))
+        let oldest = store.pages.keys.sorted().first.flatMap { DayKey.date(from: $0) }
         return oldest.map { min(calendar.startOfMonth(for: $0), thisMonth) } ?? thisMonth
     }
 

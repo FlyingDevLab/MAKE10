@@ -15956,6 +15956,102 @@
         }
       }
     },
+    "memory_howto_sticker" : {
+      "comment" : "Animal Match how-to line 4: after clearing, pick a favorite animal sticker.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Findest du alle Paare, darfst du dir einen Tier-Sticker aussuchen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Match them all to pick your favorite animal sticker"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encuentra todas las parejas y elige tu pegatina de animal favorita"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trouve toutes les paires et choisis ton autocollant d’animal préféré"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "सारे जोड़े मिलाओ और अपना पसंदीदा जानवर स्टिकर चुनो"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cocokkan semuanya, lalu pilih stiker hewan kesukaanmu"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Trova tutte le coppie e scegli il tuo adesivo animale preferito"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ぜんぶ そろったら すきな どうぶつの シールが もらえるよ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모두 맞히면 좋아하는 동물 스티커를 골라 받아요"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vind alle paren en kies je favoriete dierensticker"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Encontre todos os pares e escolha seu adesivo de animal favorito"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "จับคู่ครบทุกใบ แล้วเลือกสติกเกอร์สัตว์ที่ชอบได้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghép hết các cặp để chọn nhãn dán con vật con thích"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部配对成功，就能选一张喜欢的动物贴纸"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部配對成功，就能選一張喜歡的動物貼紙"
+          }
+        }
+      }
+    },
     "memory_result_again" : {
       "comment" : "Play-again button on the Animal Match result screen.",
       "localizations" : {
