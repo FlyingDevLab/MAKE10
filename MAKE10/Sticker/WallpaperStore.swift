@@ -41,24 +41,50 @@ final class WallpaperStore {
     /// いま背景にかべがみを出すか（オンで、画像があるとき）。
     var isShowing: Bool { isOn && image != nil }
 
+    /// かべがみの絵の背景色（お絵かき画面で選んでいた色）。
+    private(set) var paperColor: Color?
+
+    /// ヘッダーとフッターの帯の色。
+    ///
+    /// ★ かべがみのときは、絵の背景色で塗る理由 ★
+    ///   帯は文字を読みやすくするために塗っている（SharedFrame を参照）。
+    ///   いつもの色（DS.bg）で塗ると、絵の上下にだけ別の色の帯ができて目立ってしまう。
+    ///   絵の背景色と同じ色で塗れば、帯が絵になじむ。
+    var bandColor: Color {
+        isShowing ? (paperColor ?? DS.bg) : DS.bg
+    }
+
     private init() {
         isOn  = UserDefaults.standard.bool(forKey: UDKey.isWallpaperOn)
         image = (try? Data(contentsOf: Self.fileURL)).flatMap(UIImage.init(data:))
+        if let rgb = UserDefaults.standard.array(forKey: UDKey.wallpaperBandRGB) as? [Double], rgb.count == 3 {
+            paperColor = Color(red: rgb[0], green: rgb[1], blue: rgb[2])
+        }
     }
 
     /// 新しいかべがみを保存して、背景に使い始める。
-    func save(_ newImage: UIImage) {
+    /// - Parameter paper: 絵の背景色（ヘッダー・フッターの帯に使う）
+    func save(_ newImage: UIImage, paper: Color) {
         guard let data = newImage.pngData() else { return }
         try? data.write(to: Self.fileURL, options: .atomic)
         image = newImage
         isOn  = true
+
+        // Color のままでは保存できないので、赤・緑・青の割合にして保存する
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
+        if UIColor(paper).getRed(&r, green: &g, blue: &b, alpha: &a) {
+            UserDefaults.standard.set([Double(r), Double(g), Double(b)], forKey: UDKey.wallpaperBandRGB)
+            paperColor = Color(red: Double(r), green: Double(g), blue: Double(b))
+        }
     }
 
     /// 「さいしょから はじめる」で、かべがみを消して、いつもの背景に戻す。
     func reset() {
         try? FileManager.default.removeItem(at: Self.fileURL)
-        image = nil
-        isOn  = false
+        UserDefaults.standard.removeObject(forKey: UDKey.wallpaperBandRGB)
+        image      = nil
+        paperColor = nil
+        isOn       = false
     }
 
     /// 保存先: Documents/wallpaper.png（お絵かきの drawing_canvas.json と同じ場所）
