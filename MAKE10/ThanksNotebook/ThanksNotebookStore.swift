@@ -100,6 +100,42 @@ final class ThanksNotebookStore {
         save()
     }
 
+    // MARK: まとめ（集計）
+
+    /// まとめの期間。
+    enum SummaryPeriod: String, CaseIterable, Identifiable {
+        case all        // いままで ぜんぶ
+        case thisMonth  // こんげつ
+        var id: String { rawValue }
+    }
+
+    /// 期間内にチェックしたミッションの集計。
+    struct Summary {
+        /// できたミッションの合計の数。
+        var total = 0
+        /// ミッションごとの回数。
+        var byMission: [ThanksMission: Int] = [:]
+        /// 相手ごとの回数（1つのミッションで2人選んでいたら、それぞれ1回）。
+        var byPerson: [ThanksPerson: Int] = [:]
+    }
+
+    /// 期間内の集計を作る。
+    func summary(for period: SummaryPeriod, now: Date = Date()) -> Summary {
+        var result = Summary()
+        // ★ 日付の文字列で期間を判定する ★
+        //   キーは "2026-10-04" の形なので、今月の分は "2026-10-" で始まるかどうかで分かる。
+        let monthPrefix = String(DayKey.string(for: now).prefix(8))
+        for (key, page) in pages where period == .all || key.hasPrefix(monthPrefix) {
+            for mission in page.missions {
+                guard let people = page.checks[mission] else { continue }
+                result.total += 1
+                result.byMission[mission, default: 0] += 1
+                for person in people { result.byPerson[person, default: 0] += 1 }
+            }
+        }
+        return result
+    }
+
     // MARK: リセット
 
     /// 「さいしょから はじめる」で、手帳の記録をすべて消す。
