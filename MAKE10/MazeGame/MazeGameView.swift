@@ -78,6 +78,7 @@ private struct MazeTitleView: View {
                     ("🐭", "Drag to move the white mouse"),
                     ("🧀", "Collect all 3 cheeses in the corners to advance!"),
                     ("🐀", "Dark mice drain HP — game over at 0!"),
+                    ("🔴", "Red and blue mice patrol along the walls!"),
                     ("💥", "Tap to fire a shockwave and repel mice!"),
                     ("⚡", "The lower your HP, the wider the shockwave!"),
                 ]
@@ -395,14 +396,41 @@ private func drawPlayer(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) 
     c.stroke(tail, with: .color(Color(white: 0.80)), lineWidth: 1.8)  // ← しっぽ色（薄グレー）
 }
 
-// MARK: drawMice（敵ネズミの描画・ダークグレー）
+// MARK: drawMice（敵ネズミの描画・ダークグレー／赤／青）
 
-/// 全敵ネズミを、プレイヤーの方を向くように回転させて描く。
+/// 敵ネズミの種類ごとの色。← 変更可
+private struct MouseColors {
+    let body: Color, head: Color, outline: Color, ear: Color, eye: Color
+
+    init(_ kind: MouseKind) {
+        switch kind {
+        case .chaser:      // ダークグレー（赤い目）
+            body = Color(white: 0.28); head = Color(white: 0.35); outline = Color(white: 0.15)
+            ear  = Color(red: 0.600, green: 0.300, blue: 0.300)
+            eye  = Color(red: 0.9, green: 0.1, blue: 0.1)
+        case .rightHand:   // 赤（体が赤いので、目は黄色にして見やすくする）
+            body = Color(red: 0.80, green: 0.16, blue: 0.16); head = Color(red: 0.88, green: 0.26, blue: 0.24)
+            outline = Color(red: 0.45, green: 0.05, blue: 0.05)
+            ear  = Color(red: 1.00, green: 0.62, blue: 0.62)
+            eye  = Color(red: 1.0, green: 0.92, blue: 0.2)
+        case .leftHand:    // 青
+            body = Color(red: 0.16, green: 0.36, blue: 0.85); head = Color(red: 0.26, green: 0.46, blue: 0.92)
+            outline = Color(red: 0.05, green: 0.15, blue: 0.45)
+            ear  = Color(red: 0.62, green: 0.75, blue: 1.00)
+            eye  = Color(red: 1.0, green: 0.92, blue: 0.2)
+        }
+    }
+}
+
+/// 全敵ネズミを描く。追いかけるネズミはプレイヤーの方を、赤・青は進んでいる方を向く。
 private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     for m in model.mice {
         var c = ctx
-        // 敵はプレイヤーの方向を向く（描画上の向きだけ。移動ロジックは Model 側）
-        let angle = atan2(model.cheeseY - m.y, model.cheeseX - m.x)
+        // 向きは描画上だけのもの（移動ロジックは Model 側）
+        let angle = m.kind == .chaser
+            ? atan2(model.cheeseY - m.y, model.cheeseX - m.x)
+            : atan2(m.vy, m.vx)
+        let colors = MouseColors(m.kind)
         let mx = m.x * s, my = m.y * s
         let r  = model.MOUSE_R * s
 
@@ -411,31 +439,31 @@ private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
 
         // ── 胴体（ダークグレー・横長楕円）───────────────────
         let body = Path(ellipseIn: CGRect(x: -r * 1.4, y: -r * 0.9, width: r * 2.8, height: r * 1.8))
-        c.fill(body,   with: .color(Color(white: 0.28)))  // ← 敵胴体色（ダークグレー）
-        c.stroke(body, with: .color(Color(white: 0.15)), lineWidth: 1)
+        c.fill(body,   with: .color(colors.body))
+        c.stroke(body, with: .color(colors.outline), lineWidth: 1)
 
         // ── 頭（円）──────────────────────────────────────────
         let head = Path(ellipseIn: CGRect(x: r * 0.45, y: -r * 0.75, width: r * 1.5, height: r * 1.5))
-        c.fill(head,   with: .color(Color(white: 0.35)))  // ← 敵頭色（ダークグレー）
-        c.stroke(head, with: .color(Color(white: 0.15)), lineWidth: 1)
+        c.fill(head,   with: .color(colors.head))
+        c.stroke(head, with: .color(colors.outline), lineWidth: 1)
 
         // ── 耳（上下2枚）─────────────────────────────────────
         for sy in [-0.8, 0.8] {
             let ear = Path(ellipseIn: CGRect(
                 x: r * 0.5, y: r * CGFloat(sy) - r * 0.5, width: r, height: r))
-            c.fill(ear, with: .color(Color(red: 0.600, green: 0.300, blue: 0.300)))  // ← 耳色（暗いピンク）
+            c.fill(ear, with: .color(colors.ear))
         }
 
-        // ── 目（赤・敵らしさを強調）──────────────────────────
+        // ── 目（いつもの敵は赤、赤・青のネズミは黄色）──────────
         let eye = Path(ellipseIn: CGRect(x: r * 1.48, y: -r * 0.52, width: r * 0.44, height: r * 0.44))
-        c.fill(eye, with: .color(Color(red: 0.9, green: 0.1, blue: 0.1)))  // ← 敵の目（赤）
+        c.fill(eye, with: .color(colors.eye))
 
         // ── しっぽ ────────────────────────────────────────────
         var tail = Path()
         tail.move(to: CGPoint(x: -r * 1.4, y: 0))
         tail.addQuadCurve(to:      CGPoint(x: -r * 2.5, y: r * 0.4),
                           control: CGPoint(x: -r * 2.0, y: r * 1.2))
-        c.stroke(tail, with: .color(Color(white: 0.28)), lineWidth: 1.5)  // ← 敵しっぽ色
+        c.stroke(tail, with: .color(colors.body), lineWidth: 1.5)
     }
 }
 

@@ -34,6 +34,13 @@ import QuartzCore   // CADisplayLink
 // ゲーム中に大量に生成・破棄される小さなデータを表す構造体群。
 // いずれもロジックを持たない「値の入れ物」なので struct（値型）にしている。
 
+/// 敵ネズミの種類
+enum MouseKind {
+    case chaser      // ダークグレー：プレイヤーを追いかける
+    case rightHand   // 赤：右手を壁につけて、壁に沿って巡回する
+    case leftHand    // 青：左手を壁につけて、壁に沿って巡回する
+}
+
 /// 敵ネズミ1匹分のデータ
 struct Mouse {
     var x: CGFloat              // 現在位置X（論理座標）
@@ -41,6 +48,13 @@ struct Mouse {
     var vx: CGFloat = 0         // 速度X（衝撃波で吹き飛ばされた時などに使う）
     var vy: CGFloat = 0         // 速度Y
     var kb: Int = 0             // ノックバック残りフレーム数（>0 の間は吹き飛び挙動になる）
+    var kind: MouseKind = .chaser
+
+    // ── 壁に沿って巡回するネズミ（赤・青）だけが使う値 ──
+    var dir: Int = Int.random(in: 0..<4)   // 進む向き（0=右 1=下 2=左 3=上）
+    var targetX = -1                       // 向かっているタイル（-1 = まだ決めていない）
+    var targetY = -1
+    var touchesWall = false                // 手を壁につけたか（つけるまでは、まっすぐ進んで壁を探す）
 }
 
 /// プレイヤーが放つ衝撃波（リング状の攻撃）1つ分のデータ
@@ -98,6 +112,10 @@ final class MazeGameModel: NSObject {
     let GW   = 19                   // ⚠️ 変更注意: MC から導出される値。単独で変えると迷路が壊れる
     /// ネズミ（プレイヤー）の移動速度（px/frame）
     let MOUSE_SPD: CGFloat = 1.05   // ← 変更可
+    /// 各ステージで、この匹数目から「赤 → 青 → いつもの敵」の順に出す（膠着を防ぎ、難しくするため）
+    let WALL_FOLLOWER_FROM = 16     // ← 変更可
+    /// 16匹目からの出る順番（この並びをくり返す）
+    let LATE_SPAWN_ORDER: [MouseKind] = [.rightHand, .leftHand, .chaser]   // ← 変更可
     /// 衝撃波が1フレームごとに広がる量（px）
     let SW_EXPAND: CGFloat = 7      // ← 変更可
     /// 衝撃波のクールダウン（frames。60fps なので 180 = 約3秒）
@@ -183,6 +201,8 @@ final class MazeGameModel: NSObject {
     // ── 敵スポーン用タイマー ─────────────────────────────────
     /// 次の敵を出現させるまでの残りフレーム数（0 で1匹スポーン）
     var spawnTimer = 0
+    /// このステージで出した敵ネズミの数（16匹目から赤・青を混ぜるために数える）
+    var spawnedThisStage = 0
 
     // MARK: - 内部参照（ループ）
 
@@ -234,6 +254,7 @@ final class MazeGameModel: NSObject {
             CheeseItem(x: T * 16.5, y: T * 16.5),  // 右下コーナー (5,5)
         ]
         mice         = []; particles = []
+        spawnedThisStage = 0
         shockwave    = MazeShockwave()
         let (_, si)  = getDifficulty()
         spawnTimer   = si
@@ -550,9 +571,17 @@ final class MazeGameModel: NSObject {
             let mx = (CGFloat(tx) + 0.5) * T
             let my = (CGFloat(ty) + 0.5) * T
             guard hypot(mx - cheeseX, my - cheeseY) >= T * 5 else { continue }  // 近すぎる位置は避ける
-            mice.append(Mouse(x: mx, y: my))
+            spawnedThisStage += 1
+            mice.append(Mouse(x: mx, y: my, kind: nextMouseKind()))
             break
         }
+    }
+
+    /// 次に出す敵ネズミの種類。15匹目までは いつもの敵、16匹目からは 赤 → 青 → いつもの敵 をくり返す。
+    /// （spawnedThisStage を数えたあとに呼ぶ）
+    private func nextMouseKind() -> MouseKind {
+        guard spawnedThisStage >= WALL_FOLLOWER_FROM else { return .chaser }
+        return LATE_SPAWN_ORDER[(spawnedThisStage - WALL_FOLLOWER_FROM) % LATE_SPAWN_ORDER.count]
     }
 
     /// 全敵ネズミの移動・吹き飛ばし・プレイヤーへのダメージ判定を1フレーム分処理する。
@@ -565,6 +594,12 @@ final class MazeGameModel: NSObject {
                 mice[i].x = moved.x; mice[i].y = moved.y
                 mice[i].vx *= 0.82; mice[i].vy *= 0.82
                 mice[i].kb -= 1
+                // 吹き飛ばされて道すじから外れたので、止まったところから壁を探し直す
+                mice[i].targetX = -1
+                mice[i].touchesWall = false
+            } else if mice[i].kind != .chaser {
+                // 赤・青：壁に沿って巡回する
+                updateWallFollower(i)
             } else {
                 // 通常時：プレイヤーへ向かう（jitter で少し揺らし、動きを単調でなくする）
                 let dx = cheeseX - mice[i].x, dy = cheeseY - mice[i].y
@@ -595,6 +630,94 @@ final class MazeGameModel: NSObject {
                 }
             }
         }
+    }
+
+    // MARK: - 壁に沿って巡回するネズミ（赤・青）
+    //
+    // ★ 壁に手をつけて歩く（右手法・左手法）とは？ ★
+    //   迷路で片方の手をずっと壁につけたまま歩くと、いつかは迷路じゅうを回れる、という歩き方。
+    //   この迷路は「一本道で全部回れる」作り方（buildMaze を参照）なので、壁はすべて外周につながっていて、
+    //   手をつけて歩けば迷路全体をぐるっと一周し、また同じ道をくり返し巡回する。
+    //   赤は右手、青は左手を壁につける。同じ道でも、まわる向きが逆になる。
+    //
+    // ★ タイルの中心から中心へ動く ★
+    //   追いかけるネズミのように壁にぶつかりながら動くのではなく、通路タイルの中心を1マスずつ渡り歩く。
+    //   中心に着いたら、次にどのタイルへ進むかを決める（wallFollowStep）。
+
+    /// 向き（0=右 1=下 2=左 3=上）ごとの、1マス進んだときのずれ。
+    private let stepX = [1, 0, -1, 0]
+    private let stepY = [0, 1, 0, -1]
+
+    /// タイル(x,y)が通路か（盤の外は壁）。
+    private func isPath(_ x: Int, _ y: Int) -> Bool {
+        x >= 0 && y >= 0 && x < GW && y < GW && grid[y][x] == 1
+    }
+
+    /// 赤・青のネズミを1フレームぶん動かす。
+    private func updateWallFollower(_ i: Int) {
+        var m = mice[i]
+
+        // 向かうタイルが決まっていなければ（出現直後・吹き飛ばされた後）、いまいるタイルの中心へ向かう
+        if m.targetX < 0 {
+            m.targetX = min(GW - 1, max(0, Int(m.x / T)))
+            m.targetY = min(GW - 1, max(0, Int(m.y / T)))
+        }
+
+        let goalX = (CGFloat(m.targetX) + 0.5) * T
+        let goalY = (CGFloat(m.targetY) + 0.5) * T
+        let dx = goalX - m.x, dy = goalY - m.y
+        let dist = hypot(dx, dy)
+        if dist > MOUSE_SPD {
+            m.vx = dx / dist * MOUSE_SPD
+            m.vy = dy / dist * MOUSE_SPD
+            m.x += m.vx; m.y += m.vy
+        } else {
+            // タイルの中心に着いた。次に進むタイルを決める
+            m.x = goalX; m.y = goalY
+            let next = wallFollowStep(x: m.targetX, y: m.targetY, dir: m.dir,
+                                      hand: m.kind == .rightHand ? 1 : 3,
+                                      touchesWall: m.touchesWall)
+            m.dir = next.dir
+            m.touchesWall = next.touchesWall
+            m.targetX += stepX[m.dir]
+            m.targetY += stepY[m.dir]
+        }
+        mice[i] = m
+    }
+
+    /// タイル(x,y)の中心で、次に進む向きを決める。
+    /// - Parameters:
+    ///   - hand: 壁につける手の向き。右手なら 1（右回りに1つ）、左手なら 3（右回りに3つ＝左）
+    ///   - touchesWall: もう手を壁につけているか
+    private func wallFollowStep(x: Int, y: Int, dir: Int, hand: Int,
+                                touchesWall: Bool) -> (dir: Int, touchesWall: Bool) {
+        let away = (4 - hand) % 4   // 手と反対の向きへ曲がるときの回り方
+        func open(_ d: Int) -> Bool { isPath(x + stepX[d], y + stepY[d]) }
+
+        // ① まだ手が壁についていない：手の側に壁が来るまで、まっすぐ進む
+        if !touchesWall {
+            if !open((dir + hand) % 4) {
+                // 手の側に壁がある → ここから手をつける（下の ② へ）
+            } else if open(dir) {
+                return (dir, false)
+            } else {
+                // 正面が壁 → 手と反対へ曲がると、正面の壁が手の側に来る
+                var d = (dir + away) % 4
+                for _ in 0..<4 where !open(d) { d = (d + away) % 4 }
+                return (d, true)
+            }
+        }
+
+        // ② 手を壁につけて歩く：手の側が空いたら（壁の角）その向きへ曲がる。
+        //    空いていなければ まっすぐ、それも壁なら手と反対へ曲がる（行き止まりなら引き返す）
+        let handSide = (dir + hand) % 4
+        if open(handSide) { return (handSide, true) }
+        var d = dir
+        for _ in 0..<4 {
+            if open(d) { return (d, true) }
+            d = (d + away) % 4
+        }
+        return (dir, true)   // 四方が壁（通路の上では起きない）
     }
 
     // MARK: - 衝撃波
