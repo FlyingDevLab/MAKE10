@@ -38,6 +38,13 @@ struct ThanksTodayView: View {
     @State private var pickingFor: Target? = nil
     /// チェックを外すか確かめているミッション。
     @State private var uncheckingFor: Target? = nil
+    /// 行のタップを受け付けてよいか。開いた直後は受け付けない。
+    ///
+    /// ★ 開いた直後のタップを捨てる理由 ★
+    ///   タイトル画面で「ありがとう てちょう」をトントンと2回たたくと、2回目がいちばん上の
+    ///   ミッションの行に当たって、相手えらびや「はずす？」がいきなり出てしまう。
+    ///   ページをめくって入ってきたときも同じことが起きるので、開いてすこしの間は行のタップを捨てる。
+    @State private var acceptsTaps = false
     /// この画面を開いてから、きのうのページを触ったか。
     /// 触ったあとは、ぜんぶチェックしても「きのうの ページ」をすぐには消さない（急に消えると驚くため）。
     @State private var touchedYesterday = false
@@ -135,7 +142,11 @@ struct ThanksTodayView: View {
         .animation(.easeInOut(duration: 0.2), value: pickingFor)
         .animation(.easeInOut(duration: 0.2), value: uncheckingFor)
         .animation(.spring(response: 0.35, dampingFraction: 0.6), value: rewardPopup)
-        .onAppear { openToday() }
+        .onAppear {
+            openToday()
+            // ← 変更可：開いてから行のタップを受け付けるまでの時間（秒）
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { acceptsTaps = true }
+        }
         .onChange(of: scenePhase) { _, phase in
             // 寝る前に開いたまま翌朝戻ってきた、などのときに新しいページにする
             if phase == .active { openToday() }
@@ -282,6 +293,7 @@ struct ThanksTodayView: View {
 
     /// ミッションの行をタップしたとき。
     private func tap(_ mission: ThanksMission, page: ThanksDayPage, day: Date) {
+        guard acceptsTaps else { return }
         SoundManager.shared.playTap()
         let target = Target(mission: mission, day: day)
         if page.isChecked(mission) {
@@ -476,11 +488,15 @@ private struct ThanksPersonPicker: View {
             VStack(spacing: 4) {
                 Text(verbatim: person.emoji)
                     .font(.system(size: 32))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)   // 🐶🧸🌱 のように絵文字が3つ並ぶ相手も1行に収める
                 Text(person.nameKey)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.textBody)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.6)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(2)             // 「どうぶつ・ぬいぐるみ・しょくぶつ」のような長い名前は2行に
+                    .minimumScaleFactor(0.7)
+                    .frame(minHeight: 30)     // 1行の名前も2行ぶんの高さをとり、マスの大きさをそろえる
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, 10)

@@ -115,7 +115,7 @@ enum ThanksMission: String, Codable, CodingKeyRepresentable, CaseIterable, Ident
     /// チェックするときに「だれに？」を選ぶか。
     var asksWho: Bool {
         switch self {
-        case .thanksMeal, .thanksThings, .thanksMyself,
+        case .thanksMeal, .thanksMyself,
              .tidyUp, .brushTeeth, .dressSelf, .readBook:
             return false
         default:
@@ -133,8 +133,17 @@ enum ThanksMission: String, Codable, CodingKeyRepresentable, CaseIterable, Ident
 
 /// 「だれに？」の相手。いろいろな家庭の形があるので「おうちの ひと」も用意している。
 /// 保存は rawValue。一度出した rawValue を変えたり case を消したりしないこと（ThanksMission と同じ理由）。
+/// 宣言の順がそのまま選ぶカードの並びになる。
+///
+/// ★ 入れていない相手 ★
+///   「すきな ひと」（恋愛の意味にとられて冷やかしの種になりやすい）と
+///   「きらいな ひと」（人に「きらい」の名前をつけることになり、手帳の目的と反対）は、あえて入れていない。
+///   苦手な人へのあいさつなどは「ほかの ひと」で受け止める（docs/SPEC_thanks_notebook.md を参照）。
 enum ThanksPerson: String, Codable, CaseIterable, Identifiable {
-    case father, mother, family, grandpa, grandma, sibling, friend, teacher, other
+    case father, mother, family, grandpa, grandma, sibling, friend, teacher
+    case nonHuman   // どうぶつ・ぬいぐるみ・しょくぶつ（人以外の友達。ペットがいない子も選べる）
+    case other
+    case me         // じぶん（何でも「じぶん」で済ませないよう、いちばん最後に並べる）
 
     var id: String { rawValue }
 
@@ -148,7 +157,9 @@ enum ThanksPerson: String, Codable, CaseIterable, Identifiable {
         case .sibling:  return "👦"
         case .friend:   return "🧒"
         case .teacher:  return "🧑‍🏫"
+        case .nonHuman: return "🐶🧸🌱"
         case .other:    return "🙂"
+        case .me:       return "🙋"
         }
     }
 
