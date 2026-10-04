@@ -12,6 +12,7 @@
 //   TitleView（親） … pickerRows で組み立てた「行」を縦に並べる独自レイアウト。
 //                     フリック操作で並べ替え・吹き飛ばしができ、
 //                     無操作が続くと自動デモ（スワップ／フライ）が動く。
+//                     デモでは指（👆）がカードの上をスワイプし、それに合わせてカードが動く。
 //
 // 役割分担:
 //   - GamePickerTile (GamePickerComponents.swift) : タップ/フリックの「判定」
@@ -85,6 +86,24 @@ struct TitleView: View {
     /// 自動デモアニメの世代番号。手動操作時にインクリメントしてデモを停止する。
     @State private var demoGeneration: Int = 0
 
+    // MARK: デモの指（👆）
+
+    // ★ なぜ指を出すのか ★
+    //   カードを勝手に動かすだけでは「指で動かせる」ことに気づかない人が多かった。
+    //   指がカードをスワイプし、その動きに合わせてカードが動くことで、操作方法そのものを見せる。
+
+    /// 各タイルの位置（グリッドの座標系）。デモの指をどのカードの上に出すかを決めるのに使う。
+    @State private var tileFrames: [GamePickerSelection: CGRect] = [:]
+    /// 指の位置（指先の位置。グリッドの座標系）。
+    @State private var fingerPoint: CGPoint = .zero
+    /// 指を表示しているか。
+    @State private var fingerVisible = false
+    /// 指で押しているか（押すと少し小さくなる）。
+    @State private var fingerPressed = false
+
+    /// グリッドの座標系の名前。タイルの位置と指の位置を同じ基準で扱うために使う。
+    private let gridSpace = "titleGrid"
+
     /// タイルの位置移動（スワップ・末尾送り・バナーローテーション）を滑らかにアニメーションさせるための名前空間。
     /// matchedGeometryEffect は「同じ id を持つビューが前後でどこにあったか」を追跡して
     /// フレーム差分を自動でアニメーションする仕組みで、行（HStack）をまたいだ移動にも対応できる。
@@ -116,6 +135,7 @@ struct TitleView: View {
                         }
                         .matchedGeometryEffect(id: game, in: tileTransition)
                         .frame(height: bannerHeight)
+                        .modifier(TileFrameReporter(game: game, space: gridSpace) { tileFrames[$0] = $1 })
 
                     case .pair(let left, let right):
                         HStack(spacing: 10) {
@@ -134,6 +154,7 @@ struct TitleView: View {
                                 )
                             }
                             .matchedGeometryEffect(id: left, in: tileTransition)
+                            .modifier(TileFrameReporter(game: left, space: gridSpace) { tileFrames[$0] = $1 })
 
                             if let right {
                                 GamePickerTile(
@@ -151,6 +172,7 @@ struct TitleView: View {
                                     )
                                 }
                                 .matchedGeometryEffect(id: right, in: tileTransition)
+                                .modifier(TileFrameReporter(game: right, space: gridSpace) { tileFrames[$0] = $1 })
                             } else {
                                 // 奇数個であぶれた行の空きマス（見た目にも操作にも影響しない透明マス）
                                 Color.clear
@@ -161,6 +183,9 @@ struct TitleView: View {
             }
             // ← 変更可：グリッド再配置アニメ（スワップの半速に合わせて response を 0.80 に）
             .animation(.spring(response: 0.80, dampingFraction: 0.8), value: visibleGames)
+            .coordinateSpace(name: gridSpace)
+            // デモの指。カードより手前に重ね、タップは下のカードへ素通しさせる
+            .overlay(alignment: .topLeading) { demoFinger }
             .padding(.horizontal, 24)   // 他画面（遊び方カード等）と揃えた余白
             .padding(.bottom, 24)
         }
@@ -173,6 +198,72 @@ struct TitleView: View {
         .onDisappear {
             // 世代番号を進めて、予約済みのデモをすべて無効にする（ゲーム中に裏で動かさない）
             demoGeneration += 1
+            fingerVisible  = false
+            fingerPressed  = false
+        }
+    }
+
+    // MARK: デモの指
+
+    /// 指先の大きさ（pt）。← 変更可
+    private let fingerSize: CGFloat = 52
+
+    /// デモでカードをスワイプする指。fingerPoint に指先が来るよう、絵文字を少し下にずらして置く。
+    private var demoFinger: some View {
+        Text(verbatim: "👆")
+            .font(.system(size: fingerSize))
+            .shadow(color: .black.opacity(0.25), radius: 4, x: 0, y: 3)
+            .scaleEffect(fingerPressed ? 0.85 : 1.0, anchor: .top)
+            .position(x: fingerPoint.x, y: fingerPoint.y + fingerSize * 0.5)
+            .opacity(fingerVisible ? 1 : 0)
+            .allowsHitTesting(false)
+            .accessibilityHidden(true)
+    }
+
+    /// 指でカードをスワイプする演出を1回行う。
+    ///   ① from に指を出す → ② 押す → ③ to へ動かす（同時に action でカードを動かす）→ ④ 離して消える
+    /// 途中で世代が変わったら（＝ユーザーが触ったら）そこでやめる。
+    /// - Parameters:
+    ///   - action: 指が動き出す瞬間に呼ぶ。カードを動かす処理を渡す。
+    ///   - completion: 指が消え終わったあとに呼ぶ。
+    private func demoSwipe(
+        generation: Int,
+        from: CGPoint,
+        to: CGPoint,
+        action: @escaping () -> Void,
+        completion: @escaping () -> Void
+    ) {
+        // ← 変更可：指の演出の各段階の時間（秒）
+        let appear: Double = 0.30
+        let press:  Double = 0.15
+        let move:   Double = 0.55
+        let leave:  Double = 0.30
+        let pressHold: Double = press + 0.05
+
+        fingerPoint = from
+        withAnimation(.easeOut(duration: appear)) { fingerVisible = true }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + appear) {
+            guard generation == self.demoGeneration else { return }
+            withAnimation(.easeInOut(duration: press)) { self.fingerPressed = true }
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + pressHold) {
+                guard generation == self.demoGeneration else { return }
+                withAnimation(.easeInOut(duration: move)) { self.fingerPoint = to }
+                action()
+
+                DispatchQueue.main.asyncAfter(deadline: .now() + move) {
+                    guard generation == self.demoGeneration else { return }
+                    withAnimation(.easeOut(duration: leave)) {
+                        self.fingerPressed = false
+                        self.fingerVisible = false
+                    }
+                    DispatchQueue.main.asyncAfter(deadline: .now() + leave) {
+                        guard generation == self.demoGeneration else { return }
+                        completion()
+                    }
+                }
+            }
         }
     }
 
@@ -274,6 +365,11 @@ struct TitleView: View {
     private func scheduleDemo(delay: Double) {
         demoGeneration += 1
         let gen = demoGeneration
+        // デモの途中でユーザーが触った場合、出ていた指を引っ込める
+        withAnimation(.easeOut(duration: 0.2)) {
+            fingerVisible = false
+            fingerPressed = false
+        }
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             runDemoLoop(generation: gen)
         }
@@ -295,32 +391,62 @@ struct TitleView: View {
     }
 
     /// 末尾2枚（バナーを除く）を入れ替えて戻すデモ。
-    /// swap → 1.4秒後に swap back → 4秒後に次のデモへ。
+    /// 指が左のカードを右へスワイプして入れ替え → 少し待って、指が右へ移ったカードを左へスワイプして戻す
+    /// → 4秒後に次のデモへ。
     private func runDemoSwap(generation: Int, candidates: [GamePickerSelection]) {
         let lastGame   = candidates[candidates.count - 1]
         let secondLast = candidates[candidates.count - 2]
 
-        guard let si = rankManager.sortedGames.firstIndex(of: lastGame),
-              let sj = rankManager.sortedGames.firstIndex(of: secondLast) else { return }
-
-        // ← 変更可：デモスワップ速度（response: 0.70 = 手動の半速）
-        withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
-            rankManager.swap(at: si, with: sj, persist: false)   // デモは保存しない（下の解説を参照）
-        }
-
-        // ← 変更可：swap back までの待機時間（秒）
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.4) {
-            guard generation == self.demoGeneration else { return }
-            guard let si2 = self.rankManager.sortedGames.firstIndex(of: lastGame),
-                  let sj2 = self.rankManager.sortedGames.firstIndex(of: secondLast) else { return }
-            withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
-                self.rankManager.swap(at: si2, with: sj2, persist: false)
-            }
-            // ← 変更可：次のデモまでの待機時間（秒）
-            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+        guard let fromFrame = tileFrames[secondLast],
+              let toFrame   = tileFrames[lastGame] else {
+            // まだ位置が分からない（表示直後など）ときは、少し待ってからやり直す
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 self.runDemoLoop(generation: generation)
             }
+            return
         }
+
+        // ① secondLast を lastGame の位置へスワイプして入れ替える
+        demoSwipe(
+            generation: generation,
+            from: center(of: fromFrame),
+            to:   center(of: toFrame),
+            action: { self.demoSwap(lastGame, secondLast) },
+            completion: {
+                // ← 変更可：入れ替えてから戻し始めるまでの待機時間（秒）
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) {
+                    guard generation == self.demoGeneration else { return }
+                    // ② 移動した secondLast を元の位置へスワイプして戻す
+                    self.demoSwipe(
+                        generation: generation,
+                        from: self.center(of: toFrame),
+                        to:   self.center(of: fromFrame),
+                        action: { self.demoSwap(lastGame, secondLast) },
+                        completion: {
+                            // ← 変更可：次のデモまでの待機時間（秒）
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 4.0) {
+                                self.runDemoLoop(generation: generation)
+                            }
+                        }
+                    )
+                }
+            }
+        )
+    }
+
+    /// デモ用の入れ替え（保存しない）。
+    private func demoSwap(_ a: GamePickerSelection, _ b: GamePickerSelection) {
+        guard let si = rankManager.sortedGames.firstIndex(of: a),
+              let sj = rankManager.sortedGames.firstIndex(of: b) else { return }
+        // ← 変更可：デモスワップ速度（response: 0.70 = 手動の半速）
+        withAnimation(.spring(response: 0.70, dampingFraction: 0.75)) {
+            rankManager.swap(at: si, with: sj, persist: false)   // デモは保存しない（上の解説を参照）
+        }
+    }
+
+    /// 枠の中心。
+    private func center(of frame: CGRect) -> CGPoint {
+        CGPoint(x: frame.midX, y: frame.midY)
     }
 
     /// 末尾タイル（バナーを除く）を画面外に飛ばして末尾送りするデモ。
@@ -328,6 +454,27 @@ struct TitleView: View {
     private func runDemoFly(generation: Int, candidates: [GamePickerSelection]) {
         let lastGame = candidates[candidates.count - 1]
 
+        guard let frame = tileFrames[lastGame] else {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                self.runDemoLoop(generation: generation)
+            }
+            return
+        }
+
+        // 指がカードを右へはらう。指はカードの右端あたりまで動き、カードはそのまま画面の外へ飛んでいく
+        let start = center(of: frame)
+        let end   = CGPoint(x: frame.maxX, y: frame.midY)   // ← 変更可：指が動く距離
+        demoSwipe(
+            generation: generation,
+            from: start,
+            to:   end,
+            action: { self.demoFly(lastGame, generation: generation) },
+            completion: {}
+        )
+    }
+
+    /// デモ用の吹き飛ばし（保存しない）。飛び終わったら末尾へ送り、次のデモを予約する。
+    private func demoFly(_ lastGame: GamePickerSelection, generation: Int) {
         // ← 変更可：デモフライ方向（右端タイルなので右へ）
         let flyDir = CGSize(width: 600, height: 0)
 
@@ -507,6 +654,24 @@ struct TitleView: View {
                     rankManager.throwToBottom(game)
                 }
             }
+        }
+    }
+}
+
+// MARK: - TileFrameReporter
+
+/// タイルの位置（指定した座標系での枠）を親へ知らせる ViewModifier。
+/// TitleView のデモで、指をどのカードの上に出すかを決めるのに使う。
+private struct TileFrameReporter: ViewModifier {
+    let game:  GamePickerSelection
+    let space: String
+    let onChange: (GamePickerSelection, CGRect) -> Void
+
+    func body(content: Content) -> some View {
+        content.onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .named(space))
+        } action: { frame in
+            onChange(game, frame)
         }
     }
 }
