@@ -19,18 +19,23 @@
 Included games:
 - **MAKE10** — tap number cards to make sums of 10
 - **Whack-a-Mole** — tap the moles before they disappear
-- **Maze (Cheese Quest)** — guide the mouse through the maze
+- **Maze (Cheese Quest)** — guide the mouse through the maze; fend off mice with stored-up shockwaves (red and blue mice patrol along the walls)
 - **Pinball** — classic pinball action
-- **Emoji Quiz** — guess from emoji clues
+- **Emoji Quiz** — animals, the flag of every country (look-alike flags appear side by side), and airport codes from Japan and around the world
 - **Coin Drop** — drop and merge coins to make $10
 - **Command Janken** — rock-paper-scissors with a twist: follow the command to win *or* lose on purpose
 - **Ten Puzzle** — combine four numbers with + − × ÷ to make 10
-- **Animal Match** — a memory game; match every pair to pick a sticker
-- **Stickers & Drawing** — decorate your own canvas with stickers and draw freely with crayons
+- **Animal Match** — a memory game; earn energy for every pair (more for streaks), then pick a sticker
+- **Stickers & Drawing** — decorate your own canvas with stickers and draw freely with crayons, then turn your picture into the app's wallpaper
+
+Also included:
+- **Thank-You Notebook** — three small missions a day for saying "thank you" to the people around you, with a calendar and a summary to look back on
 
 Playing games fills up your **Energy 🔥** (shown in kcal — one banana's worth, 100 kcal, is enough for one gacha spin).
 Spend it in the **Gacha** for a random sticker, or in the **Sticker Corner** to pick one from ten stickers that change every day.
 Energy is earned only by playing — there is no way to buy it with real money.
+
+For parents: after 30 minutes of continuous play, a gentle break reminder appears between games (it can be turned off in Settings).
 
 ### Why This Code Is Public
 
@@ -65,15 +70,16 @@ If it doesn't, we don't do it. No exceptions. Money will never come before the s
 
 ### Requirements
 
-- Xcode 15+
+- Xcode 16+
 - iOS 17.6+
 
 ### Tech Stack
 
 - Swift / SwiftUI / SpriteKit
-- All data stored locally on the device (UserDefaults and local JSON files) — nothing ever leaves the device
+- All data stored locally on the device (UserDefaults and local files) — nothing ever leaves the device
 - No third-party libraries or SDKs
 - Sound effects by [効果音ラボ / Soundeffect-Lab](https://soundeffect-lab.info) — files not included in this repository (redistribution prohibited)
+- Airport quiz data built from [OurAirports](https://ourairports.com/data/) (public domain) and [Wikidata](https://www.wikidata.org/) (CC0) — see `tools/airports/README.md`
 
 ### License
 
@@ -104,18 +110,23 @@ Published as **"Kids Game Collection"**:
 収録ゲーム：
 - **MAKE10** — 数字カードをタップして合計10をつくろう
 - **モグラたたき** — 出てきたモグラをすばやくタップ
-- **迷路（チーズクエスト）** — ネズミを迷路のゴールへ導こう
+- **迷路（チーズクエスト）** — チーズを集めよう。ためた衝撃波でネズミを撃退（赤と青のネズミは壁に沿ってまわる）
 - **ピンボール** — クラシックなピンボール
-- **絵文字クイズ** — 絵文字のヒントから答えを当てよう
+- **絵文字クイズ** — どうぶつ、世界じゅうの国旗（そっくりな旗も並ぶ）、日本と世界の空港コード
 - **コインドロップ** — コインを落として合体させ、$10をめざそう
 - **指令じゃんけん** — 「勝って！」「負けて！」の指令どおりに出せるかな？
 - **四則テンパズル** — 4つの数字と ＋ − × ÷ で10をつくろう
-- **どうぶつめくり** — 神経衰弱。ぜんぶそろえたら好きなシールをもらえる
-- **シール＆おえかき** — シールを自分のキャンバスに貼ったり、クレヨンで自由にお絵かき
+- **どうぶつめくり** — 神経衰弱。そろえるたびにエネルギー（れんぞくで増える）、ぜんぶそろえたら好きなシールをもらえる
+- **シール＆おえかき** — シールを自分のキャンバスに貼ったり、クレヨンで自由にお絵かき。描いた絵はアプリのかべがみにもできる
+
+ほかにも：
+- **ありがとう てちょう** — 身近な人に「ありがとう」を伝える、毎日3つの小さなミッション。カレンダーとまとめでふりかえれる
 
 ゲームで遊ぶと **エネルギー🔥** がたまります（単位は kcal。バナナ1本分の 100kcal でガチャが1回まわせます）。
 たまったエネルギーは、ランダムにシールが出る **ガチャ** か、毎日入れ替わる10種類から選べる **シールやさん** で使えます。
 エネルギーはゲームで遊んだときにだけ増えます。お金で買う方法はありません。
+
+保護者の方へ：30分続けて遊ぶと、ゲームの合間に休憩をうながすおしらせが出ます（設定でオフにできます）。
 
 ### なぜコードを公開しているのか
 
@@ -150,15 +161,16 @@ Published as **"Kids Game Collection"**:
 
 ### 動作環境
 
-- Xcode 15以上
+- Xcode 16以上
 - iOS 17.6以上
 
 ### 技術スタック
 
 - Swift / SwiftUI / SpriteKit
-- データはすべて端末内にローカル保存（UserDefaultsおよびローカルJSONファイル）— 端末の外には一切送信しません
+- データはすべて端末内にローカル保存（UserDefaultsおよびローカルファイル）— 端末の外には一切送信しません
 - サードパーティライブラリ・SDKなし
 - 効果音：[効果音ラボ](https://soundeffect-lab.info) — 再配布禁止のためファイルは同梱していません
+- 空港コードクイズのデータ：[OurAirports](https://ourairports.com/data/)（パブリックドメイン）と [Wikidata](https://www.wikidata.org/)（CC0）から作成 — 作り方は `tools/airports/README.md`
 
 ### ライセンス
 
