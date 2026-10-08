@@ -127,15 +127,18 @@ struct MakeTenContentView: View {
                         .transition(.opacity)
                 case .pinball:
                     PinballView()
+                        .portraitFramed()   // 縦で遊ぶゲーム（isPortraitOnlyScreen を参照）
                         .transition(.opacity)
                 case .coinDrop:
                     CoinDropView()
+                        .portraitFramed()
                         .transition(.opacity)
                 case .janken:
                     JankenView()
                         .transition(.opacity)
                 case .tenPuzzle:
                     TenPuzzleView()
+                        .portraitFramed()
                         .transition(.opacity)
                 case .memory:
                     MemoryGameView()
@@ -199,6 +202,12 @@ struct MakeTenContentView: View {
                     .allowsHitTesting(false)
                     .zIndex(50)
             }
+        }
+        // 縦で遊ぶゲームを開いたら縦のみに、ほかの画面へ移ったら元の向きに戻す。
+        // 切り替えと戻しをこの1か所でまとめて行うので、ゲームごとに「戻し忘れ」が起きない。
+        // initial: true … 最初に表示したときにも1回呼ぶ（起動直後の向きをそろえるため）。
+        .onChange(of: isPortraitOnlyScreen, initial: true) { _, portraitOnly in
+            OrientationLock.shared.setPortraitOnly(portraitOnly)
         }
         .onDisappear { viewModel.suspend() }
         .onAppear {
@@ -301,6 +310,23 @@ struct MakeTenContentView: View {
         case .make10, .quizHome, .quizPlaying:
             return true
         default:
+            return false
+        }
+    }
+
+    // MARK: 画面の向き
+    //
+    // ★ default を書かずに全部の画面を並べている理由 ★
+    //   新しいゲームを Screen に追加したとき、ここがコンパイルエラーになるので、
+    //   「縦で遊ぶゲームか」を必ず考えて決められる（stickerBoardVisible とは逆の、書き忘れ防止）。
+
+    /// 縦のみで遊ぶ画面かどうか。盤面が縦長の前提で作られているゲームだけ true を返す。
+    private var isPortraitOnlyScreen: Bool {
+        switch screen {
+        case .pinball, .coinDrop, .tenPuzzle:
+            return true
+        case .make10, .quizHome, .quizPlaying, .whackAMole, .maze, .janken, .memory,
+             .stickerStorage, .stickerShop, .gacha, .thanksNotebook:
             return false
         }
     }
@@ -456,5 +482,40 @@ struct MakeTenContentView: View {
         case .finished:
             FinishedView(viewModel: viewModel).transition(.opacity)
         }
+    }
+}
+
+// MARK: - PortraitFrame
+
+// ★ なぜ縦で遊ぶゲームを「縦長の枠」に入れるのか ★
+//   縦で遊ぶゲームを開くと OrientationLock が画面を縦に回す。
+//   しかし iPad の分割表示・Stage Manager のウィンドウ表示・iPhone Duo を開いたときなどは、
+//   向きを変えられないので、アプリの場所が横長のままになることがある（OrientationLock.swift を参照）。
+//   そのときゲームを横長いっぱいに広げると、縦長前提の盤面が崩れてしまう。
+//   そこで、場所が横長のときだけ盤面の幅を「縦長の比率」までに抑えて中央に置き、左右を余白にする。
+//   場所が縦長のとき（ふつうの iPhone・縦向きの iPad）は幅をそのまま使うので、見た目は今までと同じ。
+
+/// 縦長の枠の比率（幅 ÷ 高さ）。iPhone でのゲーム画面と同じ比率にしている。← 変更可
+private let portraitFrameAspect: CGFloat = DS.baseContentSize.width / DS.baseContentSize.height
+
+/// 場所が横長のときだけ、中身の幅を縦長の比率までに抑えて中央に置く ViewModifier。
+private struct PortraitFrame: ViewModifier {
+    func body(content: Content) -> some View {
+        // 大きさが変わるたび（回転・分割表示・Duo の開閉）に GeometryReader が測り直すので、枠の幅もその都度決め直される
+        GeometryReader { geo in
+            let width = DS.isWide(geo.size)
+                ? min(geo.size.width, geo.size.height * portraitFrameAspect)
+                : geo.size.width
+            content
+                .frame(width: width, height: geo.size.height)
+                .frame(maxWidth: .infinity)   // 余った幅の真ん中に置く
+        }
+    }
+}
+
+private extension View {
+    /// 縦で遊ぶゲームを、横長の場所でも縦長の枠に収めて中央に置く（PortraitFrame を参照）。
+    func portraitFramed() -> some View {
+        modifier(PortraitFrame())
     }
 }

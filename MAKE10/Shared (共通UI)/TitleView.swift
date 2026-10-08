@@ -112,6 +112,24 @@ struct TitleView: View {
     /// フレーム差分を自動でアニメーションする仕組みで、行（HStack）をまたいだ移動にも対応できる。
     @Namespace private var tileTransition
 
+    // MARK: 横長の画面での幅
+
+    // ★ 横長のときに、一覧の幅を抑えて中央に置く理由 ★
+    //   一覧は「2列」を前提に作っている（フリックでの入れ替え・バナーの回転も2列が前提。GameRankManager を参照）。
+    //   iPad を横にしたときなどに横幅いっぱいまで広げると、タイルが横に平たく伸びて見づらくなる。
+    //   列の数は変えずに、幅を縦長の比率までに抑えて中央に置けば、iPhone と同じ形のタイルのまま並べられる。
+    //   縦長の場所では今までどおり幅いっぱいを使う。
+
+    /// 一覧を置ける場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+    /// 横長のときの一覧の縦横比（幅 ÷ 高さ）。iPhone でのゲーム画面と同じ比率。← 変更可
+    private let wideGridAspect: CGFloat = DS.baseContentSize.width / DS.baseContentSize.height
+
+    /// 一覧の最大の幅。横長のときだけ抑え、縦長のときは制限しない。
+    private var gridMaxWidth: CGFloat {
+        DS.isWide(areaSize) ? areaSize.height * wideGridAspect : .infinity
+    }
+
     // MARK: body
 
     var body: some View {
@@ -191,6 +209,13 @@ struct TitleView: View {
             .overlay(alignment: .topLeading) { demoFinger }
             .padding(.horizontal, 24)   // 他画面（遊び方カード等）と揃えた余白
             .padding(.bottom, 24)
+            .frame(maxWidth: gridMaxWidth)   // 横長のときだけ幅を抑える（上の「横長の画面での幅」を参照）
+        }
+        .frame(maxWidth: .infinity)   // 幅を抑えたときに、一覧を真ん中に置く
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
         .onAppear {
             // デモで見た目だけ動いていた並びを捨て、保存済みの（自分で並べた）順番に戻す

@@ -33,9 +33,20 @@ import SwiftUI
 //   SwiftUI が提供するアプリライフサイクル管理のためのプロトコルです。
 //   準拠するには body プロパティ（some Scene を返す）を実装するだけでよく、
 //   UIApplicationDelegate を書かずにアプリのライフサイクルを管理できます。
+//   ただし「画面の向きをあとから変える」など SwiftUI だけではできないことのために、
+//   このアプリでは小さな AppDelegate を1つだけ使っている（下の appDelegate を参照）。
 
 @main
 struct FDL_TenBlitzApp: App {
+
+    // MARK: 依存
+
+    // ★ @UIApplicationDelegateAdaptor とは？ ★
+    //   SwiftUI のアプリに、UIKit の AppDelegate を「つなぐ」ためのプロパティラッパーです。
+    //   ここに書いておくと、SwiftUI がアプリの起動時に AppDelegate を作り、
+    //   iOS からの問い合わせ（いま許可している画面の向きなど）を AppDelegate に回してくれます。
+    //   AppDelegate の中身と、向きを切り替える仕組みは OrientationLock.swift を参照。
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
 
     // MARK: 初期化
 

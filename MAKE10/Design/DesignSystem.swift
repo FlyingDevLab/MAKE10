@@ -176,7 +176,7 @@ enum DS {
 //   @Environment(\.layoutScale) で同じ値を受け取れます（引数で何段もバケツリレーせずに済む）。
 
 extension EnvironmentValues {
-    /// iPhone を 1.0 としたゲーム画面の拡大率。iPad では 1 より大きくなる。
+    /// iPhone を 1.0 としたゲーム画面の拡大率。iPad など広い場所では 1 より大きくなる。
     @Entry var layoutScale: CGFloat = 1
 }
 
@@ -185,14 +185,34 @@ extension DS {
     static let baseContentSize = CGSize(width: 390, height: 660)
     /// 拡大しすぎて部品が大味にならないよう、上限を決めておく。← 変更可
     static let maxLayoutScale: CGFloat = 1.8
+    /// この倍率に届かない広さなら拡大しない（拡大率 1 のまま）。← 変更可
+    ///
+    /// ★ なぜ 1.2 なのか ★
+    ///   いちばん大きい iPhone（Pro Max）でも、ゲーム画面は基準の約 1.13 倍しかない。
+    ///   1.2 にしておけば、どの iPhone も拡大されず、いままでと同じ見た目のまま。
+    ///   iPad や、iPhone Duo を開いたときの広い画面だけが拡大される。
+    static let largeScreenThreshold: CGFloat = 1.2
+
+    /// 使える場所が横長（幅 > 高さ）かどうか。
+    ///
+    /// ★ 端末の向きではなく、幅と高さで決める理由 ★
+    ///   iPad の分割表示や iPhone Duo では、端末を縦に持っていてもアプリの場所が横長になることがある。
+    ///   「端末がどちらを向いているか」ではなく「アプリが実際に使える場所の形」で決めれば、どの場合も正しく判断できる。
+    static func isWide(_ size: CGSize) -> Bool {
+        size.width > size.height
+    }
 }
 
-/// 横幅が広い画面（iPad）のときだけ、拡大率を子孫の View に配る ViewModifier。
+/// 使える場所が広い（iPad や、iPhone Duo を開いたとき）ときだけ、拡大率を子孫の View に配る ViewModifier。
 /// あわせて横幅を「iPhone の幅 × 拡大率」までに抑えて中央に置き、iPhone と同じ縦横の比率を保つ。
-/// iPhone（横幅が compact）では拡大率 1 のままで、見た目は一切変わらない。
+/// iPhone では拡大率 1 のままで、見た目は一切変わらない。
+///
+/// ★ size class（compact / regular）で決めなくなった理由 ★
+///   以前は「横幅が regular なら iPad」とみなしていた。
+///   しかし iPhone Duo を開いたときや大きな iPhone を横にしたときにも regular になるため、端末の種類の目印には使えない。
+///   いまは GeometryReader で測った「実際に使える大きさ」だけで決める。
+///   大きさが変わるたび（回転・分割表示・Duo の開閉）に GeometryReader が測り直すので、拡大率もその都度計算し直される。
 private struct LargeScreenScaling: ViewModifier {
-    @Environment(\.horizontalSizeClass) private var sizeClass
-
     func body(content: Content) -> some View {
         GeometryReader { geo in
             let scale = scale(for: geo.size)
@@ -205,15 +225,15 @@ private struct LargeScreenScaling: ViewModifier {
 
     /// 縦・横のうち、余裕が少ない方に合わせて拡大率を決める（はみ出さないように）。
     private func scale(for size: CGSize) -> CGFloat {
-        guard sizeClass == .regular else { return 1 }
         let fit = min(size.width  / DS.baseContentSize.width,
                       size.height / DS.baseContentSize.height)
-        return min(max(fit, 1), DS.maxLayoutScale)
+        guard fit >= DS.largeScreenThreshold else { return 1 }
+        return min(fit, DS.maxLayoutScale)
     }
 }
 
 extension View {
-    /// iPad では画面の大きさに合わせて部品を拡大する（LargeScreenScaling を参照）。
+    /// iPad など広い場所では、使える大きさに合わせて部品を拡大する（LargeScreenScaling を参照）。
     func scalesForLargeScreen() -> some View {
         modifier(LargeScreenScaling())
     }
@@ -235,6 +255,42 @@ extension Shape {
                 self.fill(DS.bg)
             }
             self.fill(color)
+        }
+    }
+}
+
+// MARK: - 文字の座布団（かべがみの上でも読める）
+
+extension DS {
+    /// 座布団が文字からはみ出す幅（pt）。大きくすると、文字のまわりの白い余白が広がる。← 変更可
+    static let cushionInset: CGFloat = 8
+    /// 座布団の濃さ（0.0〜1.0）。小さくするとかべがみが透けて見え、大きくすると文字が読みやすくなる。← 変更可
+    ///
+    /// ★ 真っ白（1.0）にしない理由 ★
+    ///   せっかく描いた絵をかべがみにしているので、文字の後ろも少しだけ絵が見えるようにしている。
+    ///   0.8 なら、絵の線や色がうっすら見えつつ、文字ははっきり読める。
+    static let cushionOpacity: Double = 0.8
+}
+
+extension View {
+    /// かべがみを使っているときだけ、文字の後ろに白い角丸の「座布団」を敷く。
+    ///
+    /// ★ なぜ座布団が要るのか ★
+    ///   カードの外に直接置いた文字（見出し・説明・数など）は、ふだんは無地の背景（DS.bg）の上にあるので読める。
+    ///   かべがみ（じぶんの絵）を背景にすると、文字が絵の線や色と重なって読めなくなる。
+    ///   文字の後ろにカードと同じ白い座布団を敷けば、どんな絵の上でも読める（少しだけ透かす。DS.cushionOpacity を参照）。
+    ///
+    /// ★ 座布団を「はみ出させて」描く理由 ★
+    ///   padding で文字のまわりを広げると、かべがみを使うかどうかで文字の位置がずれてしまう。
+    ///   background の中で座布団だけをマイナスの余白で外へ広げれば、文字の位置と大きさは変わらない。
+    ///   かべがみを使わないときは何も描かないので、見た目は以前とまったく同じ。
+    func wallpaperCushion() -> some View {
+        background {
+            if WallpaperStore.shared.isShowing {
+                RoundedRectangle(cornerRadius: DS.chipRadius)
+                    .fill(DS.card.opacity(DS.cushionOpacity))
+                    .padding(-DS.cushionInset)
+            }
         }
     }
 }

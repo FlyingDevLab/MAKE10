@@ -73,6 +73,7 @@ private struct TenPuzzleHomeView: View {
                     .font(.system(size: 14, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
             }
+            .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
             .padding(.bottom, 36)
 
             VStack(spacing: 14) {
@@ -220,6 +221,7 @@ private struct ProblemCounter: View {
                     .font(.system(size: 14, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
             }
+            .wallpaperCushion()
 
             Spacer()
 
@@ -585,6 +587,11 @@ private struct SubmitArea: View {
             }
             .buttonStyle(.plain)
             .disabled(!canSubmit)
+            // ★ ボタンの外側にも背景色を敷く理由 ★
+            //   押せないとき（.disabled）は、ボタン全体が中の塗りごと薄く表示される。
+            //   そのため tintFill で敷いた背景色まで薄くなり、かべがみが透けて文字が読めなくなる。
+            //   ボタンの外側に同じ形で敷いておけば、薄くならないので透けない（かべがみを使わないときは何も敷かない）。
+            .background(RoundedRectangle(cornerRadius: DS.btnRadius).tintFill(.clear))
             .animation(.easeInOut(duration: 0.15), value: canSubmit)
 
             // サブボタン行
@@ -715,6 +722,7 @@ private struct TenPuzzleResultView: View {
                     Text("モード選択に戻る")
                         .font(.system(size: 15, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)
+                        .wallpaperCushion()
                 }
                 .buttonStyle(.plain)
             }

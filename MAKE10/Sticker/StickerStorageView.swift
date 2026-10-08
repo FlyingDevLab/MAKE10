@@ -208,6 +208,10 @@ struct StickerStorageView: View {
                     // アプリ名は言語によって長いので、3行まで折り返し、それでも入らなければ少し縮める
                     .lineLimit(3)
                     .minimumScaleFactor(0.75)
+                    // ★ 座布団を frame より前に付ける理由 ★
+                    //   frame（幅72）の後に付けると、文字が短いときも幅72いっぱいの座布団になってしまう。
+                    //   前に付ければ、座布団は文字の大きさに沿う（座布団は DesignSystem.swift を参照）。
+                    .wallpaperCushion()
                     .frame(width: 72, alignment: .leading)
                     .padding(.leading, 16)
 
@@ -222,6 +226,7 @@ struct StickerStorageView: View {
                 Text(countText)
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(DS.primary)
+                    .wallpaperCushion()
                     .frame(width: 72, alignment: .trailing)
                     .padding(.trailing, 16)
             }
@@ -229,7 +234,13 @@ struct StickerStorageView: View {
             // ヒントテキスト
             Text(hint)
                 .font(.system(size: 13, weight: .semibold, design: .rounded))
-                .foregroundStyle(Color(.tertiaryLabel))
+                // かべがみのときは座布団の上でも読みやすいよう、ふだんより濃い色にする
+                .foregroundStyle(WallpaperStore.shared.isShowing ? DS.muted : Color(.tertiaryLabel))
+                .wallpaperCushion()
+                // ★ かべがみのときだけ上にすき間を空ける理由 ★
+                //   座布団は文字の外へはみ出して描くので、すぐ上の絵文字の列の座布団と重なってしまう。
+                //   はみ出す分（上の座布団の下側＋この座布団の上側）だけ下げれば、2枚が離れて見える。
+                .padding(.top, WallpaperStore.shared.isShowing ? DS.cushionInset * 2 : 0)
                 .padding(.bottom, 6)
 
             Spacer()
@@ -303,6 +314,9 @@ struct StickerStorageView: View {
         }
         .frame(width: 210, height: centerSize + 8)
         .clipped()
+        // 絵文字の列ぜんたいに1枚の座布団を敷く（シールがないときの「—」もこの上に乗る）。
+        // clipped の後に付けるので、座布団は切り取られずに列の外へ少しはみ出して描かれる。
+        .wallpaperCushion()
     }
 
     // 中央スロット：大きい絵文字＋右下の枚数バッジ（2枚以上のときのみ）。

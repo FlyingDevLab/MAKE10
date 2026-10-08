@@ -211,14 +211,14 @@ struct SharedFrame<Content: View>: View {
     /// かべがみを使うときも塗る（文字が絵にまぎれて読みにくくならないように）。色は WallpaperStore.bandColor。
     private var footerRow: some View {
         Text("© 空飛ぶ研究室 / Flying Dev Lab")
-            // ⚠️ 変更注意: size 22 は意図的な設計判断。
-            //   広告も外部リンクも持たないこのアプリにおいて、
-            //   このフッターが唯一のブランド接点のため、あえて大きめに表示している。
-            //   小さくしないこと。
-            .font(.system(size: 22, weight: .medium, design: .rounded))
+            // ★ 文字と余白を小さくしている理由（v1.6.0 で変更）★
+            //   以前は、ブランド名を覚えてもらうために 22pt と大きめにし、上にも 28pt の余白を取っていた。
+            //   iPad を横にしたときや iPhone Duo では画面の高さが足りなくなるので、
+            //   ゲームに使える場所を広げるため、控えめな大きさにした（縦画面・横画面とも同じ）。
+            .font(.system(size: 13, weight: .medium, design: .rounded))   // ← 変更可（文字の大きさ）
             .foregroundStyle(DS.muted.opacity(0.55))
             .frame(maxWidth: .infinity)
-            .padding(.top, 28)
+            .padding(.top, 8)   // ← 変更可（文字の上の余白）
             .padding(.bottom, 0)
             .background(WallpaperStore.shared.bandColor)
             .zIndex(30)
