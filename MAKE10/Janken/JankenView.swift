@@ -178,6 +178,7 @@ private struct JankenCountdownView: View {
                 Text("\(count)")
                     .font(.system(size: 120, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(DS.primary)
+                    .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
                     .scaleEffect(scale)
                     .opacity(opacity)
                     // .id() で数字が変わるたびに「別View」とみなし、onAppear からアニメを再生する
@@ -215,6 +216,7 @@ private struct JankenPhaseTransitionView: View {
                 .font(.system(size: 38, weight: .black, design: .rounded))  // ← 変更可
                 .foregroundStyle(DS.primary)
                 .multilineTextAlignment(.center)
+                .wallpaperCushion()
                 .padding(.horizontal, 32)
                 .scaleEffect(scale)
                 .opacity(opacity)
@@ -356,6 +358,7 @@ private struct JankenPlayingView: View {
                     Text("\(viewModel.currentRound) / \(viewModel.totalRounds)")
                         .font(.system(size: 13, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)
+                        .wallpaperCushion()
                 }
                 .padding(.horizontal, 24)
                 .padding(.top, 16)
@@ -369,9 +372,10 @@ private struct JankenPlayingView: View {
                         .foregroundStyle(instructionColor)
                         .padding(.horizontal, 20)
                         .padding(.vertical, 8)
+                        // かべがみの上でも透けないよう tintFill で塗る（DesignSystem の tintFill を参照）
                         .background(
-                            instructionColor.opacity(0.12),
-                            in: RoundedRectangle(cornerRadius: DS.sectionRadius)
+                            RoundedRectangle(cornerRadius: DS.sectionRadius)
+                                .tintFill(instructionColor.opacity(0.12))
                         )
                         .padding(.bottom, 8)
                 }
@@ -389,6 +393,7 @@ private struct JankenPlayingView: View {
                      : LocalizedStringKey("janken_instruction_lose"))
                     .font(.system(size: 44, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(instructionColor)
+                    .wallpaperCushion()
                     .padding(.bottom, 4)
 
                 Spacer()
@@ -413,6 +418,7 @@ private struct JankenPlayingView: View {
                     .font(.system(size: 32, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(DS.textPrimary)
                     .monospacedDigit()   // 数字の幅を固定し、桁が変わっても横揺れしないようにする
+                    .wallpaperCushion()
                     .padding(.bottom, 28)
             }
 
@@ -430,6 +436,7 @@ private struct JankenPlayingView: View {
                 Text("+5秒")
                     .font(.system(size: 52, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(DS.blitzColor)
+                    .wallpaperCushion()
                     .allowsHitTesting(false)
                     .transition(.scale(scale: 0.6).combined(with: .opacity))
             }

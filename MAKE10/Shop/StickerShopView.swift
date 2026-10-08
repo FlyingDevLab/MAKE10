@@ -168,6 +168,7 @@ struct StickerShopView: View {
         return Text("shop_remaining \(left) \(total)")
             .font(.system(size: 14, weight: .bold, design: .rounded))
             .foregroundStyle(DS.muted)
+            .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
     }
 
     // MARK: サブビュー（閉店）

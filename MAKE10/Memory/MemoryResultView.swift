@@ -78,6 +78,7 @@ struct MemoryResultView: View {
                     .font(.system(size: 28, weight: .black, design: .rounded))  // ← 変更可
                     .foregroundStyle(DS.textPrimary)
             }
+            .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
 
             EnergyRewardBanner()
 
@@ -131,6 +132,7 @@ struct MemoryResultView: View {
                 .font(.system(size: 20, weight: .bold, design: .rounded))  // ← 変更可（見出しサイズ）
                 .foregroundStyle(DS.textPrimary)
                 .multilineTextAlignment(.center)
+                .wallpaperCushion()
                 .padding(.horizontal, 24)
 
             // 盤面と同じ5列にして、続きの画面であることを見た目でも揃える。
@@ -183,6 +185,7 @@ struct MemoryResultView: View {
                 .font(.system(size: 18, weight: .bold, design: .rounded))  // ← 変更可
                 .foregroundStyle(DS.muted)
         }
+        .wallpaperCushion()
     }
 
     // MARK: - 選択の処理
