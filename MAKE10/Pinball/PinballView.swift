@@ -144,11 +144,20 @@ private struct PBPlayingView: View {
     var viewModel: PinballViewModel
     @Binding var scene: PinballScene?
 
+    /// 盤面（シーン）の大きさ。縦横比を表示の枠にも使う。
+    private static let sceneSize = CGSize(width: 390, height: 700)
+
+    // ★ 盤面の枠を、盤面と同じ縦横比にしている理由 ★
+    //   scaleMode = .aspectFit は、縦横比を保ったまま盤面を枠に収める。枠の形が盤面と違うと、
+    //   余った左右（または上下）の隙間を SpriteKit が黒く塗ってしまう。
+    //   枠そのものを盤面と同じ縦横比（.aspectRatio）にしておけば隙間ができず、
+    //   盤面の外にはいつもの背景（かべがみ）が見える。
     var body: some View {
         GeometryReader { geo in
-            let sceneSize = CGSize(width: 390, height: 700)
-            let skView = makeSpriteView(sceneSize: sceneSize, viewSize: geo.size)
+            let skView = makeSpriteView(sceneSize: Self.sceneSize, viewSize: geo.size)
             skView
+                .aspectRatio(Self.sceneSize, contentMode: .fit)    // 盤面と同じ縦横比の枠にする（上の解説を参照）
+                .frame(maxWidth: .infinity, maxHeight: .infinity)  // 余った場所の真ん中に置く
                 .ignoresSafeArea()
         }
         .onAppear {
@@ -158,7 +167,7 @@ private struct PBPlayingView: View {
                 existing.resetGame(ballsLeft: viewModel.ballsLeft)
             } else {
                 // 新規作成
-                let newScene = PinballScene(size: CGSize(width: 390, height: 700))
+                let newScene = PinballScene(size: Self.sceneSize)
                 newScene.scaleMode = .aspectFit
                 // Scene → ViewModel への通知をつなぐ（スコア更新・ボール落下）
                 newScene.onScoreChanged = { viewModel.updateScore($0) }

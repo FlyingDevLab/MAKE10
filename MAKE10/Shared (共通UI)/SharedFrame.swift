@@ -245,7 +245,8 @@ private struct AvoidsWindowControls: ViewModifier {
     }
 }
 
-private extension View {
+// StickerPlayView（シール帳であそぶ画面。SharedFrame の外に全画面で出る）の戻るボタンでも使うので、private にしない
+extension View {
     /// ウィンドウの左上の操作ボタンに重ならないよう、必要な分だけ右へずらす（AvoidsWindowControls を参照）。
     func avoidsWindowControls() -> some View {
         modifier(AvoidsWindowControls())

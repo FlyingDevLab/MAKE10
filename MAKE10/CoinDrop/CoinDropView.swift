@@ -209,6 +209,16 @@ private struct CDPlayingView: View {
     /// 親の CoinDropView が持つ scene への参照（$ を付けて Binding として受け取る）
     @Binding var scene: CoinDropScene?
 
+    /// 盤面（シーン）の大きさ。縦横比を表示の枠にも使う。
+    private static let sceneSize = CGSize(width: 390, height: 820)
+    /// 盤面に敷く白い台紙の濃さ（0.0〜1.0）。← 変更可
+    private let fieldPaperOpacity: Double = 0.45
+
+    // ★ 盤面の枠を、盤面と同じ縦横比にしている理由 ★
+    //   scaleMode = .aspectFit は、縦横比を保ったまま盤面を枠に収める。枠の形が盤面と違うと、
+    //   余った左右（または上下）の隙間を SpriteKit が黒く塗ってしまう。
+    //   枠そのものを盤面と同じ縦横比（.aspectRatio）にしておけば隙間ができず、
+    //   盤面の外にはいつもの背景（かべがみ）が見える。HUD も同じ枠の中に置くので、盤面の幅にそろう。
     var body: some View {
         // ZStack で SpriteKit 画面と HUD を重ねる
         // alignment: .top → HUD を画面上部に固定する
@@ -219,7 +229,7 @@ private struct CDPlayingView: View {
                 // SpriteView は SpriteKit の SKScene を SwiftUI に埋め込むコンポーネント
                 // scene ?? ... は scene が nil のときのフォールバック（通常は onAppear で設定済み）
                 SpriteView(
-                    scene: scene ?? CoinDropScene(size: CGSize(width: 390, height: 820)),
+                    scene: scene ?? CoinDropScene(size: Self.sceneSize),
                     options: [.allowsTransparency]  // 背景透過を許可（DS.bg がそのまま見える）
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -278,6 +288,13 @@ private struct CDPlayingView: View {
                 .padding(.top, 6)
             }
         }
+        .aspectRatio(Self.sceneSize, contentMode: .fit)   // 盤面と同じ縦横比の枠にする（上の解説を参照）
+        // ★ 盤面にうすい台紙を敷く理由 ★
+        //   左右の壁は当たり判定だけで、目に見える線がない。盤面の外が背景と同じだと、どこまでが盤面か分からない。
+        //   盤面にうすい白を重ねて範囲を見せる。かべがみのときは tintFill が下にいつもの背景色を敷くので、
+        //   コインが絵にまぎれない（tintFill の解説は DesignSystem.swift を参照）。
+        .background(Rectangle().tintFill(DS.card.opacity(fieldPaperOpacity)))
+        .frame(maxWidth: .infinity, maxHeight: .infinity)  // 余った場所の真ん中に置く
         // ビューが画面に表示された瞬間に呼ばれる
         .onAppear {
             if let existing = scene {
@@ -291,7 +308,7 @@ private struct CDPlayingView: View {
                 // コールバックを「先に」設定してから scene に代入する。
                 // 代入と同時に didMove が走るため、先に繋いでおかないと
                 // 最初のイベントを取りこぼす可能性がある。
-                let newScene = CoinDropScene(size: CGSize(width: 390, height: 820))
+                let newScene = CoinDropScene(size: Self.sceneSize)
                 newScene.scaleMode = .aspectFit   // 端末サイズに合わせてフィットさせる
 
                 // Scene → VM へのコールバックを登録（クロージャで橋渡し）
