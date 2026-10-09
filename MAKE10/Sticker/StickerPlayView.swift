@@ -57,6 +57,8 @@ private enum PlayC {
     static let rotateStep:   Double  = 15    // 編集バーの ↻ 1回あたりの角度（度）← 変更可
     static let longPress:    Double  = 0.3   // 掴むまでの長押し時間（秒）← 変更可
     static let minHitSize:   CGFloat = 56    // シールの最小タッチ領域 ← 変更可
+    static let headerOverlap: CGFloat = 10   // ヘッダーを上の帯（ノッチ・時刻）にかぶせる量 ← 変更可
+    static let headerMinTop:  CGFloat = 12   // 上の帯がないときの、ヘッダーの上の余白 ← 変更可
 }
 
 // MARK: - 下部バーの位置計測
@@ -141,98 +143,111 @@ struct StickerPlayView: View {
     // MARK: - body
 
     var body: some View {
-        GeometryReader { geo in
-            ZStack(alignment: .top) {
-                // 背景色（全画面）
-                palette[bgIndex].color
+        // ★ GeometryReader を2つ重ねている理由 ★
+        //   この画面は内側を ignoresSafeArea で画面の端まで広げている。広げた内側で測ると、
+        //   セーフエリア（ノッチや時刻の帯）が 0 として扱われ、帯の高さが分からない。
+        //   そこで、広げる前の外側（safeGeo）で帯の高さを測り、ヘッダーの位置決めに使う。
+        GeometryReader { safeGeo in
+            GeometryReader { geo in
+                ZStack(alignment: .top) {
+                    // 背景色（全画面）
+                    palette[bgIndex].color
 
-                // ── キャンバス（お絵描き＋シール）──
-                ZStack {
-                    DrawingCanvasView()
+                    // ── キャンバス（お絵描き＋シール）──
+                    ZStack {
+                        DrawingCanvasView()
 
-                    ForEach(store.playStickers) { sticker in
-                        let selected = selectedID == sticker.id
-                        PlayStickerView(
-                            sticker:      sticker,
-                            bounds:       geo.size,
-                            isSelected:   selected,
-                            liveScale:    selected ? liveScale    : 1,
-                            liveRotation: selected ? liveRotation : .zero,
-                            onGrab:        { grab(sticker.id) },
-                            onDragChanged: { loc in isOverTray = trayFrame.contains(loc) },
-                            onDragEnded:   { loc in drop(sticker: sticker, at: loc, bounds: geo.size) }
-                        )
+                        ForEach(store.playStickers) { sticker in
+                            let selected = selectedID == sticker.id
+                            PlayStickerView(
+                                sticker:      sticker,
+                                bounds:       geo.size,
+                                isSelected:   selected,
+                                liveScale:    selected ? liveScale    : 1,
+                                liveRotation: selected ? liveRotation : .zero,
+                                onGrab:        { grab(sticker.id) },
+                                onDragChanged: { loc in isOverTray = trayFrame.contains(loc) },
+                                onDragEnded:   { loc in drop(sticker: sticker, at: loc, bounds: geo.size) }
+                            )
+                        }
+
+                        // トレイから引き出し中の絵文字（指に追従するゴースト）
+                        if let ghost = trayGhost {
+                            Text(ghost.emoji)
+                                .font(.system(size: PlayC.baseFontSize * 1.3))
+                                .shadow(color: .black.opacity(0.20), radius: 8, x: 0, y: 4)
+                                .position(ghost.location)
+                                .allowsHitTesting(false)
+                        }
+                    }
+                    .contentShape(Rectangle())
+                    .simultaneousGesture(drawingGesture)
+                    .simultaneousGesture(transformGesture)
+
+                    // ── ヘッダー（常に最前面）──
+                    // ★ ヘッダーの上の余白を、決まった数字ではなくセーフエリアから決める理由 ★
+                    //   この画面は全体が ignoresSafeArea で画面の端まで広がっているので、ヘッダーは自分で
+                    //   ノッチ（Dynamic Island）や時刻の帯を避ける必要がある。以前は 52pt と決め打ちしていたが、
+                    //   帯の高さは機種や iPad のウィンドウ表示で変わる。safeGeo.safeAreaInsets.top（帯の高さ）を使えば、
+                    //   どの場合も帯のすぐ下に置ける（測り方は body の「GeometryReader を2つ重ねている理由」を参照）。
+                    //   帯に少しだけかぶせて、上の余白を詰めている
+                    //   （帯が 62pt の iPhone で、以前と同じ 52pt になる）。
+                    VStack {
+                        headerBar
+                            .padding(.top, max(safeGeo.safeAreaInsets.top - PlayC.headerOverlap, PlayC.headerMinTop))
+                        Spacer()
                     }
 
-                    // トレイから引き出し中の絵文字（指に追従するゴースト）
-                    if let ghost = trayGhost {
-                        Text(ghost.emoji)
-                            .font(.system(size: PlayC.baseFontSize * 1.3))
-                            .shadow(color: .black.opacity(0.20), radius: 8, x: 0, y: 4)
-                            .position(ghost.location)
-                            .allowsHitTesting(false)
-                    }
-                }
-                .contentShape(Rectangle())
-                .simultaneousGesture(drawingGesture)
-                .simultaneousGesture(transformGesture)
-
-                // ── ヘッダー（常に最前面）──
-                VStack {
-                    headerBar
-                        .padding(.top, 52)  // Safe Area 上端からの余白
-                    Spacer()
-                }
-
-                // ── 道具パネル（動かせる・たためる）──
-                VStack {
-                    Spacer()
-                    toolPanel(bounds: geo.size)
-                        // ⚠️ 変更注意: frameReporter は padding と offset より内側に置くこと。
-                        //   padding より内側 … まわりの余白を含まない、見えているパネルそのものの大きさになる
-                        //   offset より内側 … 動かしたあとの位置が "bottomBar" として伝わる（トレイへのドロップ判定などに使う）
-                        .background(frameReporter("bottomBar"))
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, 24)  // Safe Area 下端からの余白 ← 変更可
-                        .offset(x: panelOffset.width + panelDrag.width,
-                                y: panelOffset.height + panelDrag.height)
-                }
-                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: showPalette)
-                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: selectedID)
-                .animation(.spring(response: 0.3, dampingFraction: 0.75), value: isPanelCollapsed)
-
-                // トースト（満杯など）
-                if let msg = toastMessage {
+                    // ── 道具パネル（動かせる・たためる）──
                     VStack {
                         Spacer()
-                        Text(msg)
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 10)
-                            .background(Capsule().fill(Color.black.opacity(0.72)))
-                            .padding(.bottom, bottomBarFrame.height + 40)
-                        }
-                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                    .allowsHitTesting(false)
+                        toolPanel(bounds: geo.size)
+                            // ⚠️ 変更注意: frameReporter は padding と offset より内側に置くこと。
+                            //   padding より内側 … まわりの余白を含まない、見えているパネルそのものの大きさになる
+                            //   offset より内側 … 動かしたあとの位置が "bottomBar" として伝わる（トレイへのドロップ判定などに使う）
+                            .background(frameReporter("bottomBar"))
+                            .padding(.horizontal, 16)
+                            .padding(.bottom, 24)  // Safe Area 下端からの余白 ← 変更可
+                            .offset(x: panelOffset.width + panelDrag.width,
+                                    y: panelOffset.height + panelDrag.height)
+                    }
+                    .animation(.spring(response: 0.3, dampingFraction: 0.75), value: showPalette)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.75), value: selectedID)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.75), value: isPanelCollapsed)
+
+                    // トースト（満杯など）
+                    if let msg = toastMessage {
+                        VStack {
+                            Spacer()
+                            Text(msg)
+                                .font(.system(size: 15, weight: .bold, design: .rounded))
+                                .foregroundStyle(.white)
+                                .padding(.horizontal, 20)
+                                .padding(.vertical, 10)
+                                .background(Capsule().fill(Color.black.opacity(0.72)))
+                                .padding(.bottom, bottomBarFrame.height + 40)
+                            }
+                        .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                        .allowsHitTesting(false)
+                    }
+                }
+                .coordinateSpace(name: "playBoard")
+                .simultaneousGesture(liftedDragGesture(bounds: geo.size))
+                .onPreferenceChange(FrameKey.self) { frames = $0 }
+                // パネルの大きさが変わったとき・画面の大きさが変わったときは、はみ出さないよう位置を直す
+                .onChange(of: isPanelCollapsed) { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+                .onChange(of: showPalette)      { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+                .onChange(of: geo.size)         { _, size in keepPanelOnScreen(bounds: size, afterLayout: true) }
+                .onAppear { keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+                .alert("wallpaper_confirm_title", isPresented: $showWallpaperConfirm) {
+                    Button("wallpaper_confirm_ok") { makeWallpaper(size: geo.size) }
+                    Button("drawing_clear_cancel", role: .cancel) {}
+                } message: {
+                    Text("wallpaper_confirm_message")
                 }
             }
-            .coordinateSpace(name: "playBoard")
-            .simultaneousGesture(liftedDragGesture(bounds: geo.size))
-            .onPreferenceChange(FrameKey.self) { frames = $0 }
-            // パネルの大きさが変わったとき・画面の大きさが変わったときは、はみ出さないよう位置を直す
-            .onChange(of: isPanelCollapsed) { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
-            .onChange(of: showPalette)      { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
-            .onChange(of: geo.size)         { _, size in keepPanelOnScreen(bounds: size, afterLayout: true) }
-            .onAppear { keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
-            .alert("wallpaper_confirm_title", isPresented: $showWallpaperConfirm) {
-                Button("wallpaper_confirm_ok") { makeWallpaper(size: geo.size) }
-                Button("drawing_clear_cancel", role: .cancel) {}
-            } message: {
-                Text("wallpaper_confirm_message")
-            }
+            .ignoresSafeArea()
         }
-        .ignoresSafeArea()
     }
 
     // MARK: - 道具パネル
@@ -593,6 +608,7 @@ struct StickerPlayView: View {
                     )
             }
             .buttonStyle(.plain)
+            .avoidsWindowControls()   // iPad のウィンドウ表示で、左上の操作ボタン（●●●）に隠れないように（SharedFrame.swift を参照）
 
             Spacer()
 
