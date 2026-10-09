@@ -74,93 +74,136 @@ struct EmojiQuizResultView: View {
 
     // MARK: body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    /// 横長の並べ方にするか。
+    private var isWide: Bool { DS.isWide(areaSize) }
+
+    // ★ 横長の場所では、結果カードとボタンを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、下の「もういちど」がはみ出しやすい。
+    //   左に結果カード、右にエネルギーとボタンを置き、カードの中も「絵文字とメッセージ｜ゲージ」と横に並べる。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-
-            // ── 結果カード ──────────────────────────────────
-            // 絵文字＋メッセージ＋円形スコアゲージをまとめたメインコンテンツ
-            VStack(spacing: 20) {
-                VStack(spacing: 8) {
-                    // 正答率に連動した結果絵文字。フォントサイズ72ptで画面の主役として表示する
-                    Text(resultEmoji)
-                        .font(.system(size: 72))
-                    Text(resultMessage)
-                        .font(.system(size: 26, weight: .bold, design: .rounded))
-                        .foregroundStyle(DS.primary)
-                }
-                Divider()
-
-                // ── 円形スコアゲージ ──────────────────────────
-                // ★ Circle.trim で円形ゲージを作る ★
-                //   trim(from: 0, to: 0.7) は「円周の 0%〜70% の部分だけを描く」という
-                //   意味で、これで弧（円グラフの一部分）が表現できます。
-                //   ただし SwiftUI の円は「3時の方向」から描き始めるため、
-                //   rotationEffect(-90度) で回転させて「12時の方向」スタートに補正します。
-                //   円形プログレスバーを作るときの定番の組み合わせです。
-                ZStack {
-                    // ゲージの背景トラック（薄いグレーの全円）
-                    Circle()
-                        .stroke(DS.gaugeBg, lineWidth: 12)
-
-                    // 正答率ぶんだけ弧を描く前景トラック
-                    Circle()
-                        .trim(from: 0, to: CGFloat(percentage) / 100)
-                        .stroke(scoreColor, style: StrokeStyle(lineWidth: 12, lineCap: .round))
-                        .rotationEffect(.degrees(-90))
-                        .animation(.easeOut(duration: 0.8), value: percentage)
-
-                    // ゲージ中央に正解数と総問題数を重ねて表示する
-                    VStack(spacing: 2) {
-                        // 正解数をグラデーションカラーの大きな数字で強調する
-                        Text("\(viewModel.score)")
-                            .font(.system(size: 52, weight: .black, design: .rounded))
-                            .foregroundStyle(LinearGradient(
-                                colors: [scoreColor, DS.accent],
-                                startPoint: .top, endPoint: .bottom
-                            ))
-                        // 「/ 10問」形式で総問題数を小さく添える。
-                        // String(format: String(localized:), ...) = 「%lld もん」のような
-                        // 引数付きのローカライズ文字列に値を埋め込む書き方
-                        Text(String(format: String(localized: "quiz_result_total_count"), viewModel.totalCount))
-                            .font(.system(size: 14, weight: .medium, design: .rounded))
-                            .foregroundStyle(DS.muted)
+        Group {
+            if isWide {
+                HStack(spacing: 24) {
+                    resultCard
+                        .frame(maxWidth: .infinity)
+                    VStack(spacing: 16) {
+                        EnergyRewardBanner()
+                        playAgainButton
                     }
-                }
-                .frame(width: 160, height: 160)
-            }
-            .padding(.vertical, 36)
-            .padding(.horizontal, 32)
-            .background(
-                RoundedRectangle(cornerRadius: DS.cardRadius)
-                    .fill(DS.card)
-                    .shadow(color: .black.opacity(0.07), radius: 18, x: 0, y: 6)
-            )
-            .padding(.horizontal, 28)
-
-            Spacer()
-
-            // ── エネルギー獲得バナー ──────────────────────────
-            EnergyRewardBanner()
-
-            // ── 「もう一度」ボタン ────────────────────────────
-            Button {
-                viewModel.restart()
-            } label: {
-                Label("quiz_play_again", systemImage: "arrow.counterclockwise")
-                    .font(.system(size: 18, weight: .black, design: .rounded))
-                    .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 18)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.btnRadius)
-                            .fill(DS.primary)
-                            .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
-                    )
+                }
+                .padding(.horizontal, 28)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+                    resultCard
+                        .padding(.horizontal, 28)
+                    Spacer()
+                    // ── エネルギー獲得バナー ──────────────────────────
+                    EnergyRewardBanner()
+                    playAgainButton
+                        .padding(.horizontal, 28)
+                        .padding(.bottom, 16)
+                }
             }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 28)
-            .padding(.bottom, 16)
         }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    // ── 結果カード ──────────────────────────────────
+    // 絵文字＋メッセージ＋円形スコアゲージをまとめたメインコンテンツ。
+    // 横長では中身を横に並べる（AnyLayout で縦と横を切り替える。Divider は並べる向きに合わせて自動で縦線になる）。
+    private var resultCard: some View {
+        let layout = isWide ? AnyLayout(HStackLayout(spacing: 20)) : AnyLayout(VStackLayout(spacing: 20))
+        return layout {
+            VStack(spacing: 8) {
+                // 正答率に連動した結果絵文字。フォントサイズ72ptで画面の主役として表示する
+                Text(resultEmoji)
+                    .font(.system(size: 72))
+                Text(resultMessage)
+                    .font(.system(size: 26, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.primary)
+                    .multilineTextAlignment(.center)   // 横長で幅が足りず折り返すときも、まん中にそろえる
+            }
+            Divider()
+
+            // ── 円形スコアゲージ ──────────────────────────
+            // ★ Circle.trim で円形ゲージを作る ★
+            //   trim(from: 0, to: 0.7) は「円周の 0%〜70% の部分だけを描く」という
+            //   意味で、これで弧（円グラフの一部分）が表現できます。
+            //   ただし SwiftUI の円は「3時の方向」から描き始めるため、
+            //   rotationEffect(-90度) で回転させて「12時の方向」スタートに補正します。
+            //   円形プログレスバーを作るときの定番の組み合わせです。
+            ZStack {
+                // ゲージの背景トラック（薄いグレーの全円）
+                Circle()
+                    .stroke(DS.gaugeBg, lineWidth: 12)
+
+                // 正答率ぶんだけ弧を描く前景トラック
+                Circle()
+                    .trim(from: 0, to: CGFloat(percentage) / 100)
+                    .stroke(scoreColor, style: StrokeStyle(lineWidth: 12, lineCap: .round))
+                    .rotationEffect(.degrees(-90))
+                    .animation(.easeOut(duration: 0.8), value: percentage)
+
+                // ゲージ中央に正解数と総問題数を重ねて表示する
+                VStack(spacing: 2) {
+                    // 正解数をグラデーションカラーの大きな数字で強調する
+                    Text("\(viewModel.score)")
+                        .font(.system(size: 52, weight: .black, design: .rounded))
+                        .foregroundStyle(LinearGradient(
+                            colors: [scoreColor, DS.accent],
+                            startPoint: .top, endPoint: .bottom
+                        ))
+                    // 「/ 10問」形式で総問題数を小さく添える。
+                    // String(format: String(localized:), ...) = 「%lld もん」のような
+                    // 引数付きのローカライズ文字列に値を埋め込む書き方
+                    Text(String(format: String(localized: "quiz_result_total_count"), viewModel.totalCount))
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                }
+            }
+            .frame(width: 160, height: 160)
+        }
+        // 横長では、Divider（縦線）が上下いっぱいに伸びてカードが高さいっぱいに広がってしまう。
+        // fixedSize(vertical) で、カードの高さを中身（ゲージなど）に合わせる。
+        .fixedSize(horizontal: false, vertical: isWide)
+        .padding(.vertical, isWide ? 24 : 36)     // ← 変更可（横長のときの上下の余白）
+        .padding(.horizontal, isWide ? 20 : 32)   // ← 変更可（横長のときの左右の余白）
+        .background(
+            RoundedRectangle(cornerRadius: DS.cardRadius)
+                .fill(DS.card)
+                .shadow(color: .black.opacity(0.07), radius: 18, x: 0, y: 6)
+        )
+    }
+
+    // ── 「もう一度」ボタン ────────────────────────────
+    private var playAgainButton: some View {
+        Button {
+            viewModel.restart()
+        } label: {
+            Label("quiz_play_again", systemImage: "arrow.counterclockwise")
+                .font(.system(size: 18, weight: .black, design: .rounded))
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 18)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.btnRadius)
+                        .fill(DS.primary)
+                        .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
+                )
+        }
+        .buttonStyle(.plain)
     }
 }

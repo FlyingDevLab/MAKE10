@@ -41,59 +41,45 @@ struct PlayingView: View {
         [GridItem(.flexible(), spacing: 14 * s), GridItem(.flexible(), spacing: 14 * s)]
     }
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    /// 横長の並べ方にするか。
+    private var isWide: Bool { DS.isWide(areaSize) }
+
+    // ★ 横長の場所では、問題カードとタイルを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、下のタイルがはみ出しやすい。
+    //   左に問題カード、右に4枚のタイルを置けば、問題を見ながらすぐ右のタイルを押せる。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
         // ZStack でカード・タイル・リアクション・正誤マークを重ねる
-        // 奥から手前の順に: VStack（カード+タイル）→ リアクション → 正誤マーク
+        // 奥から手前の順に: カード+タイル → リアクション → 正誤マーク
         ZStack {
-            VStack(spacing: 0) {
-
-                // ── 問題カード ────────────────────────────────
-                // 現在の問題番号・次の問題番号・タイムゲージを表示する
-                ProblemCardView(
-                    questionNumber:     viewModel.questionNumber,
-                    nextQuestionNumber: viewModel.nextQuestionNumber,
-                    timeRemaining:      viewModel.timeRemaining,
-                    maxTime:            viewModel.maxTime,
-                    warnThreshold:      viewModel.gaugeWarnThreshold,
-                    gameMode:           viewModel.gameMode
-                )
-                .padding(.horizontal, 24 * s)
-                .padding(.top, 12 * s)
-                .padding(.bottom, 20 * s)
-
-                // ── タイルグリッド（4枚）────────────────────
-                LazyVGrid(columns: columns, spacing: 12 * s) {
-                    ForEach(0..<4, id: \.self) { index in
-                        TileButton(
-                            value:          viewModel.tiles[index],
-                            // tappedTileValue がこのタイルの値と一致するとき answerMark を渡す。
-                            // 一致しないタイルは nil のまま（通常色）で表示される。
-                            // タイルが切り替わると値が変わり自然にハイライトが消える
-                            highlightState: viewModel.tappedTileValue == viewModel.tiles[index]
-                                            ? viewModel.answerMark : nil
-                        ) {
-                            withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
-                                viewModel.answer(viewModel.tiles[index])
-                            }
-                        }
-                        // ★ .id("tile-{index}-{value}") の役割 ★
-                        //   SwiftUI は .id() が変わったとき「別のView」として扱います。
-                        //   正解後にタイルの数字が変わると、古いViewが消えて新しいViewが
-                        //   .transition で指定したアニメーションで出現します。
-                        //   .id() がなければ「同じViewの値が変わっただけ」と判断されて
-                        //   トランジションが発火しません。
-                        .id("tile-\(index)-\(viewModel.tiles[index])")
-                        // asymmetric: 出現と消去に別々のアニメーションを指定する
-                        // .scale(0.4) = 小さいサイズから等倍に拡大して現れる（ポップイン）
-                        .transition(.asymmetric(
-                            insertion: .scale(scale: 0.4).combined(with: .opacity),
-                            removal:   .scale(scale: 0.4).combined(with: .opacity)
-                        ))
+            Group {
+                if isWide {
+                    HStack(alignment: .top, spacing: 0) {
+                        problemCard
+                            .frame(maxWidth: .infinity)
+                        tileGrid
+                            .padding(.top, 12 * s)
+                            .frame(maxWidth: .infinity)
+                    }
+                    // ヘッダーの下にぶら下がるエネルギー残高（SharedFrame の energyBadge）は画面のまん中に出る。
+                    // 横長では右の列のタイルが残高に重なるので、その分だけ下げる（クイズと同じ）。
+                    .padding(.top, 20)   // ← 変更可
+                    .frame(maxHeight: .infinity, alignment: .top)
+                } else {
+                    VStack(spacing: 0) {
+                        problemCard
+                        tileGrid
+                        Spacer()
                     }
                 }
-                .padding(.horizontal, 20 * s)
-
-                Spacer()
+            }
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                areaSize = size
             }
 
             // ── コンボリアクション絵文字 ──────────────────────
@@ -108,10 +94,11 @@ struct PlayingView: View {
             // viewModel.answerMark が nil でないとき（= 正解か不正解のとき）だけ表示する。
             // allowsHitTesting(false) でタッチをすり抜けさせ、
             // マーク表示中もタイルをタップできるようにしている
+            // 縦長はカードとタイルの隙間に、横長は左右の列の境目（画面のまん中）に出す
             if let mark = viewModel.answerMark {
                 AnswerMarkView(mark: mark)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
-                    .padding(.top, 122 * s) // カード下端(192) - マーク半高(22) ≈ 隙間中央
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: isWide ? .center : .top)
+                    .padding(.top, isWide ? 0 : 122 * s) // カード下端(192) - マーク半高(22) ≈ 隙間中央
                     .transition(.asymmetric(
                         insertion: .scale(scale: 0.5).combined(with: .opacity),  // 小→等倍でポップイン
                         removal:   .scale(scale: 1.3).combined(with: .opacity)   // 等倍→大でポップアウト
@@ -126,6 +113,58 @@ struct PlayingView: View {
         //   値を指定しない .animation() は「すべての変化」に適用されて意図しない
         //   アニメーションが起きやすいため、値を絞るこちらの形が推奨されています。
         .animation(.spring(response: 0.25, dampingFraction: 0.6), value: viewModel.answerMark)
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    private var problemCard: some View {
+        // ── 問題カード ────────────────────────────────
+        // 現在の問題番号・次の問題番号・タイムゲージを表示する
+        ProblemCardView(
+            questionNumber:     viewModel.questionNumber,
+            nextQuestionNumber: viewModel.nextQuestionNumber,
+            timeRemaining:      viewModel.timeRemaining,
+            maxTime:            viewModel.maxTime,
+            warnThreshold:      viewModel.gaugeWarnThreshold,
+            gameMode:           viewModel.gameMode
+        )
+        .padding(.horizontal, 24 * s)
+        .padding(.top, 12 * s)
+        .padding(.bottom, 20 * s)
+    }
+
+    private var tileGrid: some View {
+        // ── タイルグリッド（4枚）────────────────────
+        LazyVGrid(columns: columns, spacing: 12 * s) {
+            ForEach(0..<4, id: \.self) { index in
+                TileButton(
+                    value:          viewModel.tiles[index],
+                    // tappedTileValue がこのタイルの値と一致するとき answerMark を渡す。
+                    // 一致しないタイルは nil のまま（通常色）で表示される。
+                    // タイルが切り替わると値が変わり自然にハイライトが消える
+                    highlightState: viewModel.tappedTileValue == viewModel.tiles[index]
+                                    ? viewModel.answerMark : nil
+                ) {
+                    withAnimation(.spring(response: 0.28, dampingFraction: 0.75)) {
+                        viewModel.answer(viewModel.tiles[index])
+                    }
+                }
+                // ★ .id("tile-{index}-{value}") の役割 ★
+                //   SwiftUI は .id() が変わったとき「別のView」として扱います。
+                //   正解後にタイルの数字が変わると、古いViewが消えて新しいViewが
+                //   .transition で指定したアニメーションで出現します。
+                //   .id() がなければ「同じViewの値が変わっただけ」と判断されて
+                //   トランジションが発火しません。
+                .id("tile-\(index)-\(viewModel.tiles[index])")
+                // asymmetric: 出現と消去に別々のアニメーションを指定する
+                // .scale(0.4) = 小さいサイズから等倍に拡大して現れる（ポップイン）
+                .transition(.asymmetric(
+                    insertion: .scale(scale: 0.4).combined(with: .opacity),
+                    removal:   .scale(scale: 0.4).combined(with: .opacity)
+                ))
+            }
+        }
+        .padding(.horizontal, 20 * s)
     }
 }
 

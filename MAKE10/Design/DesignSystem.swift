@@ -216,9 +216,13 @@ private struct LargeScreenScaling: ViewModifier {
     func body(content: Content) -> some View {
         GeometryReader { geo in
             let scale = scale(for: geo.size)
+            // ★ 横長の場所では幅を絞らない理由 ★
+            //   幅を「iPhone の幅 × 拡大率」に絞るのは、縦長の画面で iPhone と同じ比率を保つため。
+            //   横長の場所では、各画面が部品を左右に並べ直すので、横幅いっぱいを使えるようにしておく。
+            let maxWidth = DS.isWide(geo.size) ? .infinity : DS.baseContentSize.width * scale
             content
                 .environment(\.layoutScale, scale)
-                .frame(maxWidth: DS.baseContentSize.width * scale)
+                .frame(maxWidth: maxWidth)
                 .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
         }
     }

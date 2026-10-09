@@ -60,73 +60,112 @@ struct MakeTenStartView: View {
 
     // MARK: body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、遊び方とスタートボタンを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに横へ間延びし、下のボタンが画面の外へはみ出しやすい。
+    //   左に遊び方とハイスコア、右にスタートボタンを置けば、横に広い場所をそのまま使える。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-
-            // ── 遊び方カード ──────────────────────────────────
-            // 4行構成。1行目のみモードで出し分け、2〜4行目は両モード共通。
-            // ⚠️ 変更注意: 3行目（コンボ）と4行目（ペナルティ）は
-            //   GameViewModel の comboBonusTime / C.wrongPenalty の挙動を説明している。
-            //   仕様を変えるときは文言（xcstrings）も合わせて見直すこと。
-            VStack(alignment: .leading, spacing: 12) {
-                Label("How to Play", systemImage: "questionmark.circle.fill")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.muted)
-
-                howToRow(emoji: timeLineEmoji, textKey: timeLineKey)
-                howToRow(emoji: "🔢", textKey: "maketen_howto_rule")
-                howToRow(emoji: "🔥", textKey: "maketen_howto_combo")
-                howToRow(emoji: "⏳", textKey: "maketen_howto_penalty")
-            }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            .padding(.horizontal, 24)
-
-            // ── ハイスコア（記録がある場合のみ表示）──────────
-            // 未プレイ（0）のときは欄ごと出さない。他ゲームのスタート画面と同じ条件。
-            if viewModel.currentHighScore > 0 {
-                HStack(spacing: 8) {
-                    Text("🏆").font(.system(size: 20))
-                    Text("title_high_score_label")
-                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text("\(viewModel.currentHighScore)")
-                        .font(.system(size: 24, weight: .black, design: .rounded))  // ← 変更可（数値サイズ）
-                        .foregroundStyle(DS.accent)
-                }
-                .padding(.horizontal, 20)
-                .padding(.vertical, 10)
-                .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            }
-
-            Spacer()
-
-            // ── スタートボタン ────────────────────────────────
-            // startGame には現在の gameMode を明示的に渡す。
-            // 引数を省略すると既定値の .normal になり、10びょうを選んでいても
-            // 30びょうが始まってしまうため、必ず mode を指定すること。
-            Button {
-                SoundManager.shared.vibrate()
-                SoundManager.shared.playTap()
-                withAnimation { viewModel.startGame(mode: viewModel.gameMode) }
-            } label: {
-                Text("ゲームスタート")
-                    .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
-                    .foregroundStyle(.white)
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(spacing: 24) {
+                    VStack(spacing: 20) {
+                        howToCard
+                        highScoreBadge
+                    }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.btnRadius)
-                            .fill(mainColor)
-                            .shadow(color: mainColor.opacity(0.35), radius: 8, x: 0, y: 4)
-                    )
+                    startButton
+                        .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 24)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 20) {
+                    Spacer()
+                    howToCard
+                        .padding(.horizontal, 24)
+                    highScoreBadge
+                    Spacer()
+                    startButton
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 24)
+                }
             }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 24)
-            .padding(.bottom, 24)
         }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    private var howToCard: some View {
+        // ── 遊び方カード ──────────────────────────────────
+        // 4行構成。1行目のみモードで出し分け、2〜4行目は両モード共通。
+        // ⚠️ 変更注意: 3行目（コンボ）と4行目（ペナルティ）は
+        //   GameViewModel の comboBonusTime / C.wrongPenalty の挙動を説明している。
+        //   仕様を変えるときは文言（xcstrings）も合わせて見直すこと。
+        VStack(alignment: .leading, spacing: 12) {
+            Label("How to Play", systemImage: "questionmark.circle.fill")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.muted)
+
+            howToRow(emoji: timeLineEmoji, textKey: timeLineKey)
+            howToRow(emoji: "🔢", textKey: "maketen_howto_rule")
+            howToRow(emoji: "🔥", textKey: "maketen_howto_combo")
+            howToRow(emoji: "⏳", textKey: "maketen_howto_penalty")
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+    }
+
+    @ViewBuilder
+    private var highScoreBadge: some View {
+        // ── ハイスコア（記録がある場合のみ表示）──────────
+        // 未プレイ（0）のときは欄ごと出さない。他ゲームのスタート画面と同じ条件。
+        if viewModel.currentHighScore > 0 {
+            HStack(spacing: 8) {
+                Text("🏆").font(.system(size: 20))
+                Text("title_high_score_label")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text("\(viewModel.currentHighScore)")
+                    .font(.system(size: 24, weight: .black, design: .rounded))  // ← 変更可（数値サイズ）
+                    .foregroundStyle(DS.accent)
+            }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 10)
+            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+        }
+    }
+
+    private var startButton: some View {
+        // ── スタートボタン ────────────────────────────────
+        // startGame には現在の gameMode を明示的に渡す。
+        // 引数を省略すると既定値の .normal になり、10びょうを選んでいても
+        // 30びょうが始まってしまうため、必ず mode を指定すること。
+        Button {
+            SoundManager.shared.vibrate()
+            SoundManager.shared.playTap()
+            withAnimation { viewModel.startGame(mode: viewModel.gameMode) }
+        } label: {
+            Text("ゲームスタート")
+                .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
+                .background(
+                    RoundedRectangle(cornerRadius: DS.btnRadius)
+                        .fill(mainColor)
+                        .shadow(color: mainColor.opacity(0.35), radius: 8, x: 0, y: 4)
+                )
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: 部品

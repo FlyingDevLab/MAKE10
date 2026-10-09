@@ -153,6 +153,7 @@ struct SharedFrame<Content: View>: View {
                 }
             }
             .frame(width: 52, height: 44)
+            .avoidsWindowControls()   // iPad のウィンドウ表示で、左上の操作ボタン（●●●）に隠れないように
 
             // タイトルテキスト。lineLimit(1) でタイトルが長くても1行に収める
             Text(title ?? "")
@@ -222,5 +223,31 @@ struct SharedFrame<Content: View>: View {
             .padding(.bottom, 0)
             .background(WallpaperStore.shared.bandColor)
             .zIndex(30)
+    }
+}
+
+// MARK: - ウィンドウの操作ボタンを避ける
+
+// ★ なぜ戻るボタンをずらすのか ★
+//   iPad でアプリをウィンドウ表示（Stage Manager など）にすると、ウィンドウの左上に
+//   閉じる・最小化などの操作ボタン（●●●）が出て、ヘッダーの戻るボタンに重なって隠れてしまう。
+//   containerCornerOffset は「ウィンドウの角に、ほかのものが置かれている分だけ」中身をずらしてくれる。
+//   全画面のときや iPhone では角に何もないので、ずれは 0 になり、見た目は変わらない。
+//   この仕組みは iOS 26 からなので、それより前の iOS では何もしない（そもそもウィンドウの操作ボタンがない）。
+
+private struct AvoidsWindowControls: ViewModifier {
+    func body(content: Content) -> some View {
+        if #available(iOS 26.0, *) {
+            content.containerCornerOffset(.leading)
+        } else {
+            content
+        }
+    }
+}
+
+private extension View {
+    /// ウィンドウの左上の操作ボタンに重ならないよう、必要な分だけ右へずらす（AvoidsWindowControls を参照）。
+    func avoidsWindowControls() -> some View {
+        modifier(AvoidsWindowControls())
     }
 }

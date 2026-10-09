@@ -69,19 +69,48 @@ struct GachaView: View {
 
     // MARK: body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、ガチャのマシンとボタンを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、マシンが小さくなり、ボタンもはみ出しやすい。
+    //   左にマシン、右に残高とボタンを置けば、マシンを高さいっぱいの大きさで描ける。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
         ZStack {
-            VStack(spacing: 14) {
-                header
-
-                GachaMachineView(spinCount: spinCount, showsCapsule: showsCapsule)
-                    .frame(maxHeight: .infinity)
-
-                pullButtons
+            Group {
+                if DS.isWide(areaSize) {
+                    HStack(spacing: 20) {
+                        GachaMachineView(spinCount: spinCount, showsCapsule: showsCapsule)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        VStack(spacing: 14) {
+                            header
+                            pullButtons
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    // ヘッダーの下にぶら下がるエネルギー残高と重ならないよう、少し下げる
+                    .padding(.top, 20)      // ← 変更可
                     .padding(.bottom, 12)
+                } else {
+                    VStack(spacing: 14) {
+                        header
+
+                        GachaMachineView(spinCount: spinCount, showsCapsule: showsCapsule)
+                            .frame(maxHeight: .infinity)
+
+                        pullButtons
+                            .padding(.bottom, 12)
+                    }
+                }
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                areaSize = size
+            }
 
             if let results {
                 resultOverlay(results)

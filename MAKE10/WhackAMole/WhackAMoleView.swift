@@ -180,20 +180,31 @@ private struct WAMPlayingView: View {
             .background(DS.card)
 
             // ── モグラグリッド（3×3）──────────────────────────
-            LazyVGrid(columns: columns, spacing: 12) {  // ← 変更可（spacing でマス間隔を調整）
-                // ⚠️ 変更注意: 9 は WAMConfig.holeCount と揃えること（columns の ⚠️ も参照）
-                ForEach(0..<9, id: \.self) { index in
-                    MoleHoleView(
-                        state:   viewModel.moles[index],
-                        onWhack: { viewModel.whackMole(at: index) }
-                    )
-                    .aspectRatio(1, contentMode: .fit)  // 正方形を維持
-                }
-            }
-            .padding(16)   // ← 変更可（グリッド外周の余白）
-            .background(DS.bg)
+            // ★ 盤面の大きさを、幅と高さの小さい方で決める理由 ★
+            //   マスは正方形なので、3×3 の盤面も正方形になる。幅だけで大きさを決めると、
+            //   iPad を横にしたときなど「横に広く縦に短い」場所では、盤面が縦にはみ出してしまう。
+            //   残りの場所の幅と高さの小さい方を一辺にすれば、どんな形の場所にも収まる。
+            //   縦画面では幅の方が小さいので、今までと同じ大きさになる。
+            //   GeometryReader は大きさが変わるたび（回転・分割表示・Duo の開閉）に測り直す。
+            GeometryReader { geo in
+                // 一辺の長さ。余白（16×2）とマスの間隔（12×2）より小さくならないようにする
+                let side = max(min(geo.size.width, geo.size.height), 16 * 2 + 12 * 2)
 
-            Spacer()
+                LazyVGrid(columns: columns, spacing: 12) {  // ← 変更可（spacing でマス間隔を調整）
+                    // ⚠️ 変更注意: 9 は WAMConfig.holeCount と揃えること（columns の ⚠️ も参照）
+                    ForEach(0..<9, id: \.self) { index in
+                        MoleHoleView(
+                            state:   viewModel.moles[index],
+                            onWhack: { viewModel.whackMole(at: index) }
+                        )
+                        .aspectRatio(1, contentMode: .fit)  // 正方形を維持
+                    }
+                }
+                .padding(16)   // ← 変更可（グリッド外周の余白）
+                .frame(width: side)
+                .background(DS.bg)
+                .frame(maxWidth: .infinity)   // 盤面を左右の真ん中に置く（上は詰めたまま）
+            }
         }
     }
 }

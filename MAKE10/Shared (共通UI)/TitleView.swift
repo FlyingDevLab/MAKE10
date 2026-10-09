@@ -112,22 +112,35 @@ struct TitleView: View {
     /// フレーム差分を自動でアニメーションする仕組みで、行（HStack）をまたいだ移動にも対応できる。
     @Namespace private var tileTransition
 
-    // MARK: 横長の画面での幅
+    // MARK: 横長の画面での並べ方
 
-    // ★ 横長のときに、一覧の幅を抑えて中央に置く理由 ★
-    //   一覧は「2列」を前提に作っている（フリックでの入れ替え・バナーの回転も2列が前提。GameRankManager を参照）。
-    //   iPad を横にしたときなどに横幅いっぱいまで広げると、タイルが横に平たく伸びて見づらくなる。
-    //   列の数は変えずに、幅を縦長の比率までに抑えて中央に置けば、iPhone と同じ形のタイルのまま並べられる。
-    //   縦長の場所では今までどおり幅いっぱいを使う。
+    // ★ 横長のときは、行と列を入れ替えて並べる ★
+    //   縦長のとき:  ロゴは「上の1行」、2枚組は「横に2枚」、行が上から下へ並ぶ。
+    //   横長のとき:  ロゴは「左の1列」、2枚組は「縦に2枚」、列が左から右へ並ぶ。
+    //   並び順と、となり合うカードの関係はそのままなので、画面を回しても「どこに何があるか」が変わりにくい。
+    //   また横長では2段だけになるので、iPad を横にしたときや高さの低いウィンドウでも、上下にはみ出さない。
+    //
+    // ★ フリックの向きも入れ替える理由 ★
+    //   縦長で「右へフリック＝となりと入れ替え」だった動きは、横長では「下へフリック」になる。
+    //   指の動きの縦と横を入れ替えてから（transposed）いつもの handleFlick の判定に渡せば、
+    //   並べ替えの仕組み（GameRankManager）や判定の中身を変えずに、横長でも同じように並べ替えられる。
+    //
+    // どちらの並べ方にするかは、端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
 
     /// 一覧を置ける場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
     @State private var areaSize: CGSize = .zero
-    /// 横長のときの一覧の縦横比（幅 ÷ 高さ）。iPhone でのゲーム画面と同じ比率。← 変更可
-    private let wideGridAspect: CGFloat = DS.baseContentSize.width / DS.baseContentSize.height
 
-    /// 一覧の最大の幅。横長のときだけ抑え、縦長のときは制限しない。
-    private var gridMaxWidth: CGFloat {
-        DS.isWide(areaSize) ? areaSize.height * wideGridAspect : .infinity
+    /// 横長の並べ方（行と列を入れ替える）にするか。
+    private var isWideLayout: Bool { DS.isWide(areaSize) }
+
+    /// 行（縦長）／列（横長）を並べる向き。AnyLayout にすると、切り替えてもカードが同じものとして扱われ、滑らかに動く。
+    private var lineLayout: AnyLayout {
+        isWideLayout ? AnyLayout(HStackLayout(spacing: 10)) : AnyLayout(VStackLayout(spacing: 10))
+    }
+
+    /// 2枚組の中で2枚を並べる向き（縦長は横に2枚、横長は縦に2枚）。
+    private var pairLayout: AnyLayout {
+        isWideLayout ? AnyLayout(VStackLayout(spacing: 10)) : AnyLayout(HStackLayout(spacing: 10))
     }
 
     // MARK: body
@@ -135,8 +148,8 @@ struct TitleView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // ── ゲーム選択グリッド（行ベース） ────────────────
-            VStack(spacing: 10) {
+            // ── ゲーム選択グリッド（行ベース。横長のときは列ベース） ──
+            lineLayout {
                 ForEach(Array(pickerRows.enumerated()), id: \.element.id) { rowIndex, row in
                     switch row {
                     case .banner(let game):
@@ -150,16 +163,18 @@ struct TitleView: View {
                                 game:        game,
                                 rowIndex:    rowIndex,
                                 column:      nil,
-                                translation: translation,
-                                velocity:    velocity
+                                translation: screenToGrid(translation),
+                                velocity:    screenToGrid(velocity)
                             )
                         }
                         .matchedGeometryEffect(id: game, in: tileTransition)
-                        .frame(height: bannerHeight)
+                        // 縦長は「高さ」、横長は「幅」を bannerHeight に固定する（横長ではロゴが左の1列になるため）
+                        .frame(width:  isWideLayout ? bannerHeight : nil,
+                               height: isWideLayout ? nil : bannerHeight)
                         .modifier(TileFrameReporter(game: game, space: gridSpace) { tileFrames[$0] = $1 })
 
                     case .pair(let left, let right):
-                        HStack(spacing: 10) {
+                        pairLayout {
                             GamePickerTile(
                                 game:      left,
                                 flyOffset: flyOffsets[left] ?? .zero
@@ -170,8 +185,8 @@ struct TitleView: View {
                                     game:        left,
                                     rowIndex:    rowIndex,
                                     column:      0,
-                                    translation: translation,
-                                    velocity:    velocity
+                                    translation: screenToGrid(translation),
+                                    velocity:    screenToGrid(velocity)
                                 )
                             }
                             .matchedGeometryEffect(id: left, in: tileTransition)
@@ -188,8 +203,8 @@ struct TitleView: View {
                                         game:        right,
                                         rowIndex:    rowIndex,
                                         column:      1,
-                                        translation: translation,
-                                        velocity:    velocity
+                                        translation: screenToGrid(translation),
+                                        velocity:    screenToGrid(velocity)
                                     )
                                 }
                                 .matchedGeometryEffect(id: right, in: tileTransition)
@@ -209,9 +224,7 @@ struct TitleView: View {
             .overlay(alignment: .topLeading) { demoFinger }
             .padding(.horizontal, 24)   // 他画面（遊び方カード等）と揃えた余白
             .padding(.bottom, 24)
-            .frame(maxWidth: gridMaxWidth)   // 横長のときだけ幅を抑える（上の「横長の画面での幅」を参照）
         }
-        .frame(maxWidth: .infinity)   // 幅を抑えたときに、一覧を真ん中に置く
         .onGeometryChange(for: CGSize.self) { proxy in
             proxy.size
         } action: { size in
@@ -502,9 +515,11 @@ struct TitleView: View {
             return
         }
 
-        // 指がカードを右へはらう。指はカードの右端あたりまで動き、カードはそのまま画面の外へ飛んでいく
+        // 指がカードを外側へはらう（縦長は右へ、横長は下へ）。指はカードの端あたりまで動き、カードはそのまま画面の外へ飛んでいく
         let start = center(of: frame)
-        let end   = CGPoint(x: frame.maxX, y: frame.midY)   // ← 変更可：指が動く距離
+        let end   = isWideLayout
+            ? CGPoint(x: frame.midX, y: frame.maxY)
+            : CGPoint(x: frame.maxX, y: frame.midY)   // ← 変更可：指が動く距離
         demoSwipe(
             generation: generation,
             from: start,
@@ -516,8 +531,8 @@ struct TitleView: View {
 
     /// デモ用の吹き飛ばし（保存しない）。飛び終わったら末尾へ送り、次のデモを予約する。
     private func demoFly(_ lastGame: GamePickerSelection, generation: Int) {
-        // ← 変更可：デモフライ方向（右端タイルなので右へ）
-        let flyDir = CGSize(width: 600, height: 0)
+        // ← 変更可：デモフライ方向（末尾のタイルは外側の端にあるので、縦長は右へ・横長は下へ）
+        let flyDir = gridToScreen(CGSize(width: 600, height: 0))
 
         // ← 変更可：デモフライ速度（duration: 0.44 = 手動の半速）
         withAnimation(.easeIn(duration: 0.44)) {
@@ -553,6 +568,18 @@ struct TitleView: View {
                 self.runDemoLoop(generation: generation)
             }
         }
+    }
+
+    // MARK: 向きの読み替え（横長の並べ方用）
+
+    /// 画面上の指の動きを、縦長の並べ方での向きに直す。横長のときだけ縦と横を入れ替える。
+    private func screenToGrid(_ size: CGSize) -> CGSize {
+        isWideLayout ? CGSize(width: size.height, height: size.width) : size
+    }
+
+    /// 縦長の並べ方での向きを、画面上の向きに戻す。縦と横の入れ替えは、2回行うと元に戻る。
+    private func gridToScreen(_ size: CGSize) -> CGSize {
+        screenToGrid(size)
     }
 
     // MARK: フリック処理
@@ -678,7 +705,7 @@ struct TitleView: View {
             SoundManager.shared.vibrate()
             // ← 変更可：飛び出しアニメ速度（duration: 0.44 = 旧 0.22 の半速）
             withAnimation(.easeIn(duration: 0.44)) {
-                flyOffsets[game] = flyDir
+                flyOffsets[game] = gridToScreen(flyDir)   // 判定は縦長の向きで行ったので、画面の向きに戻して飛ばす
             }
             // flyOffset 完了後にグリッド再配置（待機時間も飛び出し速度に合わせて延長）
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.50) {
