@@ -36,6 +36,9 @@ struct DrawingCanvasView: View {
     // @State にすることで DrawingStore の変化がこのビューの再描画をトリガーする。
     @State private var store = DrawingStore.shared
 
+    /// 紙の大きさ（pt）。線は紙に対する割合で保存されているので、これを掛けて画面上の位置に戻す。
+    let paperSize: CGSize
+
     var body: some View {
         Canvas { context, _ in
             // ★ 描画順 ★
@@ -76,8 +79,11 @@ struct DrawingCanvasView: View {
             ? Color.clear  // 消しゴムは色不要（blendMode.clear で処理）
             : Color(hex: stroke.colorHex)
 
+        // 太さは紙の幅に対する割合で保存されている（DrawingStore.swift 冒頭を参照）
+        let lineWidth = stroke.width * paperSize.width
+
         let style = StrokeStyle(
-            lineWidth: stroke.width,
+            lineWidth: lineWidth,
             lineCap:   .round,   // 線の端を丸くする（クレヨンらしい柔らかさ）
             lineJoin:  .round    // 折れ曲がり部分も丸くする
         )
@@ -86,10 +92,10 @@ struct DrawingCanvasView: View {
             // ★ タップ（点）の描画 ★
             //   点が1つしかない場合は Drag ではなくタップ。
             //   円を描くことで「点」として表現する。
-            let pt = stroke.points[0].cgPoint
-            let half = stroke.width / 2
+            let pt = toPaper(stroke.points[0])
+            let half = lineWidth / 2
             let rect = CGRect(x: pt.x - half, y: pt.y - half,
-                              width: stroke.width, height: stroke.width)
+                              width: lineWidth, height: lineWidth)
             if stroke.isEraser {
                 // 消しゴムタップ：blendMode.clear で円形に消す
                 context.fill(Path(ellipseIn: rect), with: .color(Color.white))
@@ -100,11 +106,16 @@ struct DrawingCanvasView: View {
             // ★ 通常の線の描画 ★
             //   点の列をつなぐパスを作って stroke（線として描画）する。
             var path = Path()
-            path.move(to: stroke.points[0].cgPoint)
+            path.move(to: toPaper(stroke.points[0]))
             for point in stroke.points.dropFirst() {
-                path.addLine(to: point.cgPoint)
+                path.addLine(to: toPaper(point))
             }
             context.stroke(path, with: .color(color), style: style)
         }
+    }
+
+    /// 紙に対する割合（0.0〜1.0）の点を、紙の上の位置（pt）に直す。
+    private func toPaper(_ point: DrawingPoint) -> CGPoint {
+        CGPoint(x: point.x * paperSize.width, y: point.y * paperSize.height)
     }
 }

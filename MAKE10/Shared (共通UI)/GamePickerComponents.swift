@@ -59,6 +59,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case tenPuzzle      // 四則演算テンパズル
     case memory         // どうぶつめくり（神経衰弱）
     case stickerStorage // シール管理・遊ぶ画面
+    case stickerDex     // シールじてん（v1.6.0 から。シール帳・シールやさんからも開ける）
 
     /// タイルに表示する絵文字アイコン。
     /// ⚠️ logoCard は GamePickerTile 側で専用描画（ロゴ画像＋リング）に差し替わるため、
@@ -77,6 +78,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:        return "🔢"
         case .memory:           return "🐘"
         case .stickerStorage:   return "🖼️"
+        case .stickerDex:       return "📖"
         case .stickerShop:      return "🛍️"
         case .gacha:            return "🎁"
         case .thanksNotebook:   return "📒"
@@ -104,6 +106,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:         return "tenpuzzle_title"
         case .memory:            return "memory_title"
         case .stickerStorage:    return "sticker_storage_title"
+        case .stickerDex:        return "sticker_dex_title"
         case .stickerShop:       return "shop_title"
         case .gacha:             return "gacha_title"
         case .thanksNotebook:    return "thanks_notebook_title"
@@ -125,6 +128,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .tenPuzzle:        return .indigo
         case .memory:           return .brown
         case .stickerStorage:   return .pink
+        case .stickerDex:       return .cyan
         case .stickerShop:      return DS.energy
         case .gacha:            return .mint
         case .thanksNotebook:   return Color(red: 0.80, green: 0.55, blue: 0.05)   // 📒 の黄色に合わせた山吹色
