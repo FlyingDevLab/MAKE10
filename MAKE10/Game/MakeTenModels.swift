@@ -95,6 +95,8 @@ enum UDKey {
     static let playPanelOffsetX    = "playPanelOffsetX"    // シール用：道具パネルを動かした量（横）
     static let playPanelOffsetY    = "playPanelOffsetY"    // シール用：道具パネルを動かした量（縦）
     static let playPanelCollapsed  = "playPanelCollapsed"  // シール用：道具パネルをたたんでいるか
+    static let stickerBookCurrentPage = "stickerBookCurrentPage"  // シール帳：開いているページ（0 始まり）。1.6 で追加
+    static let stickerBookMigrated160 = "stickerBookMigrated160"  // シール帳：1.5 のシールと背景色を1ページ目へ移したか。1.6 で追加
     static let isWallpaperOn       = "isWallpaperOn"       // かべがみ（じぶんの絵）を背景に使うか
     static let wallpaperBandRGB    = "wallpaperBandRGB"    // かべがみの絵の背景色（ヘッダー・フッターの帯に使う。[r, g, b]）
     static let mazeHighScore          = "cheeseEscape_hi"              // 迷路ゲームの歴代最高スコア

@@ -10,7 +10,13 @@
 // ★ このクラスの責務 ★
 //   1. 現在の描画状態（ストローク配列・選択色・消しゴムモード）を保持する
 //   2. ジェスチャーに応じてストロークを追加・更新する
-//   3. 描画データを Documents/drawing_canvas.json へ永続保存・読み込みする
+//   3. 開いているページの線を、StickerBookStore を通して保存・読み込みする
+//
+// ★ 線の位置と太さは「紙に対する割合」（v1.6.0 から）★
+//   1.5 までは画面上の位置（pt）で持っていたが、画面の形が変わるとシールとずれてしまった。
+//   いまは位置を紙の幅・高さに対する割合（0.0〜1.0）、太さを紙の幅に対する割合で持つ。
+//   描くとき（StickerPlayView）と表示するとき（DrawingCanvasView）に、紙の大きさを掛けて pt に戻す。
+//   保存先やページの切り替えは StickerBookStore.swift を参照。
 //
 // ★ AppSettings.shared と同じシングルトンパターンを採用している理由 ★
 //   DrawingCanvasView と DrawingToolbarView の両方から同じデータにアクセスする必要があるため、
@@ -50,9 +56,23 @@ final class DrawingStore {
     let penWidth:    CGFloat = 8   // ペンの太さ（pt）← 変更可
     let eraserWidth: CGFloat = 36  // 消しゴムの太さ（pt）← 変更可
 
+    /// いま表示している紙の幅（pt）。線の太さ（pt）を割合に直すのに使う。StickerPlayView が教える。
+    var paperWidth: CGFloat = 1
+
+    /// strokes がどのページの線か（まだ読み込んでいなければ nil）。保存先を間違えないために持っておく。
+    private var loadedPage: Int? = nil
+
     // MARK: - 初期化
-    private init() {
-        load()
+    // 線は、シール帳を開いたときに reloadForCurrentPage で読み込む（起動時には読まない）。
+    private init() {}
+
+    /// 開いているページの線を読み込む。ページを切り替えたときと、シール帳を開いたときに呼ぶ。
+    /// - Parameter portraitSize: この端末を縦にしたときの画面の大きさ（1.5 の線を引っ越すときの基準）
+    func reloadForCurrentPage(portraitSize: CGSize) {
+        let book = StickerBookStore.shared
+        strokes      = book.loadStrokes(page: book.currentPage, portraitSize: portraitSize)
+        activeStroke = nil
+        loadedPage   = book.currentPage
     }
 
     // MARK: - 描画操作
@@ -61,7 +81,8 @@ final class DrawingStore {
     /// - Parameter point: 指を置いた座標
     func beginStroke(at point: DrawingPoint) {
         let hex   = isEraserMode ? DrawingColor.eraserSentinel : currentColorHex
-        let width = isEraserMode ? eraserWidth : penWidth
+        // 太さは紙の幅に対する割合で持つ（ファイル冒頭の解説を参照）
+        let width = (isEraserMode ? eraserWidth : penWidth) / max(paperWidth, 1)
         activeStroke = DrawingStroke.start(
             at: point,
             colorHex: hex,
@@ -112,38 +133,12 @@ final class DrawingStore {
         save()
     }
 
-    // MARK: - 永続化（保存／読み込み）
+    // MARK: - 永続化
 
-    /// 保存先 URL: Documents/drawing_canvas.json
-    private var saveURL: URL {
-        FileManager.default
-            .urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("drawing_canvas.json")
-    }
-
-    /// ストローク配列を JSON ファイルに保存する。
-    /// .atomic オプションにより、書き込み途中でアプリが落ちてもデータが壊れない。
+    /// 開いているページの線を保存する（保存先は StickerBookStore が決める）。
     func save() {
-        do {
-            let data = try JSONEncoder().encode(strokes)
-            try data.write(to: saveURL, options: .atomic)
-        } catch {
-            // 保存エラーはデバッグログのみ（ユーザーへの通知は不要）
-            // TODO(書式): 次の print が規約 §7 の書式「⚠️ <型名>: <失敗内容>: ...」と不一致。
-            //             文字列＝コードのため今回は変更せず、次回まとめて統一する（動作影響なし）。
-            print("DrawingStore: 保存エラー: \(error.localizedDescription)")
-        }
+        guard let page = loadedPage else { return }
+        StickerBookStore.shared.saveStrokes(strokes, page: page)
     }
 
-    /// JSON ファイルからストローク配列を読み込む。
-    /// 初回起動など、ファイルが存在しない場合は空配列のまま（エラーではない）。
-    func load() {
-        do {
-            let data = try Data(contentsOf: saveURL)
-            strokes = try JSONDecoder().decode([DrawingStroke].self, from: data)
-        } catch {
-            // ファイル未存在（初回）は正常。それ以外のエラーもログだけ出して続行。
-            strokes = []
-        }
-    }
 }

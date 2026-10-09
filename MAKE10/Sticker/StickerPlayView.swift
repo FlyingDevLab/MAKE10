@@ -59,6 +59,7 @@ private enum PlayC {
     static let minHitSize:   CGFloat = 56    // シールの最小タッチ領域 ← 変更可
     static let headerOverlap: CGFloat = 10   // ヘッダーを上の帯（ノッチ・時刻）にかぶせる量 ← 変更可
     static let headerMinTop:  CGFloat = 12   // 上の帯がないときの、ヘッダーの上の余白 ← 変更可
+    static let outsidePaperColor = Color(red: 0.86, green: 0.85, blue: 0.83)  // 紙の外の色（机の色）← 変更可
 }
 
 // MARK: - 下部バーの位置計測
@@ -79,6 +80,8 @@ struct StickerPlayView: View {
     private let store = StickerStore.shared
 
     @State private var drawingStore = DrawingStore.shared
+    /// シール帳のページ（v1.6.0 から10ページ）。StickerBookStore.swift を参照
+    @State private var book = StickerBookStore.shared
 
     // 選択・操作状態
     @State private var selectedID:     UUID?   = nil     // 長押しで選んだシール
@@ -98,8 +101,8 @@ struct StickerPlayView: View {
     // トースト
     @State private var toastMessage: String? = nil
 
-    // 背景色
-    @State private var bgIndex: Int = UserDefaults.standard.integer(forKey: UDKey.playBoardBackground)
+    // 背景色（ページごとに持つ。StickerBookStore.currentBackground）
+    private var bgIndex: Int { min(max(book.currentBackground, 0), palette.count - 1) }
     @State private var showPalette: Bool = false
 
     // 道具パネル（動かす・たたむ）
@@ -118,7 +121,7 @@ struct StickerPlayView: View {
     @Environment(\.displayScale) private var displayScale
 
     // MARK: - パステルカラーパレット（10色）
-    // インデックスが UDKey.playBoardBackground として保存される
+    // インデックスがページごとの背景色として保存される（StickerBookPage.background）
     private let palette: [(name: String, color: Color)] = [
         ("White",     Color(red: 1.00, green: 1.00, blue: 1.00)), // #FFFFFF ← 変更可
         ("Cream",     Color(red: 1.00, green: 0.97, blue: 0.91)), // #FFF8E7 ← 変更可
@@ -149,40 +152,52 @@ struct StickerPlayView: View {
         //   そこで、広げる前の外側（safeGeo）で帯の高さを測り、ヘッダーの位置決めに使う。
         GeometryReader { safeGeo in
             GeometryReader { geo in
+                let paper = paperFrame(in: geo.size)
                 ZStack(alignment: .top) {
-                    // 背景色（全画面）
-                    palette[bgIndex].color
+                    // 紙の外（横長の場所などで、紙の左右や上下にできる余白）
+                    PlayC.outsidePaperColor
 
-                    // ── キャンバス（お絵描き＋シール）──
+                    // ── 紙（お絵描き＋シール）──
+                    // ★ 紙の大きさを決めている理由 ★
+                    //   線とシールの位置は「紙に対する割合」で保存している（StickerBookStore.swift を参照）。
+                    //   紙の縦横比をページごとに決めておき、どんな形の場所でもその比率のまま中央に置けば、
+                    //   iPad を回したり iPhone Duo を開いたりしても、線とシールがずれず、絵もゆがまない。
+                    //   iPhone を縦にしたときは、紙がちょうど画面いっぱいになる（1.5 までと同じ見た目）。
                     ZStack {
-                        DrawingCanvasView()
+                        palette[bgIndex].color
+
+                        DrawingCanvasView(paperSize: paper.size)
 
                         ForEach(store.playStickers) { sticker in
                             let selected = selectedID == sticker.id
                             PlayStickerView(
                                 sticker:      sticker,
-                                bounds:       geo.size,
+                                bounds:       paper.size,
                                 isSelected:   selected,
                                 liveScale:    selected ? liveScale    : 1,
                                 liveRotation: selected ? liveRotation : .zero,
                                 onGrab:        { grab(sticker.id) },
-                                onDragChanged: { loc in isOverTray = trayFrame.contains(loc) },
-                                onDragEnded:   { loc in drop(sticker: sticker, at: loc, bounds: geo.size) }
+                                // シールの指の位置は紙の上の位置で届くので、トレイとの重なりは画面全体の位置に直して調べる
+                                onDragChanged: { loc in isOverTray = trayFrame.contains(toBoard(loc, paper: paper)) },
+                                onDragEnded:   { loc in drop(sticker: sticker, at: loc.map { toBoard($0, paper: paper) }, paper: paper) }
                             )
                         }
-
-                        // トレイから引き出し中の絵文字（指に追従するゴースト）
-                        if let ghost = trayGhost {
-                            Text(ghost.emoji)
-                                .font(.system(size: PlayC.baseFontSize * 1.3))
-                                .shadow(color: .black.opacity(0.20), radius: 8, x: 0, y: 4)
-                                .position(ghost.location)
-                                .allowsHitTesting(false)
-                        }
                     }
+                    .frame(width: paper.width, height: paper.height)
+                    .coordinateSpace(name: "paper")
                     .contentShape(Rectangle())
-                    .simultaneousGesture(drawingGesture)
+                    .simultaneousGesture(drawingGesture(paper: paper))
                     .simultaneousGesture(transformGesture)
+                    .position(x: paper.midX, y: paper.midY)
+
+                    // トレイから引き出し中の絵文字（指に追従するゴースト。画面全体の位置で動く）
+                    if let ghost = trayGhost {
+                        Text(ghost.emoji)
+                            .font(.system(size: PlayC.baseFontSize * 1.3))
+                            .shadow(color: .black.opacity(0.20), radius: 8, x: 0, y: 4)
+                            .position(ghost.location)
+                            .allowsHitTesting(false)
+                    }
 
                     // ── ヘッダー（常に最前面）──
                     // ★ ヘッダーの上の余白を、決まった数字ではなくセーフエリアから決める理由 ★
@@ -201,7 +216,7 @@ struct StickerPlayView: View {
                     // ── 道具パネル（動かせる・たためる）──
                     VStack {
                         Spacer()
-                        toolPanel(bounds: geo.size)
+                        toolPanel(bounds: geo.size, paper: paper)
                             // ⚠️ 変更注意: frameReporter は padding と offset より内側に置くこと。
                             //   padding より内側 … まわりの余白を含まない、見えているパネルそのものの大きさになる
                             //   offset より内側 … 動かしたあとの位置が "bottomBar" として伝わる（トレイへのドロップ判定などに使う）
@@ -232,15 +247,19 @@ struct StickerPlayView: View {
                     }
                 }
                 .coordinateSpace(name: "playBoard")
-                .simultaneousGesture(liftedDragGesture(bounds: geo.size))
+                .simultaneousGesture(liftedDragGesture(paper: paper))
                 .onPreferenceChange(FrameKey.self) { frames = $0 }
                 // パネルの大きさが変わったとき・画面の大きさが変わったときは、はみ出さないよう位置を直す
                 .onChange(of: isPanelCollapsed) { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
                 .onChange(of: showPalette)      { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
                 .onChange(of: geo.size)         { _, size in keepPanelOnScreen(bounds: size, afterLayout: true) }
-                .onAppear { keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
+                .onAppear {
+                    keepPanelOnScreen(bounds: geo.size, afterLayout: true)
+                    openCurrentPage(paper: paper)
+                }
+                .onChange(of: paper.size) { _, size in drawingStore.paperWidth = size.width }
                 .alert("wallpaper_confirm_title", isPresented: $showWallpaperConfirm) {
-                    Button("wallpaper_confirm_ok") { makeWallpaper(size: geo.size) }
+                    Button("wallpaper_confirm_ok") { makeWallpaper(size: paper.size) }
                     Button("drawing_clear_cancel", role: .cancel) {}
                 } message: {
                     Text("wallpaper_confirm_message")
@@ -254,7 +273,7 @@ struct StickerPlayView: View {
 
     /// 道具パネル。ひらいているときは つまみ・色・編集バー・ペン・シールのトレイ、たたんでいるときは 🎨 だけ。
     @ViewBuilder
-    private func toolPanel(bounds: CGSize) -> some View {
+    private func toolPanel(bounds: CGSize, paper: CGRect) -> some View {
         if isPanelCollapsed {
             Button {
                 SoundManager.shared.vibrate()
@@ -297,7 +316,7 @@ struct StickerPlayView: View {
                 StickerTrayView(
                     isHighlighted: isOverTray,
                     liftedEmoji:   liftedEmoji,
-                    onTap:         { emoji in addFromTray(emoji, at: nil, bounds: bounds) },
+                    onTap:         { emoji in addFromTray(emoji, at: nil, paper: paper) },
                     onLift:        { emoji in lift(emoji) },
                     onPutAwayAll:  { putAwayAll() }
                 )
@@ -384,6 +403,7 @@ struct StickerPlayView: View {
     // MARK: - かべがみ
 
     /// いまの絵（背景の色・線・シール）を画像にして、かべがみにする。道具パネルやヘッダーは入れない。
+    /// size は紙の大きさ（紙の外の余白は入れない）。
     ///
     /// ★ ImageRenderer とは？ ★
     ///   SwiftUI のビューを、画面に出さずに画像（UIImage）として描いてくれる仕組み。
@@ -391,7 +411,7 @@ struct StickerPlayView: View {
     private func makeWallpaper(size: CGSize) {
         let artwork = ZStack {
             palette[bgIndex].color
-            DrawingCanvasView()
+            DrawingCanvasView(paperSize: size)
             ForEach(store.playStickers) { sticker in
                 Text(sticker.emoji)
                     .font(.system(size: PlayC.baseFontSize * CGFloat(sticker.scale)))
@@ -421,11 +441,14 @@ struct StickerPlayView: View {
     /// 1本指でなぞって線を描く。minimumDistance: 0 でタップ（点）も記録する。
     /// シール選択中・掴んでいる間・2本指操作中は描かない。
     /// 選択中にシール以外へ触れて離した場合は、ここで選択を解除する。
-    private var drawingGesture: some Gesture {
-        DragGesture(minimumDistance: 0, coordinateSpace: .named("playBoard"))
+    /// 指の位置は紙の上の位置（"paper"）で受け取り、紙に対する割合に直して DrawingStore に渡す。
+    private func drawingGesture(paper: CGRect) -> some Gesture {
+        DragGesture(minimumDistance: 0, coordinateSpace: .named("paper"))
             .onChanged { value in
-                guard selectedID == nil, !isGrabbing, !isTransforming else { return }
-                let point = DrawingPoint(value.location)
+                guard selectedID == nil, !isGrabbing, !isTransforming,
+                      paper.width > 0, paper.height > 0 else { return }
+                let point = DrawingPoint(CGPoint(x: value.location.x / paper.width,
+                                                 y: value.location.y / paper.height))
                 if drawingStore.activeStroke == nil {
                     drawingStore.beginStroke(at: point)
                 } else {
@@ -474,7 +497,7 @@ struct StickerPlayView: View {
 
     /// 最上位で指の位置を追跡する。トレイで持ち上げた絵文字のゴースト表示と、
     /// 離した位置への配置に使う（詳細は冒頭コメント参照）。
-    private func liftedDragGesture(bounds: CGSize) -> some Gesture {
+    private func liftedDragGesture(paper: CGRect) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("playBoard"))
             .onChanged { value in
                 lastTouch = value.location
@@ -484,7 +507,7 @@ struct StickerPlayView: View {
             }
             .onEnded { value in
                 if let emoji = liftedEmoji {
-                    addFromTray(emoji, at: value.location, bounds: bounds)
+                    addFromTray(emoji, at: value.location, paper: paper)
                 }
                 liftedEmoji = nil
                 trayGhost   = nil
@@ -517,7 +540,8 @@ struct StickerPlayView: View {
     }
 
     /// シールを離したときの処理。location が nil なら動かさずに離した（選択だけ）。
-    private func drop(sticker: StickerStore.Sticker, at location: CGPoint?, bounds: CGSize) {
+    /// location は画面全体（"playBoard"）の位置。紙に対する割合に直して保存する。
+    private func drop(sticker: StickerStore.Sticker, at location: CGPoint?, paper: CGRect) {
         defer {
             isGrabbing = false
             isOverTray = false
@@ -528,12 +552,8 @@ struct StickerPlayView: View {
             putAway(sticker.id)
             return
         }
-        let p = clampedToCanvas(location, bounds: bounds)
-        store.updatePlayPosition(
-            id:     sticker.id,
-            xRatio: p.x / bounds.width,
-            yRatio: p.y / bounds.height
-        )
+        let r = paperRatio(of: location, paper: paper)
+        store.updatePlayPosition(id: sticker.id, xRatio: r.x, yRatio: r.y)
     }
 
     private func putAway(_ id: UUID) {
@@ -548,7 +568,8 @@ struct StickerPlayView: View {
     }
 
     /// トレイからの追加。location が nil ならタップ（螺旋自動配置）。
-    private func addFromTray(_ emoji: String, at location: CGPoint?, bounds: CGSize) {
+    /// location は画面全体（"playBoard"）の位置。紙に対する割合に直して置く。
+    private func addFromTray(_ emoji: String, at location: CGPoint?, paper: CGRect) {
         if let location {
             // 道具パネルの上で離した場合は「やめた」とみなして何もしない
             guard !bottomBarFrame.contains(location) else { return }
@@ -558,8 +579,8 @@ struct StickerPlayView: View {
             return
         }
         if let location {
-            let p = clampedToCanvas(location, bounds: bounds)
-            store.moveStorageToPlay(emoji: emoji, xRatio: p.x / bounds.width, yRatio: p.y / bounds.height)
+            let r = paperRatio(of: location, paper: paper)
+            store.moveStorageToPlay(emoji: emoji, xRatio: r.x, yRatio: r.y)
         } else {
             store.moveStorageToPlay(emoji: emoji)
         }
@@ -572,13 +593,71 @@ struct StickerPlayView: View {
         max(PlayC.minScale, min(PlayC.maxScale, s))
     }
 
-    /// キャンバス内（ヘッダーの下・画面の下の端より上）に収める。
+    /// 画面全体の位置を、紙の中（ヘッダーの下・紙の端より内側）に収めてから、紙に対する割合（0.0〜1.0）に直す。
     /// 道具パネルは動かせるので、パネルの下にも置ける（パネルを動かせば見える）。
-    private func clampedToCanvas(_ point: CGPoint, bounds: CGSize) -> CGPoint {
-        CGPoint(
-            x: max(28, min(bounds.width - 28, point.x)),
-            y: max(80, min(bounds.height - 40, point.y))
-        )
+    private func paperRatio(of point: CGPoint, paper: CGRect) -> CGPoint {
+        guard paper.width > 0, paper.height > 0 else { return CGPoint(x: 0.5, y: 0.5) }
+        let x = max(paper.minX + 28, min(paper.maxX - 28, point.x))
+        let y = max(max(paper.minY, 80), min(paper.maxY - 40, point.y))
+        return CGPoint(x: (x - paper.minX) / paper.width, y: (y - paper.minY) / paper.height)
+    }
+
+    /// 紙の上の位置（"paper"）を、画面全体の位置（"playBoard"）に直す。
+    private func toBoard(_ point: CGPoint, paper: CGRect) -> CGPoint {
+        CGPoint(x: point.x + paper.minX, y: point.y + paper.minY)
+    }
+
+    // MARK: - 紙とページ
+
+    /// この端末を縦にしたときの画面の大きさ。
+    ///
+    /// ★ ここだけ「画面」の大きさを使う理由 ★
+    ///   ふだんはアプリが実際に使える場所の大きさ（GeometryReader）で決めている。
+    ///   ここは「1.5 で描いたときの紙の大きさ」と「新しいページの紙の形」を決めるためだけに使う。
+    ///   1.5 は縦向き・全画面だけだったので、描いたときの紙は、この端末を縦にしたときの画面と同じ大きさになる。
+    private var portraitScreenSize: CGSize {
+        let scene = UIApplication.shared.connectedScenes.compactMap { $0 as? UIWindowScene }.first
+        let size  = scene?.screen.bounds.size ?? CGSize(width: 390, height: 844)
+        return CGSize(width: min(size.width, size.height), height: max(size.width, size.height))
+    }
+
+    /// 紙の大きさと位置（画面全体の中で）。紙の縦横比を保ったまま、使える場所にいちばん大きく収めて中央に置く。
+    private func paperFrame(in size: CGSize) -> CGRect {
+        let portrait = portraitScreenSize
+        let aspect   = CGFloat(book.currentPaperAspect ?? Double(portrait.width / portrait.height))
+        guard size.width > 0, size.height > 0, aspect > 0 else { return .zero }
+        let width:  CGFloat
+        let height: CGFloat
+        if size.width / size.height > aspect {
+            height = size.height
+            width  = height * aspect
+        } else {
+            width  = size.width
+            height = width / aspect
+        }
+        return CGRect(x: (size.width - width) / 2, y: (size.height - height) / 2, width: width, height: height)
+    }
+
+    /// 開いているページを表示できるように準備する（紙の形を決め、線を読み込む）。
+    private func openCurrentPage(paper: CGRect) {
+        book.fixPaperAspectIfNeeded(portraitSize: portraitScreenSize)
+        drawingStore.paperWidth = paper.width
+        drawingStore.reloadForCurrentPage(portraitSize: portraitScreenSize)
+    }
+
+    /// ページをめくる（delta: -1 で前、+1 で次）。
+    private func turnPage(by delta: Int) {
+        let next = book.currentPage + delta
+        guard (0..<StickerBookStore.pageCount).contains(next) else { return }
+        drawingStore.cancelStroke()
+        selectedID = nil
+        isGrabbing = false
+        withAnimation(.easeInOut(duration: 0.2)) {
+            book.openPage(next)
+        }
+        book.fixPaperAspectIfNeeded(portraitSize: portraitScreenSize)
+        drawingStore.reloadForCurrentPage(portraitSize: portraitScreenSize)
+        SoundManager.shared.playTap()
     }
 
     private func showToast(_ msg: String) {
@@ -612,12 +691,7 @@ struct StickerPlayView: View {
 
             Spacer()
 
-            Text(LocalizedStringKey("game_picker_sticker"))
-                .font(.system(size: 16, weight: .bold, design: .rounded))
-                .foregroundStyle(Color(.darkGray))
-                .padding(.horizontal, 14)
-                .padding(.vertical, 6)
-                .background(Capsule().fill(.white.opacity(0.75)))
+            pageSwitcher
 
             Spacer()
 
@@ -656,6 +730,46 @@ struct StickerPlayView: View {
         .padding(.horizontal, 20)
     }
 
+    /// ページめくり「◀ 3 / 10 ▶」。ヘッダーのまん中に置く。
+    ///
+    /// ★ スワイプではなくボタンでめくる理由 ★
+    ///   この画面では、1本指でなぞると線が描ける。スワイプでページをめくると、描こうとしただけでめくれてしまう。
+    private var pageSwitcher: some View {
+        HStack(spacing: 4) {
+            pageArrow("chevron.left", label: "sticker_page_prev", enabled: book.currentPage > 0) {
+                turnPage(by: -1)
+            }
+            Text(verbatim: "\(book.currentPage + 1) / \(StickerBookStore.pageCount)")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .monospacedDigit()   // 数字の幅を固定し、ページが変わっても左右のボタンが動かないようにする
+                .foregroundStyle(Color(.darkGray))
+                .frame(minWidth: 64)
+                .accessibilityLabel(Text("sticker_page_number \(book.currentPage + 1) \(StickerBookStore.pageCount)"))
+            pageArrow("chevron.right", label: "sticker_page_next",
+                      enabled: book.currentPage < StickerBookStore.pageCount - 1) {
+                turnPage(by: 1)
+            }
+        }
+        .padding(.horizontal, 6)
+        .padding(.vertical, 4)
+        .background(Capsule().fill(.white.opacity(0.75)))
+    }
+
+    /// ページめくりの矢印ボタン。端のページでは薄くして押せないようにする。
+    private func pageArrow(_ systemName: String, label: LocalizedStringKey,
+                           enabled: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: systemName)
+                .font(.system(size: 16, weight: .bold))
+                .foregroundStyle(Color(.darkGray))
+                .frame(width: 36, height: 36)
+        }
+        .buttonStyle(.plain)
+        .disabled(!enabled)
+        .opacity(enabled ? 1 : 0.3)
+        .accessibilityLabel(Text(label))
+    }
+
     // MARK: - パレットバー
 
     // 10色のカラーサークルを横並びで表示する。
@@ -665,8 +779,7 @@ struct StickerPlayView: View {
             HStack(spacing: 12) {
                 ForEach(palette.indices, id: \.self) { i in
                     Button {
-                        bgIndex = i
-                        UserDefaults.standard.set(i, forKey: UDKey.playBoardBackground)
+                        book.currentBackground = i   // 開いているページの背景色として保存する
                         SoundManager.shared.vibrate()
                     } label: {
                         Circle()
@@ -747,7 +860,8 @@ private struct PlayStickerView: View {
     /// 親の描画ジェスチャーがそのまま線を引く。
     private var grabGesture: some Gesture {
         LongPressGesture(minimumDuration: PlayC.longPress)
-            .sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: .named("playBoard")))
+            // 指の位置は紙の上の位置で受け取る（.position も紙の上の位置なので、そのまま使える）
+            .sequenced(before: DragGesture(minimumDistance: 0, coordinateSpace: .named("paper")))
             .onChanged { value in
                 guard case .second(true, let drag) = value else { return }
                 if !isHeld {

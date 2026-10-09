@@ -56,6 +56,8 @@ struct StickerShopView: View {
     @State private var toastGeneration = 0
     /// 買い占めの紙吹雪を出しているか。
     @State private var showsConfetti = false
+    /// シールじてんをシートで開いているか（どのシールをまだ持っていないか、買う前に確かめられるように）。
+    @State private var showDex = false
 
     // MARK: body
 
@@ -128,6 +130,10 @@ struct StickerShopView: View {
         .animation(.spring(response: 0.35, dampingFraction: 0.8), value: shop.isClosed)
         .animation(.easeInOut(duration: 0.2), value: selectedEmoji)
         .onAppear { shop.openShop() }
+        .sheet(isPresented: $showDex) {
+            StickerDexView()
+                .dynamicTypeSize(.large)   // アプリ全体と同じく文字の大きさを固定する（FDL_TenBlitzApp.swift を参照）
+        }
         .onChange(of: scenePhase) { _, phase in
             // 寝る前に開いたまま翌朝アプリへ戻ってきた、などのときに品揃えを入れ替える
             if phase == .active { shop.openShop() }
@@ -162,6 +168,23 @@ struct StickerShopView: View {
             Text("shop_daily_hint")
                 .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundStyle(DS.muted)
+
+            // シールじてんを開く（シール帳の「シールじてん」ボタンと同じ見た目）
+            Button {
+                SoundManager.shared.vibrate()
+                SoundManager.shared.playTap()
+                showDex = true
+            } label: {
+                Label(LocalizedStringKey("sticker_dex_title"), systemImage: "books.vertical")
+                    .font(.system(size: 14, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.primary)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Capsule().fill(DS.card))
+                    .overlay(Capsule().stroke(DS.primary.opacity(0.4), lineWidth: 1.5))
+            }
+            .buttonStyle(.plain)
+            .padding(.top, 4)
         }
         .frame(maxWidth: .infinity)
         .padding(.vertical, 14)

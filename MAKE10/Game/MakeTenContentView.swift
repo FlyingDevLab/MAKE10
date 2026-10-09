@@ -49,6 +49,7 @@ private enum Screen {
     case tenPuzzle
     case memory
     case stickerStorage
+    case stickerDex
     case stickerShop
     case gacha
     case thanksNotebook
@@ -145,6 +146,9 @@ struct MakeTenContentView: View {
                         .transition(.opacity)
                 case .stickerStorage:
                     StickerStorageView()
+                        .transition(.opacity)
+                case .stickerDex:
+                    StickerDexView(isEmbedded: true)
                         .transition(.opacity)
                 case .stickerShop:
                     StickerShopView(
@@ -326,7 +330,7 @@ struct MakeTenContentView: View {
         case .pinball, .coinDrop, .tenPuzzle:
             return true
         case .make10, .quizHome, .quizPlaying, .whackAMole, .maze, .janken, .memory,
-             .stickerStorage, .stickerShop, .gacha, .thanksNotebook:
+             .stickerStorage, .stickerDex, .stickerShop, .gacha, .thanksNotebook:
             return false
         }
     }
@@ -359,6 +363,7 @@ struct MakeTenContentView: View {
         case .tenPuzzle:           return String(localized: "tenpuzzle_title")
         case .memory:              return String(localized: "memory_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
+        case .stickerDex:          return String(localized: "sticker_dex_title")
         case .stickerShop:         return String(localized: "shop_title")
         case .gacha:               return String(localized: "gacha_title")
         case .thanksNotebook:      return String(localized: "thanks_notebook_title")
@@ -386,7 +391,7 @@ struct MakeTenContentView: View {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage,
+             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
@@ -405,7 +410,7 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage,
+             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:                       return nil
         }
     }
@@ -430,6 +435,7 @@ struct MakeTenContentView: View {
         case .tenPuzzle:           return "tenPuzzle"
         case .memory:              return "memory"
         case .stickerStorage:      return "stickerStorage"
+        case .stickerDex:          return "stickerDex"
         case .stickerShop:         return "stickerShop"
         case .gacha:               return "gacha"
         case .thanksNotebook:      return "thanksNotebook"
@@ -464,6 +470,7 @@ struct MakeTenContentView: View {
                         case .tenPuzzle:      screen = .tenPuzzle
                         case .memory:         screen = .memory
                         case .stickerStorage: screen = .stickerStorage
+                        case .stickerDex:     screen = .stickerDex
                         case .stickerShop:    screen = .stickerShop
                         case .gacha:          screen = .gacha
                         case .thanksNotebook: screen = .thanksNotebook

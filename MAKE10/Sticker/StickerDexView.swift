@@ -7,6 +7,11 @@
 //  シールじてん。手に入るシールの全種類をカテゴリごとに並べ、
 //  手に入れたシールは持っている枚数と一緒に、まだのシールは黒いシルエットで見せる。
 //
+//  開き方は3つ（v1.6.0 から）:
+//    ・タイトル画面の「シールじてん」タイル … ゲームと同じく共通の枠（SharedFrame）の中に出す（isEmbedded = true）
+//    ・シール帳の「シールじてん」ボタン     … シートで出す（isEmbedded = false。とじるボタンつき）
+//    ・シールやさんの「シールじてん」ボタン … シートで出す（同上）
+//
 //  役割分担:
 //    - StickerDexView（このファイル）: 一覧の表示（見るだけ。シールを動かす操作はない）
 //    - StickerCatalog                : どんなシールがあるか（カテゴリと並び順）
@@ -30,6 +35,10 @@ struct StickerDexView: View {
 
     @Environment(\.dismiss) private var dismiss
 
+    /// 共通の枠（SharedFrame）の中に出すか。true のときは、枠のヘッダーにタイトルと戻るボタンがあるので、
+    /// この画面のタイトルと「とじる」ボタンは出さず、一覧を紙のカードにのせる（かべがみの上でも読めるように）。
+    var isEmbedded: Bool = false
+
     // MARK: 表示用の値
 
     /// シールの種類ごとの所有数。画面を開いたときに一度だけ数える（じてんを見ている間は変わらないため）。
@@ -43,6 +52,28 @@ struct StickerDexView: View {
     // MARK: body
 
     var body: some View {
+        Group {
+            if isEmbedded {
+                dexContent
+                    .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.cardRadius)
+                            .fill(DS.bg)
+                            .shadow(color: .black.opacity(0.10), radius: 12, x: 0, y: 4)
+                    )
+                    .padding(.horizontal, 12)
+                    // ヘッダーの下にぶら下がるエネルギー残高と重ならないよう、少し下げる
+                    .padding(.top, 20)   // ← 変更可
+                    .padding(.bottom, 8)
+            } else {
+                dexContent
+                    .background(DS.bg.ignoresSafeArea())
+            }
+        }
+    }
+
+    /// あつめた数と、カテゴリごとの一覧。
+    private var dexContent: some View {
         VStack(spacing: 0) {
             header
 
@@ -67,7 +98,6 @@ struct StickerDexView: View {
                 .padding(.bottom, 32)
             }
         }
-        .background(DS.bg.ignoresSafeArea())
     }
 
     // MARK: サブビュー
@@ -75,6 +105,8 @@ struct StickerDexView: View {
     /// 上の帯：タイトル・あつめた数・とじるボタン。
     private var header: some View {
         VStack(spacing: 10) {
+            // 共通の枠の中に出すときは、枠のヘッダーにタイトルと戻るボタンがあるので出さない
+            if !isEmbedded {
             HStack {
                 Text("sticker_dex_title")
                     .font(.system(size: 24, weight: .black, design: .rounded))
@@ -91,6 +123,7 @@ struct StickerDexView: View {
                         .background(Circle().fill(Color.black.opacity(0.05)))
                 }
                 .buttonStyle(.plain)
+            }
             }
 
             // あつめた数と、進み具合のバー

@@ -58,7 +58,14 @@ final class StickerStore {
     private(set) var storageEmojis: [String] = []
 
     // シール画面用。位置情報あり・上限 100 枚
-    private(set) var playStickers: [Sticker] = []
+    // ★ シール帳のシールは、開いているページの分（v1.6.0 から）★
+    //   シール帳は10ページになった。全ページのシールは StickerBookStore が持っていて、
+    //   ここでは「いま開いているページのシール」をそのまま読み書きする。
+    //   ページを切り替えると、ここに見えるシールも切り替わる（StickerBookStore.openPage を参照）。
+    private(set) var playStickers: [Sticker] {
+        get { StickerBookStore.shared.currentStickers }
+        set { StickerBookStore.shared.currentStickers = newValue }
+    }
 
     // MARK: - 上限定数
 
@@ -160,7 +167,7 @@ final class StickerStore {
     func moveAllPlayToStorage() {
         guard !playStickers.isEmpty else { return }
         storageEmojis.append(contentsOf: playStickers.map { $0.emoji })
-        playStickers = []
+        playStickers = []   // 開いているページのシールだけをしまう（ほかのページはそのまま）
         savePlay()
         saveStorage()
     }
@@ -207,7 +214,7 @@ final class StickerStore {
     func reset() {
         stickers            = []
         storageEmojis       = []
-        playStickers        = []
+        StickerBookStore.shared.reset()   // シール帳の全ページ（シール・線・背景色）も消す
         UserDefaults.standard.removeObject(forKey: UDKey.stickers)
         UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
@@ -227,7 +234,8 @@ final class StickerStore {
         var counts: [String: Int] = [:]
         for s in stickers      { counts[s.emoji, default: 0] += 1 }
         for e in storageEmojis { counts[e,       default: 0] += 1 }
-        for s in playStickers  { counts[s.emoji, default: 0] += 1 }
+        // シール帳は全ページを数える（開いていないページのシールも「もっている」）
+        for (emoji, n) in StickerBookStore.shared.stickerCountsInAllPages() { counts[emoji, default: 0] += n }
         return counts
     }
 
@@ -269,8 +277,8 @@ final class StickerStore {
     }
 
     private func savePlay() {
-        guard let data = try? JSONEncoder().encode(playStickers) else { return }
-        UserDefaults.standard.set(data, forKey: UDKey.playStickers)
+        // シール帳のシールは StickerBookStore が全ページまとめて保存する（1.5 までは UDKey.playStickers だった）
+        StickerBookStore.shared.saveBook()
     }
 
     /// 起動時に UserDefaults から全状態を復元する。
@@ -284,10 +292,7 @@ final class StickerStore {
            let decoded = try? JSONDecoder().decode([String].self, from: data) {
             storageEmojis = decoded
         }
-        if let data    = UserDefaults.standard.data(forKey: UDKey.playStickers),
-           let decoded = try? JSONDecoder().decode([Sticker].self, from: data) {
-            playStickers = decoded
-        }
+        // シール帳のシールは StickerBookStore が読み込む（1.5 のデータの引っ越しもそちらで行う）
         // ★ 配置待ちのシールをストレージへ移す理由 ★
         //   1.4 以前は、結果画面でボードに貼る前のシールを pendingStickers に保存していた。
         //   1.5 から手に入れたシールはストレージへ直送する方式になったため、
