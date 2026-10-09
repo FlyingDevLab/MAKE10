@@ -59,25 +59,47 @@ struct StickerShopView: View {
 
     // MARK: body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、残高と棚を左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに横へ間延びし、下のひとことが画面の外へはみ出しやすい。
+    //   左に残高とひとこと、右に棚と残りの数を置けば、横に広い場所をそのまま使える。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
         ZStack {
-            VStack(spacing: 16) {
-                header
-
-                if shop.isClosed {
-                    closedCard
-                        .transition(.scale(scale: 0.9).combined(with: .opacity))
+            Group {
+                if DS.isWide(areaSize) {
+                    HStack(alignment: .top, spacing: 16) {
+                        VStack(spacing: 16) {
+                            header
+                            ShopTipBubble()
+                        }
+                        .frame(maxWidth: .infinity)
+                        VStack(spacing: 16) {
+                            shopContents
+                        }
+                        .frame(maxWidth: .infinity)
+                    }
+                    // ヘッダーの下にぶら下がるエネルギー残高と重ならないよう、少し下げる
+                    .padding(.top, 20)   // ← 変更可
+                    .frame(maxHeight: .infinity, alignment: .top)
                 } else {
-                    shelf
-                    remainingText
+                    VStack(spacing: 16) {
+                        header
+                        shopContents
+                        ShopTipBubble()
+                        Spacer(minLength: 0)
+                    }
                 }
-
-                ShopTipBubble()
-
-                Spacer(minLength: 0)
             }
             .padding(.horizontal, 20)
             .padding(.top, 12)
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                areaSize = size
+            }
 
             if let emoji = selectedEmoji {
                 confirmOverlay(emoji: emoji)
@@ -109,6 +131,18 @@ struct StickerShopView: View {
         .onChange(of: scenePhase) { _, phase in
             // 寝る前に開いたまま翌朝アプリへ戻ってきた、などのときに品揃えを入れ替える
             if phase == .active { shop.openShop() }
+        }
+    }
+
+    /// 棚（または閉店のカード）と残りの数。縦長・横長の両方の並べ方で使う。
+    @ViewBuilder
+    private var shopContents: some View {
+        if shop.isClosed {
+            closedCard
+                .transition(.scale(scale: 0.9).combined(with: .opacity))
+        } else {
+            shelf
+            remainingText
         }
     }
 

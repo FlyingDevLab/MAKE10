@@ -90,6 +90,13 @@ struct QuizHomeContent: View {
 
     // MARK: body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、もんだいのしゅるいとカテゴリを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに横へ間延びし、カテゴリを探すのに長くスクロールすることになる。
+    //   左にもんだいのしゅるい、右にカテゴリを置けば、しゅるいを選びながらカテゴリを選べる。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
         Group {
             // データ未ロード中は ProgressView だけを表示し、レイアウトの乱れを防ぐ
@@ -97,54 +104,35 @@ struct QuizHomeContent: View {
                 Spacer()
                 ProgressView()
                 Spacer()
+            } else if DS.isWide(areaSize) {
+                // 横長：左にもんだいのしゅるい、右にカテゴリ（カテゴリだけスクロールする）
+                HStack(alignment: .top, spacing: 18) {
+                    modeSection
+                        .frame(maxWidth: .infinity)
+                    ScrollView {
+                        categorySection
+                            .padding(.bottom, 8)
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 24)
+                .padding(.top, 8)
             } else {
                 ScrollView {
                     VStack(spacing: 18) {
-
-                        // ── 1. もんだいのしゅるい ────────────────
-                        QuizSectionCard(title: String(localized: "quiz_home_section_mode")) {
-                            VStack(spacing: 8) {
-                                // QuizMode.allCases を列挙してモード選択行を生成する
-                                ForEach(QuizMode.allCases, id: \.self) { mode in
-                                    QuizModeRow(
-                                        mode: mode, displayStyle: displayStyle,
-                                        isSelected: selectedMode == mode
-                                    ) {
-                                        // 選択時にバイブ＋タップ音を再生し、rawValue を AppStorage に保存する
-                                        SoundManager.shared.vibrate()
-                                        SoundManager.shared.playTap()
-                                        selectedModeRaw = mode.rawValue
-                                    }
-                                }
-                            }
-                        }
-
-                        // ── 2. カテゴリ（タップで即スタート）──────
-                        QuizSectionCard(title: String(localized: "quiz_home_section_category")) {
-                            VStack(spacing: 8) {
-                                // enumerated() でインデックスを取得し、グループ間に Divider を挿入する
-                                ForEach(
-                                    Array(groupedCategories.enumerated()),
-                                    id: \.element.group
-                                ) { idx, grouped in
-                                    // 最初のグループの前には Divider を挿入しない
-                                    if idx > 0 { Divider().padding(.vertical, 2) }
-                                    QuizCategoryGroup(title: grouped.group) {
-                                        ForEach(grouped.categories) { cat in
-                                            QuizCategoryRow(category: cat) {
-                                                startGame(with: cat)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
+                        modeSection
+                        categorySection
                     }
                     .padding(.horizontal, 24)   // 他画面と揃えた余白
                     .padding(.top, 8)
                     .padding(.bottom, 8)
                 }
             }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
         // ★ .task とは？ ★
         //   View の表示時に「非同期処理」を始めるためのモディファイアです。
@@ -156,6 +144,51 @@ struct QuizHomeContent: View {
             allCategories = cats
         }
     }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    // ── 1. もんだいのしゅるい ────────────────
+    private var modeSection: some View {
+        QuizSectionCard(title: String(localized: "quiz_home_section_mode")) {
+            VStack(spacing: 8) {
+                // QuizMode.allCases を列挙してモード選択行を生成する
+                ForEach(QuizMode.allCases, id: \.self) { mode in
+                    QuizModeRow(
+                        mode: mode, displayStyle: displayStyle,
+                        isSelected: selectedMode == mode
+                    ) {
+                        // 選択時にバイブ＋タップ音を再生し、rawValue を AppStorage に保存する
+                        SoundManager.shared.vibrate()
+                        SoundManager.shared.playTap()
+                        selectedModeRaw = mode.rawValue
+                    }
+                }
+            }
+        }
+    }
+
+    // ── 2. カテゴリ（タップで即スタート）──────
+    private var categorySection: some View {
+        QuizSectionCard(title: String(localized: "quiz_home_section_category")) {
+            VStack(spacing: 8) {
+                // enumerated() でインデックスを取得し、グループ間に Divider を挿入する
+                ForEach(
+                    Array(groupedCategories.enumerated()),
+                    id: \.element.group
+                ) { idx, grouped in
+                    // 最初のグループの前には Divider を挿入しない
+                    if idx > 0 { Divider().padding(.vertical, 2) }
+                    QuizCategoryGroup(title: grouped.group) {
+                        ForEach(grouped.categories) { cat in
+                            QuizCategoryRow(category: cat) {
+                                startGame(with: cat)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 // MARK: - QuizPlayingContent
@@ -164,6 +197,9 @@ struct QuizHomeContent: View {
 /// isFinished が true になると結果画面（EmojiQuizResultView）に切り替わる。
 struct QuizPlayingContent: View {
     var viewModel: EmojiQuizViewModel
+
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
 
     var body: some View {
         Group {
@@ -177,10 +213,21 @@ struct QuizPlayingContent: View {
                     ))
             } else if let question = viewModel.currentQuestion {
                 // 現在の問題番号（currentIndex）が変わるたびにフェードアニメーションを適用する
-                QuizPlayingLayout(viewModel: viewModel, question: question)
-                    .scalesForLargeScreen()   // iPad では部品を大きくする
-                    .animation(.easeInOut(duration: 0.25), value: viewModel.currentIndex)
+                if DS.isWide(areaSize) {
+                    // 横長：問題と選択肢を左右に並べる（拡大率は 1 のまま。scalesForLargeScreen は縦長の比率が前提のため）
+                    QuizPlayingLayout(viewModel: viewModel, question: question, isWide: true)
+                        .animation(.easeInOut(duration: 0.25), value: viewModel.currentIndex)
+                } else {
+                    QuizPlayingLayout(viewModel: viewModel, question: question, isWide: false)
+                        .scalesForLargeScreen()   // iPad では部品を大きくする
+                        .animation(.easeInOut(duration: 0.25), value: viewModel.currentIndex)
+                }
             }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
         // isFinished の変化をトリガーに、プレイ中↔結果間のトランジションをアニメーションさせる
         .animation(.easeInOut(duration: 0.35), value: viewModel.isFinished)
@@ -195,25 +242,65 @@ struct QuizPlayingContent: View {
 private struct QuizPlayingLayout: View {
     var viewModel: EmojiQuizViewModel
     let question:  QuizQuestion
+    /// 横長の並べ方にするか（QuizPlayingContent が使える場所の形から決める）。
+    let isWide:    Bool
 
     @Environment(\.layoutScale) private var s
 
     /// カテゴリごとに定義された表示スタイル（絵文字 / コード / テキスト）を参照する。
     private var displayStyle: DisplayStyle { viewModel.category.displayStyle }
 
+    // ★ 横長の場所では、左に「進捗と問題」、右に「選択肢と答え」を並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、選択肢や「つぎのもんだい」がはみ出しやすい。
+    //   左右に分ければ、問題を見ながらすぐ右の選択肢を押せる。
     var body: some View {
-        VStack(spacing: 0) {
-            // ── 進捗 + 問題カード ─────────────────────────
-            VStack(spacing: 8 * s) {
-                QuizProgressSection(viewModel: viewModel)
-                    .padding(.horizontal, 24 * s)
-                QuizQuestionCard(question: question, mode: viewModel.mode, displayStyle: displayStyle)
-                    .padding(.horizontal, 24 * s)
+        Group {
+            if isWide {
+                HStack(alignment: .top, spacing: 8) {
+                    VStack(spacing: 0) {
+                        questionSection
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                    VStack(spacing: 0) {
+                        answerSection
+                            .padding(.top, 8 * s)
+                        Spacer()
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                // ヘッダーの下にぶら下がるエネルギー残高（SharedFrame の energyBadge）は画面の真ん中に出る。
+                // 横長では左右の列の境目がちょうど真ん中に来て、スコアや選択肢が残高に隠れるので、その分だけ下げる。
+                .padding(.top, 20)   // ← 変更可
+            } else {
+                VStack(spacing: 0) {
+                    questionSection
+                    answerSection
+                    Spacer()
+                }
             }
-            .padding(.top, 8 * s)
-            .padding(.bottom, 16 * s)
+        }
+        // answerState の変化（回答前→正解／不正解）をトリガーにスプリングアニメーションを適用する
+        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.answerState)
+    }
 
-            // ── 選択肢 + フィードバック ────────────────────
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    // ── 進捗 + 問題カード ─────────────────────────
+    private var questionSection: some View {
+        VStack(spacing: 8 * s) {
+            QuizProgressSection(viewModel: viewModel)
+                .padding(.horizontal, 24 * s)
+            QuizQuestionCard(question: question, mode: viewModel.mode, displayStyle: displayStyle)
+                .padding(.horizontal, 24 * s)
+        }
+        .padding(.top, 8 * s)
+        .padding(.bottom, 16 * s)
+    }
+
+    // ── 選択肢 + フィードバック + つぎのもんだいボタン ────
+    private var answerSection: some View {
+        VStack(spacing: 0) {
             QuizChoiceGrid(
                 question: question, mode: viewModel.mode, displayStyle: displayStyle,
                 answerState: viewModel.answerState, selectedItem: viewModel.selectedItem
@@ -253,11 +340,7 @@ private struct QuizPlayingLayout: View {
                 // スケール＋フェードの組み合わせでボタンが自然に現れるよう演出する
                 .transition(.scale(scale: 0.85).combined(with: .opacity))
             }
-
-            Spacer()
         }
-        // answerState の変化（回答前→正解／不正解）をトリガーにスプリングアニメーションを適用する
-        .animation(.spring(response: 0.3, dampingFraction: 0.7), value: viewModel.answerState)
     }
 }
 

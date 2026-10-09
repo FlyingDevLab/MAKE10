@@ -81,9 +81,17 @@ struct ThanksNotebookView: View {
     /// 手帳の紙の色。アプリの背景より少しだけ白く、クリーム色にしている。← 変更可
     private let paperColor = Color(red: 1.00, green: 0.99, blue: 0.96)
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
     var body: some View {
         VStack(spacing: 0) {
             noteRow
+                // ★ 横長の場所でだけ、付箋を少し下げる理由 ★
+                //   ヘッダーの下にぶら下がるエネルギー残高（SharedFrame の energyBadge）は画面のまん中に出る。
+                //   横長では付箋が横に広がり、まん中の付箋が残高に隠れるので、その分だけ下げる。
+                //   ページはスクロールするので、手帳そのものの並べ方は縦長と同じでよい。
+                .padding(.top, DS.isWide(areaSize) ? 20 : 0)   // ← 変更可
                 .zIndex(1)   // いま開いているページの付箋を、紙の上に重ねて「紙から生えている」ように見せる
 
             ZStack {
@@ -113,6 +121,11 @@ struct ThanksNotebookView: View {
             .overlay(alignment: .leading) { binding }
             .padding(.horizontal, 12)
             .padding(.bottom, 8)
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
     }
 

@@ -39,130 +39,45 @@ struct JankenResultView: View {
         return "\(correct) / \(total)  (\(pct)%)"
     }
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、結果カードとボタンを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、下のボタンが画面の外へはみ出しやすい。
+    //   左に結果カード、右にエネルギーとボタンを置けば、横に広い場所をそのまま使える。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-
-            // ── 結果カード ────────────────────────────────────
-            VStack(spacing: 16) {
-
-                // 難易度ラベル
-                Text(viewModel.difficulty.labelKey)
-                    .font(.system(size: 18, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.muted)
-
-                // ── タイム（メイン）──────────────────────────
-                VStack(spacing: 4) {
-                    Text("janken_result_time_label")
-                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.accent)
-
-                    Text(viewModel.elapsedFormatted)
-                        .font(.system(size: 64, weight: .black, design: .rounded))  // ← 変更可
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [DS.primary, DS.accent],
-                                startPoint: .top,
-                                endPoint: .bottom
-                            )
-                        )
-                        .monospacedDigit()   // 数字幅を固定して横揺れを防ぐ
-                        .shadow(color: DS.primary.opacity(0.2), radius: 6, x: 0, y: 3)
-                }
-
-                Divider().padding(.horizontal, 16)
-
-                // ── ベストタイム ──────────────────────────────
-                if viewModel.isNewBest {
-                    // 新記録のとき
-                    Text("janken_result_new_best")
-                        .font(.system(size: 20, weight: .black, design: .rounded))
-                        .foregroundStyle(DS.gold)
-                } else {
-                    if let best = viewModel.bestTimeFormatted {
-                        // 記録あり・未更新のとき
-                        HStack(spacing: 6) {
-                            Text("janken_result_best_label")
-                                .font(.system(size: 15, weight: .medium, design: .rounded))
-                                .foregroundStyle(DS.muted)
-                            Text(best)
-                                .font(.system(size: 20, weight: .black, design: .rounded))
-                                .monospacedDigit()
-                                .foregroundStyle(DS.accent)
-                        }
-                    }
-                    // ミスがあったときは、タイムが記録にならない理由を伝える
-                    if !viewModel.isPerfect {
-                        Text("janken_result_perfect_only")
-                            .font(.system(size: 13, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                            .multilineTextAlignment(.center)
-                    }
-                }
-
-                // ── 正解率 ────────────────────────────────────
-                HStack(spacing: 6) {
-                    Text("janken_result_accuracy_label")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text(accuracyText)
-                        .font(.system(size: 17, weight: .bold, design: .rounded))
-                        .foregroundStyle(DS.textPrimary)
-                }
-            }
-            .padding(.vertical, 36)
-            .padding(.horizontal, 32)
-            .background(DS.cardShadow())
-            .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
-            .padding(.horizontal, 28)
-            // ポップイン：onAppear で scale/opacity を変化させて拡大フェードインする
-            .scaleEffect(scale)
-            .opacity(opacity)
-
-            Spacer()
-
-            // ── エネルギー獲得バナー ──────────────────────────
-            EnergyRewardBanner()
-
-            // ── ボタン群 ──────────────────────────────────────
-            VStack(spacing: 12) {
-
-                // もう一度（同じ難易度でリスタート）
-                Button {
-                    guard canTap else { return }
-                    withAnimation { viewModel.restart() }
-                } label: {
-                    Label("janken_result_play_again", systemImage: "arrow.counterclockwise")
-                        .font(.system(size: 18, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(spacing: 24) {
+                    resultCard
                         .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
-                        .background(
-                            RoundedRectangle(cornerRadius: DS.btnRadius)
-                                .fill(DS.primary)
-                                .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
-                        )
+                    VStack(spacing: 16) {
+                        EnergyRewardBanner()
+                        actionButtons
+                    }
+                    .frame(maxWidth: .infinity)
                 }
-                .buttonStyle(.plain)
-                .disabled(!canTap)
-
-                // 難易度選択に戻る
-                Button {
-                    guard canTap else { return }
-                    withAnimation(.easeInOut(duration: 0.3)) { viewModel.goToIdle() }
-                } label: {
-                    Text("janken_result_back_button")
-                        .font(.system(size: 18, weight: .semibold, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                        .padding(.horizontal, 36)
-                        .padding(.vertical, 11)
-                        .background(Capsule().tintFill(Color.black.opacity(0.05)))
+                .padding(.horizontal, 28)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+                    resultCard
+                        .padding(.horizontal, 28)
+                    Spacer()
+                    // ── エネルギー獲得バナー ──────────────────────────
+                    EnergyRewardBanner()
+                    actionButtons
+                        .padding(.horizontal, 28)
+                        .padding(.bottom, 28)
                 }
-                .buttonStyle(.plain)
-                .disabled(!canTap)
             }
-            .padding(.horizontal, 28)
-            .padding(.bottom, 28)
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
         .onAppear {
             // 結果カードのポップイン
@@ -174,6 +89,125 @@ struct JankenResultView: View {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 canTap = true
             }
+        }
+    }
+
+    // MARK: - 部品（縦長・横長の両方の並べ方で使う）
+
+    private var resultCard: some View {
+        // ── 結果カード ────────────────────────────────────
+        VStack(spacing: 16) {
+
+            // 難易度ラベル
+            Text(viewModel.difficulty.labelKey)
+                .font(.system(size: 18, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.muted)
+
+            // ── タイム（メイン）──────────────────────────
+            VStack(spacing: 4) {
+                Text("janken_result_time_label")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.accent)
+
+                Text(viewModel.elapsedFormatted)
+                    .font(.system(size: 64, weight: .black, design: .rounded))  // ← 変更可
+                    .foregroundStyle(
+                        LinearGradient(
+                            colors: [DS.primary, DS.accent],
+                            startPoint: .top,
+                            endPoint: .bottom
+                        )
+                    )
+                    .monospacedDigit()   // 数字幅を固定して横揺れを防ぐ
+                    .shadow(color: DS.primary.opacity(0.2), radius: 6, x: 0, y: 3)
+            }
+
+            Divider().padding(.horizontal, 16)
+
+            // ── ベストタイム ──────────────────────────────
+            if viewModel.isNewBest {
+                // 新記録のとき
+                Text("janken_result_new_best")
+                    .font(.system(size: 20, weight: .black, design: .rounded))
+                    .foregroundStyle(DS.gold)
+            } else {
+                if let best = viewModel.bestTimeFormatted {
+                    // 記録あり・未更新のとき
+                    HStack(spacing: 6) {
+                        Text("janken_result_best_label")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundStyle(DS.muted)
+                        Text(best)
+                            .font(.system(size: 20, weight: .black, design: .rounded))
+                            .monospacedDigit()
+                            .foregroundStyle(DS.accent)
+                    }
+                }
+                // ミスがあったときは、タイムが記録にならない理由を伝える
+                if !viewModel.isPerfect {
+                    Text("janken_result_perfect_only")
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .multilineTextAlignment(.center)
+                }
+            }
+
+            // ── 正解率 ────────────────────────────────────
+            HStack(spacing: 6) {
+                Text("janken_result_accuracy_label")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text(accuracyText)
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+            }
+        }
+        .padding(.vertical, 36)
+        .padding(.horizontal, 32)
+        .background(DS.cardShadow())
+        .clipShape(RoundedRectangle(cornerRadius: DS.cardRadius))
+        // ポップイン：onAppear で scale/opacity を変化させて拡大フェードインする
+        .scaleEffect(scale)
+        .opacity(opacity)
+    }
+
+    // ── ボタン群 ──────────────────────────────────────
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
+
+            // もう一度（同じ難易度でリスタート）
+            Button {
+                guard canTap else { return }
+                withAnimation { viewModel.restart() }
+            } label: {
+                Label("janken_result_play_again", systemImage: "arrow.counterclockwise")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.btnRadius)
+                            .fill(DS.primary)
+                            .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
+                    )
+            }
+            .buttonStyle(.plain)
+            .disabled(!canTap)
+
+            // 難易度選択に戻る
+            Button {
+                guard canTap else { return }
+                withAnimation(.easeInOut(duration: 0.3)) { viewModel.goToIdle() }
+            } label: {
+                Text("janken_result_back_button")
+                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .padding(.horizontal, 36)
+                    .padding(.vertical, 11)
+                    .background(Capsule().tintFill(Color.black.opacity(0.05)))
+            }
+            .buttonStyle(.plain)
+            .disabled(!canTap)
         }
     }
 }

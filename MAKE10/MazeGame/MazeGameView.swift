@@ -168,42 +168,77 @@ private struct MazePlayView: View {
     private let topBarHeight:    CGFloat = 56    // ← 変更可
     /// 迷路の下の帯（衝撃波ゲージ・さいこう記録）の高さ（pt）。
     private let bottomBarHeight: CGFloat = 92    // ← 変更可
+    /// 横長の場所で、迷路の右に帯を縦に並べるときの帯の幅（pt）。← 変更可
+    private let sidePanelWidth:  CGFloat = 280
+
+    // ★ 横長の場所では、帯を迷路の右に移す理由 ★
+    //   迷路は正方形なので、上下に帯を並べたまま横長の場所（iPad を横にしたときなど）に置くと、
+    //   高さから帯の分を引いた残りしか使えず、迷路がとても小さくなってしまう。
+    //   帯を右側に縦に並べれば、迷路は高さいっぱいの大きさで描ける。
+    //   どちらの並べ方にするかは、端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
+    //   GeometryReader が大きさの変わるたび（回転・分割表示・Duo の開閉）に測り直すので、並べ方もその都度切り替わる。
 
     var body: some View {
         GeometryReader { geo in
-            // 上下の帯を除いた場所に収まる最大の正方形サイズ
-            let side  = min(geo.size.width, geo.size.height - topBarHeight - bottomBarHeight - 16)
+            let isWide = DS.isWide(geo.size)
+            // 帯を除いた場所に収まる最大の正方形サイズ（狭すぎてマイナスにならないよう、最低 1pt にする）
+            let side = max(1, isWide
+                ? min(geo.size.height - 16, geo.size.width - sidePanelWidth - 16 * 3)
+                : min(geo.size.width, geo.size.height - topBarHeight - bottomBarHeight - 16))
             // 論理座標 → ビュー座標の変換係数（view_px = logical_px * scale）
             let scale = side / model.BASE
 
-            VStack(spacing: 8) {
-                Spacer(minLength: 0)
+            Group {
+                if isWide {
+                    // 横長：迷路を左、帯を右に縦に並べる
+                    HStack(spacing: 16) {
+                        mazeCanvas(side: side, scale: scale)
 
-                MazeTopBar(model: model)
-                    .frame(width: side, height: topBarHeight)
+                        VStack(spacing: 8) {
+                            MazeTopBar(model: model)
+                                .frame(height: topBarHeight)
+                            MazeShockwaveBar(model: model)
+                                .frame(height: bottomBarHeight)
+                        }
+                        .frame(width: sidePanelWidth)
+                    }
+                } else {
+                    // 縦長：帯を迷路の上下に置く（今までの並べ方）
+                    VStack(spacing: 8) {
+                        Spacer(minLength: 0)
 
-                // ★ TimelineView(.animation) とは？ ★
-                //   画面のリフレッシュ（約60fps）に合わせて中身を再評価し続けるView。
-                //   ここでは「毎フレーム Canvas を描き直す」ためのトリガーとして使う。
-                //   ＝ Model 側の CADisplayLink が「状態を進める」担当、
-                //      この TimelineView が「進んだ状態を描く」担当、という二人三脚の関係。
-                TimelineView(.animation) { _ in
-                    Canvas { ctx, size in
-                        drawAll(ctx: ctx, size: size, model: model)
+                        MazeTopBar(model: model)
+                            .frame(width: side, height: topBarHeight)
+
+                        mazeCanvas(side: side, scale: scale)
+
+                        MazeShockwaveBar(model: model)
+                            .frame(width: side, height: bottomBarHeight)
+
+                        Spacer(minLength: 0)
                     }
                 }
-                .frame(width: side, height: side)
-                .clipShape(RoundedRectangle(cornerRadius: 16))  // ← キャンバスの角丸
-                .gesture(makeDragGesture(scale: scale))
-
-                MazeShockwaveBar(model: model)
-                    .frame(width: side, height: bottomBarHeight)
-
-                Spacer(minLength: 0)
             }
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .onAppear { canvasScale = scale }
         }
+    }
+
+    /// 迷路を描くキャンバス。縦長・横長のどちらの並べ方でも同じものを使う。
+    private func mazeCanvas(side: CGFloat, scale: CGFloat) -> some View {
+        // ★ TimelineView(.animation) とは？ ★
+        //   画面のリフレッシュ（約60fps）に合わせて中身を再評価し続けるView。
+        //   ここでは「毎フレーム Canvas を描き直す」ためのトリガーとして使う。
+        //   ＝ Model 側の CADisplayLink が「状態を進める」担当、
+        //      この TimelineView が「進んだ状態を描く」担当、という二人三脚の関係。
+        TimelineView(.animation) { _ in
+            Canvas { ctx, size in
+                drawAll(ctx: ctx, size: size, model: model)
+            }
+        }
+        .frame(width: side, height: side)
+        .clipShape(RoundedRectangle(cornerRadius: 16))  // ← キャンバスの角丸
+        .gesture(makeDragGesture(scale: scale))
     }
 
     // MARK: ジェスチャー

@@ -66,44 +66,72 @@ private struct JankenTitleView: View {
 
     var viewModel: JankenViewModel
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、遊び方と難易度ボタンを左右に並べる理由 ★
+    //   縦に積んだままだと、iPad を横にしたときなどに横へ間延びし、下のボタンが画面の外へはみ出しやすい。
+    //   左に遊び方、右に難易度ボタンを置けば、横に広い場所をそのまま使える。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
-
-            // ── 遊び方カード ──────────────────────────────────
-            VStack(alignment: .leading, spacing: 12) {
-                Label("janken_how_to_play_title", systemImage: "questionmark.circle.fill")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.muted)
-
-                HStack(alignment: .top, spacing: 8) {
-                    Text("✊").font(.system(size: 18))
-                    Text("janken_how_to_play_body")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.textPrimary)
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(spacing: 24) {
+                    howToCard
+                    difficultyButtons
                 }
-                HStack(alignment: .top, spacing: 8) {
-                    Text("⏱️").font(.system(size: 18))
-                    Text("janken_how_to_play_penalty")
-                        .font(.system(size: 15, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.textPrimary)
+                .padding(.horizontal, 24)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    Spacer()
+                    howToCard
+                        .padding(.horizontal, 24)
+                    Spacer()
+                    difficultyButtons
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 32)
                 }
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            .padding(.horizontal, 24)
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
 
-            Spacer()
+    // ── 遊び方カード ──────────────────────────────────
+    private var howToCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("janken_how_to_play_title", systemImage: "questionmark.circle.fill")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.muted)
 
-            // ── 難易度ボタン ──────────────────────────────────
-            VStack(spacing: 12) {
-                difficultyButton(.easy,      color: DS.gaugeFull)
-                difficultyButton(.hard,      color: DS.blitzColor)
-                difficultyButton(.challenge, color: DS.accent)
+            HStack(alignment: .top, spacing: 8) {
+                Text("✊").font(.system(size: 18))
+                Text("janken_how_to_play_body")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
             }
-            .padding(.horizontal, 24)
-            .padding(.bottom, 32)
+            HStack(alignment: .top, spacing: 8) {
+                Text("⏱️").font(.system(size: 18))
+                Text("janken_how_to_play_penalty")
+                    .font(.system(size: 15, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+    }
+
+    // ── 難易度ボタン ──────────────────────────────────
+    private var difficultyButtons: some View {
+        VStack(spacing: 12) {
+            difficultyButton(.easy,      color: DS.gaugeFull)
+            difficultyButton(.hard,      color: DS.blitzColor)
+            difficultyButton(.challenge, color: DS.accent)
         }
     }
 
@@ -326,6 +354,9 @@ private struct JankenPlayingView: View {
     // ミス時の「+5秒」テキスト表示フラグ
     @State private var showPenaltyText = false
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
     /// 指示の色（勝て＝青 / 負けろ＝赤）。指示テキストとフェーズ表示で共有する。
     private var instructionColor: Color {
         viewModel.currentInstruction == .win ? DS.primary : DS.blitzColor
@@ -338,88 +369,43 @@ private struct JankenPlayingView: View {
             AppBackground().ignoresSafeArea()
 
             // ── メインコンテンツ ──────────────────────────────
+            // ★ 横長の場所では、左に「CPUの手と指示」、右に「手のボタンとタイマー」を並べる理由 ★
+            //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、ボタンやタイマーがはみ出しやすい。
+            //   左右に分ければ、指示を見ながらすぐ右手でボタンを押せる並びになる。
+            //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
             VStack(spacing: 0) {
+                progressBar
 
-                // ── プログレスバー ────────────────────────────
-                VStack(spacing: 4) {
-                    // GeometryReader で得た幅に progress(0〜1)を掛けて、塗り幅を出す（解説は ConfettiView 参照）
-                    GeometryReader { geo in
-                        ZStack(alignment: .leading) {
-                            RoundedRectangle(cornerRadius: DS.gaugeRadius)
-                                .fill(DS.gaugeBg)
-                            RoundedRectangle(cornerRadius: DS.gaugeRadius)
-                                .fill(DS.primary)
-                                .frame(width: geo.size.width * viewModel.progress)
-                                .animation(.easeOut(duration: 0.2), value: viewModel.progress)
+                if DS.isWide(areaSize) {
+                    HStack(spacing: 24) {
+                        VStack(spacing: 0) {
+                            challengePhaseLabel
+                            Spacer()
+                            cpuHandAndInstruction
+                            Spacer()
                         }
-                    }
-                    .frame(height: 10)
+                        .frame(maxWidth: .infinity)
 
-                    Text("\(viewModel.currentRound) / \(viewModel.totalRounds)")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                        .wallpaperCushion()
-                }
-                .padding(.horizontal, 24)
-                .padding(.top, 16)
-                .padding(.bottom, 12)
-
-                // ── 挑戦モード：現在フェーズ表示 ─────────────
-                // かんたん・むずかしいは非表示。挑戦モードのみ常時表示する。
-                if let phaseKey = viewModel.challengePhaseKey {
-                    Text(phaseKey)
-                        .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可
-                        .foregroundStyle(instructionColor)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 8)
-                        // かべがみの上でも透けないよう tintFill で塗る（DesignSystem の tintFill を参照）
-                        .background(
-                            RoundedRectangle(cornerRadius: DS.sectionRadius)
-                                .tintFill(instructionColor.opacity(0.12))
-                        )
-                        .padding(.bottom, 8)
-                }
-
-                Spacer()
-
-                // ── CPUの手（絵文字・大） ─────────────────────
-                Text(viewModel.cpuHand.emoji)
-                    .font(.system(size: 96))    // ← 変更可
-                    .padding(.bottom, 8)
-
-                // ── 指示テキスト（勝て！/ 負けろ！）───────────
-                Text(viewModel.currentInstruction == .win
-                     ? LocalizedStringKey("janken_instruction_win")
-                     : LocalizedStringKey("janken_instruction_lose"))
-                    .font(.system(size: 44, weight: .black, design: .rounded))  // ← 変更可
-                    .foregroundStyle(instructionColor)
-                    .wallpaperCushion()
-                    .padding(.bottom, 4)
-
-                Spacer()
-
-                // ── プレイヤーの手ボタン（3択）────────────────
-                // クイズの QuizChoiceButton と同じ視覚スタイルを使う
-                HStack(spacing: 12) {
-                    ForEach(JankenHand.allCases, id: \.self) { hand in
-                        JankenHandButton(
-                            hand:   hand,
-                            state:  handButtonState(for: hand)
-                        ) {
-                            viewModel.tap(hand)
+                        VStack(spacing: 0) {
+                            handButtons
+                                .padding(.top, 8)
+                            timerText
                         }
+                        .frame(maxWidth: .infinity)
                     }
+                } else {
+                    challengePhaseLabel
+                    Spacer()
+                    cpuHandAndInstruction
+                    Spacer()
+                    handButtons
+                    timerText
                 }
-                .padding(.horizontal, 20)
-                .padding(.bottom, 16)
-
-                // ── タイマー ──────────────────────────────────
-                Text(viewModel.elapsedFormatted)
-                    .font(.system(size: 32, weight: .black, design: .rounded))  // ← 変更可
-                    .foregroundStyle(DS.textPrimary)
-                    .monospacedDigit()   // 数字の幅を固定し、桁が変わっても横揺れしないようにする
-                    .wallpaperCushion()
-                    .padding(.bottom, 28)
+            }
+            .onGeometryChange(for: CGSize.self) { proxy in
+                proxy.size
+            } action: { size in
+                areaSize = size
             }
 
             // ── 正解/不正解フラッシュオーバーレイ ─────────────
@@ -451,6 +437,98 @@ private struct JankenPlayingView: View {
                 showPenaltyText = false
             }
         }
+    }
+
+    // MARK: - 部品（縦長・横長の両方の並べ方で使う）
+
+    // ── プログレスバー ────────────────────────────
+    private var progressBar: some View {
+        VStack(spacing: 4) {
+            // GeometryReader で得た幅に progress(0〜1)を掛けて、塗り幅を出す（解説は ConfettiView 参照）
+            GeometryReader { geo in
+                ZStack(alignment: .leading) {
+                    RoundedRectangle(cornerRadius: DS.gaugeRadius)
+                        .fill(DS.gaugeBg)
+                    RoundedRectangle(cornerRadius: DS.gaugeRadius)
+                        .fill(DS.primary)
+                        .frame(width: geo.size.width * viewModel.progress)
+                        .animation(.easeOut(duration: 0.2), value: viewModel.progress)
+                }
+            }
+            .frame(height: 10)
+
+            Text("\(viewModel.currentRound) / \(viewModel.totalRounds)")
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.muted)
+                .wallpaperCushion()
+        }
+        .padding(.horizontal, 24)
+        .padding(.top, 16)
+        .padding(.bottom, 12)
+    }
+
+    // ── 挑戦モード：現在フェーズ表示 ─────────────
+    // かんたん・むずかしいは非表示。挑戦モードのみ常時表示する。
+    @ViewBuilder
+    private var challengePhaseLabel: some View {
+        if let phaseKey = viewModel.challengePhaseKey {
+            Text(phaseKey)
+                .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可
+                .foregroundStyle(instructionColor)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
+                // かべがみの上でも透けないよう tintFill で塗る（DesignSystem の tintFill を参照）
+                .background(
+                    RoundedRectangle(cornerRadius: DS.sectionRadius)
+                        .tintFill(instructionColor.opacity(0.12))
+                )
+                .padding(.bottom, 8)
+        }
+    }
+
+    // ── CPUの手（絵文字・大）と指示テキスト（勝て！/ 負けろ！）──
+    private var cpuHandAndInstruction: some View {
+        VStack(spacing: 0) {
+            Text(viewModel.cpuHand.emoji)
+                .font(.system(size: 96))    // ← 変更可
+                .padding(.bottom, 8)
+
+            // ── 指示テキスト（勝て！/ 負けろ！）───────────
+            Text(viewModel.currentInstruction == .win
+                 ? LocalizedStringKey("janken_instruction_win")
+                 : LocalizedStringKey("janken_instruction_lose"))
+                .font(.system(size: 44, weight: .black, design: .rounded))  // ← 変更可
+                .foregroundStyle(instructionColor)
+                .wallpaperCushion()
+                .padding(.bottom, 4)
+        }
+    }
+
+    // ── プレイヤーの手ボタン（3択）────────────────
+    // クイズの QuizChoiceButton と同じ視覚スタイルを使う
+    private var handButtons: some View {
+        HStack(spacing: 12) {
+            ForEach(JankenHand.allCases, id: \.self) { hand in
+                JankenHandButton(
+                    hand:   hand,
+                    state:  handButtonState(for: hand)
+                ) {
+                    viewModel.tap(hand)
+                }
+            }
+        }
+        .padding(.horizontal, 20)
+        .padding(.bottom, 16)
+    }
+
+    // ── タイマー ──────────────────────────────────
+    private var timerText: some View {
+        Text(viewModel.elapsedFormatted)
+            .font(.system(size: 32, weight: .black, design: .rounded))  // ← 変更可
+            .foregroundStyle(DS.textPrimary)
+            .monospacedDigit()   // 数字の幅を固定し、桁が変わっても横揺れしないようにする
+            .wallpaperCushion()
+            .padding(.bottom, 28)
     }
 
     // MARK: - ヘルパー

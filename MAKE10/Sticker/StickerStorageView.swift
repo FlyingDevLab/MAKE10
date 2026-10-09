@@ -77,104 +77,63 @@ struct StickerStorageView: View {
 
     // MARK: - body
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    /// 横長の場所で、2つの行を置く幅の上限（pt）。← 変更可
+    private let wideRowsMaxWidth: CGFloat = 520
+
+    // ★ 横長の場所では、行の幅を抑えて左に置き、ボタンを右に縦に並べる理由 ★
+    //   2つの行のあいだで、シールを上下にはらって移す。この遊び方は変えたくないので、行は縦に2つのまま残す。
+    //   ただ横幅いっぱいに広げると、名前・絵文字・枚数が左右の端まで離れて見づらい。
+    //   また、高さの低い場所では下のボタンが行に重なってしまう。
+    //   そこで行の幅を抑えて左に置き、ボタンは右側に縦に並べる。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        GeometryReader { geo in
-            let rowH = geo.size.height / 2
-
-            ZStack {
-                VStack(spacing: 0) {
-                    // 上行：キッズゲームコレクション（タイトル画面などに貼られるシール）
-                    // ★ MAKE10 ではなくアプリ名にしている理由 ★
-                    //   この行のシールが貼られるのは MAKE10 だけでなく、タイトル画面・クイズの画面も含む
-                    //   （MakeTenContentView.stickerBoardVisible を参照）。アプリ名の方が実態に合う。
-                    rowView(
-                        // 欄が狭いので、読みやすい位置で改行を入れたこの場所専用の文言を使う
-                        // （例: 日本語は「キッズゲーム／コレクション」で2行にする）
-                        label:     String(localized: "sticker_storage_row_kids"),
-                        groups:    gameGroups,
-                        index:     gameIndex,
-                        countText: "\(displayGameCount) / 50",
-                        dragX:     gameDragX,
-                        hint:      String(localized: "sticker_storage_hint_down")
-                    )
-                    .frame(height: rowH)
-                    .contentShape(Rectangle())
-                    .gesture(makeGesture(row: .game, rowH: rowH))
-
-                    Divider()
-
-                    // 中行：もっているシール（ストレージ）
-                    rowView(
-                        label:     String(localized: "sticker_storage_row_mine"),
-                        groups:    storageGroups,
-                        index:     storageIndex,
-                        countText: "\(store.storageEmojis.count)",
-                        dragX:     storageDragX,
-                        hint:      String(localized: "sticker_storage_hint_up_game")
-                    )
-                    .frame(height: rowH)
-                    .contentShape(Rectangle())
-                    .gesture(makeGesture(row: .storage, rowH: rowH))
-                }
-
-                // 飛ぶ絵文字オーバーレイ
-                if isFlying {
-                    Text(flyEmoji)
-                        .font(.system(size: 56))
-                        .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 3)
-                        .position(x: geo.size.width / 2, y: flyY)
-                        .allowsHitTesting(false)
-                }
-
-                // シールじてん・シール画面を開くボタン（下部固定・横一列にして高さを変えない）
-                VStack {
-                    Spacer()
-                    HStack(spacing: 10) {
-                    Button {
-                        showDex = true
-                        SoundManager.shared.vibrate()
-                    } label: {
-                        Label(LocalizedStringKey("sticker_dex_title"), systemImage: "books.vertical")
-                            .font(.system(size: 15, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.primary)
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 12)
-                            .background(Capsule().fill(DS.card))
-                            .overlay(Capsule().stroke(DS.primary.opacity(0.4), lineWidth: 1.5))
+        ZStack {
+            if DS.isWide(areaSize) {
+                HStack(spacing: 20) {
+                    GeometryReader { geo in
+                        rowsArea(size: geo.size)
                     }
-                    .buttonStyle(.plain)
-
-                    Button {
-                        showPlayView = true
-                        SoundManager.shared.vibrate()
-                    } label: {
-                        Label(
-                            LocalizedStringKey("sticker_open_play_mode"),
-                            systemImage: "rectangle.expand.diagonal"
-                        )
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 24)
-                        .padding(.vertical, 12)
-                        .background(Capsule().fill(DS.primary))
-                        .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
+                    .frame(maxWidth: wideRowsMaxWidth)
+                    VStack(spacing: 12) {
+                        actionButtons
                     }
-                    .buttonStyle(.plain)
-                    }
-                    .padding(.bottom, 20)
+                    .frame(maxWidth: .infinity)
                 }
-
-                // 満杯・空メッセージ
-                if let msg = blockMessage {
-                    Text(msg)
-                        .font(.system(size: 15, weight: .bold, design: .rounded))
-                        .foregroundStyle(.white)
-                        .padding(.horizontal, 20)
-                        .padding(.vertical, 10)
-                        .background(Capsule().fill(Color.black.opacity(0.72)))
-                        .transition(.opacity.combined(with: .scale(scale: 0.9)))
+                .padding(.trailing, 20)
+            } else {
+                GeometryReader { geo in
+                    ZStack {
+                        rowsArea(size: geo.size)
+                        // シールじてん・シール画面を開くボタン（下部固定・横一列にして高さを変えない）
+                        VStack {
+                            Spacer()
+                            HStack(spacing: 10) {
+                                actionButtons
+                            }
+                            .padding(.bottom, 20)
+                        }
+                    }
                 }
             }
+
+            // 満杯・空メッセージ
+            if let msg = blockMessage {
+                Text(msg)
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 20)
+                    .padding(.vertical, 10)
+                    .background(Capsule().fill(Color.black.opacity(0.72)))
+                    .transition(.opacity.combined(with: .scale(scale: 0.9)))
+            }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
         }
         .ignoresSafeArea(edges: .bottom)
         .fullScreenCover(isPresented: $showPlayView) {
@@ -185,6 +144,93 @@ struct StickerStorageView: View {
             StickerDexView()
                 .dynamicTypeSize(.large)
         }
+    }
+
+    // MARK: - 部品（縦長・横長の両方の並べ方で使う）
+
+    /// 2つの行と、行のあいだを飛ぶ絵文字。size はこの部品が置かれた場所の大きさ（行の高さと飛ぶ位置の計算に使う）。
+    private func rowsArea(size: CGSize) -> some View {
+        let rowH = size.height / 2
+        return ZStack {
+            VStack(spacing: 0) {
+                // 上行：キッズゲームコレクション（タイトル画面などに貼られるシール）
+                // ★ MAKE10 ではなくアプリ名にしている理由 ★
+                //   この行のシールが貼られるのは MAKE10 だけでなく、タイトル画面・クイズの画面も含む
+                //   （MakeTenContentView.stickerBoardVisible を参照）。アプリ名の方が実態に合う。
+                rowView(
+                    // 欄が狭いので、読みやすい位置で改行を入れたこの場所専用の文言を使う
+                    // （例: 日本語は「キッズゲーム／コレクション」で2行にする）
+                    label:     String(localized: "sticker_storage_row_kids"),
+                    groups:    gameGroups,
+                    index:     gameIndex,
+                    countText: "\(displayGameCount) / 50",
+                    dragX:     gameDragX,
+                    hint:      String(localized: "sticker_storage_hint_down")
+                )
+                .frame(height: rowH)
+                .contentShape(Rectangle())
+                .gesture(makeGesture(row: .game, rowH: rowH))
+
+                Divider()
+
+                // 中行：もっているシール（ストレージ）
+                rowView(
+                    label:     String(localized: "sticker_storage_row_mine"),
+                    groups:    storageGroups,
+                    index:     storageIndex,
+                    countText: "\(store.storageEmojis.count)",
+                    dragX:     storageDragX,
+                    hint:      String(localized: "sticker_storage_hint_up_game")
+                )
+                .frame(height: rowH)
+                .contentShape(Rectangle())
+                .gesture(makeGesture(row: .storage, rowH: rowH))
+            }
+
+            // 飛ぶ絵文字オーバーレイ
+            if isFlying {
+                Text(flyEmoji)
+                    .font(.system(size: 56))
+                    .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 3)
+                    .position(x: size.width / 2, y: flyY)
+                    .allowsHitTesting(false)
+            }
+        }
+    }
+
+    /// シールじてん・シール画面を開くボタン。縦長では横一列、横長では縦一列に並べる（並べる向きは呼ぶ側が決める）。
+    @ViewBuilder
+    private var actionButtons: some View {
+        Button {
+            showDex = true
+            SoundManager.shared.vibrate()
+        } label: {
+            Label(LocalizedStringKey("sticker_dex_title"), systemImage: "books.vertical")
+                .font(.system(size: 15, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.primary)
+                .padding(.horizontal, 18)
+                .padding(.vertical, 12)
+                .background(Capsule().fill(DS.card))
+                .overlay(Capsule().stroke(DS.primary.opacity(0.4), lineWidth: 1.5))
+        }
+        .buttonStyle(.plain)
+
+        Button {
+            showPlayView = true
+            SoundManager.shared.vibrate()
+        } label: {
+            Label(
+                LocalizedStringKey("sticker_open_play_mode"),
+                systemImage: "rectangle.expand.diagonal"
+            )
+            .font(.system(size: 15, weight: .bold, design: .rounded))
+            .foregroundStyle(.white)
+            .padding(.horizontal, 24)
+            .padding(.vertical, 12)
+            .background(Capsule().fill(DS.primary))
+            .shadow(color: DS.primary.opacity(0.30), radius: 6, x: 0, y: 3)
+        }
+        .buttonStyle(.plain)
     }
 
     // MARK: - 行ビュー
