@@ -51,7 +51,7 @@ struct MemoryGameView: View {
     //   中身が変わったときだけ画面が更新されます。
     @State private var engine = MemoryGameEngine()
 
-    /// スタート画面でえらんでいるカードの種類。前回えらんだ種類から始める。
+    /// 前回あそんだカードの種類。スタート画面で、そのボタンに枠を付けて目印にする。
     @State private var selectedDeck: MemoryDeck = .lastPlayed
 
     /// 紙吹雪の表示。クリアで true にし、「もういちど」で false に戻す。
@@ -125,33 +125,32 @@ struct MemoryGameView: View {
 
     // MARK: - スタート画面
 
-    // 他ゲームのスタート画面と同じ構成（遊び方カード + スタートボタン）に、カードの種類えらびを足したもの。
-    // このゲームはスコアを持たないため、ハイスコア欄は置かない。
+    // 遊び方カードと、カードの種類のボタン。このゲームはスコアを持たないため、ハイスコア欄は置かない。
+    //
+    // ★ スタートボタンを置かない理由 ★
+    //   種類のボタンを押したら、すぐにゲームが始まる（えらぶ → スタート の2回押しにしない）。
+    //   小さい子でも1回押すだけで遊び始められるようにするため。
     //
     // ★ ViewThatFits で3つの並べ方を用意している理由 ★
     //   上から順に「収まるもの」が選ばれる。
     //   ① 縦に並べる（iPhone の縦・iPad）
-    //   ② 左に遊び方、右に種類えらびとボタン（iPhone の横。高さが足りないとき）
+    //   ② 左に遊び方、右に種類のボタン（iPhone の横。高さが足りないとき）
     //   ③ どちらも収まらないときは、①をスクロールできるようにする
     private var startContent: some View {
         ViewThatFits(in: .vertical) {
-            VStack(spacing: 20) {
+            VStack(spacing: 24) {
                 Spacer(minLength: 0)
                 howToCard
                 deckPicker
                 Spacer(minLength: 0)
-                startButton
             }
             .padding(.vertical, 16)
 
             HStack(alignment: .center, spacing: 0) {
                 howToCard
                     .frame(maxWidth: .infinity)
-                VStack(spacing: 16) {
-                    deckPicker
-                    startButton
-                }
-                .frame(maxWidth: .infinity)
+                deckPicker
+                    .frame(maxWidth: .infinity)
             }
             .padding(.vertical, 12)
 
@@ -159,7 +158,6 @@ struct MemoryGameView: View {
                 VStack(spacing: 20) {
                     howToCard
                     deckPicker
-                    startButton
                 }
                 .padding(.vertical, 16)
             }
@@ -189,37 +187,48 @@ struct MemoryGameView: View {
     private var deckPicker: some View {
         VStack(spacing: 10) {
             Text("memory_deck_choose")
-                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .font(.system(size: 18, weight: .bold, design: .rounded))
                 .foregroundStyle(DS.textPrimary)
                 .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
 
-            LazyVGrid(
-                columns: [GridItem(.adaptive(minimum: 92), spacing: 10)],   // ← 変更可（ボタン1つの最小幅）
-                spacing: 10
-            ) {
-                ForEach(MemoryDeck.allCases) { deck in
-                    deckButton(deck)
+            // ★ 「6つ1行」か「3つずつ2行」のどちらかにする理由 ★
+            //   幅に合わせて自由に折り返すと、5つ + 1つ のように1つだけ取り残される行ができる。
+            //   ViewThatFits で、6つが1行に入るならそうし、入らなければ 3列×2行 にする。
+            ViewThatFits(in: .horizontal) {
+                HStack(spacing: 12) {
+                    ForEach(MemoryDeck.allCases) { deck in
+                        deckButton(deck)
+                            .frame(width: 104)   // ← 変更可（1行に並べるときのボタンの幅）
+                    }
+                }
+                LazyVGrid(
+                    columns: Array(repeating: GridItem(.flexible(), spacing: 12), count: 3),
+                    spacing: 12
+                ) {
+                    ForEach(MemoryDeck.allCases) { deck in
+                        deckButton(deck)
+                    }
                 }
             }
         }
-        .frame(maxWidth: 560)   // ← 変更可（iPad で横に広がりすぎないように）
+        .frame(maxWidth: 720)   // ← 変更可（iPad で横に広がりすぎないように）
         .padding(.horizontal, 24)
     }
 
     /// カードの種類のボタン1つ。見本のカード・名前・盤面の大きさ・むずかしさ ボーナス を出す。
+    /// 押すと、すぐにその種類でゲームが始まる。前回あそんだ種類には枠が付く。
     private func deckButton(_ deck: MemoryDeck) -> some View {
         let isSelected = deck == selectedDeck
         return Button {
-            SoundManager.shared.playTap()
-            withAnimation(.easeOut(duration: 0.15)) { selectedDeck = deck }
+            startGame(deck)
         } label: {
             VStack(spacing: 3) {
                 Text(verbatim: deck.preview)
-                    .font(.system(size: 26, weight: .heavy, design: .rounded))   // ← 変更可（見本の大きさ）
+                    .font(.system(size: 32, weight: .heavy, design: .rounded))   // ← 変更可（見本の大きさ）
                     .foregroundStyle(DS.textPrimary)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
-                    .frame(height: 34)
+                    .frame(height: 42)
                 Text(deck.nameKey)
                     .font(.system(size: 12, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.textBody)
@@ -239,7 +248,7 @@ struct MemoryGameView: View {
                 .monospacedDigit()
             }
             .frame(maxWidth: .infinity)
-            .padding(.vertical, 10)
+            .padding(.vertical, 14)   // ← 変更可（押すとすぐ始まる大事なボタンなので、押しやすく大きめに）
             .padding(.horizontal, 4)
             .background(
                 RoundedRectangle(cornerRadius: 14)
@@ -256,30 +265,14 @@ struct MemoryGameView: View {
         .accessibilityAddTraits(isSelected ? .isSelected : [])
     }
 
-    /// スタートボタン。えらんでいる種類で盤面を作り、次のためにその種類を覚えておく。
-    private var startButton: some View {
-        Button {
-            SoundManager.shared.vibrate()
-            SoundManager.shared.playTap()
-            MemoryDeck.lastPlayed = selectedDeck
-            engine.start(deck: selectedDeck)
-            withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
-        } label: {
-            Text("ゲームスタート")
-                .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
-                .background(
-                    RoundedRectangle(cornerRadius: DS.btnRadius)
-                        .fill(themeColor)
-                        .shadow(color: themeColor.opacity(0.35), radius: 8, x: 0, y: 4)
-                )
-        }
-        .buttonStyle(.plain)
-        .frame(maxWidth: 520)   // ← 変更可
-        .padding(.horizontal, 24)
-        .padding(.bottom, 8)
+    /// えらんだ種類で盤面を作ってゲームを始め、次のためにその種類を覚えておく。
+    private func startGame(_ deck: MemoryDeck) {
+        SoundManager.shared.vibrate()
+        SoundManager.shared.playTap()
+        selectedDeck          = deck
+        MemoryDeck.lastPlayed = deck
+        engine.start(deck: deck)
+        withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
     }
 
     /// 遊び方カードの1行（絵文字 + 説明文）。絵文字は装飾なので翻訳対象に含めない。
@@ -566,14 +559,15 @@ private struct MemoryCardView: View {
             // ★ 長い英単語（September など）も1行に収める ★
             //   minimumScaleFactor で、カードの幅に収まるまで文字を小さくする。
             Text(verbatim: text)
-                .font(.system(size: side * (number == nil ? 0.26 : 0.32),   // ← 変更可（辺長に対する文字の比率）
+                // 漢字（3文字まで）は大きめ、英単語（3〜9文字）は小さめにする
+                .font(.system(size: side * (text.count > 3 ? 0.26 : 0.32),   // ← 変更可（辺長に対する文字の比率）
                               weight: .heavy, design: .rounded))
                 .foregroundStyle(DS.textPrimary)
                 .lineLimit(1)
                 .minimumScaleFactor(0.2)
                 .padding(.horizontal, side * 0.07)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                // 漢字の月には、左上に小さく月の数字を添える（漢字が読めない人のため）
+                // 月のカードには、左上に小さく月の数字を添える（英語や漢字が読めない人のため）
                 .overlay(alignment: .topLeading) {
                     if let number {
                         Text(verbatim: "\(number)")

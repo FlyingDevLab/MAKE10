@@ -9,9 +9,10 @@
 //
 // ★ このファイルの構成 ★
 //   MemoryTuning        … 秒数・余白などの調整用定数を1か所に集めた入れ物
-//   MemoryDeck          … あそぶカードの種類（どうぶつ 4×5 / どうぶつ 5×5 / せいざ / つき 2種）
+//   MemoryDeck          … あそぶカードの種類（どうぶつ 4×5 / どうぶつ 5×5 / くだもの / せいざ / つき 2種）
 //   MemoryItem          … カード1組ぶんの定義（絵柄・読み上げ・クリア後にえらべるシール）
 //   MemoryAnimal        … 動物カードの定義（絵文字と読み上げラベル）
+//   MemoryFruit         … 果物カードの定義（15種から毎回12種をえらぶ）
 //   MemoryZodiac        … 星座カードの定義（♈〜♓ と読み上げラベル）
 //   MemoryMonth         … 月カードの定義（英語・漢字・季節のシール）
 //   CardFace            … カード表面の中身を表す型
@@ -142,6 +143,7 @@ enum MemoryTuning {
 enum MemoryDeck: String, CaseIterable, Identifiable {
     case animals        // どうぶつ 10組（4×5）。いままでと同じ
     case animals12      // どうぶつ 12組（5×5・中央にロゴ）
+    case fruits         // くだもの 15種から毎回12組（5×5・中央にロゴ）
     case zodiac         // せいざ 12組（5×5・中央にロゴ）
     case monthsEnglish  // つき（えいご） 12組（5×5・中央にロゴ）
     case monthsKanji    // つき（かんじ） 12組（5×5・中央にロゴ）
@@ -153,13 +155,15 @@ enum MemoryDeck: String, CaseIterable, Identifiable {
         switch self {
         case .animals:       return MemoryAnimal.classic.map(\.item)
         case .animals12:     return MemoryAnimal.twelve.map(\.item)
+        case .fruits:        return MemoryFruit.allCases.map(\.item)
         case .zodiac:        return MemoryZodiac.allCases.map(\.item)
         case .monthsEnglish: return MemoryMonth.all.map(\.englishItem)
         case .monthsKanji:   return MemoryMonth.all.map(\.kanjiItem)
         }
     }
 
-    /// ペアの数。
+    /// ペアの数。items より少ないときは、毎回 items の中からランダムにこの数だけえらぶ
+    /// （くだもの は15種から12組。毎回ちがう組み合わせになる）。
     var pairCount: Int {
         switch self {
         case .animals: return 10
@@ -186,19 +190,21 @@ enum MemoryDeck: String, CaseIterable, Identifiable {
     /// むずかしい種類か。全部そろえると「むずかしさ ボーナス」がもらえる。
     var isHard: Bool {
         switch self {
-        case .animals, .animals12:                   return false
+        case .animals, .animals12, .fruits:          return false
         case .zodiac, .monthsEnglish, .monthsKanji:  return true
         }
     }
 
     /// スタート画面のボタンに大きく出す見本（その種類のカード1枚ぶん）。
+    /// つき は2種類とも1月のカード（Jan・睦月）にして、同じ月の英語と漢字だと分かるようにする。
     var preview: String {
         switch self {
         case .animals:       return "🐘"
         case .animals12:     return "🐉"
+        case .fruits:        return "🍓"
         case .zodiac:        return "♈"
         case .monthsEnglish: return "Jan"
-        case .monthsKanji:   return "如月"
+        case .monthsKanji:   return "睦月"
         }
     }
 
@@ -207,6 +213,7 @@ enum MemoryDeck: String, CaseIterable, Identifiable {
     var nameKey: LocalizedStringKey {
         switch self {
         case .animals, .animals12: return "memory_deck_animals"
+        case .fruits:              return "memory_deck_fruits"
         case .zodiac:              return "memory_deck_zodiac"
         case .monthsEnglish:       return "memory_deck_months_en"
         case .monthsKanji:         return "memory_deck_months_kanji"
@@ -371,6 +378,69 @@ enum MemoryAnimal: String, CaseIterable {
     }
 }
 
+// MARK: - MemoryFruit
+
+// ★ 15種から12種をえらぶ理由 ★
+//   毎回ちがう組み合わせになり、「今回はどれが出るかな」という楽しみが生まれます。
+//   🍋 と 🍋‍🟩（ライム）、🍈 と 🥝 のように色や形が近いものもあり、ほどよく手ごたえがあります。
+//   クリア後のシールは、出なかった3種もふくめて15種すべてからえらべます。
+//   ここにある絵文字は StickerCatalog の fruits と同じ15種（片方を変えたら両方を揃えること）。
+
+/// 果物カードの定義。rawValue に "fruit_" を付けて pairID にする。
+enum MemoryFruit: String, CaseIterable {
+    case apple, tangerine, lemon, banana, watermelon
+    case grapes, strawberry, cherries, peach, pineapple
+    case kiwi, melon, mango, blueberries, lime
+
+    /// カード表面に表示する絵文字。
+    var emoji: String {
+        switch self {
+        case .apple:       return "🍎"
+        case .tangerine:   return "🍊"
+        case .lemon:       return "🍋"
+        case .banana:      return "🍌"
+        case .watermelon:  return "🍉"
+        case .grapes:      return "🍇"
+        case .strawberry:  return "🍓"
+        case .cherries:    return "🍒"
+        case .peach:       return "🍑"
+        case .pineapple:   return "🍍"
+        case .kiwi:        return "🥝"
+        case .melon:       return "🍈"
+        case .mango:       return "🥭"
+        case .blueberries: return "🫐"
+        case .lime:        return "🍋‍🟩"
+        }
+    }
+
+    /// VoiceOver 読み上げ用の名前（翻訳キー）。画面には表示しない。
+    var accessibilityLabel: LocalizedStringKey {
+        switch self {
+        case .apple:       return "memory_fruit_apple"
+        case .tangerine:   return "memory_fruit_tangerine"
+        case .lemon:       return "memory_fruit_lemon"
+        case .banana:      return "memory_fruit_banana"
+        case .watermelon:  return "memory_fruit_watermelon"
+        case .grapes:      return "memory_fruit_grapes"
+        case .strawberry:  return "memory_fruit_strawberry"
+        case .cherries:    return "memory_fruit_cherries"
+        case .peach:       return "memory_fruit_peach"
+        case .pineapple:   return "memory_fruit_pineapple"
+        case .kiwi:        return "memory_fruit_kiwi"
+        case .melon:       return "memory_fruit_melon"
+        case .mango:       return "memory_fruit_mango"
+        case .blueberries: return "memory_fruit_blueberries"
+        case .lime:        return "memory_fruit_lime"
+        }
+    }
+
+    /// カード1組ぶんの定義。果物の絵文字が、そのままクリア後のシールになる。
+    var item: MemoryItem {
+        MemoryItem(pairID: "fruit_" + rawValue, face: .emoji(emoji),
+                   label: Text(accessibilityLabel), sticker: emoji)
+    }
+}
+
 // MARK: - MemoryZodiac
 
 // ★ 星座がむずかしい理由 ★
@@ -430,7 +500,7 @@ enum MemoryZodiac: String, CaseIterable {
 // ★ 月のカードは2種類 ★
 //   えいご … January〜December の英単語。どの言語でも英語のまま出す
 //   かんじ … 睦月〜師走（日本の昔の月の呼び名）。どの言語でも同じ漢字を出す
-//   漢字が読めない人にも分かるよう、かんじ のカードには小さく月の数字（1〜12）も添える。
+//   英語や漢字が読めない人にも分かるよう、どちらのカードにも小さく月の数字（1〜12）を添える。
 //
 // ★ クリア後のシール ★
 //   文字はシールにできないので、その月らしい季節の絵文字からえらんでもらう。
@@ -478,7 +548,7 @@ struct MemoryMonth {
 
     /// えいご のカード1組ぶん。読み上げは、カードに書いてある英単語そのもの。
     var englishItem: MemoryItem {
-        MemoryItem(pairID: "month_en_\(number)", face: .text(english, number: nil),
+        MemoryItem(pairID: "month_en_\(number)", face: .text(english, number: number),
                    label: Text(verbatim: english), sticker: season)
     }
 
@@ -502,7 +572,7 @@ enum CardFace {
     /// 絵文字1文字。
     case emoji(String)
 
-    /// 文字（月の名前など）。number があれば、すみに小さく数字を添える（漢字が読めない人のため）。
+    /// 文字（月の名前など）。number があれば、すみに小さく数字を添える（英語や漢字が読めない人のため）。
     case text(String, number: Int?)
 
     /// 画像。現時点では使用していないが、カード面を差し替える余地を型で示すために残す。
@@ -532,13 +602,18 @@ struct DeckFaceProvider: CardFaceProvider {
     /// pairID からカード1組ぶんの定義を引くための辞書。
     private let itemsByID: [String: MemoryItem]
 
+    /// 1回のゲームで使うペアの数。
+    private let pairCount: Int
+
     init(deck: MemoryDeck) {
         itemsByID = Dictionary(uniqueKeysWithValues: deck.items.map { ($0.pairID, $0) })
+        pairCount = deck.pairCount
     }
 
-    /// その種類のペアの識別子を、シャッフルして返す。
+    /// その種類のペアの識別子を、シャッフルしてペアの数だけ返す
+    /// （くだもの のように種類のほうが多いときは、ここで毎回ちがう12種がえらばれる）。
     func pairIdentifiers() -> [String] {
-        itemsByID.keys.shuffled()
+        Array(itemsByID.keys.shuffled().prefix(pairCount))
     }
 
     // ★ 未知の識別子が来たときについて ★
