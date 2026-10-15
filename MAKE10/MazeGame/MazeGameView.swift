@@ -79,7 +79,7 @@ private struct MazeTitleView: View {
                     ("🧀", "Collect all 3 cheeses in the corners to advance!"),
                     ("🐀", "Dark mice drain HP — game over at 0!"),
                     ("🔴", "Red and blue mice patrol along the walls!"),
-                    ("💥", "Tap to fire a shockwave and repel mice!"),
+                    ("💥", "Tap to shoot a laser! It pops mice in its path, and a shockwave bursts where it lands!"),
                     ("⚡", "The lower your HP, the wider the shockwave — and the more you can store!"),
                 ]
                 ForEach(instructions, id: \.0) { emoji, desc in
@@ -297,8 +297,10 @@ private func drawAll(ctx: GraphicsContext, size: CGSize, model: MazeGameModel) {
     drawMaze(ctx: ctx, model: model, s: s)        // 壁
     drawCheeses(ctx: ctx, model: model, s: s)     // 収集チーズ（3コーナー）
     drawShockwave(ctx: ctx, model: model, s: s)   // 衝撃波リング
-    drawParticles(ctx: ctx, model: model, s: s)   // ネズミ撃破パーティクル
     drawMice(ctx: ctx, model: model, s: s)        // 敵ネズミ（ダークグレー）
+    drawPoppingMice(ctx: ctx, model: model, s: s) // 倒されて弾けている敵ネズミ
+    drawLasers(ctx: ctx, model: model, s: s)      // プレイヤーから飛ぶレーザー（ネズミより手前に光らせる）
+    drawParticles(ctx: ctx, model: model, s: s)   // チーズの破片・紙吹雪（弾けたネズミより手前に舞わせる）
     drawPlayer(ctx: ctx, model: model, s: s)      // プレイヤー（白ネズミ）
     // ライフ・スコア・衝撃波ゲージは迷路の外（MazeTopBar / MazeShockwaveBar）に表示する
 
@@ -460,45 +462,102 @@ private struct MouseColors {
 /// 全敵ネズミを描く。追いかけるネズミはプレイヤーの方を、赤・青は進んでいる方を向く。
 private func drawMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     for m in model.mice {
-        var c = ctx
         // 向きは描画上だけのもの（移動ロジックは Model 側）
         let angle = m.kind == .chaser
             ? atan2(model.cheeseY - m.y, model.cheeseX - m.x)
             : atan2(m.vy, m.vx)
-        let colors = MouseColors(m.kind)
-        let mx = m.x * s, my = m.y * s
-        let r  = model.MOUSE_R * s
+        drawMouse(ctx: ctx, x: m.x * s, y: m.y * s, angle: angle, kind: m.kind, r: model.MOUSE_R * s)
+    }
+}
 
-        c.translateBy(x: mx, y: my)
-        c.rotate(by: .radians(Double(angle)))
+/// 敵ネズミ1匹を描く。ふつうの敵（drawMice）と、弾けている敵（drawPoppingMice）の両方で使う。
+/// - Parameters:
+///   - x, y: 中心の位置（ビューpx）
+///   - r: 大きさの基準（ビューpx）。弾けるときは、これを大きくしてふくらませる
+private func drawMouse(ctx: GraphicsContext, x mx: CGFloat, y my: CGFloat, angle: CGFloat,
+                       kind: MouseKind, r: CGFloat) {
+    var c = ctx
+    let colors = MouseColors(kind)
 
-        // ── 胴体（ダークグレー・横長楕円）───────────────────
-        let body = Path(ellipseIn: CGRect(x: -r * 1.4, y: -r * 0.9, width: r * 2.8, height: r * 1.8))
-        c.fill(body,   with: .color(colors.body))
-        c.stroke(body, with: .color(colors.outline), lineWidth: 1)
+    c.translateBy(x: mx, y: my)
+    c.rotate(by: .radians(Double(angle)))
 
-        // ── 頭（円）──────────────────────────────────────────
-        let head = Path(ellipseIn: CGRect(x: r * 0.45, y: -r * 0.75, width: r * 1.5, height: r * 1.5))
-        c.fill(head,   with: .color(colors.head))
-        c.stroke(head, with: .color(colors.outline), lineWidth: 1)
+    // ── 胴体（ダークグレー・横長楕円）───────────────────
+    let body = Path(ellipseIn: CGRect(x: -r * 1.4, y: -r * 0.9, width: r * 2.8, height: r * 1.8))
+    c.fill(body,   with: .color(colors.body))
+    c.stroke(body, with: .color(colors.outline), lineWidth: 1)
 
-        // ── 耳（上下2枚）─────────────────────────────────────
-        for sy in [-0.8, 0.8] {
-            let ear = Path(ellipseIn: CGRect(
-                x: r * 0.5, y: r * CGFloat(sy) - r * 0.5, width: r, height: r))
-            c.fill(ear, with: .color(colors.ear))
-        }
+    // ── 頭（円）──────────────────────────────────────────
+    let head = Path(ellipseIn: CGRect(x: r * 0.45, y: -r * 0.75, width: r * 1.5, height: r * 1.5))
+    c.fill(head,   with: .color(colors.head))
+    c.stroke(head, with: .color(colors.outline), lineWidth: 1)
 
-        // ── 目（いつもの敵は赤、赤・青のネズミは黄色）──────────
-        let eye = Path(ellipseIn: CGRect(x: r * 1.48, y: -r * 0.52, width: r * 0.44, height: r * 0.44))
-        c.fill(eye, with: .color(colors.eye))
+    // ── 耳（上下2枚）─────────────────────────────────────
+    for sy in [-0.8, 0.8] {
+        let ear = Path(ellipseIn: CGRect(
+            x: r * 0.5, y: r * CGFloat(sy) - r * 0.5, width: r, height: r))
+        c.fill(ear, with: .color(colors.ear))
+    }
 
-        // ── しっぽ ────────────────────────────────────────────
-        var tail = Path()
-        tail.move(to: CGPoint(x: -r * 1.4, y: 0))
-        tail.addQuadCurve(to:      CGPoint(x: -r * 2.5, y: r * 0.4),
-                          control: CGPoint(x: -r * 2.0, y: r * 1.2))
-        c.stroke(tail, with: .color(colors.body), lineWidth: 1.5)
+    // ── 目（いつもの敵は赤、赤・青のネズミは黄色）──────────
+    let eye = Path(ellipseIn: CGRect(x: r * 1.48, y: -r * 0.52, width: r * 0.44, height: r * 0.44))
+    c.fill(eye, with: .color(colors.eye))
+
+    // ── しっぽ ────────────────────────────────────────────
+    var tail = Path()
+    tail.move(to: CGPoint(x: -r * 1.4, y: 0))
+    tail.addQuadCurve(to:      CGPoint(x: -r * 2.5, y: r * 0.4),
+                      control: CGPoint(x: -r * 2.0, y: r * 1.2))
+    c.stroke(tail, with: .color(colors.body), lineWidth: 1.5)
+}
+
+// MARK: drawPoppingMice（倒された敵ネズミが弾けて消える描画）
+
+/// 倒された敵ネズミを、一瞬ふくらませてから、小さく・薄くして消す。
+/// ★ 動きの考え方 ★
+///   進み具合 t（0.0=倒した瞬間 → 1.0=消える）に合わせて大きさを変える。
+///     前半（t < 0.3）: 1.0 倍 → 1.5 倍にふくらむ（「パン！」と弾ける感じ）
+///     後半          : 1.5 倍 → 0.3 倍にしぼみながら、透明になる
+private func drawPoppingMice(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
+    let peak: CGFloat = 1.5    // ← 変更可（いちばんふくらんだときの大きさ。1.0 = もとの大きさ）
+    let swell: CGFloat = 0.3   // ← 変更可（ふくらむ時間の割合。残りはしぼみながら消える）
+    for p in model.poppingMice {
+        let t = 1 - CGFloat(p.life) / CGFloat(p.maxLife)
+        let scale = t < swell
+            ? 1 + (peak - 1) * (t / swell)
+            : peak - (peak - 0.3) * ((t - swell) / (1 - swell))
+        var c = ctx
+        c.opacity = Double(t < swell ? 1 : 1 - (t - swell) / (1 - swell))
+        drawMouse(ctx: c, x: p.x * s, y: p.y * s, angle: p.angle, kind: p.kind,
+                  r: model.MOUSE_R * s * scale)
+    }
+}
+
+// MARK: drawLasers（プレイヤーから飛ぶレーザーの描画）
+
+/// レーザーを、黄色いふち（太く半透明）の上に、白く光る芯（細い）を重ねて描く。
+/// 飛んでいる間は根元から先っぽまで伸び、届いたあとは細く・薄くなって消える。
+private func drawLasers(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
+    let glowColor = Color(red: 1.0, green: 0.922, blue: 0.231)   // ← レーザーのふちの色（衝撃波と同じ黄色）
+    let glowWidth: CGFloat = 9                                    // ← 変更可（ふちの太さ・ビューpx）
+    let coreWidth: CGFloat = 3                                    // ← 変更可（芯の太さ・ビューpx）
+    for laser in model.lasers {
+        let from = CGPoint(x: laser.fromX * s, y: laser.fromY * s)
+        let tip  = CGPoint(x: (laser.fromX + (laser.toX - laser.fromX) * laser.tip) * s,
+                           y: (laser.fromY + (laser.toY - laser.fromY) * laser.tip) * s)
+        // 届いたあとは 1.0 → 0.0 に減っていく。飛んでいる間は 1.0
+        let remain = laser.tip < 1 ? 1 : CGFloat(laser.fade) / CGFloat(model.LASER_FADE)
+
+        var beam = Path()
+        beam.move(to: from)
+        beam.addLine(to: tip)
+        var c = ctx
+        c.opacity = Double(remain)
+        // lineCap: .round で、線の両端を丸くして、光の玉のように見せる
+        c.stroke(beam, with: .color(glowColor.opacity(0.6)),
+                 style: StrokeStyle(lineWidth: glowWidth * remain, lineCap: .round))
+        c.stroke(beam, with: .color(.white),
+                 style: StrokeStyle(lineWidth: coreWidth * remain, lineCap: .round))
     }
 }
 
@@ -534,11 +593,35 @@ private func drawShockwaveRing(_ sw: MazeShockwave, ctx: GraphicsContext, model:
 
 // MARK: drawParticles（ネズミ撃破パーティクルの描画）
 
-/// 飛散パーティクルを、残り寿命に応じて小さく・薄くしながら丸で描く。
+/// 紙吹雪の色（Model の spawnConfetti が、この中から番号で選ぶ）。
+/// ⚠️ 変更注意: 色の数を変えたら、MazeGameModel.spawnConfetti の `0..<6` も合わせる
+private let confettiColors: [Color] = [
+    Color(red: 1.00, green: 0.35, blue: 0.40),   // 赤
+    Color(red: 1.00, green: 0.75, blue: 0.20),   // オレンジ
+    Color(red: 0.98, green: 0.90, blue: 0.25),   // 黄
+    Color(red: 0.35, green: 0.80, blue: 0.45),   // 緑
+    Color(red: 0.30, green: 0.65, blue: 1.00),   // 青
+    Color(red: 0.75, green: 0.45, blue: 1.00),   // むらさき
+]
+
+/// 飛散パーティクルを描く。チーズの破片は丸、紙吹雪は回る四角。
 private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloat) {
     for p in model.particles {
         // 残りライフ比率（1.0=生成直後 / 0.0=消滅）
         let a = CGFloat(p.life) / CGFloat(p.maxLife)
+        if p.isConfetti {
+            // ── 紙吹雪：細長い四角を、傾けて描く ──
+            // 大きさは変えず、最後の 3 割で透明にする（小さくすると紙っぽく見えないため）
+            var c = ctx
+            c.opacity = Double(min(1, a / 0.3))
+            c.translateBy(x: p.x * s, y: p.y * s)
+            c.rotate(by: .radians(Double(p.rotation)))
+            // ← 4 × 2.4 を変えると紙吹雪の大きさが変わる（s は scale）
+            let w = 4 * s, h = 2.4 * s
+            c.fill(Path(CGRect(x: -w / 2, y: -h / 2, width: w, height: h)),
+                   with: .color(confettiColors[p.colorIndex % confettiColors.count]))
+            continue
+        }
         // ← 4 を変えるとパーティクルの最大サイズが変わる（s は scale）
         let r = 4 * a * s
         let circle = Path(ellipseIn: CGRect(x: p.x * s - r, y: p.y * s - r,

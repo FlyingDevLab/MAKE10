@@ -30809,97 +30809,97 @@
         }
       }
     },
-    "Tap to fire a shockwave and repel mice!" : {
+    "Tap to shoot a laser! It pops mice in its path, and a shockwave bursts where it lands!" : {
       "comment" : "An instruction line in the maze game's How to Play section.",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tippe zum Abfeuern einer Schockwelle!"
+            "value" : "Tippe, um einen Laser abzufeuern! Er erwischt Mäuse auf dem Weg, und am Ziel platzt eine Schockwelle!"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tap to fire a shockwave and repel mice!"
+            "value" : "Tap to shoot a laser! It pops mice in its path, and a shockwave bursts where it lands!"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Toca para disparar una onda de choque!"
+            "value" : "¡Toca para disparar un láser! Atrapa a los ratones en su camino y, al llegar, estalla una onda de choque."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Appuie pour tirer une onde de choc !"
+            "value" : "Appuie pour tirer un laser ! Il touche les souris sur son chemin, et une onde de choc éclate à l'arrivée !"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शॉकवेव से चूहों को भगाने के लिए टैप करें!"
+            "value" : "टैप करके लेज़र चलाओ! रास्ते के चूहे फूट जाएँगे, और जहाँ पहुँचेगा वहाँ शॉकवेव फटेगी!"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ketuk untuk menembak gelombang kejut!"
+            "value" : "Ketuk untuk menembak laser! Tikus di jalurnya kena, dan gelombang kejut meledak di ujungnya!"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tocca per sparare un'onda d'urto!"
+            "value" : "Tocca per sparare un laser! Colpisce i topi lungo il percorso e all'arrivo esplode un'onda d'urto!"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タップで衝撃波を発射してネズミを撃退！"
+            "value" : "タップした場所へレーザー発射！通り道のネズミも、届いた先の衝撃波でも撃退！"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "탭하여 충격파로 쥐를 물리치세요!"
+            "value" : "탭한 곳으로 레이저 발사! 지나가는 길의 쥐도, 도착한 곳의 충격파로도 물리쳐요!"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tik om een schokgolf te vuren!"
+            "value" : "Tik om een laser af te vuren! Hij raakt muizen onderweg, en waar hij aankomt barst een schokgolf!"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Toque para disparar uma onda de choque!"
+            "value" : "Toque para disparar um laser! Ele acerta os ratos no caminho e, ao chegar, explode uma onda de choque!"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "แตะเพื่อยิงคลื่นกระแทกขับไล่หนู!"
+            "value" : "แตะเพื่อยิงเลเซอร์! หนูที่อยู่บนทางจะโดน และคลื่นกระแทกจะระเบิดตรงจุดที่ไปถึง!"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chạm để bắn sóng xung kích đuổi chuột!"
+            "value" : "Chạm để bắn tia laser! Trúng chuột trên đường bay, và sóng xung kích nổ ở nơi tia tới!"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "点击发射冲击波击退老鼠！"
+            "value" : "点击发射激光！路上的老鼠会被击中，激光到达处还会爆发冲击波！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "點擊發射衝擊波擊退老鼠！"
+            "value" : "點擊發射雷射！路上的老鼠會被擊中，雷射到達處還會爆發衝擊波！"
           }
         }
       }
