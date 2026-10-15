@@ -224,6 +224,9 @@ struct MemoryResultView: View {
                 .font(.system(size: 100))   // ← 変更可（選んだシールの表示サイズ）
                 .accessibilityLabel(choice.label)
 
+            // 星座なら、名前ともとになった形の絵をそえる（ZodiacCaption.swift を参照）
+            ZodiacCaption(emoji: choice.emoji, fontSize: 20)
+
             Text("memory_result_saved")
                 .font(.system(size: 18, weight: .bold, design: .rounded))  // ← 変更可
                 .foregroundStyle(DS.muted)
