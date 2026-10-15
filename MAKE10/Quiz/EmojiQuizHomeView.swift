@@ -250,27 +250,36 @@ private struct QuizPlayingLayout: View {
     /// カテゴリごとに定義された表示スタイル（絵文字 / コード / テキスト）を参照する。
     private var displayStyle: DisplayStyle { viewModel.category.displayStyle }
 
-    // ★ 横長の場所では、左に「進捗と問題」、右に「選択肢と答え」を並べる理由 ★
+    /// 横長のとき、左右の選択肢の列が使う幅の割合（残りがまん中の問題）。← 変更可（0.25 = 4分の1ずつ）
+    private let wideSideRatio: CGFloat = 0.25
+
+    // ★ 横長の場所では、問題をまん中に、選択肢を左右に分けて置く理由 ★
     //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、選択肢や「つぎのもんだい」がはみ出しやすい。
-    //   左右に分ければ、問題を見ながらすぐ右の選択肢を押せる。
+    //   iPad を横にして両手で持つと、親指は画面の左右のはしにある。
+    //   選択肢を左右に2つずつ分ければ、持ったまま親指で押せて、問題はまん中で両目で見られる。
+    //   左右の分け方は、縦のときの 2×2 の「左の列（0・2番）」を左に、「右の列（1・3番）」を右にする（MAKE10 と同じ）。
     var body: some View {
         Group {
             if isWide {
-                HStack(alignment: .top, spacing: 8) {
-                    VStack(spacing: 0) {
-                        questionSection
-                        Spacer()
+                GeometryReader { geo in
+                    HStack(alignment: .center, spacing: 0) {
+                        choiceGrid(column: [0, 2])
+                            .padding(.horizontal, 20 * s)
+                            .frame(width: geo.size.width * wideSideRatio)
+                        VStack(spacing: 0) {
+                            questionSection
+                            feedbackSection
+                        }
+                        .frame(maxWidth: .infinity)
+                        choiceGrid(column: [1, 3])
+                            .padding(.horizontal, 20 * s)
+                            .frame(width: geo.size.width * wideSideRatio)
                     }
-                    .frame(maxWidth: .infinity)
-                    VStack(spacing: 0) {
-                        answerSection
-                            .padding(.top, 8 * s)
-                        Spacer()
-                    }
-                    .frame(maxWidth: .infinity)
+                    // 上下のまん中に置く（両手で持ったときの親指の高さに、選択肢が来るように）
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
                 }
                 // ヘッダーの下にぶら下がるエネルギー残高（SharedFrame の energyBadge）は画面の真ん中に出る。
-                // 横長では左右の列の境目がちょうど真ん中に来て、スコアや選択肢が残高に隠れるので、その分だけ下げる。
+                // まん中の進み具合（スコア）が残高に隠れないよう、その分だけ下げる。
                 .padding(.top, 20)   // ← 変更可
             } else {
                 VStack(spacing: 0) {
@@ -298,15 +307,27 @@ private struct QuizPlayingLayout: View {
         .padding(.bottom, 16 * s)
     }
 
-    // ── 選択肢 + フィードバック + つぎのもんだいボタン ────
+    // ── 選択肢 + フィードバック + つぎのもんだいボタン（縦長のとき）────
     private var answerSection: some View {
         VStack(spacing: 0) {
-            QuizChoiceGrid(
-                question: question, mode: viewModel.mode, displayStyle: displayStyle,
-                answerState: viewModel.answerState, selectedItem: viewModel.selectedItem
-            ) { viewModel.select($0) }
-            .padding(.horizontal, 20 * s)
+            choiceGrid(column: nil)
+                .padding(.horizontal, 20 * s)
+            feedbackSection
+        }
+    }
 
+    /// 選択肢。column が nil なら 2×2 のグリッド、番号を渡すとその選択肢だけを縦に並べる（横長の左右の列）。
+    private func choiceGrid(column: [Int]?) -> some View {
+        QuizChoiceGrid(
+            question: question, mode: viewModel.mode, displayStyle: displayStyle,
+            answerState: viewModel.answerState, selectedItem: viewModel.selectedItem,
+            column: column
+        ) { viewModel.select($0) }
+    }
+
+    // ── フィードバック + つぎのもんだいボタン（縦長・横長の両方で使う）────
+    private var feedbackSection: some View {
+        VStack(spacing: 0) {
             QuizFeedbackLabel(
                 answerState: viewModel.answerState, correct: question.correct,
                 mode: viewModel.mode, displayStyle: displayStyle
@@ -657,6 +678,8 @@ struct QuizChoiceGrid: View {
     let displayStyle: DisplayStyle
     let answerState: AnswerState
     let selectedItem: QuizItem?
+    /// 横長の左右の列に置く選択肢の番号（例: [0, 2]）。nil なら全部を 2×2 のグリッドで並べる。
+    var column: [Int]? = nil
     let onSelect:    (QuizItem) -> Void
 
     @Environment(\.layoutScale) private var s
@@ -667,14 +690,27 @@ struct QuizChoiceGrid: View {
     }
 
     var body: some View {
-        LazyVGrid(columns: columns, spacing: 12 * s) {
-            ForEach(question.choices) { item in
-                QuizChoiceButton(
-                    item: item, mode: mode, displayStyle: displayStyle,
-                    state: buttonState(for: item)
-                ) { onSelect(item) }
+        if let column {
+            // 横長の左右の列：渡された番号の選択肢だけを縦に並べる（選択肢が少ない問題でも落ちないよう、ない番号は飛ばす）
+            VStack(spacing: 12 * s) {
+                ForEach(column.filter { question.choices.indices.contains($0) }, id: \.self) { index in
+                    choiceButton(question.choices[index])
+                }
+            }
+        } else {
+            LazyVGrid(columns: columns, spacing: 12 * s) {
+                ForEach(question.choices) { item in
+                    choiceButton(item)
+                }
             }
         }
+    }
+
+    private func choiceButton(_ item: QuizItem) -> some View {
+        QuizChoiceButton(
+            item: item, mode: mode, displayStyle: displayStyle,
+            state: buttonState(for: item)
+        ) { onSelect(item) }
     }
 
     /// 各選択肢ボタンの表示状態を決定するロジック。
