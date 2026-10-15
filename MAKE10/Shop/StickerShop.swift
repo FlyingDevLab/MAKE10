@@ -24,6 +24,10 @@
 //  ★ 端末の時計を変えたら？ ★
 //    日付は端末の時計で判断しているので、時計を進めれば品揃えを入れ替えられる。
 //    課金のないアプリで、得をするのも自分だけなので、防ぐ仕組みは入れていない。
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    その日の状態を1つの記録（"shop"）にする。2台で食い違ったときの合わせ方は applyCloudPayload を参照。
+//    「ひとこと」の番号（shopTipIndex）は、端末ごとに読み進めればよいので送らない。
 
 import Foundation
 
@@ -202,6 +206,12 @@ final class StickerShop {
     // MARK: 保存／読み込み
 
     private func save() {
+        writeState()
+        CloudSyncManager.shared.markChanged(Self.recordName)   // iCloud を使っていなければ何も起きない
+    }
+
+    /// UserDefaults に書くだけ（iCloud から届いた状態を書くときは、こちらを使う。送り返さないため）。
+    private func writeState() {
         guard let state else { return }
         do {
             let data = try JSONEncoder().encode(state)
@@ -210,6 +220,8 @@ final class StickerShop {
             print("⚠️ StickerShop: 品揃えの保存に失敗: \(error.localizedDescription)")
         }
     }
+
+    fileprivate static let recordName = "shop"
 
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: UDKey.stickerShopState) else { return }
@@ -220,4 +232,51 @@ final class StickerShop {
             print("⚠️ StickerShop: 品揃えの読み込みに失敗: \(error.localizedDescription)")
         }
     }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension StickerShop: CloudSyncSource {
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let state, let data = try? JSONEncoder().encode(state) else { return nil }
+        // 日付で比べるので、時刻は使わない（.distantPast でよい）
+        return CloudPayload(data: data, modifiedAt: .distantPast)
+    }
+
+    /// iCloud から届いたその日の状態を合わせる。
+    ///
+    /// ★ 合わせ方 ★
+    ///   ・日付が違う → 新しい日付のほうを残す（古い日の品揃えは、もう使わない）
+    ///   ・同じ日で品揃えも同じ → 売り切れを足し合わせる（片方で買ったシールを、もう片方でまた買えないように）
+    ///   ・同じ日で品揃えが違う（2台が別々に開店した）→ 売り切れが多いほう（たくさん買ったほう）を残す
+    ///     同じ数なら iCloud のほうにそろえる（どちらかに決めないと、2台が交互に送り合ってしまう）
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode(DailyState.self, from: payload.data) else { return .applied }
+        guard !force, let local = state else {
+            state = remote
+            writeState()
+            return .applied
+        }
+
+        let merged: DailyState
+        if local.day != remote.day {
+            merged = local.day > remote.day ? local : remote   // "2026-10-01" の形なので、文字の大小で日付を比べられる
+        } else if local.lineup == remote.lineup {
+            merged = DailyState(day: local.day, lineup: local.lineup, soldOut: local.soldOut.union(remote.soldOut))
+        } else {
+            merged = local.soldOut.count > remote.soldOut.count ? local : remote
+        }
+
+        if merged != local {
+            state = merged
+            writeState()
+        }
+        return merged == remote ? .applied : .keptLocal
+    }
+
+    /// その日の品揃えは「遊んだ記録」として数えない（2択を出すかどうかには使わない）。
+    var hasLocalProgress: Bool { false }
 }

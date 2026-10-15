@@ -83,6 +83,8 @@ struct MakeTenContentView: View {
                         AppSettings.shared.hasAgreedToTerms = true
                         // didSet が自動で UserDefaults に保存する
                     }
+                    // 同意したので、iCloud との同期を始める（同意する前は始めない。CloudSyncManager.start を参照）
+                    CloudSyncManager.shared.start()
                 }
                 .transition(.opacity)
             }
@@ -236,6 +238,7 @@ struct MakeTenContentView: View {
             viewModel.resume()
             BreakReminder.shared.didReturn()   // アプリを離れていたので、休憩の時間を数え直す
             refreshGiftNotices()   // 寝る前に開いたまま翌朝戻ってきた、などのときもログインボーナスを渡す
+            Task { await CloudSyncManager.shared.syncNow() }   // 離れている間に、ほかの端末で変わった分を受け取る
         }
         // ★ 休憩カードを出すタイミング（タイトル画面の分）★
         //   タイトル画面に戻ってきたときに確かめる。タイトル画面にずっといる場合に備えて、30秒ごとにも確かめる。

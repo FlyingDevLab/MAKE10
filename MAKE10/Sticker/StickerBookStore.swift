@@ -32,6 +32,10 @@
 //    1.5 は縦向き・全画面だけだったので、描いたときの紙は「この端末を縦にしたときの画面」と同じ大きさ。
 //    それを基準に割合へ直す。
 //    古いデータは消さずに残しておく（移すのに失敗しても、元の絵が失われないように）。
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    1ページを1つの記録（"page-01"〜"page-10"）にして、紙の縦横比・背景色・シール・線をまとめて送る。
+//    2台で同じページを変えていたときは、ページごとに「あとで変えたほう」を残す（modifiedAt で比べる）。
 
 import SwiftUI
 import UIKit
@@ -46,6 +50,9 @@ struct StickerBookPage: Codable {
     var background: Int = 0
     /// 貼ったシール。位置は紙に対する割合。
     var stickers: [StickerStore.Sticker] = []
+    /// このページを最後に変えた時刻（iCloud で2台の食い違いを比べるときに使う）。
+    /// 1.6.0 の途中で足したので、それより前に保存したページでは nil（「いちばん古い」として扱う）。
+    var modifiedAt: Date?
 }
 
 // MARK: - StickerBookStore
@@ -92,9 +99,13 @@ final class StickerBookStore {
     // MARK: 開いているページ
 
     /// 開いているページのシール。StickerStore.playStickers はこれを読み書きする。
+    /// （保存は StickerStore.savePlay → saveBook で行う。ここでは「変わったページ」の印だけ付ける）
     var currentStickers: [StickerStore.Sticker] {
         get { pages[currentPage].stickers }
-        set { pages[currentPage].stickers = newValue }
+        set {
+            pages[currentPage].stickers = newValue
+            touch(currentPage)
+        }
     }
 
     /// 開いているページの背景色の番号。
@@ -102,6 +113,7 @@ final class StickerBookStore {
         get { pages[currentPage].background }
         set {
             pages[currentPage].background = newValue
+            touch(currentPage)
             saveBook()
         }
     }
@@ -114,6 +126,7 @@ final class StickerBookStore {
     func fixPaperAspectIfNeeded(portraitSize: CGSize) {
         guard pages[currentPage].paperAspect == nil, portraitSize.height > 0 else { return }
         pages[currentPage].paperAspect = Double(portraitSize.width / portraitSize.height)
+        touch(currentPage)
         saveBook()
     }
 
@@ -135,6 +148,7 @@ final class StickerBookStore {
     // MARK: 保存
 
     /// 全ページの「紙の縦横比・背景色・シール」を保存する。
+    /// 変わったページは、iCloud にも送る予定にする（iCloud を使っていなければ何も起きない）。
     func saveBook() {
         do {
             try FileManager.default.createDirectory(at: Self.folderURL, withIntermediateDirectories: true)
@@ -143,6 +157,19 @@ final class StickerBookStore {
         } catch {
             print("StickerBookStore: 保存エラー: \(error.localizedDescription)")
         }
+        for index in changedPages.sorted() {
+            CloudSyncManager.shared.markChanged(Self.recordName(page: index))
+        }
+        changedPages.removeAll()
+    }
+
+    /// iCloud に送る予定のページ（saveBook で送る予定にして、空にする）。
+    private var changedPages: Set<Int> = []
+
+    /// ページが変わった印を付ける（最後に変えた時刻を今にする）。
+    private func touch(_ index: Int) {
+        pages[index].modifiedAt = Date()
+        changedPages.insert(index)
     }
 
     /// あるページの線を読み込む。位置と太さは紙に対する割合。
@@ -161,8 +188,16 @@ final class StickerBookStore {
         return []
     }
 
-    /// あるページの線を保存する。
+    /// あるページの線を保存する。線が変わったので、そのページを iCloud にも送る予定にする。
     func saveStrokes(_ strokes: [DrawingStroke], page index: Int) {
+        writeStrokes(strokes, page: index)
+        guard pages.indices.contains(index) else { return }
+        touch(index)
+        saveBook()   // 最後に変えた時刻（modifiedAt）を残し、iCloud に送る予定にする
+    }
+
+    /// 線のファイルを書くだけ（iCloud から届いた線を書くときは、こちらを使う。送り返さないため）。
+    private func writeStrokes(_ strokes: [DrawingStroke], page index: Int) {
         do {
             try FileManager.default.createDirectory(at: Self.folderURL, withIntermediateDirectories: true)
             let data = try JSONEncoder().encode(strokes)
@@ -172,6 +207,13 @@ final class StickerBookStore {
         }
     }
 
+    /// あるページの線を、ファイルから読むだけ（1.5 からの引っ越しはしない。iCloud に送るときに使う）。
+    private func readStrokes(page index: Int) -> [DrawingStroke] {
+        guard let data    = try? Data(contentsOf: Self.strokesURL(page: index)),
+              let strokes = try? JSONDecoder().decode([DrawingStroke].self, from: data) else { return [] }
+        return strokes
+    }
+
     // MARK: リセット
 
     /// 「さいしょから はじめる」で、全ページ（シール・線・背景色・紙の比率）を消して、1ページ目に戻す。
@@ -179,6 +221,7 @@ final class StickerBookStore {
     /// 残さないと、次の起動で（もう消した）1.5 のデータを探して、引っ越しをやり直そうとしてしまう。
     func reset() {
         pages = Array(repeating: StickerBookPage(), count: Self.pageCount)
+        changedPages.removeAll()
         currentPage = 0
         try? FileManager.default.removeItem(at: Self.folderURL)
         // 1.5 の線も消す。残しておくと、1ページ目の線のファイルがないときに、消したはずの絵が引っ越してきてしまう
@@ -248,5 +291,66 @@ final class StickerBookStore {
     private static var legacyDrawingURL: URL {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("drawing_canvas.json")
+    }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension StickerBookStore: CloudSyncSource {
+
+    /// iCloud に送る1ページ分の中身（線も入れる）。
+    private struct CloudPage: Codable {
+        var page:    StickerBookPage
+        var strokes: [DrawingStroke]
+    }
+
+    /// 記録の名前（"page-01"〜"page-10"。ページ番号は 1 始まり・2桁。線のファイル名とそろえている）。
+    static func recordName(page index: Int) -> String {
+        String(format: "page-%02d", index + 1)
+    }
+
+    private static func pageIndex(of name: String) -> Int? {
+        guard name.hasPrefix("page-"), let number = Int(name.dropFirst(5)) else { return nil }
+        let index = number - 1
+        return (0..<pageCount).contains(index) ? index : nil
+    }
+
+    var cloudRecordNames: [String] {
+        (0..<Self.pageCount).map { Self.recordName(page: $0) }
+    }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let index = Self.pageIndex(of: name),
+              let data  = try? JSONEncoder().encode(CloudPage(page: pages[index], strokes: readStrokes(page: index)))
+        else { return nil }
+        return CloudPayload(data: data, modifiedAt: pages[index].modifiedAt ?? .distantPast)
+    }
+
+    /// iCloud から届いたページを反映する。あとで変えたほうを残す。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let index  = Self.pageIndex(of: name),
+              let remote = try? JSONDecoder().decode(CloudPage.self, from: payload.data) else { return .applied }
+        let localDate = pages[index].modifiedAt ?? .distantPast
+        if !force && localDate > payload.modifiedAt {
+            return .keptLocal   // この端末のほうがあとで変えた → この端末のページを送り直す
+        }
+
+        var page = remote.page
+        page.modifiedAt = payload.modifiedAt
+        pages[index] = page
+        writeStrokes(remote.strokes, page: index)
+        saveBook()   // ここでは touch していないので、送り返さない
+
+        // いま開いているページなら、表示中の線も入れかえる（描いている最中なら、描き終わりの保存で端末の線が勝つ）
+        let drawing = DrawingStore.shared
+        if index == currentPage, drawing.activeStroke == nil {
+            drawing.strokes = remote.strokes
+        }
+        return .applied
+    }
+
+    /// シールを貼った・線を描いた・背景色を変えたページが1つでもあれば「遊んだ」とみなす。
+    var hasLocalProgress: Bool {
+        pages.indices.contains { pages[$0].modifiedAt != nil || !pages[$0].stickers.isEmpty || !readStrokes(page: $0).isEmpty }
     }
 }

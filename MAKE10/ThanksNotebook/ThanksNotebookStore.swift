@@ -17,6 +17,9 @@
 //    端末の 0時（DayKey を参照。シールやさんの入れ替えと同じ）。
 //    その日に初めて手帳を開いたときに、その日のページ（3つのミッション）を作って保存する。
 //    保存するので、開き直しても同じミッションが並ぶ。
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    全ページを1つの記録（"thanks"）にする。2台で食い違ったら、日付ごとに合わせる（applyCloudPayload を参照）。
 
 import Foundation
 
@@ -164,9 +167,17 @@ final class ThanksNotebookStore {
     // MARK: 保存／読み込み
 
     private func save() {
+        writePages()
+        CloudSyncManager.shared.markChanged(Self.recordName)   // iCloud を使っていなければ何も起きない
+    }
+
+    /// UserDefaults に書くだけ（iCloud から届いたページを書くときは、こちらを使う。送り返さないため）。
+    private func writePages() {
         guard let data = try? JSONEncoder().encode(pages) else { return }
         UserDefaults.standard.set(data, forKey: UDKey.thanksNotebook)
     }
+
+    fileprivate static let recordName = "thanks"
 
     private func load() {
         guard let data = UserDefaults.standard.data(forKey: UDKey.thanksNotebook) else { return }
@@ -183,4 +194,65 @@ final class ThanksNotebookStore {
         }
         pages = saved
     }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension ThanksNotebookStore: CloudSyncSource {
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let data = try? JSONEncoder().encode(pages) else { return nil }
+        // 日付ごとに合わせるので、時刻は使わない（.distantPast でよい）
+        return CloudPayload(data: data, modifiedAt: .distantPast)
+    }
+
+    /// iCloud から届いたページを、日付ごとに合わせる。
+    ///
+    /// ★ 合わせ方 ★
+    ///   ・片方の端末にしかない日 → そのページを使う
+    ///   ・両方にある日で、ミッションが同じ → チェックを足し合わせ、ごほうびの段階は大きいほう
+    ///     （片方でチェックしたものは残す。ごほうびを2台で二重にもらわないよう、段階は大きいほうにそろえる）
+    ///   ・両方にある日で、ミッションが違う（2台で別々に開いた・引き直した）→ チェックが多いほう。
+    ///     同じ数なら iCloud のほう（どちらかに決めないと、2台が交互に送り合ってしまう）
+    ///   チェックを外したことは伝わらない（もう片方の端末のチェックが残る）。外すのは押しまちがいのときだけなので、
+    ///   チェックを消してしまうより、残るほうを選んでいる。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode([String: ThanksDayPage].self, from: payload.data) else {
+            return .applied
+        }
+        if force {
+            pages = remote
+            writePages()
+            return .applied
+        }
+
+        var merged = pages
+        for (day, remotePage) in remote {
+            guard let localPage = merged[day] else {
+                merged[day] = remotePage
+                continue
+            }
+            if localPage.missions == remotePage.missions {
+                var page = localPage
+                for (mission, people) in remotePage.checks where page.checks[mission] == nil {
+                    page.checks[mission] = people
+                }
+                page.rewardedStage = max(localPage.rewardedStage, remotePage.rewardedStage)
+                merged[day] = page
+            } else if remotePage.checkedCount >= localPage.checkedCount {
+                merged[day] = remotePage
+            }
+        }
+
+        if merged != pages {
+            pages = merged
+            writePages()
+        }
+        return merged == remote ? .applied : .keptLocal
+    }
+
+    /// 1つでもチェックしたページがあれば「遊んだ」とみなす（開いただけのページは数えない）。
+    var hasLocalProgress: Bool { pages.values.contains { $0.checkedCount > 0 } }
 }

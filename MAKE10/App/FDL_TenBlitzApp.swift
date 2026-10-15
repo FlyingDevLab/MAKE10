@@ -54,8 +54,12 @@ struct FDL_TenBlitzApp: App {
     /// 新しいバージョンへの更新時の処理（記録のリセット・プレゼントなど）は、
     /// 画面を作る前に済ませておく（詳しくは AppMigration.swift を参照）。
     init() {
-        AppMigration.runIfNeeded()
+        // ★ prepareAtLaunch を先に呼ぶ理由 ★
+        //   新しくインストールした人かどうかを「まだ同意していない」で見分けている。
+        //   1.6.0 の更新処理（AppMigration）は、前から使っている人の同意をいったん外すので、
+        //   あとに呼ぶと、前から使っている人まで「新しくインストールした人」と見まちがえてしまう。
         DailyBonus.prepareAtLaunch()   // 新しくインストールした人かを、同意前のこの時点で記録する
+        AppMigration.runIfNeeded()
     }
 
     // MARK: body

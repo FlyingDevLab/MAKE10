@@ -21,6 +21,9 @@
 //     - Blitz モードの解放判定
 //     - UserDefaults への永続化（解放フラグ・統計のみ。スコアは ScoreBoard が担う）
 //     - エネルギー（kcal）の付与
+//
+//   ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//     Blitz の解放と問題ごとの統計を1つの記録（"game"）にする。係はファイル末尾の GameRecordSync。
 
 import SwiftUI
 import Combine
@@ -66,7 +69,10 @@ final class GameViewModel {
 
     /// Blitzモード（10秒モード）の解放状態。通常モードで100問正解すると true になる
     var isBlitzUnlocked: Bool {
-        didSet { UserDefaults.standard.set(isBlitzUnlocked,     forKey: UDKey.isBlitzUnlocked) }
+        didSet {
+            UserDefaults.standard.set(isBlitzUnlocked, forKey: UDKey.isBlitzUnlocked)
+            GameRecordSync.shared.markChanged()
+        }
     }
 
     // 問題ごとの出題回数・正解回数（内部統計・ユーザー非公開）
@@ -76,11 +82,17 @@ final class GameViewModel {
     //   問題番号は 1〜9 の9種類ですが、index 0 を「使わない」として確保することで
     //   questionAttempts[questionNumber] と直接インデックスを使った
     //   直感的なアクセスができます（-1 のオフセット計算が不要）。
-    private var questionAttempts: [Int] {
-        didSet { UserDefaults.standard.set(questionAttempts, forKey: UDKey.questionAttempts) }
+    fileprivate var questionAttempts: [Int] {
+        didSet {
+            UserDefaults.standard.set(questionAttempts, forKey: UDKey.questionAttempts)
+            GameRecordSync.shared.markChanged()
+        }
     }
-    private var questionCorrects: [Int] {
-        didSet { UserDefaults.standard.set(questionCorrects, forKey: UDKey.questionCorrects) }
+    fileprivate var questionCorrects: [Int] {
+        didSet {
+            UserDefaults.standard.set(questionCorrects, forKey: UDKey.questionCorrects)
+            GameRecordSync.shared.markChanged()
+        }
     }
 
     // MARK: ハイスコア（ScoreBoard 経由）
@@ -191,6 +203,8 @@ final class GameViewModel {
         // Array(repeating: 0, count: 10) = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         self.questionAttempts = (savedAttempts?.count == 10) ? savedAttempts! : Array(repeating: 0, count: 10)
         self.questionCorrects = (savedCorrects?.count == 10) ? savedCorrects! : Array(repeating: 0, count: 10)
+        // iCloud から届いた記録を、この画面の表示にもすぐ反映できるよう、係に自分を教えておく
+        GameRecordSync.shared.viewModel = self
     }
 
     // MARK: 統計（内部のみ）
@@ -554,6 +568,11 @@ final class GameViewModel {
     /// 全進捗をリセットする（設定画面からの「最初からはじめる」操作）。
     /// タイマー停止・紙吹雪停止・フラグ全リセット・統計ゼロクリア・全スコア削除・シール／エネルギー／ショップのデータ削除を行う。
     func resetProgress() {
+        // ★ いちばん先に、この端末の iCloud 同期をオフにする ★（ユーザーと決めたルール）
+        //   「さいしょから はじめる」では iCloud の分は残す。オフにしないまま消すと、
+        //   空になった記録が iCloud に送られて、iCloud の分まで消えてしまう。
+        //   設定で「iCloud に ほぞん」をオンに戻すと、iCloud の記録を戻すかどうかを選べる。
+        CloudSyncManager.shared.disableForReset()
         stopTimer()
         confettiGeneration  += 1   // 実行中の紙吹雪タイマーを世代番号で無効化する
         showConfetti         = false
@@ -596,5 +615,88 @@ final class GameViewModel {
         case 1000...:   return "praise_score_max"
         default:        return "praise_score_0"
         }
+    }
+}
+
+// MARK: - GameRecordSync（iCloud との同期の係）
+
+/// MAKE10 の記録（Blitz の解放・問題ごとの統計）を iCloud とやりとりする係。
+/// ★ GameViewModel とは別に作っている理由 ★
+///   GameViewModel は画面（MakeTenContentView）が作るもので、アプリの起動時にはまだないことがある。
+///   iCloud の係は起動時に登録したいので、いつでもいる小さな係を作り、記録は UserDefaults から読み書きする。
+///   画面ができていれば（viewModel があれば）、届いた記録をその表示にも反映する。
+final class GameRecordSync: CloudSyncSource {
+
+    static let shared = GameRecordSync()
+    private static let recordName = "game"
+
+    /// いま画面にある GameViewModel（なければ nil）。届いた記録をすぐ表示に反映するために使う。
+    weak var viewModel: GameViewModel?
+
+    private init() {}
+
+    /// iCloud に送る中身。
+    private struct CloudGame: Codable {
+        var blitzUnlocked: Bool
+        var attempts:      [Int]
+        var corrects:      [Int]
+    }
+
+    /// 記録が変わったことを iCloud の係に知らせる（iCloud を使っていなければ何も起きない）。
+    func markChanged() {
+        CloudSyncManager.shared.markChanged(Self.recordName)
+    }
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let data = try? JSONEncoder().encode(local()) else { return nil }
+        // 足し合わせ方で合わせるので、時刻は使わない（.distantPast でよい）
+        return CloudPayload(data: data, modifiedAt: .distantPast)
+    }
+
+    /// iCloud から届いた記録を合わせる。
+    /// ★ 合わせ方 ★
+    ///   ・Blitz の解放 → どちらかで解放していれば解放（一度解放したら戻らないため）
+    ///   ・問題ごとの統計 → 番号ごとに大きいほう（回数は増えるだけなので、大きいほうが新しい）
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode(CloudGame.self, from: payload.data),
+              remote.attempts.count == 10, remote.corrects.count == 10 else { return .applied }
+        let mine = local()
+        let merged = force ? remote : CloudGame(
+            blitzUnlocked: mine.blitzUnlocked || remote.blitzUnlocked,
+            attempts:      zip(mine.attempts, remote.attempts).map { max($0, $1) },
+            corrects:      zip(mine.corrects, remote.corrects).map { max($0, $1) }
+        )
+
+        let defaults = UserDefaults.standard
+        defaults.set(merged.blitzUnlocked, forKey: UDKey.isBlitzUnlocked)
+        defaults.set(merged.attempts,      forKey: UDKey.questionAttempts)
+        defaults.set(merged.corrects,      forKey: UDKey.questionCorrects)
+        if let viewModel {
+            // 画面の表示にも反映する（このあいだの markChanged は CloudSyncManager が無視するので、送り返さない）
+            viewModel.isBlitzUnlocked  = merged.blitzUnlocked
+            viewModel.questionAttempts = merged.attempts
+            viewModel.questionCorrects = merged.corrects
+        }
+
+        let same = merged.blitzUnlocked == remote.blitzUnlocked
+            && merged.attempts == remote.attempts && merged.corrects == remote.corrects
+        return same ? .applied : .keptLocal
+    }
+
+    /// 1問でも解いていれば「遊んだ」とみなす。
+    var hasLocalProgress: Bool { local().attempts.contains { $0 > 0 } }
+
+    /// この端末の記録（UserDefaults から読む。壊れていればゼロ埋め）。
+    private func local() -> CloudGame {
+        let defaults = UserDefaults.standard
+        let attempts = defaults.array(forKey: UDKey.questionAttempts) as? [Int]
+        let corrects = defaults.array(forKey: UDKey.questionCorrects) as? [Int]
+        return CloudGame(
+            blitzUnlocked: defaults.bool(forKey: UDKey.isBlitzUnlocked),
+            attempts:      attempts?.count == 10 ? attempts! : Array(repeating: 0, count: 10),
+            corrects:      corrects?.count == 10 ? corrects! : Array(repeating: 0, count: 10)
+        )
     }
 }

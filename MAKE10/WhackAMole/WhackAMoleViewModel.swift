@@ -163,15 +163,9 @@ final class WhackAMoleViewModel {
     /// 各穴のモグラ状態（インデックス 0〜8: 左上→右下の順）
     var moles: [MoleState] = Array(repeating: MoleState(), count: WAMConfig.holeCount)
 
-    /// UserDefaults から読み込んだハイスコア（常に最新値を返す）。
-    ///
-    /// 他のミニゲームは ScoreBoard 経由でスコアを読み書きしているが、
-    /// このゲームだけ集約前の名残で UserDefaults を直接参照している。
-    /// ScoreBoard.highScore / saveIfBetter への置き換えは将来のリファクタ候補
-    /// （UDKey.whackHighScore は ScoreBoard.allScoreKeys に登録済みのため、
-    /// 「ぜんぶリセット」は現状でも正しく機能する）。
+    /// ハイスコア（常に最新値を返す）。ほかのミニゲームと同じく ScoreBoard 経由で読む。
     var highScore: Int {
-        UserDefaults.standard.integer(forKey: UDKey.whackHighScore)
+        ScoreBoard.highScore(for: UDKey.whackHighScore)
     }
 
     /// 残り時間が warningThreshold 以下なら true（タイマーの色変化に使う）
@@ -383,12 +377,9 @@ final class WhackAMoleViewModel {
 
     // MARK: ハイスコア管理
 
-    /// 現在スコアがハイスコアを超えていれば UserDefaults に保存し true を返す。
-    /// ScoreBoard.saveIfBetter と同等の処理（経由への統一は highScore の注記を参照）。
+    /// 現在スコアがハイスコアを超えていれば保存し true を返す。
+    /// ScoreBoard 経由で保存するので、新記録は iCloud にも送る予定になる（ScoreBoard.swift を参照）。
     private func checkAndSaveHighScore(_ current: Int) -> Bool {
-        let prev = UserDefaults.standard.integer(forKey: UDKey.whackHighScore)
-        guard current > prev else { return false }
-        UserDefaults.standard.set(current, forKey: UDKey.whackHighScore)
-        return true
+        ScoreBoard.saveIfBetter(score: current, for: UDKey.whackHighScore)
     }
 }

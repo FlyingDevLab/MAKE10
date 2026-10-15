@@ -96,6 +96,7 @@ final class OrientationLock {
 // MARK: - AppDelegate
 
 /// iOS から「このアプリはいまどの向きにしてよい？」と聞かれたときの窓口。
+/// アプリが起動し終わったときに、iCloud との同期を始める窓口も兼ねる（application(_:didFinishLaunchingWithOptions:)）。
 ///
 /// ★ SwiftUI のアプリなのに AppDelegate を使う理由 ★
 ///   SwiftUI だけでは「アプリ全体で許可する向き」をあとから変える方法がない。
@@ -106,5 +107,15 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
     func application(_ application: UIApplication,
                      supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
         OrientationLock.shared.mask
+    }
+
+    /// アプリが起動し終わったときに呼ばれる。iCloud との同期を始める。
+    /// ★ ここで始める理由 ★
+    ///   同期を始めるときに「ほかの端末で変わったら知らせてね」と iOS に頼む（registerForRemoteNotifications）。
+    ///   これはアプリの準備（UIApplication）が整ってからでないと頼めないので、起動し終わったこの時点で行う。
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
+        CloudSyncManager.startAtLaunch()
+        return true
     }
 }

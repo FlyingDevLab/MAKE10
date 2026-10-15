@@ -19,6 +19,12 @@
 //    量は下の EnergyRewards の表でまとめて調整できる。
 //    どちらも呼んだ瞬間に残高へ加算・保存する。演出のために加算を遅らせると、
 //    演出の途中でアプリが終了されたときにエネルギーが消えてしまうため。
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    残高と、ログインボーナスを受け取った日（DailyBonus）を1つの記録（"energy"）にする。
+//    2台で食い違ったら、残高は「あとで変えたほう」を残す。足し合わせないのは、
+//    同じエネルギーが2台ぶん増える抜け道になってしまうため（オフラインで2台を同時に使うと、片方の増減が消えることがある）。
+//    ログインボーナスの日は、遅い日のほうを残す（同じ日に2台で2回もらえないように）。
 
 import Foundation
 
@@ -234,6 +240,7 @@ final class EnergyStore {
         sessionClearBonusDeci = 0
         UserDefaults.standard.removeObject(forKey: UDKey.energyDeciKcal)
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
+        UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)
     }
 
     // MARK: 表示用の書式
@@ -265,7 +272,13 @@ final class EnergyStore {
 
     private func save() {
         UserDefaults.standard.set(balanceDeci, forKey: UDKey.energyDeciKcal)
+        UserDefaults.standard.set(Date(), forKey: Self.modifiedAtKey)
+        CloudSyncManager.shared.markChanged(Self.recordName)   // iCloud を使っていなければ何も起きない
     }
+
+    /// 残高を最後に変えた時刻を保存するキー（iCloud で2台の食い違いを比べるときに使う）。
+    fileprivate static let modifiedAtKey = "energyModifiedAt"
+    fileprivate static let recordName    = "energy"
 
     /// 起動時に残高を復元する。
     ///
@@ -284,4 +297,51 @@ final class EnergyStore {
             defaults.removeObject(forKey: UDKey.totalCorrectAllTime)
         }
     }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension EnergyStore: CloudSyncSource {
+
+    /// iCloud に送る中身。
+    private struct CloudEnergy: Codable {
+        var balanceDeci:  Int
+        var bonusLastDay: String?   // ログインボーナスを最後に受け取った日（"2026-10-01"）
+    }
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        let energy = CloudEnergy(balanceDeci:  balanceDeci,
+                                 bonusLastDay: UserDefaults.standard.string(forKey: UDKey.dailyBonusLastDay))
+        guard let data = try? JSONEncoder().encode(energy) else { return nil }
+        let modifiedAt = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        return CloudPayload(data: data, modifiedAt: modifiedAt)
+    }
+
+    /// iCloud から届いたエネルギーを反映する（合わせ方はファイル冒頭の「iCloud との同期」を参照）。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode(CloudEnergy.self, from: payload.data) else { return .applied }
+        let defaults  = UserDefaults.standard
+        let localDate = defaults.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        let localDay  = defaults.string(forKey: UDKey.dailyBonusLastDay)
+
+        // ログインボーナスの日は、遅い日のほう（"2026-10-01" の形なので、文字の大小で比べられる）
+        let mergedDay = force ? remote.bonusLastDay : [localDay, remote.bonusLastDay].compactMap { $0 }.max()
+        if let mergedDay { defaults.set(mergedDay, forKey: UDKey.dailyBonusLastDay) }
+
+        if !force && localDate > payload.modifiedAt {
+            return .keptLocal   // この端末のほうがあとで変えた → この端末の残高を送り直す
+        }
+        balanceDeci = remote.balanceDeci
+        defaults.set(balanceDeci, forKey: UDKey.energyDeciKcal)
+        defaults.set(payload.modifiedAt, forKey: Self.modifiedAtKey)
+        // 日付を遅いほうにそろえた結果、iCloud の日付と違うなら、そろえた日付を送り直す
+        return mergedDay == remote.bonusLastDay ? .applied : .keptLocal
+    }
+
+    /// エネルギーは「遊んだ記録」に数えない。
+    /// ★ 理由 ★ 新しくインストールした日も「はじめまして」のプレゼントで残高が増えるため、
+    ///   残高で判断すると、機種変更したばかりの端末でも2択が出てしまう。遊んだかどうかは、シールやハイスコアで判断する。
+    var hasLocalProgress: Bool { false }
 }

@@ -19,6 +19,9 @@
 //    背景に使うたびに描き直すと、画面の大きさや向きが違うときに位置がずれてしまう。
 //    「かべがみに する」を押した瞬間の見た目をそのまま画像にしておけば、あとで描き足しても
 //    かべがみは変わらず、どの画面でも同じ絵を出せる。
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    画像・帯の色・オン／オフをまとめて1つの記録（"wallpaper"）にする。2台で食い違ったら、あとで変えたほうを残す。
 
 import SwiftUI
 
@@ -35,8 +38,14 @@ final class WallpaperStore {
 
     /// かべがみを背景に使うか（設定でオン／オフできる）。
     var isOn: Bool {
-        didSet { UserDefaults.standard.set(isOn, forKey: UDKey.isWallpaperOn) }
+        didSet {
+            UserDefaults.standard.set(isOn, forKey: UDKey.isWallpaperOn)
+            if !isApplyingCloud { touch() }
+        }
     }
+
+    /// iCloud から届いたかべがみを反映している間 true（その間の変更は「変えた」扱いにしない）。
+    private var isApplyingCloud = false
 
     /// いま背景にかべがみを出すか（オンで、画像があるとき）。
     var isShowing: Bool { isOn && image != nil }
@@ -69,6 +78,7 @@ final class WallpaperStore {
         try? data.write(to: Self.fileURL, options: .atomic)
         image = newImage
         isOn  = true
+        touch()
 
         // Color のままでは保存できないので、赤・緑・青の割合にして保存する
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0, a: CGFloat = 0
@@ -82,6 +92,7 @@ final class WallpaperStore {
     func reset() {
         try? FileManager.default.removeItem(at: Self.fileURL)
         UserDefaults.standard.removeObject(forKey: UDKey.wallpaperBandRGB)
+        UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)
         image      = nil
         paperColor = nil
         isOn       = false
@@ -92,6 +103,83 @@ final class WallpaperStore {
         FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
             .appendingPathComponent("wallpaper.png")
     }
+
+    // MARK: iCloud との同期
+
+    /// かべがみを最後に変えた時刻を保存するキー（iCloud で2台の食い違いを比べるときに使う）。
+    private static let modifiedAtKey = "wallpaperModifiedAt"
+
+    /// 最後に変えた時刻を今にして、iCloud に送る予定にする（iCloud を使っていなければ何も起きない）。
+    private func touch() {
+        UserDefaults.standard.set(Date(), forKey: Self.modifiedAtKey)
+        CloudSyncManager.shared.markChanged(Self.recordName)
+    }
+
+    private static let recordName = "wallpaper"
+
+    /// iCloud に送る中身。
+    private struct CloudWallpaper: Codable {
+        var png:  Data?       // 画像（まだ作っていなければ nil）
+        var rgb:  [Double]?   // 帯の色 [r, g, b]
+        var isOn: Bool
+    }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension WallpaperStore: CloudSyncSource {
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        let wallpaper = CloudWallpaper(
+            png:  try? Data(contentsOf: Self.fileURL),
+            rgb:  UserDefaults.standard.array(forKey: UDKey.wallpaperBandRGB) as? [Double],
+            isOn: isOn
+        )
+        // ★ PropertyList（バイナリ）にする理由 ★
+        //   JSON だと画像のデータが文字に直されて 3割ほど大きくなる。バイナリの PropertyList なら、そのままの大きさで入る。
+        let encoder = PropertyListEncoder()
+        encoder.outputFormat = .binary
+        guard let data = try? encoder.encode(wallpaper) else { return nil }
+        let modifiedAt = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        return CloudPayload(data: data, modifiedAt: modifiedAt)
+    }
+
+    /// iCloud から届いたかべがみを反映する。あとで変えたほうを残す。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? PropertyListDecoder().decode(CloudWallpaper.self, from: payload.data) else {
+            return .applied
+        }
+        let localDate = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        if !force && localDate > payload.modifiedAt {
+            return .keptLocal   // この端末のほうがあとで変えた → この端末のかべがみを送り直す
+        }
+
+        isApplyingCloud = true
+        defer { isApplyingCloud = false }
+
+        if let png = remote.png, let newImage = UIImage(data: png) {
+            try? png.write(to: Self.fileURL, options: .atomic)
+            image = newImage
+        } else {
+            try? FileManager.default.removeItem(at: Self.fileURL)
+            image = nil
+        }
+        if let rgb = remote.rgb, rgb.count == 3 {
+            UserDefaults.standard.set(rgb, forKey: UDKey.wallpaperBandRGB)
+            paperColor = Color(red: rgb[0], green: rgb[1], blue: rgb[2])
+        } else {
+            UserDefaults.standard.removeObject(forKey: UDKey.wallpaperBandRGB)
+            paperColor = nil
+        }
+        isOn = remote.isOn
+        UserDefaults.standard.set(payload.modifiedAt, forKey: Self.modifiedAtKey)
+        return .applied
+    }
+
+    /// かべがみを作ったことがあれば「遊んだ」とみなす。
+    var hasLocalProgress: Bool { image != nil }
 }
 
 // MARK: - AppBackground

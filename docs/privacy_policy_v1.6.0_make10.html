@@ -1,0 +1,1091 @@
+<!DOCTYPE html>
+<!-- id="top" は、フッターの「↑ TOP」リンク（href="#top"）のジャンプ先 -->
+<html lang="en" id="top">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!--
+  ============================================================
+  【設計メモ: プライバシーポリシー & サポートページ（MAKE10）】
+
+  ■ なぜ1ファイルで完結しているのか
+    このページへのアクセスはほぼ100%アプリ内リンク経由です。
+    検索流入を期待するページではないため、hreflang などの SEO 設定は割り切っています。
+    1ファイルにまとめることで、翻訳の追加・修正・デプロイがすべて1ファイルで完結します。
+
+  ■ 翻訳データの持ち方：「キー型オブジェクト」
+    翻訳テキストを { キー: 文字列 } のフラットなオブジェクトで管理しています（下部の const S を参照）。
+    HTML 側の各要素に data-key="..." 属性を付け、setLang() が innerHTML を差し替える仕組みです。
+    セクションの順番変更や HTML 構造の修正をしても、翻訳データ側は変更不要です。
+
+  ■ なぜ PriceWise（pricewise.html）と翻訳方式が違うのか
+    MAKE10 はプロミスカード・ハイライトボックス・コンタクトボックスなど、
+    セクションごとに HTML の構造が大きく異なります。
+    HTML の構造はファイルに直接書いておき、テキストだけをキーで差し替える方が自然でした。
+
+    一方、PriceWise のページはすべてのセクションが同じカード構造のため、
+    sections[] の配列形式でテキスト＋ HTML を丸ごと持ち、JS で描画する方式を採用しています。
+    → セクションを追加・削除するとき、全言語の配列に要素を1つ追加・削除するだけで済みます。
+
+  ■ 英語フォールバック
+    翻訳キーが欠けているとき（翻訳が未完成の言語など）、setLang() が自動的に
+    英語（"en"）の値で代替します。空欄にならないため、翻訳途中でも安全にデプロイできます。
+    PriceWise の配列方式にはこのフォールバックがないため、欠けると空欄になります。
+
+  ■ ファイルサイズについて
+    15言語分のテキストを JS オブジェクトとして埋め込んでいるため、ファイルサイズは大きめです。
+    ただし画像も動的処理もないテキストページなので、体感速度への影響はほぼゼロです。
+
+  ■ 変更: 英語テキストを HTML 本体にも直書きしている理由（JS 非依存の担保）
+    以前は本文の <p> をすべて空にしておき、setLang() が innerHTML を流し込んでいました。
+    しかしこの方式だと、JavaScript が無効・読み込み失敗・実行前に中断した場合、
+    「見出しだけが並び、本文がまったく無いポリシーページ」が表示されてしまいます。
+
+    このページは App Store のプライバシーポリシー URL / サポート URL として提出しており、
+    審査ボットやテキストベースのクローラが本文ゼロのページを取得する可能性がありました。
+    「何も収集しません」と表明するページ自体が空、という状態は避けなければなりません。
+
+    そこで、HTML には英語（既定言語）のテキストを直書きしています。
+    JS が動く環境では、これまでどおり setLang() が該当言語のテキストで上書きします。
+    JS が動かない環境では、英語版の完全なポリシーとして最後まで読めます。
+
+    ⚠️ 同期ルール（重要）
+      英語テキストが「HTML 本体」と「下部の S.en」の2箇所に存在する状態になりました。
+      正となるのは S.en 側です。英語を修正するときは、必ず両方を同じ文字列に揃えてください。
+      片方だけ直すと、JS の有無で表示内容が食い違う（＝法的文書の内容が二種類ある）
+      という、発見しにくく影響の大きい不整合になります。
+  ============================================================
+  -->
+  <title>Privacy Policy & Support – MAKE10</title>
+  <meta name="description" content="Privacy Policy and Support for MAKE10 – a free, ad-free math game for kids by Flying Dev Lab. No data collection; play records can be saved only to your own iCloud.">
+  <!-- index：アプリ内リンクからの流入が中心だが、検索での到達も妨げない。
+       他ページと同様に明示することで「書き忘れではなく意図」であることを示す。 -->
+  <meta name="robots" content="index, follow">
+  <!-- canonical：変更: 新規追加。このページだけ canonical が未設定で、
+       同じ内容が複数URL（.html 付き／なし）で到達可能な状態だった。
+       他2枚（pricewise / techref）と同じく拡張子なしを正規URLとする。 -->
+  <link rel="canonical" href="https://flyingdevlab.com/privacy-policy/make10">
+  <link rel="icon" href="https://flyingdevlab.com/favicon.ico" sizes="any">
+  <link rel="apple-touch-icon" href="https://flyingdevlab.com/apple-touch-icon.png">
+  <!-- 変更: Google Fonts（Nunito ＋ Noto Sans JP）への外部リンクを削除。
+       理由: MAKE10 関連ページは子ども向け側と位置づけ、外部リクエストをゼロにするため。
+             Nunito（400 / 700 / 900）は下の @font-face で /fonts/ の woff2 を自己ホスト。
+             600・800 は最も近い自己ホストウェイト（700・900）に自動マッチする。
+             Noto Sans JP は自己ホストせず、システムフォントで代替する（既定方針）。 -->
+  <style>
+    /* ── Nunito 自己ホスト（latin, 400 / 700 / 900） ──
+       フォントファイルの場所: /fonts/（リポジトリルート）
+       このページはサブディレクトリ配下のため、絶対パスで参照する。 */
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 400;
+      font-display: swap;
+      src: url('/fonts/nunito-latin-400.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 700;
+      font-display: swap;
+      src: url('/fonts/nunito-latin-700.woff2') format('woff2');
+    }
+    @font-face {
+      font-family: 'Nunito';
+      font-style: normal;
+      font-weight: 900;
+      font-display: swap;
+      src: url('/fonts/nunito-latin-900.woff2') format('woff2');
+    }
+
+    :root {
+      --bg: #fffdf7; --surface: #ffffff; --primary: #ff7043; --primary-light: #fff3ee;
+      --accent: #ffd54f; --text: #2d2d2d; --text-muted: #777; --border: #ede8e0;
+      --radius: 16px; --shadow: 0 2px 16px rgba(0,0,0,0.07);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    /* 変更: 日本語フォールバックに Hiragino 系等を追記（pinball/style.css と同じチェーン）。
+       理由: Noto Sans JP を外部読み込みしなくなったため、iOS / macOS での表示を明示的に担保する。 */
+    body { font-family: 'Nunito','Noto Sans JP','Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo',sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.75; }
+    a { color: var(--primary); font-weight: 700; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .skip-link { position: absolute; top: -40px; left: 0; background: var(--primary); color: #fff; padding: 8px 16px; z-index: 200; transition: top .2s; }
+    .skip-link:focus { top: 0; }
+
+    header { background: var(--surface); border-bottom: 2px solid var(--border); padding: 0 24px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .header-inner { max-width: 760px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .logo-icon { width: 36px; height: 36px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: 900; color: white; letter-spacing: -1px; box-shadow: 0 2px 8px rgba(255,112,67,0.35); }
+    .logo-name { font-size: 18px; font-weight: 800; color: var(--primary); }
+
+    .lang-select { padding: 6px 32px 6px 12px; border: 2px solid var(--border); border-radius: 20px; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer; background: var(--surface); color: var(--text); outline: none; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23777' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; transition: border-color .2s; }
+    .lang-select:focus { border-color: var(--primary); }
+
+    .hero { background: linear-gradient(135deg,#fff3ee 0%,#fff8e6 50%,#f0f7ff 100%); padding: 56px 24px 48px; text-align: center; border-bottom: 2px solid var(--border); position: relative; overflow: hidden; }
+    .hero::before { content: '10'; position: absolute; font-size: 240px; font-weight: 900; color: rgba(255,112,67,0.06); top: -40px; left: 50%; transform: translateX(-50%); pointer-events: none; line-height: 1; }
+    .hero-badge { display: inline-block; background: var(--accent); color: #5d4e00; font-size: 12px; font-weight: 800; padding: 4px 14px; border-radius: 20px; margin-bottom: 16px; text-transform: uppercase; letter-spacing: .5px; }
+    .hero h1 { font-size: clamp(24px,5vw,34px); font-weight: 900; color: var(--primary); margin-bottom: 8px; }
+    .hero-app { font-size: 15px; color: var(--text-muted); font-weight: 600; margin-bottom: 20px; }
+    .hero-updated { font-size: 13px; color: var(--text-muted); }
+
+    .promises-section { max-width: 760px; margin: 0 auto; padding: 40px 24px 0; }
+    .promises-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(160px,1fr)); gap: 14px; margin-top: 16px; }
+    .promise-card { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 20px 18px; text-align: center; transition: transform .2s, box-shadow .2s; }
+    .promise-card:hover { transform: translateY(-3px); box-shadow: var(--shadow); }
+    .promise-card .icon { font-size: 32px; margin-bottom: 10px; }
+    .promise-card .label { font-size: 13px; font-weight: 800; }
+    .promise-card.green  { border-color: #a5d6a7; background: #f1f8f1; }
+    .promise-card.blue   { border-color: #90caf9; background: #f0f6ff; }
+    .promise-card.yellow { border-color: #ffe082; background: #fffde7; }
+    .promise-card.orange { border-color: #ffab91; background: #fff3ee; }
+
+    .content { max-width: 760px; margin: 0 auto; padding: 40px 24px 80px; }
+    .section { background: var(--surface); border: 2px solid var(--border); border-radius: var(--radius); padding: 28px; margin-bottom: 20px; box-shadow: var(--shadow); }
+    .section-num { display: inline-flex; align-items: center; justify-content: center; width: 28px; height: 28px; background: var(--primary); color: white; border-radius: 8px; font-size: 13px; font-weight: 900; margin-right: 10px; vertical-align: middle; flex-shrink: 0; }
+    .section h2 { font-size: 17px; font-weight: 800; margin-bottom: 14px; display: flex; align-items: center; }
+    .section p { font-size: 15px; color: var(--text); margin-bottom: 10px; }
+    .section p:last-child { margin-bottom: 0; }
+    .highlight-box { background: var(--primary-light); border-left: 4px solid var(--primary); border-radius: 10px; padding: 14px 16px; margin: 12px 0; font-size: 15px; font-weight: 700; color: var(--primary); }
+
+    .contact-box { background: #f0f6ff; border: 2px solid #90caf9; border-radius: var(--radius); padding: 24px 28px; margin-bottom: 20px; }
+    .contact-box h2 { font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+    .contact-box p { font-size: 15px; margin-bottom: 10px; }
+    .contact-box p:last-child { margin-bottom: 0; }
+    .contact-inner { background: #e3f0ff; border: 1px solid #90caf9; border-radius: 10px; padding: 14px 18px; margin-top: 12px; }
+    .contact-inner p { margin: 4px 0 !important; }
+    .contact-box a { color: #1565c0; }
+
+    .footer-note { text-align: center; font-size: 13px; color: var(--text-muted); margin-top: 20px; }
+    .footer-note a { color: var(--primary); }
+
+    /* ページ先頭へ戻るリンク。ポリシーページは縦に長いため用意している。 */
+    .footer-top-wrap { text-align: center; margin-top: 28px; }
+    .footer-top {
+      display: inline-block; font-size: 13px; font-weight: 800;
+      letter-spacing: .06em; color: var(--text-muted) !important;
+      text-decoration: none; padding: 6px 14px;
+      border: 2px solid var(--border); border-radius: 20px;
+      background: var(--surface); transition: border-color .2s, color .2s;
+    }
+    .footer-top:hover { border-color: var(--primary); color: var(--primary) !important; text-decoration: none; }
+    .footer-top:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; }
+
+    @media (max-width: 500px) { .section { padding: 20px 18px; } .hero { padding: 40px 18px 36px; } .contact-box { padding: 20px 18px; } }
+  </style>
+</head>
+<body>
+
+<a href="#main" class="skip-link">Skip to content</a>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="https://flyingdevlab.com">
+      <div class="logo-icon">10</div>
+      <span class="logo-name">MAKE10</span>
+    </a>
+    <select class="lang-select" id="lang-select" onchange="setLang(this.value)" aria-label="Language">
+      <option value="en">🇺🇸 English</option>
+      <option value="ja">🇯🇵 日本語</option>
+      <option value="zh-Hans">🇨🇳 中文（简体）</option>
+      <option value="zh-Hant">🇹🇼 中文（繁體）</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="pt-BR">🇧🇷 Português</option>
+      <option value="id">🇮🇩 Indonesia</option>
+      <option value="vi">🇻🇳 Tiếng Việt</option>
+      <option value="th">🇹🇭 ภาษาไทย</option>
+      <option value="ko">🇰🇷 한국어</option>
+      <option value="hi">🇮🇳 हिन्दी</option>
+      <option value="fr">🇫🇷 Français</option>
+      <option value="de">🇩🇪 Deutsch</option>
+      <option value="it">🇮🇹 Italiano</option>
+      <option value="nl">🇳🇱 Nederlands</option>
+    </select>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-badge" data-key="badge">Privacy Policy & Support</div>
+  <h1 data-key="title">Privacy Policy & Support</h1>
+  <p class="hero-app">MAKE10 – 10をつくろう</p>
+  <p class="hero-updated" data-key="updated">Effective: October 15, 2026</p>
+</div>
+
+<div class="promises-section">
+  <div class="promises-grid">
+    <div class="promise-card green"><div class="icon">🚫📊</div><div class="label" data-key="p1">No Data Collection</div></div>
+    <div class="promise-card blue"><div class="icon">☁️🔒</div><div class="label" data-key="p2">Your records can be saved only to your own iCloud</div></div>
+    <div class="promise-card yellow"><div class="icon">🚫🎯</div><div class="label" data-key="p3">No Ads, Ever</div></div>
+    <div class="promise-card orange"><div class="icon">🚫🔗</div><div class="label" data-key="p4">No External Links</div></div>
+  </div>
+</div>
+
+<!-- 変更: 以下の各セクション・お問い合わせ・フッターの本文に、英語の初期テキストを直書きした。
+     理由: JavaScript が動かない環境で本文が空になるのを防ぐため（詳細は <head> の設計メモを参照）。
+           JS が有効なときは、従来どおり setLang() が表示言語のテキストで上書きする。
+           HTML 構造・CSS・JS のロジックには一切手を加えていない。 -->
+<div class="content" id="main">
+
+  <div class="section">
+    <h2><span class="section-num">1</span><span data-key="s1-title">Overview</span></h2>
+    <p data-key="s1-p1">MAKE10 (10をつくろう) is a free math puzzle game for children, developed by Flying Dev Lab (空飛ぶ研究室).</p>
+    <div class="highlight-box" data-key="s1-highlight">MAKE10 does not collect any personal information — from anyone, of any age. The developer never receives or sees your data.</div>
+    <p data-key="s1-p2">This policy describes what data MAKE10 does and does not handle, and confirms our commitment to keeping the app completely safe for children.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">2</span><span data-key="s2-title">Information We Collect</span></h2>
+    <p data-key="s2-p1">We collect <strong>nothing</strong>.</p>
+    <p data-key="s2-p2">MAKE10 does not collect, request, or store any of the following:</p>
+    <p data-key="s2-list">• Name, email address, or contact information<br>• Device identifiers or advertising IDs<br>• Location data<br>• Usage analytics or behavioral data<br>• Cookies or tracking technologies<br>• Any other personal or non-personal information</p>
+  </div>
+
+  <!-- v1.6.0（2026-10-15）で追加: iCloud への保存。キーは icloud-*（節の番号とは別の名前にして、番号を付け直しても翻訳データを変えずに済むようにした） -->
+  <div class="section">
+    <h2><span class="section-num">3</span><span data-key="icloud-title">Saving to iCloud</span></h2>
+    <p data-key="icloud-p1">So that play records (sticker book drawings, stickers, energy, high scores, the Thank-You Notebook, and so on) can be restored after changing devices or reinstalling, MAKE10 can save them to Apple's iCloud.</p>
+    <p data-key="icloud-list">• They are saved to the private area of the iCloud account of the Apple Account signed in on the device.<br>• Only that Apple Account can read this area. No one else, including the developer, can see it.<br>• Nothing is sent to the developer's servers or to any other company.<br>• Turn off Settings → "Save to iCloud" in the app to keep records on the device only. Devices not signed in to iCloud also keep records on the device only.<br>• Records saved in iCloud can be deleted from the device's Settings → [your name] → iCloud.</p>
+    <p data-key="icloud-p2">Apple's Privacy Policy applies to iCloud.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">4</span><span data-key="s3-title">Network Activity</span></h2>
+    <p data-key="s3-p1">MAKE10 communicates only with Apple's iCloud, and only for the iCloud saving described above. It makes no other connections. All features work without an internet connection.</p>
+    <p data-key="s3-p2">No data is sent to Flying Dev Lab, third-party analytics services, or advertising networks.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">5</span><span data-key="s4-title">Advertising & In-App Purchases</span></h2>
+    <p data-key="s4-p1">MAKE10 contains <strong>no advertisements</strong> of any kind.</p>
+    <p data-key="s4-p2">MAKE10 contains <strong>no in-app purchases</strong>. The app is completely free.</p>
+    <p data-key="s4-p3">There are no links to external websites, social media, or other apps within MAKE10.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">6</span><span data-key="s5-title">Children's Privacy (COPPA)</span></h2>
+    <p data-key="s5-p1">MAKE10 is designed for children and complies fully with the Children's Online Privacy Protection Act (COPPA) and applicable international children's privacy laws.</p>
+    <p data-key="s5-p2">We collect no personal information from anyone. Records saved to iCloud stay in your own Apple Account; the developer does not receive them.</p>
+    <p data-key="s5-p3">We do not knowingly collect information from children under 13 (or any age).</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">7</span><span data-key="s6-title">Open Source</span></h2>
+    <p data-key="s6-p1">MAKE10 is open-sourced on GitHub as a transparency measure. Anyone can inspect the source code to verify our privacy claims.</p>
+    <p data-key="s6-p2">→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a></p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">8</span><span data-key="s7-title">Changes to This Policy</span></h2>
+    <p data-key="s7-p1">If this policy is ever updated, the new version will be posted on this page with a revised effective date.</p>
+  </div>
+
+  <div class="section">
+    <h2><span class="section-num">9</span><span data-key="s8-title">Disclaimer</span></h2>
+    <p data-key="s8-p1">While we strive to provide accurate content and stable functionality, we do not guarantee the completeness, accuracy, or uninterrupted operation of the App.</p>
+    <p data-key="s8-p2">iOS updates, changes in device environment, or the state of iCloud may affect app behavior without prior notice. The Developer shall not be liable for any data loss resulting from such changes.</p>
+    <p data-key="s8-p3">The Developer may terminate or modify the App without prior notice.</p>
+  </div>
+
+  <div class="contact-box">
+    <h2>📬 <span data-key="contact-title">Support & Contact</span></h2>
+    <p data-key="contact-form-p">You can send anonymous feedback or requests via the contact form at our official website.</p>
+    <p data-key="contact-email-p">If you prefer email, please reach out using the address below.</p>
+    <div class="contact-inner">
+      <p>🌐 <a href="https://flyingdevlab.com" data-key="contact-web-label">flyingdevlab.com</a></p>
+      <p>📧 <a href="mailto:support@flyingdevlab.com">support@flyingdevlab.com</a></p>
+    </div>
+  </div>
+
+  <!-- ページ先頭へ戻るリンク。href="#top" は <html id="top"> へジャンプします。
+       ラベルと aria-label は setLang() 内で表示言語に合わせて設定しています。
+       ※ このページには SNS 等の外部リンクは意図的に置いていません（子ども向けページのため）。 -->
+  <div class="footer-top-wrap">
+    <a href="#top" class="footer-top" id="f-top">↑ TOP</a>
+  </div>
+
+  <p class="footer-note">
+    <span data-key="footer-copy">© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室</span><br>
+    <span data-key="footer2">Made with ❤️ for curious kids everywhere.</span>
+  </p>
+
+</div>
+
+<script>
+/*
+ * S（翻訳データオブジェクト）
+ * ─────────────────────────────────────────────
+ * 15言語分の翻訳テキストを「キー型オブジェクト」で管理しています。
+ *
+ * 構造: S[言語コード][キー] = "表示する文字列"
+ * 例:   S["ja"]["s1-title"] = "概要"
+ *       S["en"]["s1-title"] = "Overview"
+ *
+ * HTML 側では <span data-key="s1-title"> のように data-key 属性でキーを指定し、
+ * setLang() がすべての [data-key] 要素を走査して innerHTML を差し替えます。
+ *
+ * キーの命名規則:
+ *   s1-title, s1-p1, s1-highlight … セクション番号-要素種別
+ *   p1, p2, p3, p4               … プロミスカードのラベル
+ *   contact-*                    … お問い合わせセクション
+ *   footer-*                     … フッター
+ *
+ * ⚠️ 翻訳を追加・修正するときは全15言語に同じキーを追加してください。
+ *    欠けていても setLang() が英語（"en"）の値にフォールバックしますが、
+ *    翻訳品質のためなるべく全言語を揃えてください。
+ */
+const S = {
+  en: {
+    badge:'Privacy Policy & Support', title:'Privacy Policy & Support', updated:'Effective: October 15, 2026',
+    p1:'No Data Collection', p2:'Your records can be saved only to your own iCloud', p3:'No Ads, Ever', p4:'No External Links',
+    's1-title':'Overview',
+    's1-p1':'MAKE10 (10をつくろう) is a free math puzzle game for children, developed by Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 does not collect any personal information — from anyone, of any age. The developer never receives or sees your data.',
+    's1-p2':'This policy describes what data MAKE10 does and does not handle, and confirms our commitment to keeping the app completely safe for children.',
+    's2-title':'Information We Collect',
+    's2-p1':'We collect <strong>nothing</strong>.',
+    's2-p2':'MAKE10 does not collect, request, or store any of the following:',
+    's2-list':'• Name, email address, or contact information<br>• Device identifiers or advertising IDs<br>• Location data<br>• Usage analytics or behavioral data<br>• Cookies or tracking technologies<br>• Any other personal or non-personal information',
+    'icloud-title':'Saving to iCloud',
+    'icloud-p1':'So that play records (sticker book drawings, stickers, energy, high scores, the Thank-You Notebook, and so on) can be restored after changing devices or reinstalling, MAKE10 can save them to Apple\'s iCloud.',
+    'icloud-list':'• They are saved to the private area of the iCloud account of the Apple Account signed in on the device.<br>• Only that Apple Account can read this area. No one else, including the developer, can see it.<br>• Nothing is sent to the developer\'s servers or to any other company.<br>• Turn off Settings → "Save to iCloud" in the app to keep records on the device only. Devices not signed in to iCloud also keep records on the device only.<br>• Records saved in iCloud can be deleted from the device\'s Settings → [your name] → iCloud.',
+    'icloud-p2':'Apple\'s Privacy Policy applies to iCloud.',
+    's3-title':'Network Activity',
+    's3-p1':'MAKE10 communicates only with Apple\'s iCloud, and only for the iCloud saving described above. It makes no other connections. All features work without an internet connection.',
+    's3-p2':'No data is sent to Flying Dev Lab, third-party analytics services, or advertising networks.',
+    's4-title':'Advertising & In-App Purchases',
+    's4-p1':'MAKE10 contains <strong>no advertisements</strong> of any kind.',
+    's4-p2':'MAKE10 contains <strong>no in-app purchases</strong>. The app is completely free.',
+    's4-p3':'There are no links to external websites, social media, or other apps within MAKE10.',
+    's5-title':"Children's Privacy (COPPA)",
+    's5-p1':"MAKE10 is designed for children and complies fully with the Children's Online Privacy Protection Act (COPPA) and applicable international children's privacy laws.",
+    's5-p2':'We collect no personal information from anyone. Records saved to iCloud stay in your own Apple Account; the developer does not receive them.',
+    's5-p3':'We do not knowingly collect information from children under 13 (or any age).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 is open-sourced on GitHub as a transparency measure. Anyone can inspect the source code to verify our privacy claims.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Changes to This Policy',
+    's7-p1':'If this policy is ever updated, the new version will be posted on this page with a revised effective date.',
+    's8-title':'Disclaimer',
+    's8-p1':'While we strive to provide accurate content and stable functionality, we do not guarantee the completeness, accuracy, or uninterrupted operation of the App.',
+    's8-p2':'iOS updates, changes in device environment, or the state of iCloud may affect app behavior without prior notice. The Developer shall not be liable for any data loss resulting from such changes.',
+    's8-p3':'The Developer may terminate or modify the App without prior notice.',
+    'contact-title':'Support & Contact',
+    'contact-form-p':'You can send anonymous feedback or requests via the contact form at our official website.',
+    'contact-email-p':'If you prefer email, please reach out using the address below.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Made with ❤️ for curious kids everywhere.',
+  },
+  ja: {
+    badge:'プライバシーポリシー・サポート', title:'プライバシーポリシー・サポート', updated:'発効日：2026年10月15日',
+    p1:'個人情報の収集なし', p2:'記録は、ご本人の iCloud にだけ保存できます', p3:'広告なし（永久に）', p4:'外部リンクなし',
+    's1-title':'概要',
+    's1-p1':'MAKE10（10をつくろう）は、空飛ぶ研究室（Flying Dev Lab）が開発した、子ども向けの無料算数パズルゲームです。',
+    's1-highlight':'MAKE10は、年齢を問わず、いかなる個人情報も収集しません。開発者がお客様のデータを受け取ったり、見たりすることはありません。',
+    's1-p2':'このポリシーでは、MAKE10がどのようなデータを扱うか（あるいは扱わないか）を説明し、子どもたちにとって安全なアプリであることをお約束します。',
+    's2-title':'収集する情報',
+    's2-p1':'<strong>何も収集しません。</strong>',
+    's2-p2':'MAKE10は以下のいかなる情報も収集・要求・保存しません：',
+    's2-list':'• 氏名・メールアドレス・連絡先情報<br>• デバイス識別子・広告ID<br>• 位置情報<br>• 利用状況の分析データ・行動データ<br>• クッキーやトラッキング技術<br>• その他一切の個人情報・非個人情報',
+    'icloud-title':'iCloud への保存',
+    'icloud-p1':'機種変更やアプリの入れ直しのあとでも、遊んだ記録（シール帳の絵・シール・エネルギー・ハイスコア・ありがとう てちょう など）を戻せるように、記録を Apple の iCloud に保存できます。',
+    'icloud-list':'• 保存先は、端末にサインインしているご本人の Apple アカウントの iCloud（プライベートな領域）です。<br>• この領域は、ご本人の Apple アカウントでしか読めません。開発者を含め、ほかの人が見ることはできません。<br>• 開発者のサーバーや、ほかの会社へは送りません。<br>• アプリの「せってい」→「iCloud に ほぞん」をオフにすると、その端末の記録は端末の中だけに保存されます。iCloud にサインインしていない端末でも、端末の中だけに保存されます。<br>• iCloud に保存した記録は、iPhone/iPad の「設定」→ ご自身の名前 →「iCloud」から消すことができます。',
+    'icloud-p2':'iCloud の取り扱いには、Apple のプライバシーポリシーが適用されます。',
+    's3-title':'ネットワーク通信',
+    's3-p1':'MAKE10は、上の iCloud への保存のときだけ、Apple の iCloud と通信します。それ以外の通信はしません。インターネットにつながっていなくても、すべての機能で遊べます。',
+    's3-p2':'空飛ぶ研究室（Flying Dev Lab）・第三者の分析サービス・広告ネットワークへデータを送ることはありません。',
+    's4-title':'広告・アプリ内課金',
+    's4-p1':'MAKE10には<strong>広告は一切ありません</strong>。',
+    's4-p2':'MAKE10には<strong>アプリ内課金はありません</strong>。完全無料のアプリです。',
+    's4-p3':'MAKE10内には外部ウェブサイト、SNS、他のアプリへのリンクは含まれていません。',
+    's5-title':'子どものプライバシー（COPPA準拠）',
+    's5-p1':'MAKE10は子ども向けに設計されており、COPPA（児童オンラインプライバシー保護法）およびその他適用される国際的な子どものプライバシー法を完全に遵守しています。',
+    's5-p2':'いかなる年齢の方からも個人情報を収集しません。iCloud に保存した記録は、ご本人の Apple アカウントの中にだけあり、開発者は受け取りません。',
+    's5-p3':'13歳未満の子ども（およびいかなる年齢の方）からも、意図的に情報を収集することはありません。',
+    's6-title':'オープンソース',
+    's6-p1':'MAKE10は透明性の確保のためGitHubでオープンソース公開しています。誰でもソースコードを確認し、プライバシーに関する主張を検証することができます。',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'ポリシーの変更について',
+    's7-p1':'本ポリシーを更新する場合は、改定日とともに本ページに掲載します。',
+    's8-title':'免責事項',
+    's8-p1':'本アプリは正確な情報と安定した動作の提供に努めていますが、その完全性・正確性・継続的な動作を保証するものではありません。',
+    's8-p2':'iOSのアップデート、端末環境の変化、iCloud の状態などにより、予告なくアプリの動作に影響が生じる場合があります。これに起因するデータの消失について、当開発者は責任を負いかねます。',
+    's8-p3':'当開発者は、事前の予告なくアプリの提供を終了・変更する場合があります。',
+    'contact-title':'サポート・お問い合わせ',
+    'contact-form-p':'公式サイトのお問い合わせフォームから、匿名でご意見・ご要望をお送りいただけます。',
+    'contact-email-p':'メールでのお問い合わせをご希望の方は、以下よりご連絡ください。',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">空飛ぶ研究室</a> · Flying Dev Lab',
+    'footer2':'子どもたちの好奇心のために、愛を込めて作りました。',
+  },
+  th: {
+    badge:'นโยบายความเป็นส่วนตัว & ช่วยเหลือ', title:'นโยบายความเป็นส่วนตัว & ช่วยเหลือ', updated:'มีผลบังคับใช้: 15 ตุลาคม 2026',
+    p1:'ไม่เก็บข้อมูล', p2:'บันทึกข้อมูลได้เฉพาะใน iCloud ของคุณเองเท่านั้น', p3:'ไม่มีโฆษณา', p4:'ไม่มีลิงก์ภายนอก',
+    's1-title':'ภาพรวม',
+    's1-p1':'MAKE10 (สร้างสิบ) คือเกมปริศนาคณิตศาสตร์ฟรีสำหรับเด็ก พัฒนาโดย Flying Dev Lab (空飛ぶ研究室)',
+    's1-highlight':'MAKE10 ไม่เก็บข้อมูลส่วนบุคคลใด ๆ จากใครก็ตาม ไม่ว่าจะอายุเท่าใด ผู้พัฒนาไม่เคยได้รับหรือเห็นข้อมูลของคุณ',
+    's1-p2':'นโยบายนี้อธิบายว่า MAKE10 จัดการกับข้อมูลอย่างไร และยืนยันความมุ่งมั่นในการทำให้แอปปลอดภัยสำหรับเด็ก',
+    's2-title':'ข้อมูลที่เราเก็บ',
+    's2-p1':'เราไม่เก็บ<strong>อะไรเลย</strong>',
+    's2-p2':'MAKE10 ไม่เก็บ ไม่ขอ หรือจัดเก็บสิ่งต่อไปนี้:',
+    's2-list':'• ชื่อ อีเมล หรือข้อมูลติดต่อ<br>• ตัวระบุอุปกรณ์หรือ ID โฆษณา<br>• ข้อมูลตำแหน่ง<br>• ข้อมูลการใช้งานหรือพฤติกรรม<br>• คุกกี้หรือเทคโนโลยีติดตาม<br>• ข้อมูลอื่นใดทั้งส่วนบุคคลและไม่ส่วนบุคคล',
+    'icloud-title':'การบันทึกใน iCloud',
+    'icloud-p1':'เพื่อให้กู้คืนข้อมูลการเล่น (ภาพวาดในสมุดสติกเกอร์ สติกเกอร์ พลังงาน คะแนนสูงสุด สมุดขอบคุณ ฯลฯ) ได้หลังเปลี่ยนอุปกรณ์หรือติดตั้งแอปใหม่ MAKE10 สามารถบันทึกข้อมูลไว้ใน iCloud ของ Apple',
+    'icloud-list':'• ข้อมูลจะถูกบันทึกในพื้นที่ส่วนตัวของ iCloud ของบัญชี Apple ที่ลงชื่อเข้าใช้ในอุปกรณ์<br>• มีเพียงบัญชี Apple นั้นเท่านั้นที่อ่านพื้นที่นี้ได้ ไม่มีใครอื่น รวมถึงผู้พัฒนา ที่สามารถดูได้<br>• ไม่มีการส่งข้อมูลใด ๆ ไปยังเซิร์ฟเวอร์ของผู้พัฒนาหรือบริษัทอื่น<br>• ปิด "บันทึกใน iCloud" ในการตั้งค่าของแอปเพื่อเก็บข้อมูลไว้ในอุปกรณ์เท่านั้น อุปกรณ์ที่ไม่ได้ลงชื่อเข้าใช้ iCloud ก็จะเก็บข้อมูลไว้ในอุปกรณ์เท่านั้นเช่นกัน<br>• ข้อมูลที่บันทึกใน iCloud สามารถลบได้จาก การตั้งค่าของอุปกรณ์ → [ชื่อของคุณ] → iCloud',
+    'icloud-p2':'นโยบายความเป็นส่วนตัวของ Apple มีผลบังคับใช้กับ iCloud',
+    's3-title':'กิจกรรมเครือข่าย',
+    's3-p1':'MAKE10 ติดต่อกับ iCloud ของ Apple เท่านั้น และเฉพาะเพื่อการบันทึกใน iCloud ตามที่อธิบายข้างต้น ไม่มีการเชื่อมต่ออื่นใด ทุกฟีเจอร์ใช้งานได้แม้ไม่มีอินเทอร์เน็ต',
+    's3-p2':'ไม่มีการส่งข้อมูลไปยัง Flying Dev Lab บริการวิเคราะห์ของบุคคลที่สาม หรือเครือข่ายโฆษณา',
+    's4-title':'โฆษณาและการซื้อในแอป',
+    's4-p1':'MAKE10 ไม่มี<strong>โฆษณาใดๆ</strong>ทั้งสิ้น',
+    's4-p2':'MAKE10 ไม่มี<strong>การซื้อในแอป</strong> แอปนี้ฟรีสมบูรณ์',
+    's4-p3':'ไม่มีลิงก์ไปยังเว็บไซต์ภายนอก โซเชียลมีเดีย หรือแอปอื่นๆ ภายใน MAKE10',
+    's5-title':'ความเป็นส่วนตัวของเด็ก (COPPA)',
+    's5-p1':'MAKE10 ออกแบบมาสำหรับเด็กและปฏิบัติตาม COPPA และกฎหมายความเป็นส่วนตัวของเด็กนานาชาติอย่างครบถ้วน',
+    's5-p2':'เราไม่เก็บข้อมูลส่วนบุคคลจากใครก็ตาม ข้อมูลที่บันทึกใน iCloud จะอยู่ในบัญชี Apple ของคุณเองเท่านั้น ผู้พัฒนาไม่ได้รับข้อมูลนั้น',
+    's5-p3':'เราไม่เก็บข้อมูลจากเด็กอายุต่ำกว่า 13 ปี (หรืออายุใดๆ) โดยเจตนา',
+    's6-title':'โอเพนซอร์ส',
+    's6-p1':'MAKE10 เปิดซอร์สโค้ดบน GitHub เพื่อความโปร่งใส ทุกคนสามารถตรวจสอบเพื่อยืนยันคำอ้างสิทธิ์ด้านความเป็นส่วนตัว',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'การเปลี่ยนแปลงนโยบายนี้',
+    's7-p1':'หากมีการปรับปรุงนโยบายนี้ ฉบับใหม่จะเผยแพร่ในหน้านี้พร้อมวันที่มีผลบังคับใช้ใหม่',
+    's8-title':'ข้อจำกัดความรับผิดชอบ',
+    's8-p1':'เราไม่รับประกันความสมบูรณ์ ความถูกต้อง หรือการทำงานต่อเนื่องของแอป',
+    's8-p2':'การอัปเดต iOS การเปลี่ยนแปลงสภาพแวดล้อมของอุปกรณ์ หรือสถานะของ iCloud อาจส่งผลต่อการทำงานของแอปโดยไม่แจ้งให้ทราบล่วงหน้า ผู้พัฒนาจะไม่รับผิดชอบต่อการสูญหายของข้อมูลที่เกิดจากเหตุดังกล่าว',
+    's8-p3':'ผู้พัฒนาอาจยุติหรือแก้ไขแอปโดยไม่แจ้งล่วงหน้า',
+    'contact-title':'ช่วยเหลือ & ติดต่อ',
+    'contact-form-p':'คุณสามารถส่งความคิดเห็นหรือคำขอแบบไม่ระบุตัวตนผ่านแบบฟอร์มติดต่อบนเว็บไซต์ทางการของเรา',
+    'contact-email-p':'หากต้องการติดต่อทางอีเมล กรุณาใช้ที่อยู่ด้านล่าง',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'สร้างด้วยความรักเพื่อเด็กๆ ที่อยากรู้อยากเห็นทั่วโลก',
+  },
+  hi: {
+    badge:'गोपनीयता नीति & सहायता', title:'गोपनीयता नीति & सहायता', updated:'प्रभावी: 15 अक्टूबर 2026',
+    p1:'कोई डेटा संग्रह नहीं', p2:'आपके रिकॉर्ड सिर्फ़ आपके अपने iCloud में सहेजे जा सकते हैं', p3:'कोई विज्ञापन नहीं', p4:'कोई बाहरी लिंक नहीं',
+    's1-title':'अवलोकन',
+    's1-p1':'MAKE10 (दस बनाओ) बच्चों के लिए एक मुफ़्त गणित पहेली गेम है, जिसे Flying Dev Lab (空飛ぶ研究室) ने विकसित किया है।',
+    's1-highlight':'MAKE10 किसी भी उम्र के किसी भी व्यक्ति से कोई व्यक्तिगत जानकारी एकत्र नहीं करता। डेवलपर आपका डेटा कभी प्राप्त नहीं करता और न ही देखता है।',
+    's1-p2':'यह नीति बताती है कि MAKE10 डेटा को कैसे संभालता है, और बच्चों के लिए ऐप को पूरी तरह सुरक्षित रखने की हमारी प्रतिबद्धता की पुष्टि करती है।',
+    's2-title':'हम क्या जानकारी एकत्र करते हैं',
+    's2-p1':'हम <strong>कुछ भी</strong> एकत्र नहीं करते।',
+    's2-p2':'MAKE10 निम्नलिखित में से कुछ भी एकत्र, अनुरोध या संग्रहीत नहीं करता:',
+    's2-list':'• नाम, ईमेल पता या संपर्क जानकारी<br>• डिवाइस पहचानकर्ता या विज्ञापन ID<br>• स्थान डेटा<br>• उपयोग विश्लेषण या व्यवहार डेटा<br>• कुकीज़ या ट्रैकिंग तकनीक<br>• कोई भी अन्य व्यक्तिगत या गैर-व्यक्तिगत जानकारी',
+    'icloud-title':'iCloud में सहेजना',
+    'icloud-p1':'ताकि डिवाइस बदलने या ऐप दोबारा इंस्टॉल करने के बाद भी खेल के रिकॉर्ड (स्टिकर बुक के चित्र, स्टिकर, ऊर्जा, हाई स्कोर, धन्यवाद डायरी आदि) वापस लाए जा सकें, MAKE10 उन्हें Apple के iCloud में सहेज सकता है।',
+    'icloud-list':'• वे डिवाइस पर साइन इन किए गए Apple खाते के iCloud के निजी हिस्से में सहेजे जाते हैं।<br>• इस हिस्से को सिर्फ़ वही Apple खाता पढ़ सकता है। डेवलपर सहित कोई और इसे नहीं देख सकता।<br>• डेवलपर के सर्वर या किसी अन्य कंपनी को कुछ भी नहीं भेजा जाता।<br>• रिकॉर्ड सिर्फ़ डिवाइस पर रखने के लिए ऐप की सेटिंग में "iCloud में सहेजें" बंद करें। जो डिवाइस iCloud में साइन इन नहीं हैं, वे भी रिकॉर्ड सिर्फ़ डिवाइस पर रखते हैं।<br>• iCloud में सहेजे गए रिकॉर्ड डिवाइस की सेटिंग → [आपका नाम] → iCloud से हटाए जा सकते हैं।',
+    'icloud-p2':'iCloud पर Apple की गोपनीयता नीति लागू होती है।',
+    's3-title':'नेटवर्क गतिविधि',
+    's3-p1':'MAKE10 सिर्फ़ Apple के iCloud से संपर्क करता है, और सिर्फ़ ऊपर बताए गए iCloud में सहेजने के लिए। यह कोई अन्य कनेक्शन नहीं बनाता। सभी सुविधाएँ इंटरनेट के बिना भी काम करती हैं।',
+    's3-p2':'Flying Dev Lab, तृतीय-पक्ष विश्लेषण सेवाओं या विज्ञापन नेटवर्क को कोई डेटा नहीं भेजा जाता।',
+    's4-title':'विज्ञापन और इन-ऐप खरीदारी',
+    's4-p1':'MAKE10 में किसी भी प्रकार के <strong>कोई विज्ञापन नहीं हैं</strong>।',
+    's4-p2':'MAKE10 में <strong>कोई इन-ऐप खरीदारी नहीं है</strong>। ऐप बिल्कुल मुफ़्त है।',
+    's4-p3':'MAKE10 में बाहरी वेबसाइट, सोशल मीडिया या अन्य ऐप के कोई लिंक नहीं हैं।',
+    's5-title':'बच्चों की गोपनीयता (COPPA)',
+    's5-p1':'MAKE10 बच्चों के लिए डिज़ाइन किया गया है और COPPA तथा लागू अंतर्राष्ट्रीय बाल गोपनीयता कानूनों का पूरी तरह पालन करता है।',
+    's5-p2':'हम किसी से भी व्यक्तिगत जानकारी एकत्र नहीं करते। iCloud में सहेजे गए रिकॉर्ड आपके अपने Apple खाते में ही रहते हैं; डेवलपर उन्हें प्राप्त नहीं करता।',
+    's5-p3':'हम जानबूझकर 13 वर्ष से कम उम्र के बच्चों (या किसी भी उम्र) से जानकारी एकत्र नहीं करते।',
+    's6-title':'ओपन सोर्स',
+    's6-p1':'MAKE10 पारदर्शिता के लिए GitHub पर ओपन-सोर्स है। कोई भी हमारे गोपनीयता दावों को सत्यापित करने के लिए स्रोत कोड देख सकता है।',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'इस नीति में बदलाव',
+    's7-p1':'अगर यह नीति अपडेट होती है, तो नया संस्करण नई प्रभावी तिथि के साथ इस पेज पर प्रकाशित किया जाएगा।',
+    's8-title':'अस्वीकरण',
+    's8-p1':'हम सटीक सामग्री और स्थिर कार्यक्षमता प्रदान करने का प्रयास करते हैं, लेकिन इसकी पूर्णता या निर्बाध संचालन की गारंटी नहीं देते।',
+    's8-p2':'iOS अपडेट, डिवाइस के माहौल में बदलाव या iCloud की स्थिति बिना पूर्व सूचना के ऐप के व्यवहार को प्रभावित कर सकती है। इससे होने वाले डेटा नुकसान के लिए डेवलपर ज़िम्मेदार नहीं होगा।',
+    's8-p3':'डेवलपर बिना पूर्व सूचना के ऐप को समाप्त या संशोधित कर सकता है।',
+    'contact-title':'सहायता & संपर्क',
+    'contact-form-p':'आप हमारी आधिकारिक वेबसाइट पर संपर्क फ़ॉर्म के माध्यम से गुमनाम रूप से फ़ीडबैक या अनुरोध भेज सकते हैं।',
+    'contact-email-p':'यदि आप ईमेल से संपर्क करना चाहते हैं, तो नीचे दिए गए पते का उपयोग करें।',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'दुनिया भर के जिज्ञासु बच्चों के लिए ❤️ के साथ बनाया गया।',
+  },
+  fr: {
+    badge:'Politique de confidentialité & Support', title:'Politique de confidentialité & Support', updated:'En vigueur : 15 octobre 2026',
+    p1:'Aucune collecte de données', p2:'Tes données peuvent être sauvegardées uniquement dans ton propre iCloud', p3:'Aucune publicité', p4:'Aucun lien externe',
+    's1-title':'Présentation',
+    's1-p1':'MAKE10 est un jeu de puzzle mathématique gratuit pour enfants, développé par Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 ne collecte aucune information personnelle, auprès de qui que ce soit et quel que soit l\'âge. Le développeur ne reçoit et ne voit jamais tes données.',
+    's1-p2':'Cette politique décrit comment MAKE10 traite (ou ne traite pas) les données, et confirme notre engagement à garder l\'application sûre pour les enfants.',
+    's2-title':'Informations collectées',
+    's2-p1':'Nous ne collectons <strong>rien</strong>.',
+    's2-p2':'MAKE10 ne collecte, ne demande ni ne stocke les éléments suivants :',
+    's2-list':'• Nom, adresse e-mail ou coordonnées<br>• Identifiants d\'appareil ou ID publicitaires<br>• Données de localisation<br>• Données d\'utilisation ou comportementales<br>• Cookies ou technologies de suivi<br>• Toute autre information personnelle ou non personnelle',
+    'icloud-title':'Sauvegarde dans iCloud',
+    'icloud-p1':'Pour que les données de jeu (dessins de l\'album de stickers, stickers, énergie, meilleurs scores, le Carnet de mercis, etc.) puissent être restaurées après un changement d\'appareil ou une réinstallation, MAKE10 peut les sauvegarder dans iCloud d\'Apple.',
+    'icloud-list':'• Elles sont sauvegardées dans l\'espace privé de l\'iCloud du compte Apple connecté sur l\'appareil.<br>• Seul ce compte Apple peut lire cet espace. Personne d\'autre, y compris le développeur, ne peut le voir.<br>• Rien n\'est envoyé aux serveurs du développeur ni à une autre entreprise.<br>• Désactive « Sauvegarder dans iCloud » dans les réglages de l\'app pour garder les données uniquement sur l\'appareil. Les appareils non connectés à iCloud les gardent aussi uniquement sur l\'appareil.<br>• Les données sauvegardées dans iCloud peuvent être supprimées depuis Réglages de l\'appareil → [ton nom] → iCloud.',
+    'icloud-p2':'La politique de confidentialité d\'Apple s\'applique à iCloud.',
+    's3-title':'Activité réseau',
+    's3-p1':'MAKE10 communique uniquement avec iCloud d\'Apple, et uniquement pour la sauvegarde dans iCloud décrite ci-dessus. Il n\'établit aucune autre connexion. Toutes les fonctionnalités fonctionnent sans connexion Internet.',
+    's3-p2':'Aucune donnée n\'est envoyée à Flying Dev Lab, à des services d\'analyse tiers ni à des régies publicitaires.',
+    's4-title':'Publicité et achats intégrés',
+    's4-p1':'MAKE10 ne contient <strong>aucune publicité</strong>.',
+    's4-p2':'MAKE10 ne contient <strong>aucun achat intégré</strong>. L\'application est entièrement gratuite.',
+    's4-p3':'Il n\'y a aucun lien vers des sites externes, des réseaux sociaux ou d\'autres applications dans MAKE10.',
+    's5-title':'Confidentialité des enfants (COPPA)',
+    's5-p1':'MAKE10 est conçu pour les enfants et respecte pleinement le COPPA et les lois internationales applicables sur la protection de la vie privée des enfants.',
+    's5-p2':'Nous ne collectons aucune information personnelle. Les données sauvegardées dans iCloud restent dans ton propre compte Apple ; le développeur ne les reçoit pas.',
+    's5-p3':'Nous ne collectons pas sciemment d\'informations sur des enfants de moins de 13 ans (ni de tout âge).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 est open source sur GitHub à des fins de transparence. Chacun peut inspecter le code source pour vérifier nos déclarations.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Modifications de cette politique',
+    's7-p1':'Si cette politique est mise à jour, la nouvelle version sera publiée sur cette page avec une nouvelle date d\'entrée en vigueur.',
+    's8-title':'Clause de non-responsabilité',
+    's8-p1':'Bien que nous nous efforcions de fournir un contenu précis et un fonctionnement stable, nous ne garantissons pas l\'exhaustivité, l\'exactitude ou le fonctionnement ininterrompu de l\'application.',
+    's8-p2':'Les mises à jour d\'iOS, les changements de l\'environnement de l\'appareil ou l\'état d\'iCloud peuvent affecter le fonctionnement de l\'app sans préavis. Le développeur décline toute responsabilité en cas de perte de données qui en résulterait.',
+    's8-p3':'Le développeur peut mettre fin à l\'application ou la modifier sans préavis.',
+    'contact-title':'Support & Contact',
+    'contact-form-p':'Vous pouvez envoyer des commentaires ou des demandes de manière anonyme via le formulaire de contact sur notre site officiel.',
+    'contact-email-p':'Si vous préférez nous contacter par e-mail, utilisez l\'adresse ci-dessous.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Fait avec ❤️ pour les enfants curieux du monde entier.',
+  },
+  de: {
+    badge:'Datenschutz & Support', title:'Datenschutzrichtlinie & Support', updated:'Gültig ab: 15. Oktober 2026',
+    p1:'Keine Datenerfassung', p2:'Deine Daten können nur in deiner eigenen iCloud gesichert werden', p3:'Keine Werbung', p4:'Keine externen Links',
+    's1-title':'Übersicht',
+    's1-p1':'MAKE10 ist ein kostenloses Mathe-Puzzle-Spiel für Kinder, entwickelt von Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 erfasst keinerlei personenbezogene Daten – von niemandem, egal welchen Alters. Der Entwickler erhält oder sieht deine Daten nie.',
+    's1-p2':'Diese Richtlinie beschreibt, wie MAKE10 mit Daten umgeht (oder nicht), und bestätigt unser Engagement für die Sicherheit der App für Kinder.',
+    's2-title':'Erfasste Informationen',
+    's2-p1':'Wir erfassen <strong>nichts</strong>.',
+    's2-p2':'MAKE10 erfasst, fordert oder speichert nicht:',
+    's2-list':'• Name, E-Mail-Adresse oder Kontaktinformationen<br>• Gerätekennungen oder Werbe-IDs<br>• Standortdaten<br>• Nutzungsanalysen oder Verhaltensdaten<br>• Cookies oder Tracking-Technologien<br>• Sonstige persönliche oder nicht-persönliche Informationen',
+    'icloud-title':'Sichern in iCloud',
+    'icloud-p1':'Damit Spielstände (Zeichnungen im Stickerbuch, Sticker, Energie, Highscores, das Danke-Heft usw.) nach einem Gerätewechsel oder einer Neuinstallation wiederhergestellt werden können, kann MAKE10 sie in Apples iCloud sichern.',
+    'icloud-list':'• Sie werden im privaten Bereich der iCloud des auf dem Gerät angemeldeten Apple Accounts gesichert.<br>• Nur dieser Apple Account kann diesen Bereich lesen. Niemand sonst, auch nicht der Entwickler, kann ihn sehen.<br>• Es wird nichts an Server des Entwicklers oder an andere Unternehmen gesendet.<br>• Schalte in der App unter Einstellungen „In iCloud sichern“ aus, um die Daten nur auf dem Gerät zu behalten. Geräte, die nicht bei iCloud angemeldet sind, behalten die Daten ebenfalls nur auf dem Gerät.<br>• In iCloud gesicherte Daten kannst du in den Einstellungen des Geräts → [dein Name] → iCloud löschen.',
+    'icloud-p2':'Für iCloud gilt die Datenschutzrichtlinie von Apple.',
+    's3-title':'Netzwerkaktivität',
+    's3-p1':'MAKE10 kommuniziert nur mit Apples iCloud und nur für das oben beschriebene Sichern in iCloud. Es baut keine anderen Verbindungen auf. Alle Funktionen funktionieren auch ohne Internetverbindung.',
+    's3-p2':'Es werden keine Daten an Flying Dev Lab, Analysedienste Dritter oder Werbenetzwerke gesendet.',
+    's4-title':'Werbung & In-App-Käufe',
+    's4-p1':'MAKE10 enthält <strong>keinerlei Werbung</strong>.',
+    's4-p2':'MAKE10 enthält <strong>keine In-App-Käufe</strong>. Die App ist vollständig kostenlos.',
+    's4-p3':'Es gibt keine Links zu externen Websites, sozialen Medien oder anderen Apps in MAKE10.',
+    's5-title':'Datenschutz für Kinder (COPPA)',
+    's5-p1':'MAKE10 ist für Kinder konzipiert und entspricht vollständig dem COPPA und den geltenden internationalen Kinderdatenschutzgesetzen.',
+    's5-p2':'Wir erfassen von niemandem personenbezogene Daten. In iCloud gesicherte Daten bleiben in deinem eigenen Apple Account; der Entwickler erhält sie nicht.',
+    's5-p3':'Wir erfassen wissentlich keine Informationen von Kindern unter 13 Jahren (oder in jedem Alter).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 ist auf GitHub als Open-Source veröffentlicht. Jeder kann den Quellcode einsehen, um unsere Datenschutzangaben zu verifizieren.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Änderungen dieser Richtlinie',
+    's7-p1':'Wird diese Richtlinie aktualisiert, wird die neue Fassung mit geändertem Datum auf dieser Seite veröffentlicht.',
+    's8-title':'Haftungsausschluss',
+    's8-p1':'Wir bemühen uns um genaue Inhalte und stabile Funktionalität, übernehmen jedoch keine Garantie für Vollständigkeit oder unterbrechungsfreien Betrieb.',
+    's8-p2':'iOS-Updates, Änderungen der Geräteumgebung oder der Zustand von iCloud können das Verhalten der App ohne Vorankündigung beeinflussen. Der Entwickler haftet nicht für daraus entstehende Datenverluste.',
+    's8-p3':'Der Entwickler kann die App ohne vorherige Ankündigung beenden oder ändern.',
+    'contact-title':'Support & Kontakt',
+    'contact-form-p':'Sie können anonymes Feedback oder Anfragen über das Kontaktformular auf unserer offiziellen Website senden.',
+    'contact-email-p':'Wenn Sie uns per E-Mail kontaktieren möchten, verwenden Sie bitte die untenstehende Adresse.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Mit ❤️ für neugierige Kinder weltweit gemacht.',
+  },
+  es: {
+    badge:'Política de privacidad & Soporte', title:'Política de privacidad & Soporte', updated:'En vigor: 15 de octubre de 2026',
+    p1:'Sin recopilación de datos', p2:'Tus registros solo pueden guardarse en tu propio iCloud', p3:'Sin publicidad', p4:'Sin enlaces externos',
+    's1-title':'Descripción general',
+    's1-p1':'MAKE10 es un juego de puzle matemático gratuito para niños, desarrollado por Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 no recopila ninguna información personal, de nadie y de ninguna edad. El desarrollador nunca recibe ni ve tus datos.',
+    's1-p2':'Esta política describe cómo MAKE10 maneja (o no) los datos, y confirma nuestro compromiso de mantener la app segura para los niños.',
+    's2-title':'Información recopilada',
+    's2-p1':'No recopilamos <strong>nada</strong>.',
+    's2-p2':'MAKE10 no recopila, solicita ni almacena ninguno de los siguientes datos:',
+    's2-list':'• Nombre, correo electrónico o información de contacto<br>• Identificadores de dispositivo o IDs publicitarios<br>• Datos de ubicación<br>• Análisis de uso o datos de comportamiento<br>• Cookies o tecnologías de seguimiento<br>• Cualquier otra información personal o no personal',
+    'icloud-title':'Guardar en iCloud',
+    'icloud-p1':'Para que los registros de juego (dibujos del álbum de pegatinas, pegatinas, energía, récords, el Cuaderno de gracias, etc.) puedan restaurarse después de cambiar de dispositivo o reinstalar, MAKE10 puede guardarlos en iCloud de Apple.',
+    'icloud-list':'• Se guardan en el área privada del iCloud de la cuenta de Apple con la que se inició sesión en el dispositivo.<br>• Solo esa cuenta de Apple puede leer esta área. Nadie más, ni siquiera el desarrollador, puede verla.<br>• No se envía nada a los servidores del desarrollador ni a ninguna otra empresa.<br>• Desactiva «Guardar en iCloud» en los ajustes de la app para guardar los registros solo en el dispositivo. Los dispositivos sin sesión iniciada en iCloud también los guardan solo en el dispositivo.<br>• Los registros guardados en iCloud se pueden eliminar desde Ajustes del dispositivo → [tu nombre] → iCloud.',
+    'icloud-p2':'A iCloud se le aplica la Política de privacidad de Apple.',
+    's3-title':'Actividad de red',
+    's3-p1':'MAKE10 solo se comunica con iCloud de Apple, y solo para el guardado en iCloud descrito arriba. No realiza ninguna otra conexión. Todas las funciones se pueden usar sin conexión a internet.',
+    's3-p2':'No se envía ningún dato a Flying Dev Lab, a servicios de análisis de terceros ni a redes publicitarias.',
+    's4-title':'Publicidad y compras integradas',
+    's4-p1':'MAKE10 no contiene <strong>ningún tipo de publicidad</strong>.',
+    's4-p2':'MAKE10 no contiene <strong>compras integradas</strong>. La app es completamente gratuita.',
+    's4-p3':'No hay enlaces a sitios externos, redes sociales u otras apps dentro de MAKE10.',
+    's5-title':'Privacidad de los niños (COPPA)',
+    's5-p1':'MAKE10 está diseñado para niños y cumple plenamente con el COPPA y las leyes internacionales de privacidad infantil aplicables.',
+    's5-p2':'No recopilamos información personal de nadie. Los registros guardados en iCloud permanecen en tu propia cuenta de Apple; el desarrollador no los recibe.',
+    's5-p3':'No recopilamos conscientemente información de menores de 13 años (ni de ninguna edad).',
+    's6-title':'Código abierto',
+    's6-p1':'MAKE10 es de código abierto en GitHub como medida de transparencia. Cualquiera puede inspeccionar el código fuente para verificar nuestras declaraciones.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Cambios en esta política',
+    's7-p1':'Si esta política se actualiza, la nueva versión se publicará en esta página con una nueva fecha de vigencia.',
+    's8-title':'Aviso legal',
+    's8-p1':'Aunque nos esforzamos por proporcionar contenido preciso y funcionamiento estable, no garantizamos la exactitud o el funcionamiento ininterrumpido de la app.',
+    's8-p2':'Las actualizaciones de iOS, los cambios en el entorno del dispositivo o el estado de iCloud pueden afectar al funcionamiento de la app sin previo aviso. El desarrollador no se hace responsable de la pérdida de datos derivada de ello.',
+    's8-p3':'El desarrollador puede terminar o modificar la app sin previo aviso.',
+    'contact-title':'Soporte & Contacto',
+    'contact-form-p':'Puedes enviar comentarios o solicitudes de forma anónima a través del formulario de contacto en nuestro sitio oficial.',
+    'contact-email-p':'Si prefieres contactar por correo electrónico, usa la dirección de abajo.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Hecho con ❤️ para niños curiosos de todo el mundo.',
+  },
+  'pt-BR': {
+    badge:'Política de Privacidade & Suporte', title:'Política de Privacidade & Suporte', updated:'Em vigor: 15 de outubro de 2026',
+    p1:'Sem coleta de dados', p2:'Seus registros só podem ser salvos no seu próprio iCloud', p3:'Sem publicidade', p4:'Sem links externos',
+    's1-title':'Visão geral',
+    's1-p1':'MAKE10 é um jogo de quebra-cabeça matemático gratuito para crianças, desenvolvido pela Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'O MAKE10 não coleta nenhuma informação pessoal — de ninguém, de qualquer idade. O desenvolvedor nunca recebe nem vê seus dados.',
+    's1-p2':'Esta política descreve como o MAKE10 lida (ou não) com dados, e confirma nosso compromisso de manter o app seguro para crianças.',
+    's2-title':'Informações coletadas',
+    's2-p1':'Não coletamos <strong>nada</strong>.',
+    's2-p2':'O MAKE10 não coleta, solicita nem armazena nenhum dos seguintes dados:',
+    's2-list':'• Nome, endereço de e-mail ou informações de contato<br>• Identificadores de dispositivo ou IDs de publicidade<br>• Dados de localização<br>• Análise de uso ou dados comportamentais<br>• Cookies ou tecnologias de rastreamento<br>• Qualquer outra informação pessoal ou não pessoal',
+    'icloud-title':'Salvar no iCloud',
+    'icloud-p1':'Para que os registros de jogo (desenhos do álbum de adesivos, adesivos, energia, recordes, o Caderno do obrigado etc.) possam ser restaurados depois de trocar de dispositivo ou reinstalar o app, o MAKE10 pode salvá-los no iCloud da Apple.',
+    'icloud-list':'• Eles são salvos na área privada do iCloud da Conta Apple conectada no dispositivo.<br>• Somente essa Conta Apple pode ler essa área. Ninguém mais, nem mesmo o desenvolvedor, pode vê-la.<br>• Nada é enviado aos servidores do desenvolvedor nem a qualquer outra empresa.<br>• Desative "Salvar no iCloud" nos ajustes do app para manter os registros apenas no dispositivo. Dispositivos sem sessão no iCloud também mantêm os registros apenas no dispositivo.<br>• Os registros salvos no iCloud podem ser apagados em Ajustes do dispositivo → [seu nome] → iCloud.',
+    'icloud-p2':'A Política de Privacidade da Apple se aplica ao iCloud.',
+    's3-title':'Atividade de rede',
+    's3-p1':'O MAKE10 se comunica apenas com o iCloud da Apple, e somente para o salvamento no iCloud descrito acima. Ele não faz nenhuma outra conexão. Todos os recursos funcionam sem conexão com a internet.',
+    's3-p2':'Nenhum dado é enviado à Flying Dev Lab, a serviços de análise de terceiros ou a redes de publicidade.',
+    's4-title':'Publicidade e compras no app',
+    's4-p1':'O MAKE10 não contém <strong>nenhuma publicidade</strong>.',
+    's4-p2':'O MAKE10 não contém <strong>compras no app</strong>. O app é completamente gratuito.',
+    's4-p3':'Não há links para sites externos, redes sociais ou outros apps dentro do MAKE10.',
+    's5-title':'Privacidade infantil (COPPA)',
+    's5-p1':'O MAKE10 foi desenvolvido para crianças e cumpre integralmente o COPPA e as leis internacionais de privacidade infantil aplicáveis.',
+    's5-p2':'Não coletamos informações pessoais de ninguém. Os registros salvos no iCloud ficam na sua própria Conta Apple; o desenvolvedor não os recebe.',
+    's5-p3':'Não coletamos conscientemente informações de crianças menores de 13 anos (nem de qualquer idade).',
+    's6-title':'Código aberto',
+    's6-p1':'O MAKE10 é open source no GitHub como medida de transparência. Qualquer pessoa pode inspecionar o código-fonte para verificar nossas declarações.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Alterações nesta política',
+    's7-p1':'Se esta política for atualizada, a nova versão será publicada nesta página com uma nova data de vigência.',
+    's8-title':'Isenção de responsabilidade',
+    's8-p1':'Embora nos esforcemos para fornecer conteúdo preciso e funcionamento estável, não garantimos a completude, precisão ou operação ininterrupta do app.',
+    's8-p2':'Atualizações do iOS, mudanças no ambiente do dispositivo ou o estado do iCloud podem afetar o funcionamento do app sem aviso prévio. O desenvolvedor não se responsabiliza por perdas de dados decorrentes disso.',
+    's8-p3':'O desenvolvedor pode encerrar ou modificar o app sem aviso prévio.',
+    'contact-title':'Suporte & Contato',
+    'contact-form-p':'Você pode enviar feedback ou solicitações anonimamente pelo formulário de contato em nosso site oficial.',
+    'contact-email-p':'Se preferir entrar em contato por e-mail, use o endereço abaixo.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Feito com ❤️ para crianças curiosas de todo o mundo.',
+  },
+  it: {
+    badge:'Informativa sulla privacy & Supporto', title:'Informativa sulla privacy & Supporto', updated:'In vigore: 15 ottobre 2026',
+    p1:'Nessuna raccolta di dati', p2:'I tuoi dati possono essere salvati solo nel tuo iCloud', p3:'Nessuna pubblicità', p4:'Nessun link esterno',
+    's1-title':'Panoramica',
+    's1-p1':'MAKE10 è un gioco di puzzle matematico gratuito per bambini, sviluppato da Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 non raccoglie alcuna informazione personale, da nessuno e a qualsiasi età. Lo sviluppatore non riceve né vede mai i tuoi dati.',
+    's1-p2':'Questa informativa descrive come MAKE10 gestisce (o non gestisce) i dati, e conferma il nostro impegno a mantenere l\'app sicura per i bambini.',
+    's2-title':'Informazioni raccolte',
+    's2-p1':'Non raccogliamo <strong>nulla</strong>.',
+    's2-p2':'MAKE10 non raccoglie, richiede né archivia nessuno dei seguenti dati:',
+    's2-list':'• Nome, indirizzo e-mail o informazioni di contatto<br>• Identificatori di dispositivo o ID pubblicitari<br>• Dati di localizzazione<br>• Analisi dell\'utilizzo o dati comportamentali<br>• Cookie o tecnologie di tracciamento<br>• Qualsiasi altra informazione personale o non personale',
+    'icloud-title':'Salvataggio su iCloud',
+    'icloud-p1':'Affinché i dati di gioco (disegni dell\'album di adesivi, adesivi, energia, record, il Quaderno dei grazie e così via) possano essere ripristinati dopo un cambio di dispositivo o una reinstallazione, MAKE10 può salvarli su iCloud di Apple.',
+    'icloud-list':'• Vengono salvati nell\'area privata di iCloud dell\'Account Apple con cui è stato effettuato l\'accesso sul dispositivo.<br>• Solo quell\'Account Apple può leggere quest\'area. Nessun altro, nemmeno lo sviluppatore, può vederla.<br>• Nulla viene inviato ai server dello sviluppatore o ad altre aziende.<br>• Disattiva "Salva su iCloud" nelle impostazioni dell\'app per conservare i dati solo sul dispositivo. Anche i dispositivi senza accesso a iCloud conservano i dati solo sul dispositivo.<br>• I dati salvati su iCloud possono essere eliminati da Impostazioni del dispositivo → [il tuo nome] → iCloud.',
+    'icloud-p2':'A iCloud si applica l\'Informativa sulla privacy di Apple.',
+    's3-title':'Attività di rete',
+    's3-p1':'MAKE10 comunica solo con iCloud di Apple, e solo per il salvataggio su iCloud descritto sopra. Non effettua altre connessioni. Tutte le funzioni sono utilizzabili anche senza connessione a Internet.',
+    's3-p2':'Nessun dato viene inviato a Flying Dev Lab, a servizi di analisi di terze parti o a reti pubblicitarie.',
+    's4-title':'Pubblicità e acquisti in-app',
+    's4-p1':'MAKE10 non contiene <strong>alcuna pubblicità</strong>.',
+    's4-p2':'MAKE10 non contiene <strong>acquisti in-app</strong>. L\'app è completamente gratuita.',
+    's4-p3':'Non ci sono link a siti esterni, social media o altre app all\'interno di MAKE10.',
+    's5-title':'Privacy dei minori (COPPA)',
+    's5-p1':'MAKE10 è progettato per i bambini e rispetta pienamente il COPPA e le leggi internazionali sulla privacy dei minori.',
+    's5-p2':'Non raccogliamo informazioni personali da nessuno. I dati salvati su iCloud restano nel tuo Account Apple; lo sviluppatore non li riceve.',
+    's5-p3':'Non raccogliamo consapevolmente informazioni da bambini di età inferiore ai 13 anni (né di qualsiasi età).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 è open source su GitHub come misura di trasparenza. Chiunque può ispezionare il codice sorgente per verificare le nostre affermazioni.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Modifiche a questa informativa',
+    's7-p1':'Se questa informativa viene aggiornata, la nuova versione sarà pubblicata su questa pagina con una nuova data di validità.',
+    's8-title':'Dichiarazione di non responsabilità',
+    's8-p1':'Pur sforzandoci di fornire contenuti accurati e funzionamento stabile, non garantiamo la completezza, l\'accuratezza o il funzionamento ininterrotto dell\'app.',
+    's8-p2':'Gli aggiornamenti di iOS, i cambiamenti dell\'ambiente del dispositivo o lo stato di iCloud possono influire sul funzionamento dell\'app senza preavviso. Lo sviluppatore non è responsabile di eventuali perdite di dati che ne derivino.',
+    's8-p3':'Lo sviluppatore può terminare o modificare l\'app senza preavviso.',
+    'contact-title':'Supporto & Contatto',
+    'contact-form-p':'Puoi inviare feedback o richieste in modo anonimo tramite il modulo di contatto sul nostro sito ufficiale.',
+    'contact-email-p':'Se preferisci contattarci via e-mail, usa l\'indirizzo qui sotto.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Fatto con ❤️ per bambini curiosi di tutto il mondo.',
+  },
+  nl: {
+    badge:'Privacybeleid & Ondersteuning', title:'Privacybeleid & Ondersteuning', updated:'Van kracht: 15 oktober 2026',
+    p1:'Geen gegevensverzameling', p2:'Je gegevens kunnen alleen in je eigen iCloud worden bewaard', p3:'Geen advertenties', p4:'Geen externe links',
+    's1-title':'Overzicht',
+    's1-p1':'MAKE10 is een gratis wiskundig puzzelspel voor kinderen, ontwikkeld door Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 verzamelt geen enkele persoonlijke informatie, van niemand en van geen enkele leeftijd. De ontwikkelaar ontvangt of ziet je gegevens nooit.',
+    's1-p2':'Dit beleid beschrijft hoe MAKE10 omgaat (of niet omgaat) met gegevens, en bevestigt onze inzet om de app volledig veilig te houden voor kinderen.',
+    's2-title':'Verzamelde informatie',
+    's2-p1':'Wij verzamelen <strong>niets</strong>.',
+    's2-p2':'MAKE10 verzamelt, vraagt of slaat het volgende niet op:',
+    's2-list':'• Naam, e-mailadres of contactgegevens<br>• Apparaat-ID\'s of advertentie-ID\'s<br>• Locatiegegevens<br>• Gebruiksanalyses of gedragsgegevens<br>• Cookies of trackingtechnologieën<br>• Andere persoonlijke of niet-persoonlijke informatie',
+    'icloud-title':'Bewaren in iCloud',
+    'icloud-p1':'Zodat speelgegevens (tekeningen in het stickerboek, stickers, energie, topscores, het Dankjewel-boekje enzovoort) na het wisselen van apparaat of opnieuw installeren kunnen worden hersteld, kan MAKE10 ze in iCloud van Apple bewaren.',
+    'icloud-list':'• Ze worden bewaard in het privégedeelte van de iCloud van de Apple-account waarmee op het apparaat is ingelogd.<br>• Alleen die Apple-account kan dit gedeelte lezen. Niemand anders, ook de ontwikkelaar niet, kan het zien.<br>• Er wordt niets naar servers van de ontwikkelaar of naar andere bedrijven gestuurd.<br>• Zet "Bewaren in iCloud" uit in de instellingen van de app om de gegevens alleen op het apparaat te bewaren. Apparaten die niet bij iCloud zijn ingelogd, bewaren de gegevens ook alleen op het apparaat.<br>• In iCloud bewaarde gegevens kun je verwijderen via Instellingen van het apparaat → [je naam] → iCloud.',
+    'icloud-p2':'Op iCloud is het privacybeleid van Apple van toepassing.',
+    's3-title':'Netwerkactiviteit',
+    's3-p1':'MAKE10 communiceert alleen met iCloud van Apple, en alleen voor het bewaren in iCloud zoals hierboven beschreven. Er worden geen andere verbindingen gemaakt. Alle functies werken ook zonder internetverbinding.',
+    's3-p2':'Er worden geen gegevens verzonden naar Flying Dev Lab, analysediensten van derden of advertentienetwerken.',
+    's4-title':'Advertenties en in-app aankopen',
+    's4-p1':'MAKE10 bevat <strong>geen advertenties</strong>.',
+    's4-p2':'MAKE10 bevat <strong>geen in-app aankopen</strong>. De app is volledig gratis.',
+    's4-p3':'Er zijn geen links naar externe websites, sociale media of andere apps in MAKE10.',
+    's5-title':'Privacy van kinderen (COPPA)',
+    's5-p1':'MAKE10 is ontworpen voor kinderen en voldoet volledig aan COPPA en toepasselijke internationale wetgeving inzake kinderprivacy.',
+    's5-p2':'We verzamelen van niemand persoonlijke informatie. In iCloud bewaarde gegevens blijven in je eigen Apple-account; de ontwikkelaar ontvangt ze niet.',
+    's5-p3':'We verzamelen niet bewust informatie van kinderen onder de 13 jaar (of van welke leeftijd dan ook).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 is open source op GitHub als transparantiemaatregel. Iedereen kan de broncode inspecteren om onze privacyclaims te verifiëren.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Wijzigingen in dit beleid',
+    's7-p1':'Als dit beleid wordt bijgewerkt, wordt de nieuwe versie met een nieuwe ingangsdatum op deze pagina gepubliceerd.',
+    's8-title':'Disclaimer',
+    's8-p1':'Hoewel we streven naar nauwkeurige inhoud en stabiele werking, garanderen we niet de volledigheid, nauwkeurigheid of ononderbroken werking van de app.',
+    's8-p2':'iOS-updates, veranderingen in de apparaatomgeving of de toestand van iCloud kunnen de werking van de app zonder voorafgaande kennisgeving beïnvloeden. De ontwikkelaar is niet aansprakelijk voor gegevensverlies dat hierdoor ontstaat.',
+    's8-p3':'De ontwikkelaar kan de app beëindigen of wijzigen zonder voorafgaande kennisgeving.',
+    'contact-title':'Ondersteuning & Contact',
+    'contact-form-p':'Je kunt anoniem feedback of verzoeken sturen via het contactformulier op onze officiële website.',
+    'contact-email-p':'Als je liever per e-mail contact opneemt, gebruik dan het onderstaande adres.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Gemaakt met ❤️ voor nieuwsgierige kinderen overal ter wereld.',
+  },
+  ko: {
+    badge:'개인정보 처리방침 & 지원', title:'개인정보 처리방침 & 지원', updated:'시행일: 2026년 10월 15일',
+    p1:'데이터 수집 없음', p2:'기록은 본인의 iCloud에만 저장할 수 있어요', p3:'광고 없음', p4:'외부 링크 없음',
+    's1-title':'개요',
+    's1-p1':'MAKE10(10 만들기)은 Flying Dev Lab(空飛ぶ研究室)이 개발한 어린이용 무료 수학 퍼즐 게임입니다.',
+    's1-highlight':'MAKE10은 나이와 관계없이 어떠한 개인정보도 수집하지 않습니다. 개발자는 사용자의 데이터를 받거나 볼 수 없습니다.',
+    's1-p2':'이 방침은 MAKE10이 데이터를 어떻게 처리하는지(또는 처리하지 않는지) 설명하고, 어린이에게 완전히 안전한 앱으로 유지하겠다는 약속을 확인합니다.',
+    's2-title':'수집하는 정보',
+    's2-p1':'저희는 <strong>아무것도</strong> 수집하지 않습니다.',
+    's2-p2':'MAKE10은 다음 중 어느 것도 수집, 요청 또는 저장하지 않습니다:',
+    's2-list':'• 이름, 이메일 주소 또는 연락처 정보<br>• 기기 식별자 또는 광고 ID<br>• 위치 데이터<br>• 사용 분석 또는 행동 데이터<br>• 쿠키 또는 추적 기술<br>• 기타 모든 개인 또는 비개인 정보',
+    'icloud-title':'iCloud에 저장',
+    'icloud-p1':'기기를 바꾸거나 앱을 다시 설치한 뒤에도 플레이 기록(스티커북 그림·스티커·에너지·최고 점수·고마워 수첩 등)을 되돌릴 수 있도록, 기록을 Apple의 iCloud에 저장할 수 있습니다.',
+    'icloud-list':'• 저장 위치는 기기에 로그인한 본인 Apple 계정의 iCloud(비공개 영역)입니다.<br>• 이 영역은 본인의 Apple 계정으로만 읽을 수 있습니다. 개발자를 포함해 다른 사람은 볼 수 없습니다.<br>• 개발자의 서버나 다른 회사로는 보내지 않습니다.<br>• 앱의 \'설정\' → \'iCloud에 저장\'을 끄면, 그 기기의 기록은 기기 안에만 저장됩니다. iCloud에 로그인하지 않은 기기도 기기 안에만 저장됩니다.<br>• iCloud에 저장된 기록은 iPhone/iPad의 \'설정\' → 본인 이름 → \'iCloud\'에서 지울 수 있습니다.',
+    'icloud-p2':'iCloud에는 Apple의 개인정보 처리방침이 적용됩니다.',
+    's3-title':'네트워크 활동',
+    's3-p1':'MAKE10은 위의 iCloud 저장을 할 때만 Apple의 iCloud와 통신합니다. 그 밖의 통신은 하지 않습니다. 인터넷에 연결되어 있지 않아도 모든 기능을 즐길 수 있습니다.',
+    's3-p2':'Flying Dev Lab, 제3자 분석 서비스, 광고 네트워크로 데이터를 보내지 않습니다.',
+    's4-title':'광고 및 인앱 구매',
+    's4-p1':'MAKE10에는 <strong>어떠한 광고도</strong> 없습니다.',
+    's4-p2':'MAKE10에는 <strong>인앱 구매가 없습니다</strong>. 앱은 완전히 무료입니다.',
+    's4-p3':'MAKE10 내에는 외부 웹사이트, 소셜 미디어 또는 다른 앱으로의 링크가 없습니다.',
+    's5-title':'아동 개인정보 보호 (COPPA)',
+    's5-p1':'MAKE10은 어린이를 위해 설계되었으며 COPPA 및 적용 가능한 국제 아동 개인정보 보호법을 완전히 준수합니다.',
+    's5-p2':'어떤 연령의 사용자로부터도 개인정보를 수집하지 않습니다. iCloud에 저장된 기록은 본인의 Apple 계정 안에만 있으며, 개발자는 받지 않습니다.',
+    's5-p3':'저희는 13세 미만의 어린이(또는 어떤 나이)로부터도 고의로 정보를 수집하지 않습니다.',
+    's6-title':'오픈 소스',
+    's6-p1':'MAKE10은 투명성 조치로 GitHub에 오픈 소스로 공개되어 있습니다. 누구든지 소스 코드를 검사하여 개인정보 보호 주장을 확인할 수 있습니다.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'이 방침의 변경',
+    's7-p1':'본 방침을 업데이트하는 경우, 개정일과 함께 이 페이지에 게시합니다.',
+    's8-title':'면책 조항',
+    's8-p1':'정확한 콘텐츠와 안정적인 기능을 제공하기 위해 노력하지만, 앱의 완전성, 정확성 또는 중단 없는 운영을 보장하지 않습니다.',
+    's8-p2':'iOS 업데이트, 기기 환경의 변화, iCloud 상태 등에 따라 예고 없이 앱 동작에 영향이 생길 수 있습니다. 이로 인한 데이터 손실에 대해 개발자는 책임을 지지 않습니다.',
+    's8-p3':'개발자는 사전 통보 없이 앱을 종료 또는 수정할 수 있습니다.',
+    'contact-title':'지원 및 문의',
+    'contact-form-p':'공식 웹사이트의 문의 양식을 통해 익명으로 의견이나 요청을 보내실 수 있습니다.',
+    'contact-email-p':'이메일로 문의하시려면 아래 주소를 이용해 주세요.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'전 세계 호기심 많은 어린이들을 위해 ❤️로 만들었습니다.',
+  },
+  'zh-Hans': {
+    badge:'隐私政策 & 支持', title:'隐私政策 & 支持', updated:'生效日期：2026年10月15日',
+    p1:'不收集数据', p2:'记录只能保存到你本人的 iCloud', p3:'无广告', p4:'无外部链接',
+    's1-title':'概述',
+    's1-p1':'MAKE10（凑十）是由Flying Dev Lab（空飛ぶ研究室）开发的儿童免费数学益智游戏。',
+    's1-highlight':'MAKE10 不会收集任何年龄的任何人的个人信息。开发者不会接收或查看你的数据。',
+    's1-p2':'本政策说明MAKE10如何处理（或不处理）数据，并确认我们对保持应用对儿童完全安全的承诺。',
+    's2-title':'我们收集的信息',
+    's2-p1':'我们<strong>什么都不</strong>收集。',
+    's2-p2':'MAKE10不收集、请求或存储以下任何内容：',
+    's2-list':'• 姓名、电子邮件地址或联系信息<br>• 设备标识符或广告ID<br>• 位置数据<br>• 使用分析或行为数据<br>• Cookie或跟踪技术<br>• 任何其他个人或非个人信息',
+    'icloud-title':'保存到 iCloud',
+    'icloud-p1':'为了在更换设备或重新安装应用后也能恢复游戏记录（贴纸册的画、贴纸、能量、最高分、感谢手帐等），MAKE10 可以将记录保存到 Apple 的 iCloud。',
+    'icloud-list':'• 保存位置是设备上登录的本人 Apple 账户的 iCloud（私人区域）。<br>• 该区域只有本人的 Apple 账户可以读取。包括开发者在内，其他任何人都无法查看。<br>• 不会发送到开发者的服务器或其他公司。<br>• 在应用的“设置”中关闭“保存到 iCloud”，该设备的记录将只保存在设备中。未登录 iCloud 的设备也只保存在设备中。<br>• 保存在 iCloud 中的记录，可以在 iPhone/iPad 的“设置”→ 你的名字 →“iCloud”中删除。',
+    'icloud-p2':'iCloud 适用 Apple 的隐私政策。',
+    's3-title':'网络活动',
+    's3-p1':'MAKE10 仅在进行上述 iCloud 保存时与 Apple 的 iCloud 通信，不进行其他任何通信。即使没有连接互联网，也能使用全部功能。',
+    's3-p2':'不会向空飛ぶ研究室（Flying Dev Lab）、第三方分析服务或广告网络发送任何数据。',
+    's4-title':'广告与应用内购买',
+    's4-p1':'MAKE10不包含<strong>任何广告</strong>。',
+    's4-p2':'MAKE10不包含<strong>应用内购买</strong>。应用完全免费。',
+    's4-p3':'MAKE10内没有指向外部网站、社交媒体或其他应用的链接。',
+    's5-title':'儿童隐私（COPPA）',
+    's5-p1':'MAKE10专为儿童设计，完全遵守COPPA及适用的国际儿童隐私法律。',
+    's5-p2':'不会收集任何年龄用户的个人信息。保存在 iCloud 中的记录只存在于你本人的 Apple 账户中，开发者不会接收。',
+    's5-p3':'我们不会故意收集13岁以下儿童（或任何年龄）的信息。',
+    's6-title':'开源',
+    's6-p1':'MAKE10在GitHub上开源，作为透明度措施。任何人都可以检查源代码以验证我们的隐私声明。',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'本政策的变更',
+    's7-p1':'本政策更新时，将连同修订日期一并发布在本页面。',
+    's8-title':'免责声明',
+    's8-p1':'虽然我们努力提供准确的内容和稳定的功能，但我们不保证应用的完整性、准确性或不间断运行。',
+    's8-p2':'iOS 更新、设备环境的变化或 iCloud 的状态等，可能会在不事先通知的情况下影响应用的运行。对于由此造成的数据丢失，开发者不承担责任。',
+    's8-p3':'开发者可能在不事先通知的情况下终止或修改应用。',
+    'contact-title':'支持 & 联系',
+    'contact-form-p':'您可以通过我们官方网站上的联系表单匿名发送反馈或请求。',
+    'contact-email-p':'如果您希望通过电子邮件联系我们，请使用以下地址。',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'用❤️为全世界好奇的孩子们制作。',
+  },
+  'zh-Hant': {
+    badge:'隱私政策 & 支援', title:'隱私政策 & 支援', updated:'生效日期：2026年10月15日',
+    p1:'不收集資料', p2:'紀錄只能儲存到你本人的 iCloud', p3:'無廣告', p4:'無外部連結',
+    's1-title':'概述',
+    's1-p1':'MAKE10（湊十）是由Flying Dev Lab（空飛ぶ研究室）開發的兒童免費數學益智遊戲。',
+    's1-highlight':'MAKE10 不會收集任何年齡的任何人的個人資訊。開發者不會接收或查看你的資料。',
+    's1-p2':'本政策說明MAKE10如何處理（或不處理）資料，並確認我們對保持應用程式對兒童完全安全的承諾。',
+    's2-title':'我們收集的資訊',
+    's2-p1':'我們<strong>什麼都不</strong>收集。',
+    's2-p2':'MAKE10不收集、請求或儲存以下任何內容：',
+    's2-list':'• 姓名、電子郵件地址或聯絡資訊<br>• 裝置識別碼或廣告ID<br>• 位置資料<br>• 使用分析或行為資料<br>• Cookie或追蹤技術<br>• 任何其他個人或非個人資訊',
+    'icloud-title':'儲存到 iCloud',
+    'icloud-p1':'為了在更換裝置或重新安裝應用程式後也能復原遊戲紀錄（貼紙冊的畫、貼紙、能量、最高分、感謝手帳等），MAKE10 可以將紀錄儲存到 Apple 的 iCloud。',
+    'icloud-list':'• 儲存位置是裝置上登入的本人 Apple 帳號的 iCloud（私人區域）。<br>• 該區域只有本人的 Apple 帳號可以讀取。包括開發者在內，其他任何人都無法查看。<br>• 不會傳送到開發者的伺服器或其他公司。<br>• 在應用程式的「設定」中關閉「儲存到 iCloud」，該裝置的紀錄將只儲存在裝置中。未登入 iCloud 的裝置也只儲存在裝置中。<br>• 儲存在 iCloud 中的紀錄，可以在 iPhone/iPad 的「設定」→ 你的名字 →「iCloud」中刪除。',
+    'icloud-p2':'iCloud 適用 Apple 的隱私權政策。',
+    's3-title':'網路活動',
+    's3-p1':'MAKE10 僅在進行上述 iCloud 儲存時與 Apple 的 iCloud 通訊，不進行其他任何通訊。即使沒有連上網際網路，也能使用全部功能。',
+    's3-p2':'不會向空飛ぶ研究室（Flying Dev Lab）、第三方分析服務或廣告網路傳送任何資料。',
+    's4-title':'廣告與應用程式內購買',
+    's4-p1':'MAKE10不包含<strong>任何廣告</strong>。',
+    's4-p2':'MAKE10不包含<strong>應用程式內購買</strong>。應用程式完全免費。',
+    's4-p3':'MAKE10內沒有指向外部網站、社群媒體或其他應用程式的連結。',
+    's5-title':'兒童隱私（COPPA）',
+    's5-p1':'MAKE10專為兒童設計，完全遵守COPPA及適用的國際兒童隱私法律。',
+    's5-p2':'不會收集任何年齡使用者的個人資訊。儲存在 iCloud 中的紀錄只存在於你本人的 Apple 帳號中，開發者不會接收。',
+    's5-p3':'我們不會故意收集13歲以下兒童（或任何年齡）的資訊。',
+    's6-title':'開源',
+    's6-p1':'MAKE10在GitHub上開源，作為透明度措施。任何人都可以檢查原始碼以驗證我們的隱私聲明。',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'本政策的變更',
+    's7-p1':'本政策更新時，將連同修訂日期一併刊登在本頁面。',
+    's8-title':'免責聲明',
+    's8-p1':'雖然我們努力提供準確的內容和穩定的功能，但我們不保證應用程式的完整性、準確性或不間斷運行。',
+    's8-p2':'iOS 更新、裝置環境的變化或 iCloud 的狀態等，可能會在不事先通知的情況下影響應用程式的運作。對於因此造成的資料遺失，開發者不負任何責任。',
+    's8-p3':'開發者可能在不事先通知的情況下終止或修改應用程式。',
+    'contact-title':'支援 & 聯絡',
+    'contact-form-p':'您可以透過我們官方網站上的聯絡表單匿名傳送意見或請求。',
+    'contact-email-p':'如果您希望透過電子郵件聯絡我們，請使用以下地址。',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'用❤️為全世界好奇的孩子們製作。',
+  },
+  id: {
+    badge:'Kebijakan Privasi & Dukungan', title:'Kebijakan Privasi & Dukungan', updated:'Berlaku: 15 Oktober 2026',
+    p1:'Tidak ada pengumpulan data', p2:'Data hanya dapat disimpan di iCloud milikmu sendiri', p3:'Tidak ada iklan', p4:'Tidak ada tautan eksternal',
+    's1-title':'Ikhtisar',
+    's1-p1':'MAKE10 adalah game puzzle matematika gratis untuk anak-anak, dikembangkan oleh Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 tidak mengumpulkan informasi pribadi apa pun — dari siapa pun, dari usia berapa pun. Pengembang tidak pernah menerima atau melihat datamu.',
+    's1-p2':'Kebijakan ini menjelaskan bagaimana MAKE10 menangani (atau tidak menangani) data, dan menegaskan komitmen kami untuk menjaga app sepenuhnya aman bagi anak-anak.',
+    's2-title':'Informasi yang Dikumpulkan',
+    's2-p1':'Kami tidak mengumpulkan <strong>apa pun</strong>.',
+    's2-p2':'MAKE10 tidak mengumpulkan, meminta, atau menyimpan hal-hal berikut:',
+    's2-list':'• Nama, alamat email, atau informasi kontak<br>• Pengidentifikasi perangkat atau ID iklan<br>• Data lokasi<br>• Analitik penggunaan atau data perilaku<br>• Cookie atau teknologi pelacakan<br>• Informasi pribadi atau non-pribadi lainnya',
+    'icloud-title':'Menyimpan ke iCloud',
+    'icloud-p1':'Agar data permainan (gambar di Buku Stiker, stiker, energi, skor tertinggi, Buku Terima Kasih, dan lainnya) bisa dipulihkan setelah ganti perangkat atau memasang ulang app, MAKE10 dapat menyimpannya ke iCloud milik Apple.',
+    'icloud-list':'• Data disimpan di area pribadi iCloud dari Akun Apple yang masuk di perangkat.<br>• Hanya Akun Apple tersebut yang dapat membaca area ini. Tidak ada orang lain, termasuk pengembang, yang dapat melihatnya.<br>• Tidak ada yang dikirim ke server pengembang atau ke perusahaan lain.<br>• Matikan "Simpan ke iCloud" di pengaturan app agar data hanya disimpan di perangkat. Perangkat yang tidak masuk ke iCloud juga hanya menyimpan data di perangkat.<br>• Data yang disimpan di iCloud dapat dihapus dari Pengaturan perangkat → [namamu] → iCloud.',
+    'icloud-p2':'Kebijakan Privasi Apple berlaku untuk iCloud.',
+    's3-title':'Aktivitas Jaringan',
+    's3-p1':'MAKE10 hanya berkomunikasi dengan iCloud milik Apple, dan hanya untuk penyimpanan ke iCloud di atas. App tidak membuat koneksi lain. Semua fitur tetap berfungsi tanpa koneksi internet.',
+    's3-p2':'Tidak ada data yang dikirim ke Flying Dev Lab, layanan analitik pihak ketiga, atau jaringan iklan.',
+    's4-title':'Iklan & Pembelian Dalam App',
+    's4-p1':'MAKE10 tidak mengandung <strong>iklan apa pun</strong>.',
+    's4-p2':'MAKE10 tidak mengandung <strong>pembelian dalam app</strong>. App sepenuhnya gratis.',
+    's4-p3':'Tidak ada tautan ke situs eksternal, media sosial, atau app lain di dalam MAKE10.',
+    's5-title':'Privasi Anak (COPPA)',
+    's5-p1':'MAKE10 dirancang untuk anak-anak dan sepenuhnya mematuhi COPPA dan hukum privasi anak internasional yang berlaku.',
+    's5-p2':'Kami tidak mengumpulkan informasi pribadi dari siapa pun. Data yang disimpan di iCloud tetap berada di Akun Apple milikmu; pengembang tidak menerimanya.',
+    's5-p3':'Kami tidak secara sengaja mengumpulkan informasi dari anak-anak di bawah 13 tahun (atau usia berapa pun).',
+    's6-title':'Open Source',
+    's6-p1':'MAKE10 bersumber terbuka di GitHub sebagai langkah transparansi. Siapa pun dapat memeriksa kode sumber untuk memverifikasi klaim privasi kami.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Perubahan Kebijakan Ini',
+    's7-p1':'Jika kebijakan ini diperbarui, versi barunya akan dimuat di halaman ini beserta tanggal berlaku yang baru.',
+    's8-title':'Penafian',
+    's8-p1':'Meskipun kami berusaha memberikan konten yang akurat dan fungsionalitas yang stabil, kami tidak menjamin kelengkapan, akurasi, atau pengoperasian app yang tidak terputus.',
+    's8-p2':'Pembaruan iOS, perubahan lingkungan perangkat, atau keadaan iCloud dapat memengaruhi perilaku app tanpa pemberitahuan. Pengembang tidak bertanggung jawab atas kehilangan data yang diakibatkannya.',
+    's8-p3':'Pengembang dapat menghentikan atau mengubah app tanpa pemberitahuan sebelumnya.',
+    'contact-title':'Dukungan & Kontak',
+    'contact-form-p':'Kamu dapat mengirim masukan atau permintaan secara anonim melalui formulir kontak di situs resmi kami.',
+    'contact-email-p':'Jika ingin menghubungi kami lewat email, gunakan alamat di bawah ini.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Dibuat dengan ❤️ untuk anak-anak yang penasaran di seluruh dunia.',
+  },
+  vi: {
+    badge:'Chính sách Quyền riêng tư & Hỗ trợ', title:'Chính sách Quyền riêng tư & Hỗ trợ', updated:'Có hiệu lực: 15 tháng 10 năm 2026',
+    p1:'Không thu thập dữ liệu', p2:'Dữ liệu chỉ có thể được lưu vào iCloud của chính bạn', p3:'Không có quảng cáo', p4:'Không có liên kết ngoài',
+    's1-title':'Tổng quan',
+    's1-p1':'MAKE10 là trò chơi đố toán học miễn phí dành cho trẻ em, phát triển bởi Flying Dev Lab (空飛ぶ研究室).',
+    's1-highlight':'MAKE10 không thu thập bất kỳ thông tin cá nhân nào — từ bất kỳ ai, ở bất kỳ độ tuổi nào. Nhà phát triển không bao giờ nhận hay xem dữ liệu của bạn.',
+    's1-p2':'Chính sách này mô tả cách MAKE10 xử lý (hoặc không xử lý) dữ liệu, và xác nhận cam kết giữ ứng dụng hoàn toàn an toàn cho trẻ em.',
+    's2-title':'Thông tin chúng tôi thu thập',
+    's2-p1':'Chúng tôi không thu thập <strong>bất cứ điều gì</strong>.',
+    's2-p2':'MAKE10 không thu thập, yêu cầu hoặc lưu trữ bất kỳ điều nào sau đây:',
+    's2-list':'• Tên, địa chỉ email hoặc thông tin liên hệ<br>• Mã định danh thiết bị hoặc ID quảng cáo<br>• Dữ liệu vị trí<br>• Phân tích sử dụng hoặc dữ liệu hành vi<br>• Cookie hoặc công nghệ theo dõi<br>• Bất kỳ thông tin cá nhân hoặc phi cá nhân nào khác',
+    'icloud-title':'Lưu vào iCloud',
+    'icloud-p1':'Để có thể khôi phục dữ liệu chơi (tranh vẽ trong sổ nhãn dán, nhãn dán, năng lượng, điểm cao, Sổ cảm ơn, v.v.) sau khi đổi thiết bị hoặc cài lại ứng dụng, MAKE10 có thể lưu chúng vào iCloud của Apple.',
+    'icloud-list':'• Dữ liệu được lưu vào vùng riêng tư trong iCloud của Tài khoản Apple đang đăng nhập trên thiết bị.<br>• Chỉ Tài khoản Apple đó mới đọc được vùng này. Không ai khác, kể cả nhà phát triển, có thể xem.<br>• Không có gì được gửi đến máy chủ của nhà phát triển hay bất kỳ công ty nào khác.<br>• Tắt "Lưu vào iCloud" trong cài đặt của ứng dụng để chỉ lưu dữ liệu trên thiết bị. Thiết bị chưa đăng nhập iCloud cũng chỉ lưu dữ liệu trên thiết bị.<br>• Dữ liệu đã lưu trên iCloud có thể xóa trong Cài đặt của thiết bị → [tên của bạn] → iCloud.',
+    'icloud-p2':'Chính sách Quyền riêng tư của Apple áp dụng cho iCloud.',
+    's3-title':'Hoạt động mạng',
+    's3-p1':'MAKE10 chỉ liên lạc với iCloud của Apple, và chỉ để lưu vào iCloud như mô tả ở trên. Ứng dụng không tạo bất kỳ kết nối nào khác. Mọi tính năng đều dùng được khi không có internet.',
+    's3-p2':'Không có dữ liệu nào được gửi đến Flying Dev Lab, dịch vụ phân tích bên thứ ba hay mạng quảng cáo.',
+    's4-title':'Quảng cáo & Mua hàng trong ứng dụng',
+    's4-p1':'MAKE10 không chứa <strong>bất kỳ quảng cáo nào</strong>.',
+    's4-p2':'MAKE10 không có <strong>mua hàng trong ứng dụng</strong>. Ứng dụng hoàn toàn miễn phí.',
+    's4-p3':'Không có liên kết đến trang web bên ngoài, mạng xã hội hoặc ứng dụng khác trong MAKE10.',
+    's5-title':'Quyền riêng tư của trẻ em (COPPA)',
+    's5-p1':'MAKE10 được thiết kế cho trẻ em và tuân thủ đầy đủ COPPA cũng như các luật bảo vệ quyền riêng tư trẻ em quốc tế hiện hành.',
+    's5-p2':'Chúng tôi không thu thập thông tin cá nhân từ bất kỳ ai. Dữ liệu đã lưu trên iCloud nằm trong Tài khoản Apple của chính bạn; nhà phát triển không nhận được.',
+    's5-p3':'Chúng tôi không cố ý thu thập thông tin từ trẻ em dưới 13 tuổi (hoặc bất kỳ độ tuổi nào).',
+    's6-title':'Mã nguồn mở',
+    's6-p1':'MAKE10 được mã nguồn mở trên GitHub như một biện pháp minh bạch. Bất kỳ ai cũng có thể kiểm tra mã nguồn để xác minh các tuyên bố quyền riêng tư của chúng tôi.',
+    's6-p2':'→ <a href="https://github.com/FlyingDevLab">github.com/FlyingDevLab</a>',
+    's7-title':'Thay đổi chính sách này',
+    's7-p1':'Nếu chính sách này được cập nhật, phiên bản mới sẽ được đăng trên trang này kèm ngày hiệu lực mới.',
+    's8-title':'Miễn trách nhiệm',
+    's8-p1':'Mặc dù chúng tôi cố gắng cung cấp nội dung chính xác và chức năng ổn định, chúng tôi không đảm bảo tính đầy đủ, chính xác hoặc hoạt động liên tục của ứng dụng.',
+    's8-p2':'Các bản cập nhật iOS, thay đổi môi trường thiết bị hoặc tình trạng của iCloud có thể ảnh hưởng đến hoạt động của ứng dụng mà không báo trước. Nhà phát triển không chịu trách nhiệm cho việc mất dữ liệu phát sinh từ đó.',
+    's8-p3':'Nhà phát triển có thể chấm dứt hoặc sửa đổi ứng dụng mà không có thông báo trước.',
+    'contact-title':'Hỗ trợ & Liên hệ',
+    'contact-form-p':'Bạn có thể gửi phản hồi hoặc yêu cầu ẩn danh qua biểu mẫu liên hệ trên trang web chính thức của chúng tôi.',
+    'contact-email-p':'Nếu bạn muốn liên hệ qua email, vui lòng sử dụng địa chỉ bên dưới.',
+    'contact-web-label':'flyingdevlab.com',
+    'footer-copy':'© 2026 <a href="https://flyingdevlab.com">Flying Dev Lab</a> · 空飛ぶ研究室',
+    'footer2':'Được tạo ra với ❤️ cho những đứa trẻ tò mò trên khắp thế giới.',
+  },
+};
+
+/*
+ * setLang(lang)
+ * ─────────────────────────────────────────────
+ * ページ全体の表示言語を切り替える関数です。
+ * <select> の onchange と、下の自動検出処理の両方から呼ばれます。
+ *
+ * 処理の流れ:
+ *   1. <html lang="..."> 属性を更新（スクリーンリーダー・翻訳ツール向け）
+ *   2. data-key 属性を持つすべての要素を走査して innerHTML を差し替える
+ *   3. <title> を更新
+ *   4. <select> の選択値を同期する
+ *
+ * フォールバック処理:
+ *   d[k] が undefined のとき（翻訳未完成のキー）、S["en"][k] の英語テキストで代替します。
+ *   これにより、翻訳が途中の言語でも空欄が生じません。
+ *
+ * PriceWise の applyLang() との違い:
+ *   こちらは data-key 属性を querySelectorAll で走査して差し替えます。
+ *   applyLang() は sections 配列を map() で処理して innerHTML に一括挿入します。
+ *   また、こちらは localStorage を使わずセッションごとに言語を自動検出します。
+ */
+function setLang(lang) {
+  const d = S[lang];
+  if (!d) return;
+  // BCP 47 準拠の html[lang] 設定
+  const bcp47 = { 'zh-Hans': 'zh-Hans', 'zh-Hant': 'zh-Hant', 'pt-BR': 'pt-BR' };
+  document.documentElement.lang = bcp47[lang] || lang.split('-')[0];
+  document.querySelectorAll('[data-key]').forEach(el => {
+    const k = el.getAttribute('data-key');
+    // ② 英語フォールバック: キーが欠けていても en の値を使う
+    const val = (d[k] !== undefined) ? d[k] : (S['en'][k] !== undefined ? S['en'][k] : '');
+    el.innerHTML = val;
+  });
+  document.title = d.title + ' – MAKE10';
+  document.getElementById('lang-select').value = lang;
+  applyFooter(lang);
+}
+
+/*
+ * F（フッター用の言語別データ）
+ * ─────────────────────────────────────────────
+ * S とは別オブジェクトにしている理由：
+ *   S は15言語あるため、各言語にキーを足すと15箇所の編集になります。
+ *   フッターだけ切り出して英語フォールバックを持たせれば、
+ *   翻訳は用意できた言語だけで済みます（未定義の言語は英語表示）。
+ *
+ * homeHref：著作権表記のリンク先。日本語は日本語トップ、それ以外は英語トップ。
+ * ariaTop / labelTop：ページ先頭へ戻るリンクの読み上げ用説明と表示ラベル。
+ */
+const F = {
+  en: { homeHref: '/', ariaTop: 'Back to top of page',  labelTop: '↑ TOP' },
+  ja: { homeHref: '/ja/', ariaTop: 'ページの先頭へ',     labelTop: '↑ 先頭へ' },
+};
+
+/*
+ * applyFooter(lang)
+ * ─────────────────────────────────────────────
+ * フッターの「↑ TOP」リンクと、著作権表記のリンク先を表示言語に合わせます。
+ *
+ * 著作権表記（footer-copy）は15言語すべてに同じ href が書かれているため、
+ * 翻訳データ側は触らず、描画後にここで href を差し替えています。
+ * こうすることで、言語を追加しても翻訳データの修正が不要になります。
+ */
+function applyFooter(lang) {
+  const f = F[lang] || F.en;
+
+  const top = document.getElementById('f-top');
+  if (top) {
+    top.textContent = f.labelTop;
+    top.setAttribute('aria-label', f.ariaTop);
+  }
+
+  // 著作権表記の中のリンクを、その言語のトップページへ向ける
+  const copy = document.querySelector('[data-key="footer-copy"] a');
+  if (copy) copy.setAttribute('href', f.homeHref);
+}
+
+/*
+ * 初期言語の自動検出（即時実行関数）
+ * ─────────────────────────────────────────────
+ * ページ読み込み時にブラウザの言語設定（navigator.language）を参照し、
+ * サポートしている言語コードに変換してから setLang() を呼びます。
+ *
+ * map テーブルは navigator.language の値（例: "zh-CN", "zh-TW"）を
+ * 翻訳データのキー（例: "zh-Hans", "zh-Hant"）に変換するための対応表です。
+ * ブラウザが返す言語コードは OS や地域によって微妙に異なるため、
+ * startsWith() で前方一致させることで "zh-CN"・"zh-SG" などをまとめて処理しています。
+ *
+ * map に一致しない場合のデフォルトは "en"（英語）です。
+ *
+ * PriceWise の detectLang() との違い:
+ *   PriceWise は localStorage に言語選択を保存し、次回アクセス時も同じ言語を表示します。
+ *   こちらは localStorage を使わず、毎回ブラウザの言語設定から判定します。
+ */
+(function () {
+  const nav = navigator.language || 'en';
+  // BCP47ベースのnabigator.language照合テーブル
+  const map = {
+    'ja':'ja',
+    'zh-Hans':'zh-Hans','zh-CN':'zh-Hans','zh-SG':'zh-Hans',
+    'zh-Hant':'zh-Hant','zh-TW':'zh-Hant','zh-HK':'zh-Hant',
+    'es':'es',
+    'pt':'pt-BR',
+    'id':'id',
+    'vi':'vi',
+    'th':'th',
+    'ko':'ko',
+    'hi':'hi',
+    'fr':'fr',
+    'de':'de',
+    'it':'it',
+    'nl':'nl',
+  };
+  const code = nav.toLowerCase();
+  let matched = 'en';
+  for (const [k,v] of Object.entries(map)) {
+    if (code.startsWith(k.toLowerCase())) { matched = v; break; }
+  }
+  setLang(matched);
+})();
+</script>
+</body>
+</html>
