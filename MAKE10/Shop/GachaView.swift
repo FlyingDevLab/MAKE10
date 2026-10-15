@@ -249,6 +249,16 @@ struct GachaView: View {
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.muted)
 
+                // 自動交換にした種類が出たときは、何枚をエネルギーに変えたかを伝える（勝手に消えたと思わないように）
+                let exchanged = items.filter(\.isExchanged).count
+                if exchanged > 0 && revealedCount >= items.count {
+                    Text("gacha_auto_exchanged \(exchanged) \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker * Double(exchanged)))")
+                        .font(.system(size: 14, weight: .heavy, design: .rounded))
+                        .foregroundStyle(DS.energy)
+                        .multilineTextAlignment(.center)
+                        .transition(.opacity)
+                }
+
                 Button {
                     SoundManager.shared.playTap()
                     results = nil
@@ -341,13 +351,15 @@ struct GachaView: View {
             return
         }
 
-        // 「NEW」の判定のため、抽選の前に持っている枚数を控えておく
-        let ownedBefore = StickerStore.shared.ownedCounts()
+        // 「NEW」と「エネルギーに かえた」の判定のため、抽選の前に「見つけた種類」と「自動交換の種類」を控えておく
+        let discoveredBefore = StickerStore.shared.discovered
+        let autoExchange     = StickerStore.shared.autoExchange
         guard let emojis = StickerGacha.pull(pull) else {
             showToast("shop_not_enough")
             return
         }
-        let items = GachaResultItem.make(from: emojis, ownedBefore: ownedBefore, bonusCount: pull == .ten ? EnergyTuning.tenPullBonus : 0)
+        let items = GachaResultItem.make(from: emojis, discoveredBefore: discoveredBefore, autoExchange: autoExchange,
+                                         bonusCount: pull == .ten ? EnergyTuning.tenPullBonus : 0)
 
         // ── 演出：ハンドルが回ってマシンが揺れ、カプセルが出てくる ─────────
         isSpinning = true
@@ -409,19 +421,24 @@ struct GachaResultItem: Identifiable {
     let isNew:   Bool
     /// 10連のおまけの1枚か（「おまけ」の印）。
     let isBonus: Bool
+    /// 自動交換にした種類で、シールばこに入れずエネルギーに変えたか（「🔥」の印）。
+    let isExchanged: Bool
 
     /// 抽選結果から表示用データを作る。
     /// 同じ回で同じシールが2枚出たときは、最初の1枚だけを NEW にする。
     /// おまけは末尾の bonusCount 枚とする（StickerGacha は通常分のあとにおまけ分を引く）。
-    static func make(from emojis: [String], ownedBefore: [String: Int], bonusCount: Int) -> [GachaResultItem] {
+    /// NEW は「まだ見つけたことがない種類」（StickerStore.discovered）で決める。交換で0枚にした種類は NEW にしない。
+    static func make(from emojis: [String], discoveredBefore: Set<String>, autoExchange: Set<String>,
+                     bonusCount: Int) -> [GachaResultItem] {
         var seen = Set<String>()
         return emojis.enumerated().map { index, emoji in
-            let isNew = ownedBefore[emoji, default: 0] == 0 && !seen.contains(emoji)
+            let isNew = !discoveredBefore.contains(emoji) && !seen.contains(emoji)
             seen.insert(emoji)
             return GachaResultItem(
-                emoji:   emoji,
-                isNew:   isNew,
-                isBonus: index >= emojis.count - bonusCount
+                emoji:       emoji,
+                isNew:       isNew,
+                isBonus:     index >= emojis.count - bonusCount,
+                isExchanged: autoExchange.contains(emoji)
             )
         }
     }
@@ -554,6 +571,8 @@ private struct GachaResultCell: View {
             if isRevealed {
                 Text(item.emoji)
                     .font(.system(size: size))
+                    // エネルギーに変えたシールは、うすくして「シールばこには入っていない」ことを見せる
+                    .opacity(item.isExchanged ? 0.4 : 1)
                     .transition(.scale(scale: 0.2).combined(with: .opacity))
             } else {
                 Text(verbatim: "❔")
@@ -570,6 +589,14 @@ private struct GachaResultCell: View {
         .overlay(alignment: .bottom) {
             if isRevealed && item.isBonus {
                 tag("gacha_bonus_tag", color: DS.gold)
+            }
+        }
+        .overlay(alignment: .center) {
+            if isRevealed && item.isExchanged {
+                Text(verbatim: "🔥")
+                    .font(.system(size: size * 0.5))
+                    .offset(x: size * 0.35, y: size * 0.25)
+                    .accessibilityLabel(Text("gacha_exchanged_tag"))
             }
         }
     }
