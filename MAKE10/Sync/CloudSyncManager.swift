@@ -69,7 +69,7 @@ enum CloudApplyResult {
 
 /// 記録の持ち主（StickerBookStore・EnergyStore など）が守る約束。
 protocol CloudSyncSource: AnyObject {
-    /// この持ち主が受け持つ記録の名前（例: ["page-01", ..., "page-10"]）。アプリ全体で重ならないこと。
+    /// この持ち主が受け持つ記録の名前（例: ["page-01", ..., "page-12"]）。アプリ全体で重ならないこと。
     var cloudRecordNames: [String] { get }
 
     /// 記録を iCloud に送るデータにして返す。送るものがなければ nil。
@@ -177,7 +177,7 @@ final class CloudSyncManager {
     /// ⚠️ 新しく iCloud に入れたい記録を作ったら、ここに登録を足すこと（足さないと、その記録は送られない）。
     static func startAtLaunch() {
         let manager = CloudSyncManager.shared
-        manager.register(StickerBookStore.shared)      // シール帳の10ページ（page-01〜page-10）
+        manager.register(StickerBookStore.shared)      // シール帳の12ページ（page-01〜page-12）
         manager.register(WallpaperStore.shared)        // かべがみ（wallpaper）
         manager.register(StickerStore.shared)          // もっているシール（stickers）
         manager.register(StickerShop.shared)           // シールやさんの その日の状態（shop）
@@ -615,7 +615,7 @@ final class CloudSyncManager {
     ///   CKSyncEngine は、記録を1つずつ頼む係（recordProvider）を、画面とは別の流れから呼ぶ。
     ///   記録の中身は各ストア（画面の流れで動く）から取り出す必要があるので、
     ///   ここ（画面の流れ）で先に全部作っておき、係にはでき上がった記録を渡すだけにする。
-    ///   一度に送るのは多くても十数個（シール帳10ページ＋数個）なので、先に作っても重くない。
+    ///   一度に送るのは多くても十数個（シール帳12ページ＋数個）なので、先に作っても重くない。
     fileprivate func nextBatch(for changes: [CKSyncEngine.PendingRecordZoneChange],
                                engine: CKSyncEngine) async -> CKSyncEngine.RecordZoneChangeBatch? {
         var prepared: [CKRecord.ID: CKRecord] = [:]

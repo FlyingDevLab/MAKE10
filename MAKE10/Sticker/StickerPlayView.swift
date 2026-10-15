@@ -137,7 +137,7 @@ struct StickerPlayView: View {
     private let store = StickerStore.shared
 
     @State private var drawingStore = DrawingStore.shared
-    /// シール帳のページ（v1.6.0 から10ページ）。StickerBookStore.swift を参照
+    /// シール帳のページ（v1.6.0 から12ページ）。StickerBookStore.swift を参照
     @State private var book = StickerBookStore.shared
 
     // 選択・操作状態

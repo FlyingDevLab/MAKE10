@@ -84,7 +84,7 @@ final class StickerStore {
 
     // シール画面用。位置情報あり・上限 100 枚
     // ★ シール帳のシールは、開いているページの分（v1.6.0 から）★
-    //   シール帳は10ページになった。全ページのシールは StickerBookStore が持っていて、
+    //   シール帳は12ページになった。全ページのシールは StickerBookStore が持っていて、
     //   ここでは「いま開いているページのシール」をそのまま読み書きする。
     //   ページを切り替えると、ここに見えるシールも切り替わる（StickerBookStore.openPage を参照）。
     private(set) var playStickers: [Sticker] {
