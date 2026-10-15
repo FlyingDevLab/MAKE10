@@ -370,6 +370,7 @@ final class WhackAMoleViewModel {
         isNewRecord = checkAndSaveHighScore(score)
         // クリアボーナス = 叩いた数 × 倍率（量は EnergyRewards で調整する）
         EnergyStore.shared.grantClearBonus(Double(score) * EnergyRewards.whackAMoleBonusRate)
+        GameDailyBonus.shared.claim(.whackAMole)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished
         }

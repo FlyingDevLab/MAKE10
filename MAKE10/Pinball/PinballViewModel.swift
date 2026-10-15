@@ -89,6 +89,7 @@ final class PinballViewModel {
         // クリアボーナス = 正解の数（点数 ÷ pinballPointsPerCorrect）× 倍率
         let corrects = Double(score) / Double(EnergyRewards.pinballPointsPerCorrect)   // 500点 = 0.5
         EnergyStore.shared.grantClearBonus(corrects * EnergyRewards.pinballBonusRate)
+        GameDailyBonus.shared.claim(.pinball)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
 
         // 新記録ならアンロック風の祝福音、そうでなければ通常のゲームオーバー音
         // （Scene 側で鳴らす ballDrain 音の余韻の後に、結果を告げる音として重ねる）

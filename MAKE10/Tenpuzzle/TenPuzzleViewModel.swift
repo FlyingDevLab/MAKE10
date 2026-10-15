@@ -166,6 +166,7 @@ final class TenPuzzleViewModel {
             var bonus = Double(record.noHintCorrect) * bonusRate
             if record.noHintCorrect == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
             EnergyStore.shared.grantClearBonus(bonus)
+            GameDailyBonus.shared.claim(.tenPuzzle)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
             withAnimation(.easeInOut(duration: 0.3)) { phase = .result }
             return
         }

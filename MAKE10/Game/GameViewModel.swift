@@ -531,6 +531,7 @@ final class GameViewModel {
         let bonusRate = gameMode == .blitz ? EnergyRewards.make10BonusRateBlitz
                                            : EnergyRewards.make10BonusRateNormal
         EnergyStore.shared.grantClearBonus(Double(score) * bonusRate)
+        GameDailyBonus.shared.claim(gameMode == .blitz ? .blitz : .normal)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
 
         // ── 紙吹雪の処理 ──────────────────────────────────
         // confettiThreshold 以上の正解で紙吹雪を表示する。
@@ -589,6 +590,7 @@ final class GameViewModel {
         ThanksNotebookStore.shared.reset()   // ありがとう てちょうの記録も消す
         DrawingStore.shared.clearAll()       // お絵かきの線も消す
         WallpaperStore.shared.reset()        // かべがみも消して、いつもの背景に戻す
+        GameDailyBonus.shared.reset()        // ゲームごとの「きょう はじめての ボーナス」の記録も消す
         // お絵かき画面の背景色・道具パネルの位置とたたみ具合も、はじめの状態に戻す
         for key in [UDKey.playBoardBackground, UDKey.playPanelOffsetX,
                     UDKey.playPanelOffsetY, UDKey.playPanelCollapsed] {

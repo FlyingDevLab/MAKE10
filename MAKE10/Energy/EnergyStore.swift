@@ -25,6 +25,7 @@
 //    2台で食い違ったら、残高は「あとで変えたほう」を残す。足し合わせないのは、
 //    同じエネルギーが2台ぶん増える抜け道になってしまうため（オフラインで2台を同時に使うと、片方の増減が消えることがある）。
 //    ログインボーナスの日は、遅い日のほうを残す（同じ日に2台で2回もらえないように）。
+//    ゲームごとの「きょう はじめての ボーナス」を受け取った日（GameDailyBonus）も、同じ考え方で一緒に送る。
 
 import Foundation
 
@@ -159,6 +160,9 @@ final class EnergyStore {
     /// 今回のプレイで grantClearBonus() により増えた量（0.1kcal 単位）。beginSession() で 0 に戻る。
     private(set) var sessionClearBonusDeci: Int = 0
 
+    /// 今回のプレイで grantDailyGameBonus()（きょう はじめての ボーナス）により増えた量（0.1kcal 単位）。
+    private(set) var sessionDailyBonusDeci: Int = 0
+
     // MARK: 表示用の値
 
     /// 残高（kcal）。
@@ -170,6 +174,9 @@ final class EnergyStore {
     /// 今回のクリアボーナス（kcal）。結果画面の内訳表示に使う。
     var sessionClearBonus: Double { Double(sessionClearBonusDeci) / 10 }
 
+    /// 今回の「きょう はじめての ボーナス」（kcal）。結果画面の内訳表示に使う。
+    var sessionDailyBonus: Double { Double(sessionDailyBonusDeci) / 10 }
+
     // MARK: 初期化
 
     private init() { load() }
@@ -180,6 +187,7 @@ final class EnergyStore {
     func beginSession() {
         sessionEarnedDeci     = 0
         sessionClearBonusDeci = 0
+        sessionDailyBonusDeci = 0
     }
 
     /// プレイ中の獲得（正解1問ごとなど）。残高にすぐ加算して保存する。
@@ -200,6 +208,16 @@ final class EnergyStore {
         guard deci > 0 else { return }
         balanceDeci           += deci
         sessionClearBonusDeci += deci
+        save()
+    }
+
+    /// きょう はじめて、そのゲームを最後まで遊んだときのボーナス（GameDailyBonus が呼ぶ）。
+    /// クリアボーナスとは分けて数え、結果画面の内訳で「きょう はじめての ボーナス」として見せる。
+    func grantDailyGameBonus(_ kcal: Double) {
+        let deci = Self.toDeci(kcal)
+        guard deci > 0 else { return }
+        balanceDeci           += deci
+        sessionDailyBonusDeci += deci
         save()
     }
 
@@ -238,6 +256,7 @@ final class EnergyStore {
         balanceDeci           = 0
         sessionEarnedDeci     = 0
         sessionClearBonusDeci = 0
+        sessionDailyBonusDeci = 0
         UserDefaults.standard.removeObject(forKey: UDKey.energyDeciKcal)
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
         UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)
@@ -307,13 +326,17 @@ extension EnergyStore: CloudSyncSource {
     private struct CloudEnergy: Codable {
         var balanceDeci:  Int
         var bonusLastDay: String?   // ログインボーナスを最後に受け取った日（"2026-10-01"）
+        /// ゲームごとに「きょう はじめての ボーナス」を受け取った日（GameDailyBonus）。
+        /// 途中で足した項目なので、これより前に送った記録では nil
+        var gameBonusDays: [String: String]?
     }
 
     var cloudRecordNames: [String] { [Self.recordName] }
 
     func cloudPayload(for name: String) -> CloudPayload? {
-        let energy = CloudEnergy(balanceDeci:  balanceDeci,
-                                 bonusLastDay: UserDefaults.standard.string(forKey: UDKey.dailyBonusLastDay))
+        let energy = CloudEnergy(balanceDeci:   balanceDeci,
+                                 bonusLastDay:  UserDefaults.standard.string(forKey: UDKey.dailyBonusLastDay),
+                                 gameBonusDays: GameDailyBonus.shared.claimedDays)
         guard let data = try? JSONEncoder().encode(energy) else { return nil }
         let modifiedAt = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
         return CloudPayload(data: data, modifiedAt: modifiedAt)
@@ -329,6 +352,9 @@ extension EnergyStore: CloudSyncSource {
         // ログインボーナスの日は、遅い日のほう（"2026-10-01" の形なので、文字の大小で比べられる）
         let mergedDay = force ? remote.bonusLastDay : [localDay, remote.bonusLastDay].compactMap { $0 }.max()
         if let mergedDay { defaults.set(mergedDay, forKey: UDKey.dailyBonusLastDay) }
+        // ゲームごとのボーナスを受け取った日も、ゲームごとに遅い日のほうにそろえる
+        let mergedGameDays = GameDailyBonus.shared.merge(remote.gameBonusDays ?? [:], force: force)
+        let gameDaysSame   = mergedGameDays == (remote.gameBonusDays ?? [:])
 
         if !force && localDate > payload.modifiedAt {
             return .keptLocal   // この端末のほうがあとで変えた → この端末の残高を送り直す
@@ -337,7 +363,7 @@ extension EnergyStore: CloudSyncSource {
         defaults.set(balanceDeci, forKey: UDKey.energyDeciKcal)
         defaults.set(payload.modifiedAt, forKey: Self.modifiedAtKey)
         // 日付を遅いほうにそろえた結果、iCloud の日付と違うなら、そろえた日付を送り直す
-        return mergedDay == remote.bonusLastDay ? .applied : .keptLocal
+        return mergedDay == remote.bonusLastDay && gameDaysSame ? .applied : .keptLocal
     }
 
     /// エネルギーは「遊んだ記録」に数えない。
