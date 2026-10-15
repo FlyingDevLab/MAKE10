@@ -5,14 +5,15 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/09/06.
 //
 
-// どうぶつめくりのクリア後画面。今回もらったエネルギーを見せ、動物10種から好きなシールを1匹選ぶ。
+// どうぶつめくりのクリア後画面。今回もらったエネルギーを見せ、そろえたカードの絵柄から好きなシールを1まい選ぶ。
+// （月のカードは文字なので、その月らしい季節の絵文字から選ぶ。MemoryMonth を参照）
 //
 // ★ ごほうびは2つ ★
 //   ① エネルギー … そろえるたびに（連続ならコンボボーナス付きで）その場で増えている
 //                  （MemoryGameEngine.grantMatchReward を参照）。
 //                  この画面は EnergyRewardBanner で「今回いくら増えたか」を見せるだけで、残高には触らない。
-//   ② シール     … クリアのごほうびとして、好きな動物を「自分で選ぶ」。
-//                  選ばれた1匹を StickerStore.addStickerToStorage() でストレージへ直接入れる
+//   ② シール     … クリアのごほうびとして、好きなシールを「自分で選ぶ」。
+//                  選ばれた1まいを StickerStore.addStickerToStorage() でストレージへ直接入れる
 //                  （ガチャ・ショップで手に入れたシールと同じ行き先）。
 //
 // ★ ストレージ直送にした理由 ★
@@ -34,8 +35,14 @@ struct MemoryResultView: View {
 
     // MARK: 設定項目（呼び出し側から渡すパラメータ）
 
+    /// いま遊んだカードの種類。えらべるシールと、ボーナスの名前が変わる。
+    let deck: MemoryDeck
+
     /// 「もういちど」が押されたときに呼ばれる。盤面の作り直しは呼び出し側が行う。
     let onPlayAgain: () -> Void
+
+    /// 「カードを えらぶ」が押されたときに呼ばれる。スタート画面に戻すのは呼び出し側が行う。
+    let onChangeDeck: () -> Void
 
     // MARK: 調整用の定数
 
@@ -50,8 +57,24 @@ struct MemoryResultView: View {
 
     // MARK: 状態
 
-    /// 選ばれた動物。nil のあいだは選択グリッドを表示する。
-    @State private var chosen: MemoryAnimal? = nil
+    /// 選ばれたシールの番号（choices の何番目か）。nil のあいだは選択グリッドを表示する。
+    @State private var chosenIndex: Int? = nil
+
+    /// えらべるシール（絵文字と読み上げの名前）。
+    private var choices: [(emoji: String, label: Text)] {
+        deck.items.map { ($0.sticker, stickerLabel(for: $0)) }
+    }
+
+    /// シールの読み上げの名前。月は季節の絵文字なので、カードの読み上げではなく月の名前（「1月」など）にする。
+    private func stickerLabel(for item: MemoryItem) -> Text {
+        switch item.face {
+        case .text:                return Text(verbatim: MemoryMonth.all.first { $0.season == item.sticker }?.localizedName ?? "")
+        case .emoji, .image:       return item.label
+        }
+    }
+
+    /// 選択グリッドの列の数。12まいは 6列×2行 にすると、すき間なくそろう。
+    private var chooserColumns: Int { choices.count == 12 ? 6 : MemoryTuning.columns }   // ← 変更可
 
     // ★ 入力ガードについて ★
     //   このゲームは連打を前提に作られているため、クリア直後も指が動き続けています。
@@ -80,11 +103,12 @@ struct MemoryResultView: View {
             }
             .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
 
-            EnergyRewardBanner()
+            // むずかしい種類では、クリアボーナスを「むずかしさ ボーナス」の名前で見せる（MemoryGameEngine を参照）
+            EnergyRewardBanner(clearBonusLabel: deck.isHard ? "memory_difficulty_bonus" : "energy_reward_clear_bonus")
 
             ZStack {
-                if let animal = chosen {
-                    chosenContent(animal)
+                if let index = chosenIndex, choices.indices.contains(index) {
+                    chosenContent(choices[index])
                         .transition(.scale(scale: 0.85).combined(with: .opacity))
                 } else {
                     chooserContent
@@ -112,8 +136,25 @@ struct MemoryResultView: View {
             }
             .buttonStyle(.plain)
             .padding(.horizontal, 24)
-            .padding(.bottom, 24)
             .opacity(showPlayAgain ? 1 : 0)        // 場所は先に取っておき、出たときにレイアウトが跳ねないようにする
+            .allowsHitTesting(showPlayAgain)
+
+            // 「もういちど」の下に、ほかの種類をえらび直すための小さなボタン
+            Button {
+                SoundManager.shared.playTap()
+                onChangeDeck()
+            } label: {
+                Text("memory_result_change_deck")
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 6)
+                    .wallpaperCushion()
+            }
+            .buttonStyle(.plain)
+            .padding(.top, -12)      // 「もういちど」に寄せて、ひとまとまりに見せる ← 変更可
+            .padding(.bottom, 12)
+            .opacity(showPlayAgain ? 1 : 0)
             .allowsHitTesting(showPlayAgain)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -139,12 +180,12 @@ struct MemoryResultView: View {
             LazyVGrid(
                 columns: Array(
                     repeating: GridItem(.flexible(), spacing: MemoryTuning.cardSpacing),
-                    count: MemoryTuning.columns
+                    count: chooserColumns
                 ),
                 spacing: MemoryTuning.cardSpacing
             ) {
-                ForEach(MemoryAnimal.allCases, id: \.self) { animal in
-                    animalTile(animal)
+                ForEach(choices.indices, id: \.self) { index in
+                    stickerTile(index)
                 }
             }
             .frame(maxWidth: chooserMaxWidth)
@@ -153,33 +194,34 @@ struct MemoryResultView: View {
     }
 
     /// 選択グリッドのタイル1枚。辺の長さは列の幅で決まる（正方形）。
-    private func animalTile(_ animal: MemoryAnimal) -> some View {
-        RoundedRectangle(cornerRadius: MemoryTuning.cardCornerRadius)
+    private func stickerTile(_ index: Int) -> some View {
+        let choice = choices[index]
+        return RoundedRectangle(cornerRadius: MemoryTuning.cardCornerRadius)
             .fill(DS.card)
             .aspectRatio(1, contentMode: .fit)
             .overlay(
                 GeometryReader { geo in
-                    Text(animal.emoji)
+                    Text(verbatim: choice.emoji)
                         .font(.system(size: geo.size.width * 0.55))   // ← 変更可（辺長に対する絵文字の比率）
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             )
             .shadow(color: .black.opacity(0.08), radius: 4, x: 0, y: 2)
             .contentShape(Rectangle())
-            .onTapGesture { choose(animal) }
+            .onTapGesture { choose(index) }
             .accessibilityElement()
-            .accessibilityLabel(Text(animal.accessibilityLabel))
+            .accessibilityLabel(choice.label)
             .accessibilityAddTraits(.isButton)
     }
 
     // MARK: - 選択後
 
-    /// 選んだ動物を大きく見せ、行き先を伝える。
-    private func chosenContent(_ animal: MemoryAnimal) -> some View {
+    /// 選んだシールを大きく見せ、行き先を伝える。
+    private func chosenContent(_ choice: (emoji: String, label: Text)) -> some View {
         VStack(spacing: 12) {
-            Text(animal.emoji)
-                .font(.system(size: 100))   // ← 変更可（選んだ動物の表示サイズ）
-                .accessibilityLabel(Text(animal.accessibilityLabel))
+            Text(verbatim: choice.emoji)
+                .font(.system(size: 100))   // ← 変更可（選んだシールの表示サイズ）
+                .accessibilityLabel(choice.label)
 
             Text("memory_result_saved")
                 .font(.system(size: 18, weight: .bold, design: .rounded))  // ← 変更可
@@ -194,18 +236,18 @@ struct MemoryResultView: View {
     //   演出を待ってから付与すると、その途中で画面を離れたときにシールが消えます。
     //   タップされた時点で確定させ、演出はその後に流します。
 
-    /// 動物が選ばれたときの処理。シールを付与し、表示を切り替える。
-    private func choose(_ animal: MemoryAnimal) {
+    /// シールが選ばれたときの処理。シールを付与し、表示を切り替える。
+    private func choose(_ index: Int) {
         // 入力ガード中、および選択済みのときは受け付けない。
-        guard canTap, chosen == nil else { return }
+        guard canTap, chosenIndex == nil, choices.indices.contains(index) else { return }
 
-        StickerStore.shared.addStickerToStorage(emoji: animal.emoji)
+        StickerStore.shared.addStickerToStorage(emoji: choices[index].emoji)
 
         SoundManager.shared.vibrate()
         SoundManager.shared.playUnlock()
 
         withAnimation(.spring(response: 0.45, dampingFraction: 0.70)) {
-            chosen = animal
+            chosenIndex = index
         }
 
         // 余韻を見せてから出す。選択直後に出すと、その勢いで押されてしまう。

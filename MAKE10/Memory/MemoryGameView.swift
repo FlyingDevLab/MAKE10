@@ -6,7 +6,7 @@
 //
 
 // どうぶつめくり（神経衰弱）の画面本体。
-// スタート画面 → 盤面 → 結果画面 の3段階を切り替える。
+// スタート画面（カードの種類をえらぶ） → 盤面 → 結果画面 の3段階を切り替える。
 //
 // ★ このファイルの構成 ★
 //   MemoryGameView    … 3画面の切り替えとクリア演出の進行役
@@ -36,7 +36,7 @@ struct MemoryGameView: View {
 
     /// このゲーム内での画面。MakeTenContentView の Screen とは別物（こちらはゲームの内側）。
     private enum Stage {
-        case start    // 遊び方の説明
+        case start    // 遊び方の説明と、カードの種類えらび
         case playing  // 盤面
         case result   // 結果（今回もらったエネルギー）
     }
@@ -50,6 +50,9 @@ struct MemoryGameView: View {
     //   同じインスタンスが保たれます。@Observable と組み合わせることで、
     //   中身が変わったときだけ画面が更新されます。
     @State private var engine = MemoryGameEngine()
+
+    /// スタート画面でえらんでいるカードの種類。前回えらんだ種類から始める。
+    @State private var selectedDeck: MemoryDeck = .lastPlayed
 
     /// 紙吹雪の表示。クリアで true にし、「もういちど」で false に戻す。
     @State private var showConfetti = false
@@ -82,7 +85,7 @@ struct MemoryGameView: View {
                     .transition(.opacity)
 
             case .result:
-                MemoryResultView(onPlayAgain: playAgain)
+                MemoryResultView(deck: engine.deck, onPlayAgain: playAgain, onChangeDeck: backToStart)
                     .transition(.opacity)
             }
 
@@ -122,50 +125,161 @@ struct MemoryGameView: View {
 
     // MARK: - スタート画面
 
-    // 他ゲームのスタート画面と同じ構成（遊び方カード + スタートボタン）。
+    // 他ゲームのスタート画面と同じ構成（遊び方カード + スタートボタン）に、カードの種類えらびを足したもの。
     // このゲームはスコアを持たないため、ハイスコア欄は置かない。
+    //
+    // ★ ViewThatFits で3つの並べ方を用意している理由 ★
+    //   上から順に「収まるもの」が選ばれる。
+    //   ① 縦に並べる（iPhone の縦・iPad）
+    //   ② 左に遊び方、右に種類えらびとボタン（iPhone の横。高さが足りないとき）
+    //   ③ どちらも収まらないときは、①をスクロールできるようにする
     private var startContent: some View {
-        VStack(spacing: 20) {
-            Spacer()
-
-            VStack(alignment: .leading, spacing: 12) {
-                Label("How to Play", systemImage: "questionmark.circle.fill")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.muted)
-
-                howToRow(emoji: "👆", textKey: "memory_howto_flip")
-                howToRow(emoji: "🐘", textKey: "memory_howto_match")
-                howToRow(emoji: "🔥", textKey: "memory_howto_energy")
-                howToRow(emoji: "🎁", textKey: "memory_howto_sticker")
+        ViewThatFits(in: .vertical) {
+            VStack(spacing: 20) {
+                Spacer(minLength: 0)
+                howToCard
+                deckPicker
+                Spacer(minLength: 0)
+                startButton
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            .padding(.horizontal, 24)
+            .padding(.vertical, 16)
 
-            Spacer()
-
-            Button {
-                SoundManager.shared.vibrate()
-                SoundManager.shared.playTap()
-                engine.start()
-                withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
-            } label: {
-                Text("ゲームスタート")
-                    .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
-                    .foregroundStyle(.white)
+            HStack(alignment: .center, spacing: 0) {
+                howToCard
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.btnRadius)
-                            .fill(themeColor)
-                            .shadow(color: themeColor.opacity(0.35), radius: 8, x: 0, y: 4)
-                    )
+                VStack(spacing: 16) {
+                    deckPicker
+                    startButton
+                }
+                .frame(maxWidth: .infinity)
             }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 24)
-            .padding(.bottom, 24)
+            .padding(.vertical, 12)
+
+            ScrollView {
+                VStack(spacing: 20) {
+                    howToCard
+                    deckPicker
+                    startButton
+                }
+                .padding(.vertical, 16)
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
+    }
+
+    /// 遊び方カード。
+    private var howToCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("How to Play", systemImage: "questionmark.circle.fill")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.muted)
+
+            howToRow(emoji: "👆", textKey: "memory_howto_flip")
+            howToRow(emoji: "🐘", textKey: "memory_howto_match")
+            howToRow(emoji: "🔥", textKey: "memory_howto_energy")
+            howToRow(emoji: "🎁", textKey: "memory_howto_sticker")
+        }
+        .padding(16)
+        .frame(maxWidth: 520, alignment: .leading)   // ← 変更可（iPad で横に広がりすぎないように）
+        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+        .padding(.horizontal, 24)
+    }
+
+    /// カードの種類をえらぶボタンの並び。幅に合わせて1行に入る数が変わる（iPhone は 3つ + 2つ、iPad は5つ）。
+    private var deckPicker: some View {
+        VStack(spacing: 10) {
+            Text("memory_deck_choose")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.textPrimary)
+                .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
+
+            LazyVGrid(
+                columns: [GridItem(.adaptive(minimum: 92), spacing: 10)],   // ← 変更可（ボタン1つの最小幅）
+                spacing: 10
+            ) {
+                ForEach(MemoryDeck.allCases) { deck in
+                    deckButton(deck)
+                }
+            }
+        }
+        .frame(maxWidth: 560)   // ← 変更可（iPad で横に広がりすぎないように）
+        .padding(.horizontal, 24)
+    }
+
+    /// カードの種類のボタン1つ。見本のカード・名前・盤面の大きさ・むずかしさ ボーナス を出す。
+    private func deckButton(_ deck: MemoryDeck) -> some View {
+        let isSelected = deck == selectedDeck
+        return Button {
+            SoundManager.shared.playTap()
+            withAnimation(.easeOut(duration: 0.15)) { selectedDeck = deck }
+        } label: {
+            VStack(spacing: 3) {
+                Text(verbatim: deck.preview)
+                    .font(.system(size: 26, weight: .heavy, design: .rounded))   // ← 変更可（見本の大きさ）
+                    .foregroundStyle(DS.textPrimary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.5)
+                    .frame(height: 34)
+                Text(deck.nameKey)
+                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.textBody)
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.7)
+                    .multilineTextAlignment(.center)
+                HStack(spacing: 4) {
+                    Text(verbatim: deck.gridLabel)
+                        .foregroundStyle(DS.muted)
+                    if deck.isHard {
+                        // むずかしい種類には、もらえるボーナスを先に見せて、挑戦したくなるようにする
+                        Text(verbatim: "🔥+\(EnergyStore.format(MemoryTuning.hardClearBonus))")
+                            .foregroundStyle(DS.energy)
+                    }
+                }
+                .font(.system(size: 11, weight: .heavy, design: .rounded))
+                .monospacedDigit()
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 10)
+            .padding(.horizontal, 4)
+            .background(
+                RoundedRectangle(cornerRadius: 14)
+                    .fill(DS.card)
+                    .shadow(color: .black.opacity(0.06), radius: 3, x: 0, y: 2)
+            )
+            .overlay(
+                RoundedRectangle(cornerRadius: 14)
+                    .strokeBorder(themeColor, lineWidth: isSelected ? 3 : 0)
+            )
+            .scaleEffect(isSelected ? 1.04 : 1)
+        }
+        .buttonStyle(.plain)
+        .accessibilityAddTraits(isSelected ? .isSelected : [])
+    }
+
+    /// スタートボタン。えらんでいる種類で盤面を作り、次のためにその種類を覚えておく。
+    private var startButton: some View {
+        Button {
+            SoundManager.shared.vibrate()
+            SoundManager.shared.playTap()
+            MemoryDeck.lastPlayed = selectedDeck
+            engine.start(deck: selectedDeck)
+            withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
+        } label: {
+            Text("ゲームスタート")
+                .font(.system(size: 26, weight: .black, design: .rounded))  // ← 変更可（ボタン文字サイズ）
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 20)                                      // ← 変更可（ボタン縦パディング）
+                .background(
+                    RoundedRectangle(cornerRadius: DS.btnRadius)
+                        .fill(themeColor)
+                        .shadow(color: themeColor.opacity(0.35), radius: 8, x: 0, y: 4)
+                )
+        }
+        .buttonStyle(.plain)
+        .frame(maxWidth: 520)   // ← 変更可
+        .padding(.horizontal, 24)
+        .padding(.bottom, 8)
     }
 
     /// 遊び方カードの1行（絵文字 + 説明文）。絵文字は装飾なので翻訳対象に含めない。
@@ -190,7 +304,7 @@ struct MemoryGameView: View {
     private var boardContent: some View {
         GeometryReader { geo in
             let columns = MemoryTuning.columns
-            let rows    = Int(ceil(Double(MemoryTuning.pairCount * 2) / Double(columns)))
+            let rows    = engine.deck.rows
             let spacing = MemoryTuning.cardSpacing
 
             let widthBased  = (geo.size.width
@@ -207,18 +321,23 @@ struct MemoryGameView: View {
                 ),
                 spacing: spacing
             ) {
-                // ForEach に CardState をそのまま渡せるのは Identifiable だから。
+                // ForEach に BoardCell をそのまま渡せるのは Identifiable だから。
                 // id で対応づけられるため、並びが変わってもアニメーションが崩れない。
-                ForEach(engine.cards) { card in
-                    MemoryCardView(
-                        card:           card,
-                        face:           engine.face(for: card),
-                        label:          engine.accessibilityLabel(for: card),
-                        side:           side,
-                        backColor:      themeColor,
-                        restoreOpacity: restoreOpacity
-                    ) {
-                        engine.tap(card.id)
+                ForEach(boardCells) { cell in
+                    switch cell {
+                    case .card(let card):
+                        MemoryCardView(
+                            card:           card,
+                            face:           engine.face(for: card),
+                            label:          engine.accessibilityLabel(for: card),
+                            side:           side,
+                            backColor:      themeColor,
+                            restoreOpacity: restoreOpacity
+                        ) {
+                            engine.tap(card.id)
+                        }
+                    case .logo:
+                        MemoryLogoCell(side: side)
                     }
                 }
             }
@@ -227,6 +346,34 @@ struct MemoryGameView: View {
         // 通常の流れではスタートボタンで盤面が作られている。
         // 何らかの理由で未生成のまま入ってきた場合の安全網として呼ぶ（生成済みなら何もしない）。
         .onAppear { engine.startIfNeeded() }
+    }
+
+    /// 盤面の1マス。カードか、まん中のロゴ。
+    private enum BoardCell: Identifiable {
+        case card(CardState)
+        case logo
+
+        var id: String {
+            switch self {
+            case .card(let card): return card.id.uuidString
+            case .logo:           return "logo"
+            }
+        }
+    }
+
+    // ★ ロゴをエンジンのカードに混ぜない理由 ★
+    //   ロゴはめくれない飾りなので、ゲームのルール（エンジン）には関係ありません。
+    //   エンジンはカード24枚だけを持ち、画面に並べるときにまん中へロゴを差し込みます。
+    //   25マスのまん中は、0 から数えて 12番目（25 ÷ 2 の切り捨て）。
+
+    /// 画面に並べるマスの一覧。5×5 の種類では、カードの並びのまん中にロゴを入れる。
+    private var boardCells: [BoardCell] {
+        var cells = engine.cards.map(BoardCell.card)
+        if engine.deck.hasCenterLogo {
+            let center = (MemoryTuning.columns * engine.deck.rows) / 2
+            cells.insert(.logo, at: min(center, cells.count))
+        }
+        return cells
     }
 
     // MARK: - クリア演出
@@ -265,14 +412,26 @@ struct MemoryGameView: View {
         }
     }
 
-    /// 「もういちど」で呼ばれる。演出の状態を戻してから盤面を作り直す。
+    /// 「もういちど」で呼ばれる。演出の状態を戻してから、同じ種類で盤面を作り直す。
     private func playAgain() {
+        resetEffects()
+        engine.start()
+        withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
+    }
+
+    /// 結果画面の「カードを えらぶ」で呼ばれる。スタート画面に戻り、いまの種類をえらんだ状態にする。
+    private func backToStart() {
+        resetEffects()
+        selectedDeck = engine.deck
+        withAnimation(.easeInOut(duration: 0.3)) { stage = .start }
+    }
+
+    /// クリア演出の状態を元に戻す。
+    private func resetEffects() {
         showConfetti   = false
         showCongrats   = false
         restoreOpacity = false
         rewardPopups   = []
-        engine.start()
-        withAnimation(.easeInOut(duration: 0.3)) { stage = .playing }
     }
 }
 
@@ -353,7 +512,7 @@ private struct MemoryCardView: View {
 
     let card:           CardState
     let face:           CardFace
-    let label:          LocalizedStringKey
+    let label:          Text
     let side:           CGFloat
     let backColor:      Color
     /// クリア演出で薄さを解除するフラグ。true のあいだは一致済みでも濃いまま表示する。
@@ -389,7 +548,7 @@ private struct MemoryCardView: View {
         .contentShape(Rectangle())   // 角丸の外側もタップ判定に含めて、押しやすくする
         .onTapGesture(perform: onTap)
         .accessibilityElement()
-        .accessibilityLabel(Text(label))
+        .accessibilityLabel(label)
         .accessibilityAddTraits(.isButton)
     }
 
@@ -403,11 +562,67 @@ private struct MemoryCardView: View {
             Text(emoji)
                 .font(.system(size: side * 0.55))   // ← 変更可（カード辺長に対する絵文字の比率）
 
+        case .text(let text, let number):
+            // ★ 長い英単語（September など）も1行に収める ★
+            //   minimumScaleFactor で、カードの幅に収まるまで文字を小さくする。
+            Text(verbatim: text)
+                .font(.system(size: side * (number == nil ? 0.26 : 0.32),   // ← 変更可（辺長に対する文字の比率）
+                              weight: .heavy, design: .rounded))
+                .foregroundStyle(DS.textPrimary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.2)
+                .padding(.horizontal, side * 0.07)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                // 漢字の月には、左上に小さく月の数字を添える（漢字が読めない人のため）
+                .overlay(alignment: .topLeading) {
+                    if let number {
+                        Text(verbatim: "\(number)")
+                            .font(.system(size: side * 0.18, weight: .bold, design: .rounded))   // ← 変更可（数字の大きさ）
+                            .foregroundStyle(DS.muted)
+                            .padding(.leading, side * 0.09)
+                            .padding(.top, side * 0.05)
+                    }
+                }
+
         case .image(let image):
             Image(uiImage: image)
                 .resizable()
                 .scaledToFill()
                 .clipShape(RoundedRectangle(cornerRadius: MemoryTuning.cardCornerRadius))
         }
+    }
+}
+
+
+// MARK: - MemoryLogoCell
+
+/// 5×5 の盤面のまん中に置く、Flying Dev Lab のロゴ（外周の輪と、内側の家でひと組）。押せない飾り。
+///
+/// ★ 輪の外側を透明にする方法 ★
+///   ロゴの画像（fdl-logo-mark・fdl-logo-ring）は、どちらも白い背景の四角い画像。
+///   輪の画像は、輪の外のふちが画像のふちにぴったり接しているので、
+///   全体を円（Circle）の形で切り抜けば、輪の外側の白い角だけが消えて透明になる。
+///   画像そのものは作り直さずに済む（タイトル画面のロゴも、同じ2枚の画像を重ねている）。
+private struct MemoryLogoCell: View {
+    let side: CGFloat
+
+    var body: some View {
+        ZStack {
+            Image("fdl-logo-mark")
+                .resizable()
+                .scaledToFit()
+                .padding(side * 0.12)   // ← 変更可（輪と家の隙間。小さいほど家が大きくなる）
+            Image("fdl-logo-ring")
+                .resizable()
+                .scaledToFit()
+                // multiply: 輪の画像の白い部分を透かして、下の家を見せる（タイトル画面と同じ手法）
+                .blendMode(.multiply)
+        }
+        .background(Color.white)   // 輪の内側は白（かべがみの上でも、ロゴがはっきり見えるように）
+        .clipShape(Circle())       // 輪の外側の白い角を切り落として、透明にする
+        .frame(width: side, height: side)
+        .shadow(color: .black.opacity(0.12), radius: 4, x: 0, y: 2)
+        .allowsHitTesting(false)
+        .accessibilityHidden(true)   // 飾りなので読み上げない
     }
 }

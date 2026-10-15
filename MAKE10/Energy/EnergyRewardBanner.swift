@@ -31,6 +31,12 @@ struct EnergyRewardBanner: View {
 
     private let energy = EnergyStore.shared
 
+    // MARK: 設定項目（呼び出し側から渡すパラメータ）
+
+    /// クリアボーナスの名前（翻訳キー）。ふつうは「クリアの ごほうび」。
+    /// どうぶつめくりのむずかしい種類では「むずかしさ ボーナス」を渡す（MemoryResultView を参照）。
+    var clearBonusLabel: LocalizedStringKey = "energy_reward_clear_bonus"
+
     // MARK: 調整用の定数
 
     /// 結果カードのポップインを待ってから数え始めるまでの時間（秒）。
@@ -117,9 +123,9 @@ struct EnergyRewardBanner: View {
                 if playKcal > 0 {
                     breakdownItem("energy_reward_play", kcal: playKcal)
                     Text(verbatim: "・")
-                    breakdownItem("energy_reward_clear_bonus", kcal: bonusKcal)
+                    breakdownItem(clearBonusLabel, kcal: bonusKcal)
                 } else {
-                    Text("energy_reward_clear_bonus")
+                    Text(clearBonusLabel)
                 }
             }
             .font(.system(size: 12, weight: .bold, design: .rounded))
