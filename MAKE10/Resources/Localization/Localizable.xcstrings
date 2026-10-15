@@ -5379,91 +5379,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bevor du beginnst, lies bitte unsere Datenschutzrichtlinie und unseren Haftungsausschluss.\n\nKeine Werbung, keine Käufe und keine Daten werden nach außen gesendet — sicher für Kinder.\n\nDurch Tippen auf \"Zustimmen und starten\" stimmst du unserer Datenschutzrichtlinie und unserem Haftungsausschluss zu."
+            "value" : "Bitte lies vor dem Start unsere Datenschutzrichtlinie und den Haftungsausschluss.\n\nKeine Werbung, keine Käufe und keine Datenerfassung – sicher für Kinder.\nSpielstände können nur in deiner eigenen iCloud gesichert werden (der Entwickler kann sie nicht sehen; du kannst das in den Einstellungen ausschalten).\n\nMit Tippen auf „Zustimmen und starten“ stimmst du der Datenschutzrichtlinie und dem Haftungsausschluss zu."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before you start, please review our Privacy Policy & Disclaimer.\n\nNo ads, no purchases, and no data sent externally — safe for kids.\n\nBy tapping \"Agree & Start\", you agree to our Privacy Policy & Disclaimer."
+            "value" : "Before you start, please review our Privacy Policy & Disclaimer.\n\nNo ads, no purchases, and no data collection — safe for kids.\nPlay records can be saved only to your own iCloud (the developer can't see them; you can turn this off in Settings).\n\nBy tapping \"Agree & Start\", you agree to our Privacy Policy & Disclaimer."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Antes de empezar, revisa nuestra Política de privacidad y Aviso legal.\n\nSin anuncios, sin compras y sin datos enviados al exterior — seguro para niños.\n\nAl pulsar \"Aceptar y empezar\", aceptas nuestra Política de privacidad y Aviso legal."
+            "value" : "Antes de empezar, revisa nuestra Política de privacidad y el Aviso legal.\n\nSin anuncios, sin compras y sin recopilación de datos: segura para niños.\nLos registros de juego solo pueden guardarse en tu propio iCloud (el desarrollador no puede verlos; puedes desactivarlo en Ajustes).\n\nAl tocar «Aceptar y empezar», aceptas la Política de privacidad y el Aviso legal."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avant de commencer, veuillez lire notre Politique de confidentialité et Clause de non-responsabilité.\n\nPas de publicité, pas d'achats et aucune donnée envoyée à l'extérieur — sûr pour les enfants.\n\nEn appuyant sur \"Accepter et commencer\", vous acceptez notre Politique de confidentialité et Clause de non-responsabilité."
+            "value" : "Avant de commencer, consulte notre politique de confidentialité et la clause de non-responsabilité.\n\nSans publicité, sans achats et sans collecte de données : sûr pour les enfants.\nLes données de jeu peuvent être sauvegardées uniquement dans ton propre iCloud (le développeur ne peut pas les voir ; tu peux désactiver cela dans les réglages).\n\nEn touchant « Accepter et commencer », tu acceptes la politique de confidentialité et la clause de non-responsabilité."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शुरू करने से पहले, कृपया हमारी गोपनीयता नीति और अस्वीकरण पढ़ें।\n\nकोई विज्ञापन नहीं, कोई खरीदारी नहीं, और कोई बाहरी डेटा नहीं — बच्चों के लिए सुरक्षित।\n\n\"सहमत हूँ और शुरू करें\" दबाने का मतलब है कि आप हमारी गोपनीयता नीति और अस्वीकरण से सहमत हैं।"
+            "value" : "शुरू करने से पहले, कृपया हमारी गोपनीयता नीति और अस्वीकरण देखें।\n\nकोई विज्ञापन नहीं, कोई खरीदारी नहीं और कोई डेटा संग्रह नहीं — बच्चों के लिए सुरक्षित।\nखेल के रिकॉर्ड सिर्फ़ आपके अपने iCloud में सहेजे जा सकते हैं (डेवलपर उन्हें नहीं देख सकता; आप इसे सेटिंग में बंद कर सकते हैं)।\n\n\"सहमत हूँ और शुरू करें\" पर टैप करके, आप गोपनीयता नीति और अस्वीकरण से सहमत होते हैं।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sebelum mulai, harap baca Kebijakan Privasi & Penafian kami.\n\nTanpa iklan, tanpa pembelian, dan tidak ada data yang dikirim ke luar — aman untuk anak-anak.\n\nDengan mengetuk \"Setuju dan mulai\", kamu menyetujui Kebijakan Privasi & Penafian kami."
+            "value" : "Sebelum mulai, harap baca Kebijakan Privasi & Penafian kami.\n\nTanpa iklan, tanpa pembelian, dan tanpa pengumpulan data — aman untuk anak-anak.\nData permainan hanya dapat disimpan di iCloud milikmu sendiri (pengembang tidak dapat melihatnya; kamu bisa mematikannya di Pengaturan).\n\nDengan mengetuk \"Setuju dan mulai\", kamu menyetujui Kebijakan Privasi & Penafian."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prima di iniziare, leggi la nostra Informativa sulla privacy e Dichiarazione di non responsabilità.\n\nNessuna pubblicità, nessun acquisto e nessun dato inviato all'esterno — sicuro per i bambini.\n\nToccando \"Accetta e inizia\", accetti la nostra Informativa sulla privacy e Dichiarazione di non responsabilità."
+            "value" : "Prima di iniziare, leggi l'Informativa sulla privacy e la Dichiarazione di non responsabilità.\n\nNiente pubblicità, niente acquisti e nessuna raccolta di dati: sicura per i bambini.\nI dati di gioco possono essere salvati solo nel tuo iCloud (lo sviluppatore non può vederli; puoi disattivarlo nelle impostazioni).\n\nToccando \"Accetta e inizia\", accetti l'Informativa sulla privacy e la Dichiarazione di non responsabilità."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "このアプリをはじめる前に、プライバシーポリシー・免責事項をご確認ください。\n\n広告なし・課金なし・外部へのデータ送信なしで、安心してお子さまにお渡しいただけます。\n\n「同意してはじめる」ボタンをタップすることで、プライバシーポリシー・免責事項に同意したものとみなします。"
+            "value" : "このアプリをはじめる前に、プライバシーポリシー・免責事項をご確認ください。\n\n広告なし・課金なし・データ収集なしで、安心してお子さまにお渡しいただけます。\n遊んだ記録は、ご本人の iCloud にだけ保存できます（開発者は見られません。せっていでオフにできます）。\n\n「同意してはじめる」ボタンをタップすることで、プライバシーポリシー・免責事項に同意したものとみなします。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "시작하기 전에 개인정보 처리방침 및 면책조항을 확인해 주세요.\n\n광고 없음, 구매 없음, 외부 데이터 전송 없음 — 어린이에게 안전합니다.\n\n\"동의하고 시작\"을 탭하면 개인정보 처리방침 및 면책조항에 동의한 것으로 간주됩니다."
+            "value" : "앱을 시작하기 전에 개인정보 처리방침·면책조항을 확인해 주세요.\n\n광고 없음·결제 없음·데이터 수집 없음으로, 안심하고 아이에게 건네주실 수 있습니다.\n플레이 기록은 본인의 iCloud에만 저장할 수 있습니다(개발자는 볼 수 없으며, 설정에서 끌 수 있습니다).\n\n'동의하고 시작' 버튼을 탭하면 개인정보 처리방침·면책조항에 동의한 것으로 간주합니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lees voor het starten ons Privacybeleid en Disclaimer.\n\nGeen advertenties, geen aankopen en geen gegevens die extern worden verzonden — veilig voor kinderen.\n\nDoor op \"Akkoord en starten\" te tikken, ga je akkoord met ons Privacybeleid en Disclaimer."
+            "value" : "Lees voordat je begint ons privacybeleid en de disclaimer.\n\nGeen advertenties, geen aankopen en geen gegevensverzameling — veilig voor kinderen.\nSpeelgegevens kunnen alleen in je eigen iCloud worden bewaard (de ontwikkelaar kan ze niet zien; je kunt dit uitzetten in de instellingen).\n\nDoor op \"Akkoord en starten\" te tikken, ga je akkoord met het privacybeleid en de disclaimer."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Antes de começar, leia nossa Política de Privacidade e Isenção de Responsabilidade.\n\nSem anúncios, sem compras e nenhum dado enviado externamente — seguro para crianças.\n\nAo tocar em \"Aceitar e começar\", você concorda com nossa Política de Privacidade e Isenção de Responsabilidade."
+            "value" : "Antes de começar, leia nossa Política de Privacidade e a Isenção de responsabilidade.\n\nSem anúncios, sem compras e sem coleta de dados — seguro para crianças.\nOs registros de jogo só podem ser salvos no seu próprio iCloud (o desenvolvedor não pode vê-los; você pode desativar isso nos Ajustes).\n\nAo tocar em \"Aceitar e começar\", você concorda com a Política de Privacidade e a Isenção de responsabilidade."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ก่อนเริ่มต้น กรุณาอ่านนโยบายความเป็นส่วนตัวและข้อจำกัดความรับผิดชอบของเรา\n\nไม่มีโฆษณา ไม่มีการซื้อ และไม่มีการส่งข้อมูลภายนอก — ปลอดภัยสำหรับเด็ก\n\nการแตะ \"ยอมรับและเริ่มเล่น\" หมายความว่าคุณยอมรับนโยบายความเป็นส่วนตัวและข้อจำกัดความรับผิดชอบของเรา"
+            "value" : "ก่อนเริ่มใช้งาน โปรดอ่านนโยบายความเป็นส่วนตัวและข้อจำกัดความรับผิดชอบของเรา\n\nไม่มีโฆษณา ไม่มีการซื้อ และไม่เก็บข้อมูล — ปลอดภัยสำหรับเด็ก\nบันทึกการเล่นเก็บได้เฉพาะใน iCloud ของคุณเองเท่านั้น (ผู้พัฒนามองไม่เห็น และปิดได้ในการตั้งค่า)\n\nเมื่อแตะ \"ยอมรับและเริ่มเล่น\" ถือว่าคุณยอมรับนโยบายความเป็นส่วนตัวและข้อจำกัดความรับผิดชอบ"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trước khi bắt đầu, vui lòng đọc Chính sách Quyền riêng tư & Miễn trách nhiệm của chúng tôi.\n\nKhông quảng cáo, không mua hàng, không gửi dữ liệu ra ngoài — an toàn cho trẻ em.\n\nBằng cách nhấn \"Đồng ý và bắt đầu\", bạn đồng ý với Chính sách Quyền riêng tư & Miễn trách nhiệm của chúng tôi."
+            "value" : "Trước khi bắt đầu, vui lòng xem Chính sách Quyền riêng tư và Miễn trách nhiệm của chúng tôi.\n\nKhông quảng cáo, không mua hàng và không thu thập dữ liệu — an toàn cho trẻ em.\nDữ liệu chơi chỉ có thể được lưu vào iCloud của chính bạn (nhà phát triển không thể xem; bạn có thể tắt trong Cài đặt).\n\nKhi chạm \"Đồng ý và bắt đầu\", bạn đồng ý với Chính sách Quyền riêng tư và Miễn trách nhiệm."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "开始之前，请阅读我们的隐私政策和免责声明。\n\n无广告、无购买、不向外部发送数据——对儿童安全。\n\n点击\"同意并开始\"即表示您同意我们的隐私政策和免责声明。"
+            "value" : "开始使用前，请阅读隐私政策与免责声明。\n\n无广告、无付费、不收集数据，可以放心交给孩子使用。\n游戏记录只能保存到你本人的 iCloud（开发者无法查看，可在设置中关闭）。\n\n点击“同意并开始”按钮，即视为同意隐私政策与免责声明。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "開始之前，請閱讀我們的隱私政策和免責聲明。\n\n無廣告、無購買、不向外部傳送資料——對兒童安全。\n\n點擊「同意並開始」即表示您同意我們的隱私政策和免責聲明。"
+            "value" : "開始使用前，請閱讀隱私政策與免責聲明。\n\n無廣告、無付費、不收集資料，可以放心交給孩子使用。\n遊戲紀錄只能儲存到你本人的 iCloud（開發者無法查看，可在設定中關閉）。\n\n點擊「同意並開始」按鈕，即視為同意隱私政策與免責聲明。"
           }
         }
       }
@@ -16524,91 +16524,91 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datenschutzrichtlinie\nLetztes Update: 28. April 2026\n\n🚫 Keine Datenerfassung\n🚫 Keine Datenübertragung\n🚫 Keine Werbung\n🚫 Keine externen Links\n\n📋 Übersicht\nMAKE10 ist ein kostenloses Mathe-Puzzle-Spiel für Kinder,\nentwickelt von Flying Dev Lab (空飛ぶ研究室).\nMAKE10 erfasst, speichert oder überträgt keinerlei personenbezogene Daten.\n\n📦 Erfasste Informationen\nWir erfassen nichts.\nMAKE10 erfasst nicht: Name, E-Mail, Gerätekennungen, Standortdaten, Nutzungsdaten, Cookies oder sonstige Informationen.\n\n📡 Netzwerkaktivität\nMAKE10 verbindet sich im normalen Betrieb nicht mit dem Internet. Die App funktioniert vollständig offline.\n\n🎯 Werbung & In-App-Käufe\nKeine Werbung. Keine In-App-Käufe. Die App ist vollständig kostenlos. Keine externen Links.\n\n👶 Datenschutz für Kinder (COPPA)\nMAKE10 ist für Kinder konzipiert und entspricht vollständig dem COPPA und den geltenden internationalen Kinderschutzgesetzen.\n\n🔄 Änderungen dieser Richtlinie\nÄnderungen werden auf dieser Seite mit einem neuen Datum veröffentlicht.\n\n⚠️ Haftungsausschluss\nWir übernehmen keine Garantie für Vollständigkeit, Richtigkeit oder unterbrechungsfreien Betrieb der App. Der Entwickler haftet nicht für Datenverluste."
+            "value" : "Datenschutzrichtlinie\nLetztes Update: 15. Oktober 2026\n\n🚫 Keine Datenerfassung\n🚫 Keine Werbung\n🚫 Keine externen Links\n☁️ Deine Daten können nur in deiner eigenen iCloud gesichert werden\n\n📋 Übersicht\nMAKE10 (10をつくろう) ist ein kostenloses Mathe-Puzzle-Spiel für Kinder, entwickelt von Flying Dev Lab (空飛ぶ研究室).\nMAKE10 erfasst keinerlei personenbezogene Daten – von niemandem, egal welchen Alters. Der Entwickler erhält oder sieht deine Daten nie.\n\n📦 Erfasste Informationen\nWir erfassen nichts.\nMAKE10 erfasst, erfragt oder speichert nichts davon:\n· Name, E-Mail-Adresse oder Kontaktdaten\n· Gerätekennungen oder Werbe-IDs\n· Standortdaten\n· Nutzungsanalysen oder Verhaltensdaten\n· Cookies oder Tracking-Technologien\n· Sonstige personenbezogene oder nicht personenbezogene Informationen\n\n☁️ Sichern in iCloud\nDamit Spielstände (Zeichnungen im Stickerbuch, Sticker, Energie, Highscores, das Danke-Heft usw.) nach einem Gerätewechsel oder einer Neuinstallation wiederhergestellt werden können, kann MAKE10 sie in Apples iCloud sichern.\n· Sie werden im privaten Bereich der iCloud des auf dem Gerät angemeldeten Apple Accounts gesichert.\n· Nur dieser Apple Account kann diesen Bereich lesen. Niemand sonst, auch nicht der Entwickler, kann ihn sehen.\n· Es wird nichts an Server des Entwicklers oder an andere Unternehmen gesendet.\n· Schalte in der App unter Einstellungen „In iCloud sichern“ aus, um die Daten nur auf dem Gerät zu behalten. Geräte, die nicht bei iCloud angemeldet sind, behalten die Daten ebenfalls nur auf dem Gerät.\n· In iCloud gesicherte Daten kannst du in den Einstellungen des Geräts → [dein Name] → iCloud löschen.\nFür iCloud gilt die Datenschutzrichtlinie von Apple.\n\n📡 Netzwerkaktivität\nMAKE10 kommuniziert nur mit Apples iCloud und nur für das oben beschriebene Sichern in iCloud. Es baut keine anderen Verbindungen auf. Alle Funktionen funktionieren auch ohne Internetverbindung.\n\n🎯 Werbung & In-App-Käufe\nMAKE10 enthält keinerlei Werbung.\nMAKE10 enthält keine In-App-Käufe. Die App ist vollständig kostenlos.\nIn MAKE10 gibt es keine Links zu externen Websites, sozialen Medien oder anderen Apps.\n\n👶 Datenschutz für Kinder (COPPA)\nMAKE10 ist für Kinder konzipiert und hält COPPA sowie geltende internationale Datenschutzgesetze für Kinder ein.\nWir erfassen von niemandem personenbezogene Daten. In iCloud gesicherte Daten bleiben in deinem eigenen Apple Account; der Entwickler erhält sie nicht.\n\n🔄 Änderungen dieser Richtlinie\nWird diese Richtlinie aktualisiert, wird die neue Fassung mit geändertem Datum auf dieser Seite veröffentlicht.\n\n⚠️ Haftungsausschluss\nWir bemühen uns um korrekte Inhalte und einen stabilen Betrieb, garantieren jedoch nicht die Vollständigkeit, Richtigkeit oder den unterbrechungsfreien Betrieb der App.\niOS-Updates, Änderungen der Geräteumgebung oder der Zustand von iCloud können das Verhalten der App ohne Vorankündigung beeinflussen. Der Entwickler haftet nicht für daraus entstehende Datenverluste.\nDer Entwickler kann die App ohne Vorankündigung einstellen oder ändern."
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy Policy\nLast updated: April 28, 2026\n\n🚫 No Data Collection\n🚫 No Data Transmission\n🚫 No Ads, Ever\n🚫 No External Links\n\n📋 Overview\nMAKE10 (10をつくろう) is a free math puzzle game for children,\ndeveloped by Flying Dev Lab (空飛ぶ研究室).\nMAKE10 does not collect, store, or transmit any personal\ninformation — from anyone, of any age.\n\n📦 Information We Collect\nWe collect nothing.\nMAKE10 does not collect, request, or store any of the following:\n· Name, email address, or contact information\n· Device identifiers or advertising IDs\n· Location data\n· Usage analytics or behavioral data\n· Cookies or tracking technologies\n· Any other personal or non-personal information\n\n📡 Network Activity\nMAKE10 does not connect to the internet during normal use.\nThe app operates entirely offline.\n\n🎯 Advertising & In-App Purchases\nMAKE10 contains no advertisements of any kind.\nMAKE10 contains no in-app purchases. The app is completely free.\nThere are no links to external websites, social media, or other\napps within MAKE10.\n\n👶 Children's Privacy (COPPA)\nMAKE10 is designed for children and complies fully with COPPA\nand applicable international children's privacy laws.\nBecause we collect no personal information from anyone, there\nis no data to protect, share, or delete.\n\n🔄 Changes to This Policy\nIf this policy is ever updated, the new version will be posted\non this page with a revised effective date. Because no data is\ncollected, any changes will not affect stored user data.\n\n⚠️ Disclaimer\nWhile we strive to provide accurate content and stable\nfunctionality, we do not guarantee the completeness, accuracy,\nor uninterrupted operation of the App.\niOS updates or changes in device environment may affect app\nbehavior without prior notice. The Developer shall not be\nliable for any data loss resulting from such changes.\nThe Developer may terminate or modify the App without\nprior notice."
+            "value" : "Privacy Policy\nLast updated: October 15, 2026\n\n🚫 No Data Collection\n🚫 No Ads, Ever\n🚫 No External Links\n☁️ Your records can be saved only to your own iCloud\n\n📋 Overview\nMAKE10 (10をつくろう) is a free math puzzle game for children, developed by Flying Dev Lab (空飛ぶ研究室).\nMAKE10 does not collect any personal information — from anyone, of any age. The developer never receives or sees your data.\n\n📦 Information We Collect\nWe collect nothing.\nMAKE10 does not collect, request, or store any of the following:\n· Name, email address, or contact information\n· Device identifiers or advertising IDs\n· Location data\n· Usage analytics or behavioral data\n· Cookies or tracking technologies\n· Any other personal or non-personal information\n\n☁️ Saving to iCloud\nSo that play records (sticker book drawings, stickers, energy, high scores, the Thank-You Notebook, and so on) can be restored after changing devices or reinstalling, MAKE10 can save them to Apple's iCloud.\n· They are saved to the private area of the iCloud account of the Apple Account signed in on the device.\n· Only that Apple Account can read this area. No one else, including the developer, can see it.\n· Nothing is sent to the developer's servers or to any other company.\n· Turn off Settings → \"Save to iCloud\" in the app to keep records on the device only. Devices not signed in to iCloud also keep records on the device only.\n· Records saved in iCloud can be deleted from the device's Settings → [your name] → iCloud.\nApple's Privacy Policy applies to iCloud.\n\n📡 Network Activity\nMAKE10 communicates only with Apple's iCloud, and only for the iCloud saving described above. It makes no other connections. All features work without an internet connection.\n\n🎯 Advertising & In-App Purchases\nMAKE10 contains no advertisements of any kind.\nMAKE10 contains no in-app purchases. The app is completely free.\nThere are no links to external websites, social media, or other apps within MAKE10.\n\n👶 Children's Privacy (COPPA)\nMAKE10 is designed for children and complies with COPPA and applicable international children's privacy laws.\nWe collect no personal information from anyone. Records saved to iCloud stay in your own Apple Account; the developer does not receive them.\n\n🔄 Changes to This Policy\nIf this policy is ever updated, the new version will be posted on this page with a revised effective date.\n\n⚠️ Disclaimer\nWhile we strive to provide accurate content and stable functionality, we do not guarantee the completeness, accuracy, or uninterrupted operation of the App.\niOS updates, changes in device environment, or the state of iCloud may affect app behavior without prior notice. The Developer shall not be liable for any data loss resulting from such changes.\nThe Developer may terminate or modify the App without prior notice."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Política de privacidad\nÚltima actualización: 28 de abril de 2026\n\n🚫 Sin recopilación de datos\n🚫 Sin transmisión de datos\n🚫 Sin publicidad\n🚫 Sin enlaces externos\n\n📋 Descripción general\nMAKE10 es un juego de puzle matemático gratuito para niños,\ndesarrollado por Flying Dev Lab (空飛ぶ研究室).\nMAKE10 no recopila, almacena ni transmite ninguna información personal.\n\n📦 Información recopilada\nNo recopilamos nada.\nMAKE10 no recopila: nombre, correo, identificadores de dispositivo, ubicación, datos de uso, cookies ni ninguna otra información.\n\n📡 Actividad de red\nMAKE10 no se conecta a Internet durante el uso normal. La app funciona completamente sin conexión.\n\n🎯 Publicidad y compras integradas\nSin publicidad. Sin compras integradas. La app es totalmente gratuita. Sin enlaces externos.\n\n👶 Privacidad infantil (COPPA)\nMAKE10 está diseñado para niños y cumple plenamente con el COPPA y las leyes internacionales aplicables.\n\n🔄 Cambios en esta política\nCualquier actualización se publicará en esta página con una nueva fecha de entrada en vigor.\n\n⚠️ Aviso legal\nNo garantizamos la exactitud o el funcionamiento ininterrumpido de la app. El desarrollador no se hace responsable de pérdidas de datos."
+            "value" : "Política de privacidad\nÚltima actualización: 15 de octubre de 2026\n\n🚫 Sin recopilación de datos\n🚫 Sin anuncios\n🚫 Sin enlaces externos\n☁️ Tus registros solo pueden guardarse en tu propio iCloud\n\n📋 Descripción general\nMAKE10 (10をつくろう) es un juego de puzle matemático gratuito para niños, desarrollado por Flying Dev Lab (空飛ぶ研究室).\nMAKE10 no recopila ninguna información personal, de nadie y de ninguna edad. El desarrollador nunca recibe ni ve tus datos.\n\n📦 Información recopilada\nNo recopilamos nada.\nMAKE10 no recopila, solicita ni guarda nada de lo siguiente:\n· Nombre, correo electrónico o datos de contacto\n· Identificadores del dispositivo o de publicidad\n· Datos de ubicación\n· Análisis de uso o datos de comportamiento\n· Cookies o tecnologías de seguimiento\n· Cualquier otra información personal o no personal\n\n☁️ Guardar en iCloud\nPara que los registros de juego (dibujos del álbum de pegatinas, pegatinas, energía, récords, el Cuaderno de gracias, etc.) puedan restaurarse después de cambiar de dispositivo o reinstalar, MAKE10 puede guardarlos en iCloud de Apple.\n· Se guardan en el área privada del iCloud de la cuenta de Apple con la que se inició sesión en el dispositivo.\n· Solo esa cuenta de Apple puede leer esta área. Nadie más, ni siquiera el desarrollador, puede verla.\n· No se envía nada a los servidores del desarrollador ni a ninguna otra empresa.\n· Desactiva «Guardar en iCloud» en los ajustes de la app para guardar los registros solo en el dispositivo. Los dispositivos sin sesión iniciada en iCloud también los guardan solo en el dispositivo.\n· Los registros guardados en iCloud se pueden eliminar desde Ajustes del dispositivo → [tu nombre] → iCloud.\nA iCloud se le aplica la Política de privacidad de Apple.\n\n📡 Actividad de red\nMAKE10 solo se comunica con iCloud de Apple, y solo para el guardado en iCloud descrito arriba. No realiza ninguna otra conexión. Todas las funciones se pueden usar sin conexión a internet.\n\n🎯 Publicidad y compras integradas\nMAKE10 no contiene publicidad de ningún tipo.\nMAKE10 no tiene compras integradas. La app es completamente gratuita.\nEn MAKE10 no hay enlaces a sitios web externos, redes sociales ni otras apps.\n\n👶 Privacidad infantil (COPPA)\nMAKE10 está diseñado para niños y cumple con la COPPA y las leyes internacionales aplicables de privacidad infantil.\nNo recopilamos información personal de nadie. Los registros guardados en iCloud permanecen en tu propia cuenta de Apple; el desarrollador no los recibe.\n\n🔄 Cambios en esta política\nSi esta política se actualiza, la nueva versión se publicará en esta página con una nueva fecha de vigencia.\n\n⚠️ Aviso legal\nNos esforzamos por ofrecer contenido preciso y un funcionamiento estable, pero no garantizamos la integridad, la exactitud ni el funcionamiento ininterrumpido de la app.\nLas actualizaciones de iOS, los cambios en el entorno del dispositivo o el estado de iCloud pueden afectar al funcionamiento de la app sin previo aviso. El desarrollador no se hace responsable de la pérdida de datos derivada de ello.\nEl desarrollador puede finalizar o modificar la app sin previo aviso."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Politique de confidentialité\nDernière mise à jour : 28 avril 2026\n\n🚫 Aucune collecte de données\n🚫 Aucune transmission de données\n🚫 Aucune publicité\n🚫 Aucun lien externe\n\n📋 Présentation\nMAKE10 est un jeu de puzzle mathématique gratuit pour enfants,\ndéveloppé par Flying Dev Lab (空飛ぶ研究室).\nMAKE10 ne collecte, ne stocke ni ne transmet aucune information personnelle.\n\n📦 Informations collectées\nNous ne collectons rien.\nMAKE10 ne collecte pas : nom, e-mail, identifiants d'appareil, données de localisation, données d'utilisation, cookies ni aucune autre information.\n\n📡 Activité réseau\nMAKE10 ne se connecte pas à Internet lors d'une utilisation normale. L'application fonctionne entièrement hors ligne.\n\n🎯 Publicité et achats intégrés\nAucune publicité. Aucun achat intégré. L'application est totalement gratuite. Aucun lien externe.\n\n👶 Confidentialité des enfants (COPPA)\nMAKE10 est conçu pour les enfants et respecte pleinement le COPPA et les lois internationales applicables.\n\n🔄 Modifications de cette politique\nToute mise à jour sera publiée sur cette page avec une nouvelle date d'entrée en vigueur.\n\n⚠️ Clause de non-responsabilité\nNous ne garantissons pas l'exhaustivité, l'exactitude ou le fonctionnement ininterrompu de l'application. Le développeur ne peut être tenu responsable de toute perte de données."
+            "value" : "Politique de confidentialité\nDernière mise à jour : 15 octobre 2026\n\n🚫 Aucune collecte de données\n🚫 Aucune publicité\n🚫 Aucun lien externe\n☁️ Tes données peuvent être sauvegardées uniquement dans ton propre iCloud\n\n📋 Présentation\nMAKE10 (10をつくろう) est un jeu de puzzle mathématique gratuit pour enfants, développé par Flying Dev Lab (空飛ぶ研究室).\nMAKE10 ne collecte aucune information personnelle, auprès de qui que ce soit et quel que soit l'âge. Le développeur ne reçoit et ne voit jamais tes données.\n\n📦 Informations collectées\nNous ne collectons rien.\nMAKE10 ne collecte, ne demande ni ne conserve aucune des informations suivantes :\n· Nom, adresse e-mail ou coordonnées\n· Identifiants de l'appareil ou identifiants publicitaires\n· Données de localisation\n· Statistiques d'utilisation ou données comportementales\n· Cookies ou technologies de suivi\n· Toute autre information personnelle ou non personnelle\n\n☁️ Sauvegarde dans iCloud\nPour que les données de jeu (dessins de l'album de stickers, stickers, énergie, meilleurs scores, le Carnet de mercis, etc.) puissent être restaurées après un changement d'appareil ou une réinstallation, MAKE10 peut les sauvegarder dans iCloud d'Apple.\n· Elles sont sauvegardées dans l'espace privé de l'iCloud du compte Apple connecté sur l'appareil.\n· Seul ce compte Apple peut lire cet espace. Personne d'autre, y compris le développeur, ne peut le voir.\n· Rien n'est envoyé aux serveurs du développeur ni à une autre entreprise.\n· Désactive « Sauvegarder dans iCloud » dans les réglages de l'app pour garder les données uniquement sur l'appareil. Les appareils non connectés à iCloud les gardent aussi uniquement sur l'appareil.\n· Les données sauvegardées dans iCloud peuvent être supprimées depuis Réglages de l'appareil → [ton nom] → iCloud.\nLa politique de confidentialité d'Apple s'applique à iCloud.\n\n📡 Activité réseau\nMAKE10 communique uniquement avec iCloud d'Apple, et uniquement pour la sauvegarde dans iCloud décrite ci-dessus. Il n'établit aucune autre connexion. Toutes les fonctionnalités fonctionnent sans connexion Internet.\n\n🎯 Publicité et achats intégrés\nMAKE10 ne contient aucune publicité.\nMAKE10 ne contient aucun achat intégré. L'app est entièrement gratuite.\nMAKE10 ne contient aucun lien vers des sites web externes, des réseaux sociaux ou d'autres apps.\n\n👶 Confidentialité des enfants (COPPA)\nMAKE10 est conçu pour les enfants et respecte la COPPA ainsi que les lois internationales applicables sur la vie privée des enfants.\nNous ne collectons aucune information personnelle. Les données sauvegardées dans iCloud restent dans ton propre compte Apple ; le développeur ne les reçoit pas.\n\n🔄 Modifications de cette politique\nSi cette politique est mise à jour, la nouvelle version sera publiée sur cette page avec une nouvelle date d'entrée en vigueur.\n\n⚠️ Clause de non-responsabilité\nNous nous efforçons de proposer un contenu exact et un fonctionnement stable, mais nous ne garantissons pas l'exhaustivité, l'exactitude ni le fonctionnement ininterrompu de l'app.\nLes mises à jour d'iOS, les changements de l'environnement de l'appareil ou l'état d'iCloud peuvent affecter le fonctionnement de l'app sans préavis. Le développeur décline toute responsabilité en cas de perte de données qui en résulterait.\nLe développeur peut arrêter ou modifier l'app sans préavis."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "गोपनीयता नीति\nअंतिम अपडेट: 28 अप्रैल 2026\n\n🚫 कोई डेटा संग्रह नहीं\n🚫 कोई डेटा प्रसारण नहीं\n🚫 कोई विज्ञापन नहीं\n🚫 कोई बाहरी लिंक नहीं\n\n📋 अवलोकन\nMAKE10 (दस बनाओ) बच्चों के लिए एक मुफ़्त गणित पहेली गेम है,\nजिसे Flying Dev Lab (空飛ぶ研究室) ने बनाया है।\nMAKE10 किसी भी उम्र के किसी भी व्यक्ति की कोई भी व्यक्तिगत जानकारी एकत्र, संग्रहीत या प्रसारित नहीं करता।\n\n📦 हम क्या जानकारी एकत्र करते हैं\nहम कुछ भी एकत्र नहीं करते।\nMAKE10 निम्नलिखित में से कुछ भी एकत्र, अनुरोध या संग्रहीत नहीं करता:\n· नाम, ईमेल पता या संपर्क जानकारी\n· डिवाइस पहचानकर्ता या विज्ञापन ID\n· स्थान डेटा\n· उपयोग विश्लेषण या व्यवहार डेटा\n· कुकीज़ या ट्रैकिंग तकनीक\n· कोई भी अन्य व्यक्तिगत या गैर-व्यक्तिगत जानकारी\n\n📡 नेटवर्क गतिविधि\nMAKE10 सामान्य उपयोग के दौरान इंटरनेट से नहीं जुड़ता।\nऐप पूरी तरह ऑफलाइन काम करता है।\n\n🎯 विज्ञापन और इन-ऐप खरीदारी\nMAKE10 में किसी भी प्रकार के विज्ञापन नहीं हैं।\nMAKE10 में कोई इन-ऐप खरीदारी नहीं है। ऐप बिल्कुल मुफ़्त है।\nMAKE10 में बाहरी वेबसाइट, सोशल मीडिया या अन्य ऐप के कोई लिंक नहीं हैं।\n\n👶 बच्चों की गोपनीयता (COPPA)\nMAKE10 बच्चों के लिए डिज़ाइन किया गया है और COPPA\nतथा लागू अंतर्राष्ट्रीय बाल गोपनीयता कानूनों का पूरी तरह पालन करता है।\nचूंकि हम किसी से भी कोई व्यक्तिगत जानकारी एकत्र नहीं करते,\nइसलिए सुरक्षित, साझा या हटाने के लिए कोई डेटा नहीं है।\n\n🔄 इस नीति में बदलाव\nयदि यह नीति कभी अपडेट होती है, तो नया संस्करण संशोधित प्रभावी तिथि के साथ इस पृष्ठ पर पोस्ट किया जाएगा।\nचूंकि कोई डेटा एकत्र नहीं किया जाता, इसलिए किसी भी बदलाव से संग्रहीत उपयोगकर्ता डेटा प्रभावित नहीं होगा।\n\n⚠️ अस्वीकरण\nहम सटीक सामग्री और स्थिर कार्यक्षमता प्रदान करने का प्रयास करते हैं,\nलेकिन ऐप की पूर्णता, सटीकता या निर्बाध संचालन की गारंटी नहीं देते।\niOS अपडेट या डिवाइस वातावरण में बदलाव बिना पूर्व सूचना के ऐप के व्यवहार को प्रभावित कर सकते हैं।\nडेवलपर ऐसे बदलावों के परिणामस्वरूप किसी भी डेटा हानि के लिए उत्तरदायी नहीं होगा।\nडेवलपर बिना पूर्व सूचना के ऐप को समाप्त या संशोधित कर सकता है।"
+            "value" : "गोपनीयता नीति\nअंतिम अपडेट: 15 अक्टूबर 2026\n\n🚫 कोई डेटा संग्रह नहीं\n🚫 कोई विज्ञापन नहीं\n🚫 कोई बाहरी लिंक नहीं\n☁️ आपके रिकॉर्ड सिर्फ़ आपके अपने iCloud में सहेजे जा सकते हैं\n\n📋 अवलोकन\nMAKE10 (दस बनाओ) बच्चों के लिए एक मुफ़्त गणित पहेली गेम है, जिसे Flying Dev Lab (空飛ぶ研究室) ने बनाया है।\nMAKE10 किसी भी उम्र के किसी भी व्यक्ति से कोई व्यक्तिगत जानकारी एकत्र नहीं करता। डेवलपर आपका डेटा कभी प्राप्त नहीं करता और न ही देखता है।\n\n📦 हम क्या जानकारी एकत्र करते हैं\nहम कुछ भी एकत्र नहीं करते।\nMAKE10 इनमें से कुछ भी एकत्र, अनुरोध या संग्रहीत नहीं करता:\n· नाम, ईमेल पता या संपर्क जानकारी\n· डिवाइस पहचानकर्ता या विज्ञापन ID\n· स्थान डेटा\n· उपयोग विश्लेषण या व्यवहार डेटा\n· कुकीज़ या ट्रैकिंग तकनीकें\n· कोई अन्य व्यक्तिगत या गैर-व्यक्तिगत जानकारी\n\n☁️ iCloud में सहेजना\nताकि डिवाइस बदलने या ऐप दोबारा इंस्टॉल करने के बाद भी खेल के रिकॉर्ड (स्टिकर बुक के चित्र, स्टिकर, ऊर्जा, हाई स्कोर, धन्यवाद डायरी आदि) वापस लाए जा सकें, MAKE10 उन्हें Apple के iCloud में सहेज सकता है।\n· वे डिवाइस पर साइन इन किए गए Apple खाते के iCloud के निजी हिस्से में सहेजे जाते हैं।\n· इस हिस्से को सिर्फ़ वही Apple खाता पढ़ सकता है। डेवलपर सहित कोई और इसे नहीं देख सकता।\n· डेवलपर के सर्वर या किसी अन्य कंपनी को कुछ भी नहीं भेजा जाता।\n· रिकॉर्ड सिर्फ़ डिवाइस पर रखने के लिए ऐप की सेटिंग में \"iCloud में सहेजें\" बंद करें। जो डिवाइस iCloud में साइन इन नहीं हैं, वे भी रिकॉर्ड सिर्फ़ डिवाइस पर रखते हैं।\n· iCloud में सहेजे गए रिकॉर्ड डिवाइस की सेटिंग → [आपका नाम] → iCloud से हटाए जा सकते हैं।\niCloud पर Apple की गोपनीयता नीति लागू होती है।\n\n📡 नेटवर्क गतिविधि\nMAKE10 सिर्फ़ Apple के iCloud से संपर्क करता है, और सिर्फ़ ऊपर बताए गए iCloud में सहेजने के लिए। यह कोई अन्य कनेक्शन नहीं बनाता। सभी सुविधाएँ इंटरनेट के बिना भी काम करती हैं।\n\n🎯 विज्ञापन और इन-ऐप खरीदारी\nMAKE10 में किसी भी प्रकार का विज्ञापन नहीं है।\nMAKE10 में कोई इन-ऐप खरीदारी नहीं है। ऐप पूरी तरह मुफ़्त है।\nMAKE10 में बाहरी वेबसाइटों, सोशल मीडिया या अन्य ऐप्स के लिंक नहीं हैं।\n\n👶 बच्चों की गोपनीयता (COPPA)\nMAKE10 बच्चों के लिए बनाया गया है और COPPA तथा लागू अंतरराष्ट्रीय बाल गोपनीयता कानूनों का पालन करता है।\nहम किसी से भी व्यक्तिगत जानकारी एकत्र नहीं करते। iCloud में सहेजे गए रिकॉर्ड आपके अपने Apple खाते में ही रहते हैं; डेवलपर उन्हें प्राप्त नहीं करता।\n\n🔄 इस नीति में बदलाव\nअगर यह नीति अपडेट होती है, तो नया संस्करण नई प्रभावी तिथि के साथ इस पेज पर प्रकाशित किया जाएगा।\n\n⚠️ अस्वीकरण\nहम सटीक सामग्री और स्थिर काम देने का प्रयास करते हैं, लेकिन ऐप की पूर्णता, सटीकता या निर्बाध संचालन की गारंटी नहीं देते।\niOS अपडेट, डिवाइस के माहौल में बदलाव या iCloud की स्थिति बिना पूर्व सूचना के ऐप के व्यवहार को प्रभावित कर सकती है। इससे होने वाले डेटा नुकसान के लिए डेवलपर ज़िम्मेदार नहीं होगा।\nडेवलपर बिना पूर्व सूचना के ऐप बंद या बदल सकता है।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kebijakan Privasi\nTerakhir diperbarui: 28 April 2026\n\n🚫 Tidak ada pengumpulan data\n🚫 Tidak ada transmisi data\n🚫 Tidak ada iklan\n🚫 Tidak ada tautan eksternal\n\n📋 Ikhtisar\nMAKE10 adalah game puzzle matematika gratis untuk anak-anak,\ndikembangkan oleh Flying Dev Lab (空飛ぶ研究室).\nMAKE10 tidak mengumpulkan, menyimpan, atau mengirimkan informasi pribadi apa pun.\n\n📦 Informasi yang dikumpulkan\nKami tidak mengumpulkan apa pun.\nMAKE10 tidak mengumpulkan: nama, email, ID perangkat, data lokasi, data penggunaan, cookie, atau informasi lainnya.\n\n📡 Aktivitas jaringan\nMAKE10 tidak terhubung ke internet saat penggunaan normal. App berjalan sepenuhnya offline.\n\n🎯 Iklan & pembelian dalam app\nTanpa iklan. Tanpa pembelian dalam app. App sepenuhnya gratis. Tanpa tautan eksternal.\n\n👶 Privasi anak (COPPA)\nMAKE10 dirancang untuk anak-anak dan sepenuhnya mematuhi COPPA serta hukum privasi anak internasional yang berlaku.\n\n🔄 Perubahan kebijakan ini\nPembaruan akan diposting di halaman ini dengan tanggal berlaku baru.\n\n⚠️ Penafian\nKami tidak menjamin kelengkapan atau pengoperasian app yang tidak terputus. Pengembang tidak bertanggung jawab atas kehilangan data."
+            "value" : "Kebijakan Privasi\nTerakhir diperbarui: 15 Oktober 2026\n\n🚫 Tanpa pengumpulan data\n🚫 Tanpa iklan\n🚫 Tanpa tautan eksternal\n☁️ Data hanya dapat disimpan di iCloud milikmu sendiri\n\n📋 Ikhtisar\nMAKE10 (10をつくろう) adalah game puzzle matematika gratis untuk anak-anak, dikembangkan oleh Flying Dev Lab (空飛ぶ研究室).\nMAKE10 tidak mengumpulkan informasi pribadi apa pun — dari siapa pun, dari usia berapa pun. Pengembang tidak pernah menerima atau melihat datamu.\n\n📦 Informasi yang dikumpulkan\nKami tidak mengumpulkan apa pun.\nMAKE10 tidak mengumpulkan, meminta, atau menyimpan hal-hal berikut:\n· Nama, alamat email, atau informasi kontak\n· Pengenal perangkat atau ID iklan\n· Data lokasi\n· Analitik penggunaan atau data perilaku\n· Cookie atau teknologi pelacakan\n· Informasi pribadi maupun non-pribadi lainnya\n\n☁️ Menyimpan ke iCloud\nAgar data permainan (gambar di Buku Stiker, stiker, energi, skor tertinggi, Buku Terima Kasih, dan lainnya) bisa dipulihkan setelah ganti perangkat atau memasang ulang app, MAKE10 dapat menyimpannya ke iCloud milik Apple.\n· Data disimpan di area pribadi iCloud dari Akun Apple yang masuk di perangkat.\n· Hanya Akun Apple tersebut yang dapat membaca area ini. Tidak ada orang lain, termasuk pengembang, yang dapat melihatnya.\n· Tidak ada yang dikirim ke server pengembang atau ke perusahaan lain.\n· Matikan \"Simpan ke iCloud\" di pengaturan app agar data hanya disimpan di perangkat. Perangkat yang tidak masuk ke iCloud juga hanya menyimpan data di perangkat.\n· Data yang disimpan di iCloud dapat dihapus dari Pengaturan perangkat → [namamu] → iCloud.\nKebijakan Privasi Apple berlaku untuk iCloud.\n\n📡 Aktivitas jaringan\nMAKE10 hanya berkomunikasi dengan iCloud milik Apple, dan hanya untuk penyimpanan ke iCloud di atas. App tidak membuat koneksi lain. Semua fitur tetap berfungsi tanpa koneksi internet.\n\n🎯 Iklan & pembelian dalam app\nMAKE10 tidak berisi iklan apa pun.\nMAKE10 tidak memiliki pembelian dalam app. App ini sepenuhnya gratis.\nDi dalam MAKE10 tidak ada tautan ke situs web eksternal, media sosial, atau app lain.\n\n👶 Privasi anak (COPPA)\nMAKE10 dirancang untuk anak-anak dan mematuhi COPPA serta undang-undang privasi anak internasional yang berlaku.\nKami tidak mengumpulkan informasi pribadi dari siapa pun. Data yang disimpan di iCloud tetap berada di Akun Apple milikmu; pengembang tidak menerimanya.\n\n🔄 Perubahan kebijakan ini\nJika kebijakan ini diperbarui, versi barunya akan dimuat di halaman ini beserta tanggal berlaku yang baru.\n\n⚠️ Penafian\nKami berupaya menyediakan konten yang akurat dan kinerja yang stabil, tetapi tidak menjamin kelengkapan, keakuratan, atau kelancaran operasi app tanpa gangguan.\nPembaruan iOS, perubahan lingkungan perangkat, atau keadaan iCloud dapat memengaruhi perilaku app tanpa pemberitahuan. Pengembang tidak bertanggung jawab atas kehilangan data yang diakibatkannya.\nPengembang dapat menghentikan atau mengubah app tanpa pemberitahuan sebelumnya."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Informativa sulla privacy\nUltimo aggiornamento: 28 aprile 2026\n\n🚫 Nessuna raccolta di dati\n🚫 Nessuna trasmissione di dati\n🚫 Nessuna pubblicità\n🚫 Nessun link esterno\n\n📋 Panoramica\nMAKE10 è un gioco di puzzle matematico gratuito per bambini,\nsviluppato da Flying Dev Lab (空飛ぶ研究室).\nMAKE10 non raccoglie, archivia né trasmette alcuna informazione personale.\n\n📦 Informazioni raccolte\nNon raccogliamo nulla.\nMAKE10 non raccoglie: nome, e-mail, identificatori del dispositivo, dati di posizione, dati di utilizzo, cookie né altre informazioni.\n\n📡 Attività di rete\nMAKE10 non si connette a Internet durante l'uso normale. L'app funziona completamente offline.\n\n🎯 Pubblicità e acquisti in-app\nNessuna pubblicità. Nessun acquisto in-app. L'app è completamente gratuita. Nessun link esterno.\n\n👶 Privacy dei minori (COPPA)\nMAKE10 è progettato per i bambini e rispetta pienamente il COPPA e le leggi internazionali applicabili.\n\n🔄 Modifiche a questa informativa\nQualsiasi aggiornamento verrà pubblicato su questa pagina con una nuova data di entrata in vigore.\n\n⚠️ Dichiarazione di non responsabilità\nNon garantiamo la completezza o il funzionamento ininterrotto dell'app. Lo sviluppatore non è responsabile per eventuali perdite di dati."
+            "value" : "Informativa sulla privacy\nUltimo aggiornamento: 15 ottobre 2026\n\n🚫 Nessuna raccolta di dati\n🚫 Nessuna pubblicità\n🚫 Nessun link esterno\n☁️ I tuoi dati possono essere salvati solo nel tuo iCloud\n\n📋 Panoramica\nMAKE10 (10をつくろう) è un gioco di puzzle matematico gratuito per bambini, sviluppato da Flying Dev Lab (空飛ぶ研究室).\nMAKE10 non raccoglie alcuna informazione personale, da nessuno e a qualsiasi età. Lo sviluppatore non riceve né vede mai i tuoi dati.\n\n📦 Informazioni raccolte\nNon raccogliamo nulla.\nMAKE10 non raccoglie, richiede o conserva nessuno dei seguenti dati:\n· Nome, indirizzo email o dati di contatto\n· Identificatori del dispositivo o ID pubblicitari\n· Dati sulla posizione\n· Analisi di utilizzo o dati comportamentali\n· Cookie o tecnologie di tracciamento\n· Qualsiasi altra informazione personale o non personale\n\n☁️ Salvataggio su iCloud\nAffinché i dati di gioco (disegni dell'album di adesivi, adesivi, energia, record, il Quaderno dei grazie e così via) possano essere ripristinati dopo un cambio di dispositivo o una reinstallazione, MAKE10 può salvarli su iCloud di Apple.\n· Vengono salvati nell'area privata di iCloud dell'Account Apple con cui è stato effettuato l'accesso sul dispositivo.\n· Solo quell'Account Apple può leggere quest'area. Nessun altro, nemmeno lo sviluppatore, può vederla.\n· Nulla viene inviato ai server dello sviluppatore o ad altre aziende.\n· Disattiva \"Salva su iCloud\" nelle impostazioni dell'app per conservare i dati solo sul dispositivo. Anche i dispositivi senza accesso a iCloud conservano i dati solo sul dispositivo.\n· I dati salvati su iCloud possono essere eliminati da Impostazioni del dispositivo → [il tuo nome] → iCloud.\nA iCloud si applica l'Informativa sulla privacy di Apple.\n\n📡 Attività di rete\nMAKE10 comunica solo con iCloud di Apple, e solo per il salvataggio su iCloud descritto sopra. Non effettua altre connessioni. Tutte le funzioni sono utilizzabili anche senza connessione a Internet.\n\n🎯 Pubblicità e acquisti in-app\nMAKE10 non contiene alcun tipo di pubblicità.\nMAKE10 non contiene acquisti in-app. L'app è completamente gratuita.\nIn MAKE10 non ci sono link a siti web esterni, social network o altre app.\n\n👶 Privacy dei minori (COPPA)\nMAKE10 è pensato per i bambini e rispetta la COPPA e le leggi internazionali applicabili sulla privacy dei minori.\nNon raccogliamo informazioni personali da nessuno. I dati salvati su iCloud restano nel tuo Account Apple; lo sviluppatore non li riceve.\n\n🔄 Modifiche a questa informativa\nSe questa informativa viene aggiornata, la nuova versione sarà pubblicata su questa pagina con una nuova data di validità.\n\n⚠️ Dichiarazione di non responsabilità\nCi impegniamo a offrire contenuti accurati e un funzionamento stabile, ma non garantiamo la completezza, l'accuratezza o il funzionamento ininterrotto dell'app.\nGli aggiornamenti di iOS, i cambiamenti dell'ambiente del dispositivo o lo stato di iCloud possono influire sul funzionamento dell'app senza preavviso. Lo sviluppatore non è responsabile di eventuali perdite di dati che ne derivino.\nLo sviluppatore può interrompere o modificare l'app senza preavviso."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "プライバシーポリシー\n最終更新日：2026年4月28日\n\n🚫 データ収集なし\n🚫 外部送信なし\n🚫 広告なし\n🚫 外部リンクなし\n\n📋 概要\nMAKE10（10をつくろう）は、空飛ぶ研究室（Flying Dev Lab）が開発した、こども向けの無料数字パズルゲームです。\nMAKE10は、年齢を問わず、いかなる個人情報も収集・保存・送信しません。\n\n📦 収集する情報\n何も収集しません。\n氏名・メールアドレス・端末識別子・広告ID・位置情報・利用状況データ・その他いかなる情報も収集しません。\n\n📡 ネットワーク通信\nMAKE10は通常の使用においてインターネットに接続しません。アプリは完全にオフラインで動作します。\n\n🎯 広告・アプリ内課金\n広告は一切ありません。\nアプリ内課金もありません。アプリは完全無料です。\nアプリ内に外部サイト・SNS・他アプリへのリンクはありません。\n\n👶 こどものプライバシー（COPPA）\nMAKE10はこども向けに設計されており、COPPAおよび各国のこどものプライバシーに関する法律を完全に遵守しています。\nいかなる年齢の方からも個人情報を収集しないため、保護・共有・削除すべきデータは存在しません。\n\n🔄 プライバシーポリシーの変更\n本ポリシーを更新する場合は、改定日とともに本ページに掲載します。データを収集していないため、変更によって保存済みのユーザーデータに影響はありません。\n\n⚠️ 免責事項\n正確なコンテンツと安定した動作を提供するよう努めていますが、完全性・正確性・継続的な動作を保証するものではありません。\niOSのアップデートや端末環境の変化により、予告なくアプリの動作に影響が生じる場合があります。これに起因するデータの消失について、当開発者は責任を負いかねます。\n当開発者は、事前の予告なくアプリの提供を終了・変更する場合があります。"
+            "value" : "プライバシーポリシー\n最終更新日：2026年10月15日\n\n🚫 データ収集なし\n🚫 広告なし\n🚫 外部リンクなし\n☁️ 記録は、ご本人の iCloud にだけ保存できます\n\n📋 概要\nMAKE10（10をつくろう）は、空飛ぶ研究室（Flying Dev Lab）が開発した、こども向けの無料数字パズルゲームです。\nMAKE10は、年齢を問わず、いかなる個人情報も収集しません。開発者がお客様のデータを受け取ったり、見たりすることはありません。\n\n📦 収集する情報\n何も収集しません。\n氏名・メールアドレス・端末識別子・広告ID・位置情報・利用状況データ・その他いかなる情報も収集しません。\n\n☁️ iCloud への保存\n機種変更やアプリの入れ直しのあとでも、遊んだ記録（シール帳の絵・シール・エネルギー・ハイスコア・ありがとう てちょう など）を戻せるように、記録を Apple の iCloud に保存できます。\n・保存先は、端末にサインインしているご本人の Apple アカウントの iCloud（プライベートな領域）です。\n・この領域は、ご本人の Apple アカウントでしか読めません。開発者を含め、ほかの人が見ることはできません。\n・開発者のサーバーや、ほかの会社へは送りません。\n・アプリの「せってい」→「iCloud に ほぞん」をオフにすると、その端末の記録は端末の中だけに保存されます。iCloud にサインインしていない端末でも、端末の中だけに保存されます。\n・iCloud に保存した記録は、iPhone/iPad の「設定」→ ご自身の名前 →「iCloud」から消すことができます。\niCloud の取り扱いには、Apple のプライバシーポリシーが適用されます。\n\n📡 ネットワーク通信\nMAKE10は、上の iCloud への保存のときだけ、Apple の iCloud と通信します。それ以外の通信はしません。インターネットにつながっていなくても、すべての機能で遊べます。\n\n🎯 広告・アプリ内課金\n広告は一切ありません。\nアプリ内課金もありません。アプリは完全無料です。\nアプリ内に外部サイト・SNS・他アプリへのリンクはありません。\n\n👶 こどものプライバシー（COPPA）\nMAKE10はこども向けに設計されており、COPPAおよび各国のこどものプライバシーに関する法律を遵守しています。\nいかなる年齢の方からも個人情報を収集しません。iCloud に保存した記録は、ご本人の Apple アカウントの中にだけあり、開発者は受け取りません。\n\n🔄 プライバシーポリシーの変更\n本ポリシーを更新する場合は、改定日とともに本ページに掲載します。\n\n⚠️ 免責事項\n正確なコンテンツと安定した動作を提供するよう努めていますが、完全性・正確性・継続的な動作を保証するものではありません。\niOSのアップデート、端末環境の変化、iCloud の状態などにより、予告なくアプリの動作に影響が生じる場合があります。これに起因するデータの消失について、当開発者は責任を負いかねます。\n当開発者は、事前の予告なくアプリの提供を終了・変更する場合があります。"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "개인정보 처리방침\n최종 업데이트: 2026년 4월 28일\n\n🚫 데이터 수집 없음\n🚫 데이터 전송 없음\n🚫 광고 없음\n🚫 외부 링크 없음\n\n📋 개요\nMAKE10은 Flying Dev Lab(空飛ぶ研究室)이 개발한 어린이용 무료 수학 퍼즐 게임입니다.\nMAKE10은 어떠한 개인정보도 수집, 저장 또는 전송하지 않습니다.\n\n📦 수집하는 정보\n아무것도 수집하지 않습니다.\n이름, 이메일, 기기 식별자, 위치 정보, 이용 데이터, 쿠키 등 어떤 정보도 수집하지 않습니다.\n\n📡 네트워크 활동\nMAKE10은 정상 사용 중 인터넷에 연결되지 않습니다. 앱은 완전히 오프라인으로 작동합니다.\n\n🎯 광고 및 인앱 구매\n광고 없음. 인앱 구매 없음. 앱은 완전 무료입니다. 외부 링크 없음.\n\n👶 아동 개인정보 보호 (COPPA)\nMAKE10은 어린이를 위해 설계되었으며 COPPA 및 적용 가능한 국제 아동 개인정보 보호법을 완전히 준수합니다.\n\n🔄 정책 변경\n정책이 업데이트될 경우 새 시행일과 함께 이 페이지에 게시됩니다.\n\n⚠️ 면책조항\n앱의 완전성, 정확성 또는 중단 없는 운영을 보장하지 않습니다. 개발자는 데이터 손실에 대해 책임지지 않습니다."
+            "value" : "개인정보 처리방침\n최종 업데이트: 2026년 10월 15일\n\n🚫 데이터 수집 없음\n🚫 광고 없음\n🚫 외부 링크 없음\n☁️ 기록은 본인의 iCloud에만 저장할 수 있어요\n\n📋 개요\nMAKE10은 Flying Dev Lab(空飛ぶ研究室)이 개발한 어린이용 무료 수학 퍼즐 게임입니다.\nMAKE10은 나이와 관계없이 어떠한 개인정보도 수집하지 않습니다. 개발자는 사용자의 데이터를 받거나 볼 수 없습니다.\n\n📦 수집하는 정보\n아무것도 수집하지 않습니다.\n이름·이메일 주소·기기 식별자·광고 ID·위치 정보·이용 데이터·그 밖의 어떤 정보도 수집하지 않습니다.\n\n☁️ iCloud에 저장\n기기를 바꾸거나 앱을 다시 설치한 뒤에도 플레이 기록(스티커북 그림·스티커·에너지·최고 점수·고마워 수첩 등)을 되돌릴 수 있도록, 기록을 Apple의 iCloud에 저장할 수 있습니다.\n· 저장 위치는 기기에 로그인한 본인 Apple 계정의 iCloud(비공개 영역)입니다.\n· 이 영역은 본인의 Apple 계정으로만 읽을 수 있습니다. 개발자를 포함해 다른 사람은 볼 수 없습니다.\n· 개발자의 서버나 다른 회사로는 보내지 않습니다.\n· 앱의 '설정' → 'iCloud에 저장'을 끄면, 그 기기의 기록은 기기 안에만 저장됩니다. iCloud에 로그인하지 않은 기기도 기기 안에만 저장됩니다.\n· iCloud에 저장된 기록은 iPhone/iPad의 '설정' → 본인 이름 → 'iCloud'에서 지울 수 있습니다.\niCloud에는 Apple의 개인정보 처리방침이 적용됩니다.\n\n📡 네트워크 활동\nMAKE10은 위의 iCloud 저장을 할 때만 Apple의 iCloud와 통신합니다. 그 밖의 통신은 하지 않습니다. 인터넷에 연결되어 있지 않아도 모든 기능을 즐길 수 있습니다.\n\n🎯 광고 및 인앱 구매\n광고는 전혀 없습니다.\n인앱 구매도 없습니다. 앱은 완전히 무료입니다.\n앱 안에는 외부 사이트·SNS·다른 앱으로의 링크가 없습니다.\n\n👶 아동 개인정보 보호 (COPPA)\nMAKE10은 어린이를 위해 설계되었으며, COPPA 및 각국의 아동 개인정보 보호 관련 법률을 준수합니다.\n어떤 연령의 사용자로부터도 개인정보를 수집하지 않습니다. iCloud에 저장된 기록은 본인의 Apple 계정 안에만 있으며, 개발자는 받지 않습니다.\n\n🔄 정책 변경\n본 방침을 업데이트하는 경우, 개정일과 함께 이 페이지에 게시합니다.\n\n⚠️ 면책조항\n정확한 콘텐츠와 안정적인 동작을 제공하기 위해 노력하지만, 완전성·정확성·지속적인 동작을 보장하지는 않습니다.\niOS 업데이트, 기기 환경의 변화, iCloud 상태 등에 따라 예고 없이 앱 동작에 영향이 생길 수 있습니다. 이로 인한 데이터 손실에 대해 개발자는 책임을 지지 않습니다.\n개발자는 사전 예고 없이 앱 제공을 종료하거나 변경할 수 있습니다."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacybeleid\nLaatst bijgewerkt: 28 april 2026\n\n🚫 Geen gegevensverzameling\n🚫 Geen gegevensoverdracht\n🚫 Geen advertenties\n🚫 Geen externe links\n\n📋 Overzicht\nMAKE10 is een gratis wiskundig puzzelspel voor kinderen,\nontwikkeld door Flying Dev Lab (空飛ぶ研究室).\nMAKE10 verzamelt, slaat op noch verzendt enige persoonlijke informatie.\n\n📦 Verzamelde informatie\nWij verzamelen niets.\nMAKE10 verzamelt niet: naam, e-mail, apparaat-ID's, locatiegegevens, gebruiksdata, cookies of andere informatie.\n\n📡 Netwerkactiviteit\nMAKE10 maakt tijdens normaal gebruik geen verbinding met het internet. De app werkt volledig offline.\n\n🎯 Advertenties en in-app aankopen\nGeen advertenties. Geen in-app aankopen. De app is volledig gratis. Geen externe links.\n\n👶 Privacy van kinderen (COPPA)\nMAKE10 is ontworpen voor kinderen en voldoet volledig aan COPPA en toepasselijke internationale wetgeving.\n\n🔄 Wijzigingen in dit beleid\nEventuele updates worden op deze pagina gepubliceerd met een nieuwe ingangsdatum.\n\n⚠️ Disclaimer\nWij garanderen niet de volledigheid of ononderbroken werking van de app. De ontwikkelaar is niet aansprakelijk voor gegevensverlies."
+            "value" : "Privacybeleid\nLaatst bijgewerkt: 15 oktober 2026\n\n🚫 Geen gegevensverzameling\n🚫 Geen advertenties\n🚫 Geen externe links\n☁️ Je gegevens kunnen alleen in je eigen iCloud worden bewaard\n\n📋 Overzicht\nMAKE10 (10をつくろう) is een gratis wiskundig puzzelspel voor kinderen, ontwikkeld door Flying Dev Lab (空飛ぶ研究室).\nMAKE10 verzamelt geen enkele persoonlijke informatie, van niemand en van geen enkele leeftijd. De ontwikkelaar ontvangt of ziet je gegevens nooit.\n\n📦 Verzamelde informatie\nWe verzamelen niets.\nMAKE10 verzamelt, vraagt of bewaart geen van het volgende:\n· Naam, e-mailadres of contactgegevens\n· Apparaat-ID's of advertentie-ID's\n· Locatiegegevens\n· Gebruiksanalyses of gedragsgegevens\n· Cookies of trackingtechnologieën\n· Andere persoonlijke of niet-persoonlijke informatie\n\n☁️ Bewaren in iCloud\nZodat speelgegevens (tekeningen in het stickerboek, stickers, energie, topscores, het Dankjewel-boekje enzovoort) na het wisselen van apparaat of opnieuw installeren kunnen worden hersteld, kan MAKE10 ze in iCloud van Apple bewaren.\n· Ze worden bewaard in het privégedeelte van de iCloud van de Apple-account waarmee op het apparaat is ingelogd.\n· Alleen die Apple-account kan dit gedeelte lezen. Niemand anders, ook de ontwikkelaar niet, kan het zien.\n· Er wordt niets naar servers van de ontwikkelaar of naar andere bedrijven gestuurd.\n· Zet \"Bewaren in iCloud\" uit in de instellingen van de app om de gegevens alleen op het apparaat te bewaren. Apparaten die niet bij iCloud zijn ingelogd, bewaren de gegevens ook alleen op het apparaat.\n· In iCloud bewaarde gegevens kun je verwijderen via Instellingen van het apparaat → [je naam] → iCloud.\nOp iCloud is het privacybeleid van Apple van toepassing.\n\n📡 Netwerkactiviteit\nMAKE10 communiceert alleen met iCloud van Apple, en alleen voor het bewaren in iCloud zoals hierboven beschreven. Er worden geen andere verbindingen gemaakt. Alle functies werken ook zonder internetverbinding.\n\n🎯 Advertenties en in-app aankopen\nMAKE10 bevat geen enkele vorm van advertenties.\nMAKE10 bevat geen in-app aankopen. De app is volledig gratis.\nIn MAKE10 staan geen links naar externe websites, sociale media of andere apps.\n\n👶 Privacy van kinderen (COPPA)\nMAKE10 is ontworpen voor kinderen en voldoet aan COPPA en de toepasselijke internationale wetten over de privacy van kinderen.\nWe verzamelen van niemand persoonlijke informatie. In iCloud bewaarde gegevens blijven in je eigen Apple-account; de ontwikkelaar ontvangt ze niet.\n\n🔄 Wijzigingen in dit beleid\nAls dit beleid wordt bijgewerkt, wordt de nieuwe versie met een nieuwe ingangsdatum op deze pagina gepubliceerd.\n\n⚠️ Disclaimer\nWe streven naar juiste inhoud en een stabiele werking, maar garanderen niet de volledigheid, juistheid of ononderbroken werking van de app.\niOS-updates, veranderingen in de apparaatomgeving of de toestand van iCloud kunnen de werking van de app zonder voorafgaande kennisgeving beïnvloeden. De ontwikkelaar is niet aansprakelijk voor gegevensverlies dat hierdoor ontstaat.\nDe ontwikkelaar kan de app zonder voorafgaande kennisgeving beëindigen of wijzigen."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Política de Privacidade\nÚltima atualização: 28 de abril de 2026\n\n🚫 Sem coleta de dados\n🚫 Sem transmissão de dados\n🚫 Sem publicidade\n🚫 Sem links externos\n\n📋 Visão geral\nMAKE10 é um jogo de quebra-cabeça matemático gratuito para crianças,\ndesenvolvido pela Flying Dev Lab (空飛ぶ研究室).\nMAKE10 não coleta, armazena nem transmite nenhuma informação pessoal.\n\n📦 Informações coletadas\nNão coletamos nada.\nMAKE10 não coleta: nome, e-mail, identificadores de dispositivo, localização, dados de uso, cookies nem qualquer outra informação.\n\n📡 Atividade de rede\nMAKE10 não se conecta à internet durante o uso normal. O app funciona completamente offline.\n\n🎯 Publicidade e compras no app\nSem publicidade. Sem compras no app. O app é completamente gratuito. Sem links externos.\n\n👶 Privacidade infantil (COPPA)\nMAKE10 foi desenvolvido para crianças e cumpre integralmente o COPPA e as leis internacionais aplicáveis.\n\n🔄 Alterações nesta política\nQuaisquer atualizações serão publicadas nesta página com uma nova data de vigência.\n\n⚠️ Isenção de responsabilidade\nNão garantimos a integridade ou funcionamento ininterrupto do app. O desenvolvedor não se responsabiliza por perdas de dados."
+            "value" : "Política de Privacidade\nÚltima atualização: 15 de outubro de 2026\n\n🚫 Nenhuma coleta de dados\n🚫 Nenhum anúncio\n🚫 Nenhum link externo\n☁️ Seus registros só podem ser salvos no seu próprio iCloud\n\n📋 Visão geral\nMAKE10 (10をつくろう) é um jogo de quebra-cabeça matemático gratuito para crianças, desenvolvido pela Flying Dev Lab (空飛ぶ研究室).\nO MAKE10 não coleta nenhuma informação pessoal — de ninguém, de qualquer idade. O desenvolvedor nunca recebe nem vê seus dados.\n\n📦 Informações coletadas\nNão coletamos nada.\nO MAKE10 não coleta, solicita nem armazena nenhum dos itens a seguir:\n· Nome, endereço de e-mail ou informações de contato\n· Identificadores do dispositivo ou IDs de publicidade\n· Dados de localização\n· Análises de uso ou dados de comportamento\n· Cookies ou tecnologias de rastreamento\n· Qualquer outra informação pessoal ou não pessoal\n\n☁️ Salvar no iCloud\nPara que os registros de jogo (desenhos do álbum de adesivos, adesivos, energia, recordes, o Caderno do obrigado etc.) possam ser restaurados depois de trocar de dispositivo ou reinstalar o app, o MAKE10 pode salvá-los no iCloud da Apple.\n· Eles são salvos na área privada do iCloud da Conta Apple conectada no dispositivo.\n· Somente essa Conta Apple pode ler essa área. Ninguém mais, nem mesmo o desenvolvedor, pode vê-la.\n· Nada é enviado aos servidores do desenvolvedor nem a qualquer outra empresa.\n· Desative \"Salvar no iCloud\" nos ajustes do app para manter os registros apenas no dispositivo. Dispositivos sem sessão no iCloud também mantêm os registros apenas no dispositivo.\n· Os registros salvos no iCloud podem ser apagados em Ajustes do dispositivo → [seu nome] → iCloud.\nA Política de Privacidade da Apple se aplica ao iCloud.\n\n📡 Atividade de rede\nO MAKE10 se comunica apenas com o iCloud da Apple, e somente para o salvamento no iCloud descrito acima. Ele não faz nenhuma outra conexão. Todos os recursos funcionam sem conexão com a internet.\n\n🎯 Publicidade e compras no app\nO MAKE10 não contém nenhum tipo de anúncio.\nO MAKE10 não tem compras no app. O app é totalmente gratuito.\nNão há links para sites externos, redes sociais ou outros apps dentro do MAKE10.\n\n👶 Privacidade infantil (COPPA)\nO MAKE10 foi criado para crianças e cumpre a COPPA e as leis internacionais aplicáveis de privacidade infantil.\nNão coletamos informações pessoais de ninguém. Os registros salvos no iCloud ficam na sua própria Conta Apple; o desenvolvedor não os recebe.\n\n🔄 Alterações nesta política\nSe esta política for atualizada, a nova versão será publicada nesta página com uma nova data de vigência.\n\n⚠️ Isenção de responsabilidade\nNos esforçamos para oferecer conteúdo preciso e funcionamento estável, mas não garantimos a integridade, a precisão ou o funcionamento ininterrupto do app.\nAtualizações do iOS, mudanças no ambiente do dispositivo ou o estado do iCloud podem afetar o funcionamento do app sem aviso prévio. O desenvolvedor não se responsabiliza por perdas de dados decorrentes disso.\nO desenvolvedor pode encerrar ou modificar o app sem aviso prévio."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "นโยบายความเป็นส่วนตัว\nอัปเดตล่าสุด: 28 เมษายน 2026\n\n🚫 ไม่มีการเก็บข้อมูล\n🚫 ไม่มีการส่งข้อมูล\n🚫 ไม่มีโฆษณา\n🚫 ไม่มีลิงก์ภายนอก\n\n📋 ภาพรวม\nMAKE10 (สร้างสิบ) คือเกมปริศนาคณิตศาสตร์ฟรีสำหรับเด็ก\nพัฒนาโดย Flying Dev Lab (空飛ぶ研究室)\nMAKE10 ไม่เก็บ จัดเก็บ หรือส่งข้อมูลส่วนบุคคลใดๆ ทั้งสิ้น\n\n📦 ข้อมูลที่เราเก็บ\nเราไม่เก็บข้อมูลใดๆ\nMAKE10 ไม่เก็บ ร้องขอ หรือจัดเก็บสิ่งต่อไปนี้:\n· ชื่อ อีเมล หรือข้อมูลติดต่อ\n· ตัวระบุอุปกรณ์หรือ ID โฆษณา\n· ข้อมูลตำแหน่ง\n· ข้อมูลการใช้งานหรือพฤติกรรม\n· คุกกี้หรือเทคโนโลยีติดตาม\n· ข้อมูลอื่นใดทั้งส่วนบุคคลและไม่ส่วนบุคคล\n\n📡 กิจกรรมเครือข่าย\nMAKE10 ไม่เชื่อมต่ออินเทอร์เน็ตในการใช้งานปกติ\nแอปทำงานแบบออฟไลน์ทั้งหมด\n\n🎯 โฆษณาและการซื้อในแอป\nMAKE10 ไม่มีโฆษณาใดๆ ทั้งสิ้น\nMAKE10 ไม่มีการซื้อในแอป แอปนี้ฟรีสมบูรณ์\nไม่มีลิงก์ไปยังเว็บไซต์ภายนอก โซเชียลมีเดีย หรือแอปอื่นๆ ภายใน MAKE10\n\n👶 ความเป็นส่วนตัวของเด็ก (COPPA)\nMAKE10 ออกแบบมาสำหรับเด็กและปฏิบัติตาม COPPA\nและกฎหมายความเป็นส่วนตัวของเด็กนานาชาติที่เกี่ยวข้องอย่างครบถ้วน\nเนื่องจากเราไม่เก็บข้อมูลส่วนบุคคลจากใคร จึงไม่มีข้อมูลที่ต้องปกป้อง แบ่งปัน หรือลบ\n\n🔄 การเปลี่ยนแปลงนโยบายนี้\nหากมีการอัปเดตนโยบายนี้ เวอร์ชันใหม่จะถูกโพสต์บนหน้านี้พร้อมวันที่มีผล\nเนื่องจากไม่มีการเก็บข้อมูล การเปลี่ยนแปลงใดๆ จะไม่ส่งผลต่อข้อมูลผู้ใช้ที่จัดเก็บไว้\n\n⚠️ ข้อจำกัดความรับผิดชอบ\nแม้เราพยายามให้เนื้อหาที่ถูกต้องและการทำงานที่เสถียร\nเราไม่รับประกันความสมบูรณ์ ความถูกต้อง หรือการทำงานต่อเนื่องของแอป\nการอัปเดต iOS หรือการเปลี่ยนแปลงสภาพแวดล้อมอุปกรณ์อาจส่งผลต่อพฤติกรรมของแอปโดยไม่แจ้งล่วงหน้า\nผู้พัฒนาจะไม่รับผิดชอบต่อการสูญหายของข้อมูลจากการเปลี่ยนแปลงดังกล่าว\nผู้พัฒนาอาจยุติหรือแก้ไขแอปโดยไม่แจ้งล่วงหน้า"
+            "value" : "นโยบายความเป็นส่วนตัว\nอัปเดตล่าสุด: 15 ตุลาคม 2026\n\n🚫 ไม่เก็บข้อมูล\n🚫 ไม่มีโฆษณา\n🚫 ไม่มีลิงก์ภายนอก\n☁️ บันทึกข้อมูลได้เฉพาะใน iCloud ของคุณเองเท่านั้น\n\n📋 ภาพรวม\nMAKE10 (สร้างสิบ) คือเกมปริศนาคณิตศาสตร์ฟรีสำหรับเด็ก พัฒนาโดย Flying Dev Lab (空飛ぶ研究室)\nMAKE10 ไม่เก็บข้อมูลส่วนบุคคลใด ๆ จากใครก็ตาม ไม่ว่าจะอายุเท่าใด ผู้พัฒนาไม่เคยได้รับหรือเห็นข้อมูลของคุณ\n\n📦 ข้อมูลที่เราเก็บ\nเราไม่เก็บข้อมูลใด ๆ\nMAKE10 ไม่เก็บ ไม่ขอ และไม่บันทึกสิ่งต่อไปนี้:\n· ชื่อ อีเมล หรือข้อมูลติดต่อ\n· รหัสระบุอุปกรณ์หรือรหัสโฆษณา\n· ข้อมูลตำแหน่ง\n· ข้อมูลการใช้งานหรือพฤติกรรม\n· คุกกี้หรือเทคโนโลยีการติดตาม\n· ข้อมูลส่วนบุคคลหรือไม่ใช่ส่วนบุคคลอื่นใด\n\n☁️ การบันทึกใน iCloud\nเพื่อให้กู้คืนข้อมูลการเล่น (ภาพวาดในสมุดสติกเกอร์ สติกเกอร์ พลังงาน คะแนนสูงสุด สมุดขอบคุณ ฯลฯ) ได้หลังเปลี่ยนอุปกรณ์หรือติดตั้งแอปใหม่ MAKE10 สามารถบันทึกข้อมูลไว้ใน iCloud ของ Apple\n· ข้อมูลจะถูกบันทึกในพื้นที่ส่วนตัวของ iCloud ของบัญชี Apple ที่ลงชื่อเข้าใช้ในอุปกรณ์\n· มีเพียงบัญชี Apple นั้นเท่านั้นที่อ่านพื้นที่นี้ได้ ไม่มีใครอื่น รวมถึงผู้พัฒนา ที่สามารถดูได้\n· ไม่มีการส่งข้อมูลใด ๆ ไปยังเซิร์ฟเวอร์ของผู้พัฒนาหรือบริษัทอื่น\n· ปิด \"บันทึกใน iCloud\" ในการตั้งค่าของแอปเพื่อเก็บข้อมูลไว้ในอุปกรณ์เท่านั้น อุปกรณ์ที่ไม่ได้ลงชื่อเข้าใช้ iCloud ก็จะเก็บข้อมูลไว้ในอุปกรณ์เท่านั้นเช่นกัน\n· ข้อมูลที่บันทึกใน iCloud สามารถลบได้จาก การตั้งค่าของอุปกรณ์ → [ชื่อของคุณ] → iCloud\nนโยบายความเป็นส่วนตัวของ Apple มีผลบังคับใช้กับ iCloud\n\n📡 กิจกรรมเครือข่าย\nMAKE10 ติดต่อกับ iCloud ของ Apple เท่านั้น และเฉพาะเพื่อการบันทึกใน iCloud ตามที่อธิบายข้างต้น ไม่มีการเชื่อมต่ออื่นใด ทุกฟีเจอร์ใช้งานได้แม้ไม่มีอินเทอร์เน็ต\n\n🎯 โฆษณาและการซื้อในแอป\nMAKE10 ไม่มีโฆษณาใด ๆ ทั้งสิ้น\nMAKE10 ไม่มีการซื้อในแอป แอปนี้ฟรีทั้งหมด\nภายใน MAKE10 ไม่มีลิงก์ไปยังเว็บไซต์ภายนอก โซเชียลมีเดีย หรือแอปอื่น\n\n👶 ความเป็นส่วนตัวของเด็ก (COPPA)\nMAKE10 ออกแบบมาสำหรับเด็ก และปฏิบัติตาม COPPA และกฎหมายความเป็นส่วนตัวของเด็กระหว่างประเทศที่เกี่ยวข้อง\nเราไม่เก็บข้อมูลส่วนบุคคลจากใครก็ตาม ข้อมูลที่บันทึกใน iCloud จะอยู่ในบัญชี Apple ของคุณเองเท่านั้น ผู้พัฒนาไม่ได้รับข้อมูลนั้น\n\n🔄 การเปลี่ยนแปลงนโยบายนี้\nหากมีการปรับปรุงนโยบายนี้ ฉบับใหม่จะเผยแพร่ในหน้านี้พร้อมวันที่มีผลบังคับใช้ใหม่\n\n⚠️ ข้อจำกัดความรับผิดชอบ\nเราพยายามให้เนื้อหาที่ถูกต้องและการทำงานที่เสถียร แต่ไม่รับประกันความสมบูรณ์ ความถูกต้อง หรือการทำงานอย่างต่อเนื่องของแอป\nการอัปเดต iOS การเปลี่ยนแปลงสภาพแวดล้อมของอุปกรณ์ หรือสถานะของ iCloud อาจส่งผลต่อการทำงานของแอปโดยไม่แจ้งให้ทราบล่วงหน้า ผู้พัฒนาจะไม่รับผิดชอบต่อการสูญหายของข้อมูลที่เกิดจากเหตุดังกล่าว\nผู้พัฒนาอาจยุติหรือเปลี่ยนแปลงแอปโดยไม่แจ้งให้ทราบล่วงหน้า"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chính sách Quyền riêng tư\nCập nhật lần cuối: 28 tháng 4 năm 2026\n\n🚫 Không thu thập dữ liệu\n🚫 Không truyền dữ liệu\n🚫 Không có quảng cáo\n🚫 Không có liên kết ngoài\n\n📋 Tổng quan\nMAKE10 là trò chơi đố toán học miễn phí dành cho trẻ em,\nphát triển bởi Flying Dev Lab (空飛ぶ研究室).\nMAKE10 không thu thập, lưu trữ hay truyền bất kỳ thông tin cá nhân nào.\n\n📦 Thông tin chúng tôi thu thập\nChúng tôi không thu thập gì cả.\nMAKE10 không thu thập: tên, email, mã định danh thiết bị, dữ liệu vị trí, dữ liệu sử dụng, cookie hay bất kỳ thông tin nào khác.\n\n📡 Hoạt động mạng\nMAKE10 không kết nối internet trong quá trình sử dụng bình thường. Ứng dụng hoạt động hoàn toàn ngoại tuyến.\n\n🎯 Quảng cáo & mua hàng trong ứng dụng\nKhông có quảng cáo. Không có mua hàng trong ứng dụng. Hoàn toàn miễn phí. Không có liên kết ngoài.\n\n👶 Quyền riêng tư của trẻ em (COPPA)\nMAKE10 được thiết kế cho trẻ em và tuân thủ đầy đủ COPPA cũng như các luật bảo vệ quyền riêng tư trẻ em quốc tế hiện hành.\n\n🔄 Thay đổi chính sách này\nMọi cập nhật sẽ được đăng trên trang này kèm ngày hiệu lực mới.\n\n⚠️ Miễn trách nhiệm\nChúng tôi không đảm bảo tính đầy đủ hoặc hoạt động liên tục của ứng dụng. Nhà phát triển không chịu trách nhiệm về mất mát dữ liệu."
+            "value" : "Chính sách Quyền riêng tư\nCập nhật lần cuối: 15 tháng 10 năm 2026\n\n🚫 Không thu thập dữ liệu\n🚫 Không quảng cáo\n🚫 Không liên kết bên ngoài\n☁️ Dữ liệu chỉ có thể được lưu vào iCloud của chính bạn\n\n📋 Tổng quan\nMAKE10 (10をつくろう) là trò chơi đố toán học miễn phí dành cho trẻ em, do Flying Dev Lab (空飛ぶ研究室) phát triển.\nMAKE10 không thu thập bất kỳ thông tin cá nhân nào — từ bất kỳ ai, ở bất kỳ độ tuổi nào. Nhà phát triển không bao giờ nhận hay xem dữ liệu của bạn.\n\n📦 Thông tin chúng tôi thu thập\nChúng tôi không thu thập gì cả.\nMAKE10 không thu thập, yêu cầu hay lưu trữ bất kỳ thông tin nào sau đây:\n· Tên, địa chỉ email hoặc thông tin liên hệ\n· Mã định danh thiết bị hoặc ID quảng cáo\n· Dữ liệu vị trí\n· Phân tích sử dụng hoặc dữ liệu hành vi\n· Cookie hoặc công nghệ theo dõi\n· Bất kỳ thông tin cá nhân hoặc phi cá nhân nào khác\n\n☁️ Lưu vào iCloud\nĐể có thể khôi phục dữ liệu chơi (tranh vẽ trong sổ nhãn dán, nhãn dán, năng lượng, điểm cao, Sổ cảm ơn, v.v.) sau khi đổi thiết bị hoặc cài lại ứng dụng, MAKE10 có thể lưu chúng vào iCloud của Apple.\n· Dữ liệu được lưu vào vùng riêng tư trong iCloud của Tài khoản Apple đang đăng nhập trên thiết bị.\n· Chỉ Tài khoản Apple đó mới đọc được vùng này. Không ai khác, kể cả nhà phát triển, có thể xem.\n· Không có gì được gửi đến máy chủ của nhà phát triển hay bất kỳ công ty nào khác.\n· Tắt \"Lưu vào iCloud\" trong cài đặt của ứng dụng để chỉ lưu dữ liệu trên thiết bị. Thiết bị chưa đăng nhập iCloud cũng chỉ lưu dữ liệu trên thiết bị.\n· Dữ liệu đã lưu trên iCloud có thể xóa trong Cài đặt của thiết bị → [tên của bạn] → iCloud.\nChính sách Quyền riêng tư của Apple áp dụng cho iCloud.\n\n📡 Hoạt động mạng\nMAKE10 chỉ liên lạc với iCloud của Apple, và chỉ để lưu vào iCloud như mô tả ở trên. Ứng dụng không tạo bất kỳ kết nối nào khác. Mọi tính năng đều dùng được khi không có internet.\n\n🎯 Quảng cáo & mua hàng trong ứng dụng\nMAKE10 không có bất kỳ quảng cáo nào.\nMAKE10 không có mua hàng trong ứng dụng. Ứng dụng hoàn toàn miễn phí.\nTrong MAKE10 không có liên kết đến trang web bên ngoài, mạng xã hội hay ứng dụng khác.\n\n👶 Quyền riêng tư của trẻ em (COPPA)\nMAKE10 được thiết kế cho trẻ em và tuân thủ COPPA cùng các luật quốc tế hiện hành về quyền riêng tư của trẻ em.\nChúng tôi không thu thập thông tin cá nhân từ bất kỳ ai. Dữ liệu đã lưu trên iCloud nằm trong Tài khoản Apple của chính bạn; nhà phát triển không nhận được.\n\n🔄 Thay đổi chính sách này\nNếu chính sách này được cập nhật, phiên bản mới sẽ được đăng trên trang này kèm ngày hiệu lực mới.\n\n⚠️ Miễn trách nhiệm\nChúng tôi cố gắng cung cấp nội dung chính xác và hoạt động ổn định, nhưng không đảm bảo tính đầy đủ, chính xác hay hoạt động liên tục của ứng dụng.\nCác bản cập nhật iOS, thay đổi môi trường thiết bị hoặc tình trạng của iCloud có thể ảnh hưởng đến hoạt động của ứng dụng mà không báo trước. Nhà phát triển không chịu trách nhiệm cho việc mất dữ liệu phát sinh từ đó.\nNhà phát triển có thể ngừng hoặc thay đổi ứng dụng mà không báo trước."
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隐私政策\n最后更新：2026年4月28日\n\n🚫 不收集数据\n🚫 不传输数据\n🚫 无广告\n🚫 无外部链接\n\n📋 概述\nMAKE10是由Flying Dev Lab（空飛ぶ研究室）开发的儿童免费数学益智游戏。\nMAKE10不收集、存储或传输任何个人信息。\n\n📦 收集的信息\n我们不收集任何信息。\nMAKE10不收集：姓名、邮箱、设备标识符、位置数据、使用数据、Cookie或其他任何信息。\n\n📡 网络活动\nMAKE10在正常使用期间不连接互联网，完全离线运行。\n\n🎯 广告与应用内购买\n无广告。无应用内购买。完全免费。无外部链接。\n\n👶 儿童隐私（COPPA）\nMAKE10专为儿童设计，完全遵守COPPA及相关国际儿童隐私法律。\n\n🔄 政策变更\n如有更新，将在本页以新的生效日期公布。\n\n⚠️ 免责声明\n我们不保证应用的完整性、准确性或不间断运行。开发者不对数据丢失承担责任。"
+            "value" : "隐私政策\n最后更新：2026年10月15日\n\n🚫 不收集数据\n🚫 没有广告\n🚫 没有外部链接\n☁️ 记录只能保存到你本人的 iCloud\n\n📋 概述\nMAKE10是由Flying Dev Lab（空飛ぶ研究室）开发的儿童免费数学益智游戏。\nMAKE10 不会收集任何年龄的任何人的个人信息。开发者不会接收或查看你的数据。\n\n📦 收集的信息\n我们什么都不收集。\n不收集姓名、电子邮件地址、设备标识符、广告 ID、位置信息、使用数据或其他任何信息。\n\n☁️ 保存到 iCloud\n为了在更换设备或重新安装应用后也能恢复游戏记录（贴纸册的画、贴纸、能量、最高分、感谢手帐等），MAKE10 可以将记录保存到 Apple 的 iCloud。\n· 保存位置是设备上登录的本人 Apple 账户的 iCloud（私人区域）。\n· 该区域只有本人的 Apple 账户可以读取。包括开发者在内，其他任何人都无法查看。\n· 不会发送到开发者的服务器或其他公司。\n· 在应用的“设置”中关闭“保存到 iCloud”，该设备的记录将只保存在设备中。未登录 iCloud 的设备也只保存在设备中。\n· 保存在 iCloud 中的记录，可以在 iPhone/iPad 的“设置”→ 你的名字 →“iCloud”中删除。\niCloud 适用 Apple 的隐私政策。\n\n📡 网络活动\nMAKE10 仅在进行上述 iCloud 保存时与 Apple 的 iCloud 通信，不进行其他任何通信。即使没有连接互联网，也能使用全部功能。\n\n🎯 广告与应用内购买\n完全没有广告。\n也没有应用内购买。应用完全免费。\n应用内没有指向外部网站、社交媒体或其他应用的链接。\n\n👶 儿童隐私（COPPA）\nMAKE10 专为儿童设计，遵守 COPPA 及各国有关儿童隐私的法律。\n不会收集任何年龄用户的个人信息。保存在 iCloud 中的记录只存在于你本人的 Apple 账户中，开发者不会接收。\n\n🔄 政策变更\n本政策更新时，将连同修订日期一并发布在本页面。\n\n⚠️ 免责声明\n我们努力提供准确的内容和稳定的运行，但不保证应用的完整性、准确性或持续运行。\niOS 更新、设备环境的变化或 iCloud 的状态等，可能会在不事先通知的情况下影响应用的运行。对于由此造成的数据丢失，开发者不承担责任。\n开发者可能在不事先通知的情况下终止或变更应用。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "隱私政策\n最後更新：2026年4月28日\n\n🚫 不收集資料\n🚫 不傳輸資料\n🚫 無廣告\n🚫 無外部連結\n\n📋 概述\nMAKE10是由Flying Dev Lab（空飛ぶ研究室）開發的兒童免費數學益智遊戲。\nMAKE10不收集、儲存或傳輸任何個人資訊。\n\n📦 收集的資訊\n我們不收集任何資訊。\nMAKE10不收集：姓名、電郵、裝置識別碼、位置資料、使用資料、Cookie或其他任何資訊。\n\n📡 網路活動\nMAKE10在正常使用期間不連接網際網路，完全離線運行。\n\n🎯 廣告與應用程式內購買\n無廣告。無應用程式內購買。完全免費。無外部連結。\n\n👶 兒童隱私（COPPA）\nMAKE10專為兒童設計，完全遵守COPPA及相關國際兒童隱私法律。\n\n🔄 政策變更\n如有更新，將在本頁以新的生效日期公布。\n\n⚠️ 免責聲明\n我們不保證應用程式的完整性、準確性或不間斷運行。開發者不對資料遺失承擔責任。"
+            "value" : "隱私政策\n最後更新：2026年10月15日\n\n🚫 不收集資料\n🚫 沒有廣告\n🚫 沒有外部連結\n☁️ 紀錄只能儲存到你本人的 iCloud\n\n📋 概述\nMAKE10是由Flying Dev Lab（空飛ぶ研究室）開發的兒童免費數學益智遊戲。\nMAKE10 不會收集任何年齡的任何人的個人資訊。開發者不會接收或查看你的資料。\n\n📦 收集的資訊\n我們什麼都不收集。\n不收集姓名、電子郵件地址、裝置識別碼、廣告 ID、位置資訊、使用資料或其他任何資訊。\n\n☁️ 儲存到 iCloud\n為了在更換裝置或重新安裝應用程式後也能復原遊戲紀錄（貼紙冊的畫、貼紙、能量、最高分、感謝手帳等），MAKE10 可以將紀錄儲存到 Apple 的 iCloud。\n· 儲存位置是裝置上登入的本人 Apple 帳號的 iCloud（私人區域）。\n· 該區域只有本人的 Apple 帳號可以讀取。包括開發者在內，其他任何人都無法查看。\n· 不會傳送到開發者的伺服器或其他公司。\n· 在應用程式的「設定」中關閉「儲存到 iCloud」，該裝置的紀錄將只儲存在裝置中。未登入 iCloud 的裝置也只儲存在裝置中。\n· 儲存在 iCloud 中的紀錄，可以在 iPhone/iPad 的「設定」→ 你的名字 →「iCloud」中刪除。\niCloud 適用 Apple 的隱私權政策。\n\n📡 網路活動\nMAKE10 僅在進行上述 iCloud 儲存時與 Apple 的 iCloud 通訊，不進行其他任何通訊。即使沒有連上網際網路，也能使用全部功能。\n\n🎯 廣告與應用程式內購買\n完全沒有廣告。\n也沒有應用程式內購買。應用程式完全免費。\n應用程式內沒有指向外部網站、社群媒體或其他應用程式的連結。\n\n👶 兒童隱私（COPPA）\nMAKE10 專為兒童設計，遵守 COPPA 及各國有關兒童隱私的法律。\n不會收集任何年齡使用者的個人資訊。儲存在 iCloud 中的紀錄只存在於你本人的 Apple 帳號中，開發者不會接收。\n\n🔄 政策變更\n本政策更新時，將連同修訂日期一併刊登在本頁面。\n\n⚠️ 免責聲明\n我們努力提供正確的內容和穩定的運作，但不保證應用程式的完整性、正確性或持續運作。\niOS 更新、裝置環境的變化或 iCloud 的狀態等，可能會在不事先通知的情況下影響應用程式的運作。對於因此造成的資料遺失，開發者不負任何責任。\n開發者可能在不事先通知的情況下終止或變更應用程式。"
           }
         }
       }
@@ -39899,6 +39899,1542 @@
           "stringUnit" : {
             "state" : "needs_review",
             "value" : "難題與無解題混合。\n看穿了就點「湊不出！」。"
+          }
+        }
+      }
+    },
+    "settings_icloud_label" : {
+      "comment" : "Settings toggle: save the app's records to the user's own iCloud so they survive a device change. Keep it short.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In iCloud sichern"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Save to iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardar en iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegarder dans iCloud"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud में सहेजें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Simpan ke iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salva su iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud に ほぞん"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud에 저장"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewaren in iCloud"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvar no iCloud"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกใน iCloud"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lưu vào iCloud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存到 iCloud"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "儲存到 iCloud"
+          }
+        }
+      }
+    },
+    "icloud_status_off" : {
+      "comment" : "Settings: status under the iCloud toggle when it is off (records are kept only on this device).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nur auf diesem Gerät gesichert"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Saved on this device only"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guardado solo en este dispositivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvegardé uniquement sur cet appareil"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "केवल इस डिवाइस पर सहेजा गया"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hanya disimpan di perangkat ini"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvato solo su questo dispositivo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この たんまつだけに ほぞんしています"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 기기에만 저장하고 있어요"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alleen op dit apparaat bewaard"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Salvo apenas neste dispositivo"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "บันทึกไว้ในอุปกรณ์นี้เท่านั้น"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chỉ lưu trên thiết bị này"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "仅保存在此设备上"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "僅儲存在此裝置上"
+          }
+        }
+      }
+    },
+    "icloud_status_no_account" : {
+      "comment" : "Settings: status under the iCloud toggle when the device is not signed in to iCloud.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nicht bei iCloud angemeldet"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not signed in to iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No has iniciado sesión en iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Non connecté à iCloud"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud में साइन इन नहीं है"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Belum masuk ke iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accesso a iCloud non effettuato"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud に サインインしていません"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud에 로그인되어 있지 않아요"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niet ingelogd bij iCloud"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sem sessão iniciada no iCloud"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ยังไม่ได้ลงชื่อเข้าใช้ iCloud"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chưa đăng nhập iCloud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未登录 iCloud"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未登入 iCloud"
+          }
+        }
+      }
+    },
+    "icloud_status_syncing" : {
+      "comment" : "Settings: status under the iCloud toggle while syncing with iCloud.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit iCloud synchronisieren …"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Syncing with iCloud…"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizando con iCloud…"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchronisation avec iCloud…"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud के साथ सिंक हो रहा है…"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menyinkronkan dengan iCloud…"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizzazione con iCloud…"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud と そろえています…"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud와 맞추는 중…"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Synchroniseren met iCloud…"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sincronizando com o iCloud…"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กำลังซิงค์กับ iCloud…"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đang đồng bộ với iCloud…"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在与 iCloud 同步…"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "正在與 iCloud 同步…"
+          }
+        }
+      }
+    },
+    "icloud_status_synced %@" : {
+      "comment" : "Settings: status under the iCloud toggle. The argument is the date and time of the last successful sync.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zuletzt synchronisiert: %@"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last synced: %@"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronización: %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernière synchro : %@"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "आख़िरी सिंक: %@"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Terakhir disinkronkan: %@"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ultima sincronizzazione: %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "さいごに そろえた じかん：%@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "마지막으로 맞춘 시간: %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laatst gesynchroniseerd: %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última sincronização: %@"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ซิงค์ล่าสุด: %@"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Đồng bộ lần cuối: %@"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次同步：%@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上次同步：%@"
+          }
+        }
+      }
+    },
+    "icloud_status_failed" : {
+      "comment" : "Settings: status under the iCloud toggle when iCloud cannot be reached right now (it will retry automatically).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud gerade nicht erreichbar (später erneut)"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Can't reach iCloud right now (will try again later)"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No se puede conectar con iCloud ahora (se volverá a intentar)"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud injoignable pour le moment (nouvel essai plus tard)"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "अभी iCloud से जुड़ नहीं पा रहे (बाद में फिर कोशिश होगी)"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tidak bisa terhubung ke iCloud saat ini (akan dicoba lagi)"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Impossibile raggiungere iCloud ora (riproverà più tardi)"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "いまは iCloud に つながりません（あとで また ためします）"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지금은 iCloud에 연결할 수 없어요 (나중에 다시 시도해요)"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud nu niet bereikbaar (later opnieuw)"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Não foi possível acessar o iCloud agora (tentará de novo depois)"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ตอนนี้เชื่อมต่อ iCloud ไม่ได้ (จะลองใหม่ภายหลัง)"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiện không kết nối được iCloud (sẽ thử lại sau)"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暂时无法连接 iCloud（稍后会再试）"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "暫時無法連線 iCloud（稍後會再試）"
+          }
+        }
+      }
+    },
+    "icloud_status_needs_choice" : {
+      "comment" : "Settings: status under the iCloud toggle when a parent must choose which records to keep (iCloud or this device).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte wähle, welche Daten behalten werden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Please choose which records to keep"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elige qué registros conservar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisis les données à conserver"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "कृपया चुनें कि कौन-सा रिकॉर्ड रखना है"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih data mana yang ingin disimpan"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli quali dati conservare"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "どちらの きろくを つかうか えらんでください"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "어느 기록을 쓸지 골라 주세요"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kies welke gegevens je wilt houden"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolha quais registros manter"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "โปรดเลือกว่าจะใช้ข้อมูลชุดไหน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hãy chọn dữ liệu muốn giữ"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "请选择要保留哪一份记录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "請選擇要保留哪一份紀錄"
+          }
+        }
+      }
+    },
+    "icloud_status_choose_button" : {
+      "comment" : "Settings: small button next to the iCloud status that opens the choice dialog (iCloud records or this device's records).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wählen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choose"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Elegir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Choisir"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "चुनें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pilih"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Scegli"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "えらぶ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고르기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kiezen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Escolher"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เลือก"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Chọn"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "选择"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選擇"
+          }
+        }
+      }
+    },
+    "icloud_choice_title" : {
+      "comment" : "Title of the dialog asking a parent which records to keep: the ones in iCloud or the ones on this device.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Daten in iCloud"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records in iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros en iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Données dans iCloud"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud के रिकॉर्ड"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data di iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dati in iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud の きろく"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud의 기록"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gegevens in iCloud"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Registros no iCloud"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลใน iCloud"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu trên iCloud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中的记录"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中的紀錄"
+          }
+        }
+      }
+    },
+    "icloud_choice_body_first" : {
+      "comment" : "Body of the choice dialog when connecting to iCloud for the first time and both iCloud and this device already have records.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sowohl iCloud als auch dieses Gerät haben Daten. Welche möchtest du verwenden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Both iCloud and this device have records. Which do you want to use?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tanto iCloud como este dispositivo tienen registros. ¿Cuáles quieres usar?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud et cet appareil contiennent tous deux des données. Lesquelles utiliser ?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud और इस डिवाइस, दोनों में रिकॉर्ड हैं। आप कौन-सा इस्तेमाल करना चाहते हैं?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud dan perangkat ini sama-sama punya data. Mana yang ingin digunakan?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sia iCloud sia questo dispositivo hanno dei dati. Quali vuoi usare?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud にも この たんまつにも きろくが あります。どちらを つかいますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud와 이 기기 모두에 기록이 있어요. 어느 쪽을 쓸까요?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zowel iCloud als dit apparaat heeft gegevens. Welke wil je gebruiken?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O iCloud e este dispositivo têm registros. Quais você quer usar?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ทั้ง iCloud และอุปกรณ์นี้มีข้อมูลอยู่ จะใช้ชุดไหน?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cả iCloud và thiết bị này đều có dữ liệu. Bạn muốn dùng dữ liệu nào?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 和此设备上都有记录。要使用哪一份？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 和此裝置上都有紀錄。要使用哪一份？"
+          }
+        }
+      }
+    },
+    "icloud_choice_body_reenabled" : {
+      "comment" : "Body of the choice dialog when iCloud saving is turned back on (for example after Start Over) and iCloud still has the earlier records.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In iCloud sind noch die früheren Daten. Welche möchtest du verwenden?"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud still has your earlier records. Which do you want to use?"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud aún tiene los registros anteriores. ¿Cuáles quieres usar?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud contient encore les données précédentes. Lesquelles utiliser ?"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud में पहले के रिकॉर्ड अब भी हैं। आप कौन-सा इस्तेमाल करना चाहते हैं?"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud masih menyimpan data sebelumnya. Mana yang ingin digunakan?"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud contiene ancora i dati precedenti. Quali vuoi usare?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud に まえの きろくが のこっています。どちらを つかいますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud에 예전 기록이 남아 있어요. 어느 쪽을 쓸까요?"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud heeft nog de eerdere gegevens. Welke wil je gebruiken?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O iCloud ainda tem os registros anteriores. Quais você quer usar?"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud ยังมีข้อมูลเดิมอยู่ จะใช้ชุดไหน?"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud vẫn còn dữ liệu cũ. Bạn muốn dùng dữ liệu nào?"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中还留有之前的记录。要使用哪一份？"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中還留有之前的紀錄。要使用哪一份？"
+          }
+        }
+      }
+    },
+    "icloud_choice_note" : {
+      "comment" : "Warning line in the choice dialog: the records that are not chosen will be replaced (lost).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die nicht gewählten Daten werden ersetzt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The records you don't choose will be replaced."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los registros que no elijas se reemplazarán."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les données non choisies seront remplacées."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "जो रिकॉर्ड आप नहीं चुनेंगे, वे बदल दिए जाएँगे।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data yang tidak dipilih akan diganti."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I dati che non scegli verranno sostituiti."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "えらばなかった ほうの きろくは きえます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고르지 않은 쪽의 기록은 사라져요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De gegevens die je niet kiest, worden vervangen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os registros que você não escolher serão substituídos."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลชุดที่ไม่ได้เลือกจะถูกแทนที่"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu không được chọn sẽ bị thay thế."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未选择的那份记录将被替换。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "未選擇的那份紀錄將被取代。"
+          }
+        }
+      }
+    },
+    "icloud_choice_use_cloud" : {
+      "comment" : "Button in the choice dialog: bring the records in iCloud back to this device (this device's records are replaced).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aus iCloud wiederherstellen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restore from iCloud"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar desde iCloud"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurer depuis iCloud"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud से वापस लाएँ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pulihkan dari iCloud"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ripristina da iCloud"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud の きろくを もどす"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 기록 되돌리기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Herstellen uit iCloud"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Restaurar do iCloud"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "กู้คืนจาก iCloud"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Khôi phục từ iCloud"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "从 iCloud 恢复"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "從 iCloud 復原"
+          }
+        }
+      }
+    },
+    "icloud_choice_use_local" : {
+      "comment" : "Button in the choice dialog: overwrite the records in iCloud with this device's records.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud mit diesem Gerät überschreiben"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overwrite iCloud with this device"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobrescribir iCloud con este dispositivo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Remplacer iCloud par cet appareil"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "इस डिवाइस से iCloud को बदलें"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Timpa iCloud dengan perangkat ini"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sovrascrivi iCloud con questo dispositivo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "この たんまつの きろくで うわがき"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이 기기 기록으로 덮어쓰기"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud overschrijven met dit apparaat"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Substituir o iCloud por este dispositivo"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "เขียนทับ iCloud ด้วยอุปกรณ์นี้"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ghi đè iCloud bằng thiết bị này"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用此设备覆盖 iCloud"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "用此裝置覆蓋 iCloud"
+          }
+        }
+      }
+    },
+    "icloud_choice_later" : {
+      "comment" : "Button in the choice dialog: decide later (syncing stays paused until a choice is made).",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Später"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Más tarde"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus tard"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "बाद में"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nanti"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Più tardi"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "あとで"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "나중에"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Later"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mais tarde"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ภายหลัง"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Để sau"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍后"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "稍後"
+          }
+        }
+      }
+    },
+    "reset_confirm_progress_icloud" : {
+      "comment" : "Extra line in the Start Over confirmation: records saved in iCloud are kept, and can be restored by turning iCloud saving back on in Settings.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Daten in iCloud bleiben erhalten. Schalte „In iCloud sichern“ in den Einstellungen wieder ein, um sie wiederherzustellen."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records in iCloud are kept. Turn \"Save to iCloud\" back on in Settings to restore them."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Los registros de iCloud se conservan. Vuelve a activar «Guardar en iCloud» en Ajustes para restaurarlos."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les données dans iCloud sont conservées. Réactive « Sauvegarder dans iCloud » dans les réglages pour les restaurer."
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud के रिकॉर्ड बने रहेंगे। उन्हें वापस लाने के लिए सेटिंग में \"iCloud में सहेजें\" फिर से चालू करें।"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Data di iCloud tetap disimpan. Nyalakan lagi \"Simpan ke iCloud\" di Pengaturan untuk memulihkannya."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I dati in iCloud vengono conservati. Riattiva \"Salva su iCloud\" nelle impostazioni per ripristinarli."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud の きろくは のこります。せっていで「iCloud に ほぞん」を オンに もどすと、もどせます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud의 기록은 남아 있어요. 설정에서 'iCloud에 저장'을 다시 켜면 되돌릴 수 있어요."
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De gegevens in iCloud blijven bewaard. Zet \"Bewaren in iCloud\" weer aan in de instellingen om ze te herstellen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os registros no iCloud são mantidos. Ative de novo \"Salvar no iCloud\" nos Ajustes para restaurá-los."
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ข้อมูลใน iCloud จะยังอยู่ เปิด \"บันทึกใน iCloud\" อีกครั้งในการตั้งค่าเพื่อกู้คืน"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dữ liệu trên iCloud vẫn được giữ. Bật lại \"Lưu vào iCloud\" trong Cài đặt để khôi phục."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中的记录会保留。在设置中重新打开“保存到 iCloud”即可恢复。"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "iCloud 中的紀錄會保留。在設定中重新開啟「儲存到 iCloud」即可復原。"
           }
         }
       }

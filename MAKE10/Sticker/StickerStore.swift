@@ -18,6 +18,10 @@
 //  ゲームモード（stickers）  : 全件保持・画面表示は先頭50枚のみ
 //  ストレージ（storageEmojis）: 絵文字リストのみ・無制限
 //  シール画面（playStickers） : 位置情報あり・上限100枚
+//
+//  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//    ゲームモードとストレージのシールを1つの記録（"stickers"）にする。2台で食い違ったら、あとで変えたほうを残す。
+//    シール帳に貼ったシールは、シール帳のページの記録（StickerBookStore）に入る。
 
 // 絵文字シールの状態管理・永続化・ライフサイクル制御を担うシングルトン。
 
@@ -219,6 +223,7 @@ final class StickerStore {
         UserDefaults.standard.removeObject(forKey: UDKey.storageEmojis)
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
         UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
+        UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)
     }
 
     // MARK: - 公開API（所有数）
@@ -269,11 +274,31 @@ final class StickerStore {
     private func saveGame() {
         guard let data = try? JSONEncoder().encode(stickers) else { return }
         UserDefaults.standard.set(data, forKey: UDKey.stickers)
+        touch()
     }
 
     private func saveStorage() {
         guard let data = try? JSONEncoder().encode(storageEmojis) else { return }
         UserDefaults.standard.set(data, forKey: UDKey.storageEmojis)
+        touch()
+    }
+
+    // MARK: - iCloud との同期
+
+    /// シールを最後に変えた時刻を保存するキー（iCloud で2台の食い違いを比べるときに使う）。
+    private static let modifiedAtKey = "stickersModifiedAt"
+    private static let recordName    = "stickers"
+
+    /// 最後に変えた時刻を今にして、iCloud に送る予定にする（iCloud を使っていなければ何も起きない）。
+    private func touch() {
+        UserDefaults.standard.set(Date(), forKey: Self.modifiedAtKey)
+        CloudSyncManager.shared.markChanged(Self.recordName)
+    }
+
+    /// iCloud に送る中身。
+    private struct CloudStickers: Codable {
+        var game:    [Sticker]
+        var storage: [String]
     }
 
     private func savePlay() {
@@ -350,4 +375,38 @@ extension StickerStore.Sticker {
         scale    = try c.decodeIfPresent(Double.self, forKey: .scale)    ?? 1.0
         rotation = try c.decodeIfPresent(Double.self, forKey: .rotation) ?? 0
     }
+}
+
+// MARK: - iCloud との同期（CloudSyncSource）
+
+extension StickerStore: CloudSyncSource {
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let data = try? JSONEncoder().encode(CloudStickers(game: stickers, storage: storageEmojis)) else {
+            return nil
+        }
+        let modifiedAt = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        return CloudPayload(data: data, modifiedAt: modifiedAt)
+    }
+
+    /// iCloud から届いたシールを反映する。あとで変えたほうを残す。
+    /// 保存は UserDefaults に直接書く（saveGame / saveStorage は「変えた」扱いになり、送り返してしまうため）。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode(CloudStickers.self, from: payload.data) else { return .applied }
+        let localDate = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        if !force && localDate > payload.modifiedAt {
+            return .keptLocal   // この端末のほうがあとで変えた → この端末のシールを送り直す
+        }
+        stickers      = remote.game
+        storageEmojis = remote.storage
+        UserDefaults.standard.set(try? JSONEncoder().encode(remote.game),    forKey: UDKey.stickers)
+        UserDefaults.standard.set(try? JSONEncoder().encode(remote.storage), forKey: UDKey.storageEmojis)
+        UserDefaults.standard.set(payload.modifiedAt, forKey: Self.modifiedAtKey)
+        return .applied
+    }
+
+    /// シールを1枚でも持っていれば「遊んだ」とみなす（シール帳に貼った分は StickerBookStore が答える）。
+    var hasLocalProgress: Bool { !stickers.isEmpty || !storageEmojis.isEmpty }
 }

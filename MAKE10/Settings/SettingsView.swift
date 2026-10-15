@@ -55,6 +55,8 @@ struct SettingsView: View {
     @Bindable var settings = AppSettings.shared
     /// かべがみ（お絵かきで描いた絵を背景にする）のオン／オフ用
     @Bindable var wallpaper = WallpaperStore.shared
+    /// iCloud に ほぞん（同期）の状態とオン／オフ（CloudSyncManager.swift を参照）
+    private var cloud = CloudSyncManager.shared
 
     // MARK: ローカル状態
 
@@ -63,6 +65,9 @@ struct SettingsView: View {
 
     /// ポリシーシートの表示フラグ。
     @State private var showPolicy:    Bool         = false
+
+    /// iCloud の2択（iCloud の記録を もどす／この端末で うわがき）の画面を出すか。
+    @State private var showCloudChoice: Bool = false
 
     // MARK: 表示条件
 
@@ -123,6 +128,14 @@ struct SettingsView: View {
                     )
                     .disabled(wallpaper.image == nil)
                     .opacity(wallpaper.image == nil ? 0.45 : 1)
+                    Divider().padding(.leading, 60)
+                    // アプリの記録を、本人の iCloud に保存して、機種変更でも戻せるようにする（保護者向け）
+                    settingRow(
+                        icon:  "icloud.fill",
+                        label: "settings_icloud_label",
+                        isOn:  Binding(get: { cloud.isEnabled }, set: { cloud.setEnabled($0) })
+                    )
+                    cloudStatusRow
                 }
                 .background(
                     RoundedRectangle(cornerRadius: DS.sectionRadius)
@@ -201,6 +214,18 @@ struct SettingsView: View {
             )
             .padding(.horizontal, 36)
 
+            // ── iCloud の2択 ──────────────────────────────
+            // iCloud にも端末にも記録があるとき、保護者にどちらを使うか選んでもらう（CloudSyncManager の「2択」を参照）。
+            // 選ぶまでは同期を止めておく（勝手に混ぜたり消したりしない）。
+            if showCloudChoice && cloud.needsChoice {
+                CloudChoiceView(reason: cloud.choiceReason) { useCloud in
+                    cloud.resolveChoice(useCloud: useCloud)
+                    showCloudChoice = false
+                } onLater: {
+                    showCloudChoice = false
+                }
+            }
+
             // ── リセット確認ダイアログ ──────────────────────
             // confirmTarget がセットされたときだけ ZStack 上に重なって表示する。
             // 確認後は onConfirm で ViewModel のリセットメソッドを呼び、confirmTarget を nil に戻す
@@ -219,6 +244,47 @@ struct SettingsView: View {
         .sheet(isPresented: $showPolicy) {
             PolicyView()
                 .dynamicTypeSize(.large)
+        }
+    }
+
+    // MARK: iCloud の状態
+
+    /// 「iCloud に ほぞん」の下に出す、いまの様子（と、2択が必要なときの「えらぶ」ボタン）。
+    private var cloudStatusRow: some View {
+        HStack(spacing: 8) {
+            Text(cloudStatusText)
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(cloud.needsChoice ? DS.gaugeWarn : DS.muted)
+                .fixedSize(horizontal: false, vertical: true)
+            Spacer(minLength: 0)
+            if cloud.needsChoice {
+                Button { showCloudChoice = true } label: {
+                    Text("icloud_status_choose_button")
+                        .font(.system(size: 13, weight: .bold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(Capsule().fill(DS.primary))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(.leading, 60)
+        .padding(.trailing, 18)
+        .padding(.bottom, 12)
+    }
+
+    /// いまの様子の文。
+    private var cloudStatusText: LocalizedStringKey {
+        if cloud.needsChoice { return "icloud_status_needs_choice" }
+        switch cloud.status {
+        case .off:       return "icloud_status_off"
+        case .noAccount: return "icloud_status_no_account"
+        case .syncing:   return "icloud_status_syncing"
+        case .failed:    return "icloud_status_failed"
+        case .idle:
+            guard let date = cloud.lastSyncDate else { return "icloud_status_syncing" }
+            return "icloud_status_synced \(date.formatted(date: .abbreviated, time: .shortened))"
         }
     }
 
@@ -314,6 +380,13 @@ struct ResetConfirmView: View {
                     .font(.system(size: 16, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.textDialog)
                     .multilineTextAlignment(.center)
+                // 「さいしょから はじめる」でも iCloud の記録は残ることを伝える（CloudSyncManager の「リセット」を参照）
+                if target == .progress && CloudSyncManager.shared.isEnabled {
+                    Text("reset_confirm_progress_icloud")
+                        .font(.system(size: 13, weight: .medium, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .multilineTextAlignment(.center)
+                }
 
                 HStack(spacing: 12) {
                     // キャンセルボタン：目立たないスタイルで左側に配置し、誤タップを誘いにくくする
@@ -355,5 +428,74 @@ struct ResetConfirmView: View {
         }
         // 出現・消去をフェードで行う
         .transition(.opacity)
+    }
+}
+
+// MARK: - CloudChoiceView
+
+/// iCloud の2択のダイアログ。「iCloud の記録を もどす」か「この端末の記録で うわがき」かを、保護者に選んでもらう。
+/// 選ばなかったほうの記録は消えるので、そのことをはっきり書き、「あとで」も選べるようにしている。
+struct CloudChoiceView: View {
+
+    /// なぜ2択が出たのか（はじめてつなぐ・オンに戻した）。本文を切り替える。
+    let reason: CloudSyncManager.ChoiceReason
+    /// 選んだとき（true = iCloud の記録を もどす / false = この端末の記録で うわがき）
+    let onChoose: (Bool) -> Void
+    /// 「あとで」を押したとき（選ぶまで同期は止まったまま）
+    let onLater:  () -> Void
+
+    var body: some View {
+        ZStack {
+            Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ。リセット確認と同じ）
+
+            VStack(spacing: 16) {
+                Text("icloud_choice_title")
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.primary)
+                Text(reason == .reenabled ? "icloud_choice_body_reenabled" : "icloud_choice_body_first")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.textDialog)
+                    .multilineTextAlignment(.center)
+                Text("icloud_choice_note")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.gaugeWarn)
+                    .multilineTextAlignment(.center)
+
+                VStack(spacing: 10) {
+                    choiceButton("icloud_choice_use_cloud", fill: DS.primary) { onChoose(true) }
+                    choiceButton("icloud_choice_use_local", fill: DS.gaugeWarn) { onChoose(false) }
+                    Button(action: onLater) {
+                        Text("icloud_choice_later")
+                            .font(.system(size: 15, weight: .semibold, design: .rounded))
+                            .foregroundStyle(DS.muted)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 11)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+            .padding(28)
+            .background(
+                RoundedRectangle(cornerRadius: DS.sheetRadius)
+                    .fill(DS.card)
+                    .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
+            )
+            .padding(.horizontal, 44)
+        }
+        .transition(.opacity)
+    }
+
+    private func choiceButton(_ key: LocalizedStringKey, fill: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(key)
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                .foregroundStyle(.white)
+                .multilineTextAlignment(.center)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 13)
+                .padding(.horizontal, 8)
+                .background(RoundedRectangle(cornerRadius: DS.btnRadius).fill(fill))
+        }
+        .buttonStyle(.plain)
     }
 }

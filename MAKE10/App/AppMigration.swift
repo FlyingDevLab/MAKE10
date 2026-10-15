@@ -40,6 +40,7 @@ enum AppMigration {
     /// 起動時に呼ぶ。まだ済ませていないバージョンの処理だけを実行する。
     static func runIfNeeded() {
         migrateTo150()
+        migrateTo160()
     }
 
     // MARK: 1.5.0
@@ -67,6 +68,28 @@ enum AppMigration {
         // 新規インストールでも印は付ける（あとで同意しても、プレゼントの対象にしないため）
         defaults.set(true, forKey: UDKey.migration150Done)
     }
+
+    // MARK: 1.6.0
+
+    /// 1.6.0 への更新時の処理。
+    ///   ・プライバシーポリシーをもう一度確かめて、同意してもらう
+    ///
+    /// ★ もう一度同意してもらう理由 ★（ユーザーと決めた「A」）
+    ///   1.6.0 から、遊んだ記録を本人の iCloud に保存できるようになり、データの扱いが変わった。
+    ///   保護者が新しいポリシーを確かめてから iCloud が動くよう、同意の印を外して同意画面をもう一度出す。
+    ///   iCloud との同期は、同意したあとに始まる（CloudSyncManager.start を参照）。
+    private static func migrateTo160() {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: Self.migration160Done) else { return }
+        if defaults.bool(forKey: UDKey.hasAgreedToTerms) {
+            // AppSettings を通して外す（画面が読む値と UserDefaults の両方がそろうように）
+            AppSettings.shared.hasAgreedToTerms = false
+        }
+        defaults.set(true, forKey: Self.migration160Done)
+    }
+
+    /// 1.6.0 への更新時の処理を済ませたかの印（UserDefaults のキー）。
+    private static let migration160Done = "migration_1_6_0_done"
 
     // MARK: お知らせ
 

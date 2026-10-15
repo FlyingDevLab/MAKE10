@@ -21,6 +21,11 @@
 //   インスタンスを作る必要がない純粋なユーティリティのため、
 //   case を持たない enum にすることで誤って初期化されることを防ぎます。
 //   ScoreBoard() と書けないため、必ず ScoreBoard.xxx の形で使います。
+//
+// ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
+//   全ゲームのスコア・ベストタイムを1つの記録（"scores"）にする。係は下の ScoreBoardSync。
+//   2台で食い違ったら、キーごとに「よいほう」を残す（スコアは大きいほう、ベストタイムは速いほう）。
+//   どちらの端末の記録も損をしないので、ほかの記録のような「あとで変えたほう」にはしない。
 
 import Foundation
 
@@ -74,6 +79,7 @@ enum ScoreBoard {
         let prev = UserDefaults.standard.integer(forKey: key)
         guard current > prev else { return false }
         UserDefaults.standard.set(current, forKey: key)
+        ScoreBoardSync.shared.markChanged()
         return true
     }
 
@@ -96,8 +102,16 @@ enum ScoreBoard {
         let prev = UserDefaults.standard.double(forKey: key)
         guard current < prev || prev == 0 else { return false }
         UserDefaults.standard.set(current, forKey: key)
+        ScoreBoardSync.shared.markChanged()
         return true
     }
+
+    /// ベストタイム（速いほどよい記録）のキー。iCloud で合わせるときに「小さいほう」を残すために使う。
+    static let timeKeys: Set<String> = [
+        UDKey.jankenBestTimeEasy,
+        UDKey.jankenBestTimeHard,
+        UDKey.jankenBestTimeChallenge,
+    ]
 
     // MARK: リセット
 
@@ -114,5 +128,76 @@ enum ScoreBoard {
         allScoreKeys.forEach {
             UserDefaults.standard.removeObject(forKey: $0)
         }
+    }
+}
+
+// MARK: - ScoreBoardSync（iCloud との同期の係）
+
+/// ScoreBoard の記録を iCloud とやりとりする係。
+/// ★ ScoreBoard とは別に作っている理由 ★
+///   iCloud の約束（CloudSyncSource）は「物」（クラスのインスタンス）が守る約束なので、
+///   インスタンスを作らない enum の ScoreBoard には付けられない。そこで小さな係を1つだけ作っている。
+final class ScoreBoardSync: CloudSyncSource {
+
+    static let shared = ScoreBoardSync()
+    private static let recordName = "scores"
+
+    private init() {}
+
+    /// 記録が変わったことを iCloud の係に知らせる（iCloud を使っていなければ何も起きない）。
+    func markChanged() {
+        CloudSyncManager.shared.markChanged(Self.recordName)
+    }
+
+    var cloudRecordNames: [String] { [Self.recordName] }
+
+    /// 全キーの記録を [キー: 値] にして送る（記録のないキーは入れない）。
+    func cloudPayload(for name: String) -> CloudPayload? {
+        guard let data = try? JSONEncoder().encode(localScores()) else { return nil }
+        // キーごとに「よいほう」で合わせるので、時刻は使わない（.distantPast でよい）
+        return CloudPayload(data: data, modifiedAt: .distantPast)
+    }
+
+    /// iCloud から届いた記録を、キーごとに「よいほう」で合わせる。
+    func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
+        guard let remote = try? JSONDecoder().decode([String: Double].self, from: payload.data) else { return .applied }
+        let defaults = UserDefaults.standard
+        var merged   = force ? [:] : localScores()
+
+        for key in ScoreBoard.allScoreKeys {
+            guard let remoteValue = remote[key], remoteValue > 0 else { continue }
+            if let localValue = merged[key] {
+                merged[key] = ScoreBoard.timeKeys.contains(key) ? min(localValue, remoteValue)   // タイムは速いほう
+                                                                : max(localValue, remoteValue)   // スコアは大きいほう
+            } else {
+                merged[key] = remoteValue
+            }
+        }
+        if force {
+            // 「iCloud の記録を もどす」を選んだ → iCloud にない記録は消す
+            for key in ScoreBoard.allScoreKeys where merged[key] == nil { defaults.removeObject(forKey: key) }
+        }
+        for (key, value) in merged {
+            if ScoreBoard.timeKeys.contains(key) {
+                defaults.set(value, forKey: key)        // ベストタイムは Double（秒）
+            } else {
+                defaults.set(Int(value), forKey: key)   // スコアは Int
+            }
+        }
+        // 合わせた結果が iCloud と違えば（この端末のほうがよい記録を持っていれば）送り直す
+        return merged == remote ? .applied : .keptLocal
+    }
+
+    /// どれか1つでも記録があれば「遊んだ」とみなす。
+    var hasLocalProgress: Bool { !localScores().isEmpty }
+
+    /// この端末の記録（記録のないキーは入れない）。スコアもタイムも Double にそろえる。
+    private func localScores() -> [String: Double] {
+        var scores: [String: Double] = [:]
+        for key in ScoreBoard.allScoreKeys {
+            let value = UserDefaults.standard.double(forKey: key)   // Int で保存した値も Double で読める
+            if value > 0 { scores[key] = value }
+        }
+        return scores
     }
 }
