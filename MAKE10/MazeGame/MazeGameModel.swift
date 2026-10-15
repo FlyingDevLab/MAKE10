@@ -64,11 +64,38 @@ struct MazeShockwave {
     var cy:   CGFloat = 0      // 発生中心Y
 }
 
-/// 演出用の粒子（チーズ回収時・敵撃破時に飛び散る破片）1つ分のデータ
+/// 演出用の粒子（チーズ回収時の破片・敵撃破時の紙吹雪）1つ分のデータ
 struct Particle {
     var x: CGFloat; var y: CGFloat       // 現在位置
     var vx: CGFloat; var vy: CGFloat     // 速度（毎フレーム減衰しながら飛ぶ）
     var life: Int; var maxLife: Int      // 残り寿命 / 初期寿命（life/maxLife で透明度を出す）
+
+    // ── 紙吹雪だけが使う値（チーズの破片は false のまま）──
+    var isConfetti = false               // true なら、色つきの四角がくるくる回りながら落ちる
+    var colorIndex = 0                   // 紙吹雪の色の番号（View 側の色の一覧の何番目か）
+    var rotation: CGFloat = 0            // 今の傾き（ラジアン）
+    var spin: CGFloat = 0                // 1フレームで回る量（ラジアン）
+}
+
+/// 倒されて弾けている途中の敵ネズミ1匹分のデータ（見た目だけ）。
+/// ★ なぜ倒したネズミを mice からすぐ消して、別の配列に移すのか？ ★
+///   mice に残すと、弾けている間もプレイヤーに当たったり、もう一度倒されたりしてしまう。
+///   別の配列に移せば、当たり判定のことを気にせず「ふくらんで消える」見た目だけを描ける。
+struct PoppingMouse {
+    var x: CGFloat; var y: CGFloat       // 倒された位置（論理座標）
+    var angle: CGFloat                   // 倒されたときの向き（描画用）
+    var kind: MouseKind                  // 色を決めるための種類
+    var life: Int; var maxLife: Int      // 残り寿命 / 初期寿命（life/maxLife で大きさと透明度を出す）
+}
+
+/// プレイヤーからタップした場所へ飛ぶレーザー1本分のデータ。
+/// 先っぽ（tip）が届くまでの通り道にいる敵を倒し、届いたらそこで衝撃波がはじける。
+struct MazeLaser {
+    var fromX: CGFloat; var fromY: CGFloat   // 撃った瞬間のプレイヤーの位置（撃ったあとにプレイヤーが動いても、根元は動かさない）
+    var toX:   CGFloat; var toY:   CGFloat   // タップした場所
+    var tip:   CGFloat = 0                   // 先っぽの進み具合（0.0=根元 → 1.0=届いた）
+    var fade:  Int = 0                       // 届いたあと、消えるまでの残りフレーム数
+    var didKill = false                      // このレーザーで1匹でも倒したか（撃破音を1回だけ鳴らすため）
 }
 
 /// 迷路内に配置される収集チーズ1個分のデータ
@@ -118,6 +145,14 @@ final class MazeGameModel: NSObject {
     let SW_EXPAND: CGFloat = 7      // ← 変更可
     /// 衝撃波1発がたまるまでのチャージ時間（frames。60fps なので 180 = 3秒）
     let SW_CHARGE = 180             // ← 変更可
+    /// レーザーがタップした場所に届くまでのフレーム数（60fps なので 6 = 0.1秒）。大きいほどゆっくり飛ぶ
+    let LASER_TRAVEL = 6            // ← 変更可
+    /// レーザーが届いてから消えるまでのフレーム数（12 = 0.2秒）
+    let LASER_FADE   = 12           // ← 変更可
+    /// 倒した敵ネズミが弾けて消えるまでのフレーム数（15 = 0.25秒）
+    let POP_FRAMES   = 15           // ← 変更可
+    /// 敵ネズミを倒したときに飛ぶ紙吹雪の枚数
+    let CONFETTI_COUNT = 18         // ← 変更可
     /// ダメージを受けてからの無敵時間（frames。連続ヒットで即死しないための猶予）
     let DMG_COOL  = 60             // ← 変更可
     /// slideMove の1回の移動を何分割して判定するか（多いほど壁すり抜けが起きにくい）
@@ -129,6 +164,9 @@ final class MazeGameModel: NSObject {
     var CHEESE_R: CGFloat { T * 0.44 }
     /// ネズミ（プレイヤー・敵共通）の当たり判定半径（タイルサイズ比）
     var MOUSE_R:  CGFloat { T * 0.33 }
+    /// レーザーの太さの半分（当たり判定用。タイルサイズ比）。敵の中心がレーザーから
+    /// 「この値 + MOUSE_R」より近ければ当たり。大きいほど当てやすい
+    var LASER_HALF_W: CGFloat { T * 0.15 }   // ← 変更可
 
     /// 残りHPに応じて、衝撃波をためておける数を返す。
     /// 届く距離（swRangeByHp）と同じく、追い込まれたプレイヤーほど強くする救済。
@@ -203,6 +241,10 @@ final class MazeGameModel: NSObject {
     var mice:      [Mouse]      = []
     /// 飛散中のパーティクル
     var particles: [Particle]   = []
+    /// 倒されて弾けている途中の敵ネズミ（見た目だけ。当たり判定はない）
+    var poppingMice: [PoppingMouse] = []
+    /// 飛んでいる最中・消えている最中のレーザー（続けて撃つと、いくつも同時に飛ぶ）
+    var lasers: [MazeLaser] = []
     /// 広がっている最中の衝撃波（続けて撃つと、いくつも同時に広がる）
     var shockwaves: [MazeShockwave] = []
     /// ためてある衝撃波の数（0 なら撃てない）
@@ -266,6 +308,7 @@ final class MazeGameModel: NSObject {
             CheeseItem(x: T * 16.5, y: T * 16.5),  // 右下コーナー (5,5)
         ]
         mice         = []; particles = []
+        poppingMice  = []; lasers = []
         spawnedThisStage = 0
         // ステージが始まったらすぐ撃てるよう、ためられるだけためた状態にする
         shockwaves   = []
@@ -331,8 +374,10 @@ final class MazeGameModel: NSObject {
         }
 
         updateMice()
+        updateLasers()
         updateShockwave()
         updateParticles()
+        updatePoppingMice()
 
         // チーズ回収判定：プレイヤーが未回収チーズに重なったら取得
         // このフレームで1個でも取ったか（獲得音を鳴らすかどうかの判定に使う）
@@ -366,6 +411,8 @@ final class MazeGameModel: NSObject {
     /// ステージクリア演出中の1フレーム分の更新。演出が終わると次ステージへ。
     private func updateDelivered() {
         updateParticles()
+        updatePoppingMice()
+        updateLasers()   // 飛んでいる途中のレーザーは見た目だけ最後まで描く（gameState が .playing でないので敵は倒さない）
         deliveredTimer -= 1
         if deliveredTimer <= 0 { startStage() }
     }
@@ -532,33 +579,108 @@ final class MazeGameModel: NSObject {
         cheeseX = moved.x; cheeseY = moved.y
     }
 
-    /// タップ位置（論理座標）に衝撃波を発射する
+    /// タップした場所（論理座標）へ、プレイヤーからレーザーを撃つ。
+    /// レーザーは LASER_TRAVEL フレームかけて飛び、通り道の敵を倒し、届いたらそこで衝撃波がはじける
+    /// （updateLasers を参照）。
+    ///
+    /// ★ なぜ、タップした瞬間ではなく、届いたときに倒すのか？ ★
+    ///   光が当たってから弾けるほうが、見た目と結果が合って「当てた！」と感じやすいため。
+    ///   0.1秒の間に敵が動くのはタイル1枚の 1/5 ほどなので、遊んでいて差は感じない。
+    ///
+    /// ★ レーザーは壁をすり抜ける ★
+    ///   もとの衝撃波も、壁に関係なくタップした場所ではじけていたので、それに合わせている。
     func fireShockwave(at logicalPos: CGPoint) {
         // プレイ中で、1発以上ためてあるときだけ発射できる（1回のタップで1発使う）
         guard gameState == .playing, swStock > 0 else { return }
+        swStock -= 1
+        lasers.append(MazeLaser(fromX: cheeseX, fromY: cheeseY, toX: logicalPos.x, toY: logicalPos.y))
+        SoundManager.shared.vibrate()
+        // 発射音は撃った瞬間に鳴らす。撃破音は、倒したときに1回だけ重ねる（updateLasers を参照）
+        SoundManager.shared.playMazeShot()
+    }
+
+    /// 飛んでいるレーザーを1フレーム分進める。通り道の敵を倒し、届いたら衝撃波をはじけさせる。
+    private func updateLasers() {
+        for i in lasers.indices.reversed() {
+            if lasers[i].tip < 1 {
+                // ── 飛んでいる途中 ──
+                let before = lasers[i].tip
+                lasers[i].tip = min(1, before + 1 / CGFloat(LASER_TRAVEL))
+                if gameState == .playing {
+                    // このフレームで先っぽが通った区間（before → tip）にいる敵を倒す
+                    if hitMiceOnLaser(lasers[i], from: before, to: lasers[i].tip) {
+                        markLaserKill(i)
+                    }
+                    if lasers[i].tip >= 1 {
+                        // 届いた：もとの衝撃波と同じように、近くは倒し、遠くは吹き飛ばす
+                        if explodeShockwave(at: CGPoint(x: lasers[i].toX, y: lasers[i].toY)) {
+                            markLaserKill(i)
+                        }
+                    }
+                }
+                if lasers[i].tip >= 1 { lasers[i].fade = LASER_FADE }
+            } else {
+                // ── 届いたあと、だんだん消える ──
+                lasers[i].fade -= 1
+                if lasers[i].fade <= 0 { lasers.remove(at: i) }
+            }
+        }
+    }
+
+    /// レーザーで倒したことを記録し、そのレーザーで初めてなら撃破音を鳴らす。
+    /// ★ なぜ撃破ごとに鳴らさないのか？ ★
+    ///   maze_hit は1つの AVAudioPlayer を共有するため、撃破ごとに呼ぶと前の音が頭出しで
+    ///   切れ、結局1回ぶんしか鳴らない。そこで「このレーザーで1匹でも倒したか」だけを見て1回鳴らす。
+    ///   発射音（maze_shot）は別ファイル＝別プレーヤーなので、撃破音と同時でも互いに切れず重なる。
+    private func markLaserKill(_ i: Int) {
+        guard !lasers[i].didKill else { return }
+        lasers[i].didKill = true
+        SoundManager.shared.playMazeHit()
+    }
+
+    /// レーザーの区間（根元からの進み具合 from → to）に触れている敵を倒す。1匹でも倒したら true。
+    private func hitMiceOnLaser(_ laser: MazeLaser, from: CGFloat, to: CGFloat) -> Bool {
+        let dx = laser.toX - laser.fromX, dy = laser.toY - laser.fromY
+        let a = CGPoint(x: laser.fromX + dx * from, y: laser.fromY + dy * from)
+        let b = CGPoint(x: laser.fromX + dx * to,   y: laser.fromY + dy * to)
+        let hitR = LASER_HALF_W + MOUSE_R
+        var didKill = false
+        // remove(at:) で配列を縮めるため、末尾から逆順に走査する（インデックスずれ防止）
+        for i in (0..<mice.count).reversed() {
+            if distanceToSegment(CGPoint(x: mice[i].x, y: mice[i].y), a, b) < hitR {
+                defeatMouse(at: i)
+                didKill = true
+            }
+        }
+        return didKill
+    }
+
+    /// 点 p から線分 a–b までのいちばん近い距離。
+    /// ★ 考え方 ★ 線分を 0.0（a）〜1.0（b）の割合で表し、p にいちばん近い割合 t を求める。
+    ///   t が 0 より小さい・1 より大きいときは、線分の外なので、端（a か b）までの距離にする。
+    private func distanceToSegment(_ p: CGPoint, _ a: CGPoint, _ b: CGPoint) -> CGFloat {
+        let abx = b.x - a.x, aby = b.y - a.y
+        let len2 = abx * abx + aby * aby
+        guard len2 > 0 else { return hypot(p.x - a.x, p.y - a.y) }   // 長さ0の線分は点として扱う
+        let t = min(1, max(0, ((p.x - a.x) * abx + (p.y - a.y) * aby) / len2))
+        return hypot(p.x - (a.x + abx * t), p.y - (a.y + aby * t))
+    }
+
+    /// 指定した場所（論理座標）で衝撃波をはじけさせる。近い敵は倒し、遠い敵は吹き飛ばす。1匹でも倒したら true。
+    private func explodeShockwave(at logicalPos: CGPoint) -> Bool {
         let swMaxR = swRangeByHp(cheeseHp)   // 最大到達距離（HPが低いほど広い）
         let killR  = swMaxR * 0.55           // この距離以内の敵は撃破、外側は吹き飛ばし
-        swStock   -= 1
         shockwaves.append(MazeShockwave(r: 5, cx: logicalPos.x, cy: logicalPos.y))
-        SoundManager.shared.vibrate()
 
-        // この発射で1匹でも撃破したか。撃破音（maze_hit）を「1回だけ」重ねるために使う。
-        // ★ なぜ撃破ごとに鳴らさないのか？ ★
-        //   maze_hit は1つの AVAudioPlayer を共有するため、撃破ごとに呼ぶと前の音が頭出しで
-        //   切れ、結局1回ぶんしか鳴らない。そこで「1匹でも倒したか」だけを見て後で1回鳴らす。
-        //   発射音（maze_shot）は別ファイル＝別プレーヤーなので、撃破音と同時でも互いに切れず重なる。
         var didKill = false
-
         // remove(at:) で配列を縮めるため、末尾から逆順に走査する（インデックスずれ防止）
         for i in (0..<mice.count).reversed() {
             let m = mice[i]
             let d = hypot(m.x - logicalPos.x, m.y - logicalPos.y)
             guard d <= swMaxR else { continue }
             if d < killR {
-                // 近い敵は撃破（破片を出して消す）
-                spawnParticles(m.x, m.y)
-                mice.remove(at: i)
-                EnergyStore.shared.earn(EnergyRewards.mazeKillReward)   // 倒すたびにエネルギー
+                // 近い敵は撃破
+                defeatMouse(at: i)
                 didKill = true
             } else {
                 // 遠い敵は中心から外向きに吹き飛ばす（距離が近いほど強く）
@@ -569,12 +691,19 @@ final class MazeGameModel: NSObject {
                 mice[i].kb = 22   // ノックバック中フレーム数をセット
             }
         }
+        return didKill
+    }
 
-        // 発射音は常に鳴らし、撃破があれば撃破音を重ねる（別ファイルなので同時でも切れない）。
-        SoundManager.shared.playMazeShot()
-        if didKill {
-            SoundManager.shared.playMazeHit()
-        }
+    /// 敵ネズミ1匹を倒す：mice から取り除き、弾ける演出と紙吹雪を出し、エネルギーを渡す。
+    private func defeatMouse(at i: Int) {
+        let m = mice[i]
+        // 向きは drawMice と同じ決め方にする（倒れた瞬間に向きが変わって見えないように）
+        let angle = m.kind == .chaser ? atan2(cheeseY - m.y, cheeseX - m.x) : atan2(m.vy, m.vx)
+        poppingMice.append(PoppingMouse(x: m.x, y: m.y, angle: angle, kind: m.kind,
+                                        life: POP_FRAMES, maxLife: POP_FRAMES))
+        spawnConfetti(m.x, m.y)
+        mice.remove(at: i)
+        EnergyStore.shared.earn(EnergyRewards.mazeKillReward)   // 倒すたびにエネルギー
     }
 
     // MARK: - 敵ネズミ
@@ -777,15 +906,49 @@ final class MazeGameModel: NSObject {
         }
     }
 
+    /// 指定位置から紙吹雪を飛ばす（敵ネズミを倒したときの演出）。
+    /// チーズの破片（spawnParticles）より数が多く、上向きに強めに飛ばして、重力でひらひら落とす。
+    private func spawnConfetti(_ x: CGFloat, _ y: CGFloat) {
+        for _ in 0..<CONFETTI_COUNT {
+            let angle = CGFloat.random(in: 0..<(.pi * 2))   // 全方向にばらばらに飛ばす
+            let speed = CGFloat.random(in: 1.5...4.5)
+            let life  = Int.random(in: 30...45)             // 消える時間をずらして、一斉に消えないようにする
+            particles.append(Particle(
+                x: x, y: y,
+                vx: cos(angle) * speed, vy: sin(angle) * speed - 1.5,   // -1.5 で少し上に跳ね上げる
+                life: life, maxLife: life,
+                isConfetti: true,
+                colorIndex: Int.random(in: 0..<6),          // 色の数は View の confettiColors と合わせる
+                rotation: CGFloat.random(in: 0..<(.pi * 2)),
+                spin: CGFloat.random(in: -0.3...0.3)
+            ))
+        }
+    }
+
     /// 全パーティクルを1フレーム分動かし、寿命が尽きたものを消す。
     private func updateParticles() {
         // remove(at:) するため逆順走査
         for i in (0..<particles.count).reversed() {
             particles[i].x += particles[i].vx
             particles[i].y += particles[i].vy
-            particles[i].vx *= 0.88; particles[i].vy *= 0.88   // 徐々に減速
+            if particles[i].isConfetti {
+                // 紙吹雪：空気でゆっくりになりながら、重力で下に落ちていく
+                particles[i].vx *= 0.94
+                particles[i].vy  = particles[i].vy * 0.94 + 0.12   // ← 0.12 を大きくすると速く落ちる
+                particles[i].rotation += particles[i].spin
+            } else {
+                particles[i].vx *= 0.88; particles[i].vy *= 0.88   // 徐々に減速
+            }
             particles[i].life -= 1
             if particles[i].life <= 0 { particles.remove(at: i) }
+        }
+    }
+
+    /// 弾けている途中の敵ネズミを1フレーム分進め、消え終わったものを取り除く。
+    private func updatePoppingMice() {
+        for i in poppingMice.indices.reversed() {
+            poppingMice[i].life -= 1
+            if poppingMice[i].life <= 0 { poppingMice.remove(at: i) }
         }
     }
 
