@@ -17,9 +17,16 @@
 //    - StickerCatalog                : どんなシールがあるか（カテゴリと並び順）
 //    - StickerStore                  : いま持っている枚数（ownedCounts）
 //
-//  ★ 「持っている枚数」を「手に入れたかどうか」の判定に使える理由 ★
-//    シールを捨てる・消す方法はない（進捗リセットを除く）ので、
-//    1枚でも持っていれば「手に入れたことがある」と言える（StickerStore.ownedCounts を参照）。
+//  ★ 「見つけた」かどうかの決め方（v1.6.0 から）★
+//    シールをエネルギーに交換して0枚にできるようになったので、「持っている枚数」ではなく
+//    「一度でも手に入れたか」（StickerStore.discovered）で決める。0枚にしても黒いシルエットに戻らない。
+//
+//  ★ エネルギーへの交換（v1.6.0 から）★
+//    ・シールを押すと、そのシールのカードが開く。つかっていない枚数・ぜんぶの枚数を見て、
+//      「1まい こうかん」したり、「ガチャで でたら じどうで こうかん」をオン／オフしたりできる
+//    ・上の「つかっていない シールを ぜんぶ こうかん」で、つかっていないシールをまとめて交換する（確かめの画面あり）
+//    ・交換して0枚になった種類があれば、「これから じどうで こうかん する？」と聞く
+//    ゲーム画面やシール帳に貼ってあるシールは、作品をこわさないよう交換しない（StickerStore 冒頭を参照）。
 //
 //  ★ このファイルの構成 ★
 //    StickerDexView … 画面本体（あつめた数・カテゴリごとの一覧・とじるボタン）
@@ -41,13 +48,27 @@ struct StickerDexView: View {
 
     // MARK: 表示用の値
 
-    /// シールの種類ごとの所有数。画面を開いたときに一度だけ数える（じてんを見ている間は変わらないため）。
-    private let owned = StickerStore.shared.ownedCounts()
+    private let store = StickerStore.shared
 
-    /// あつめた種類の数（全シールのうち、1枚以上持っているもの）。
+    /// シールの種類ごとの所有数（ゲーム画面・シール帳・ストレージの合計）。
+    /// 交換すると変わるので、そのつど数え直す（StickerStore は @Observable なので、変わると描き直される）。
+    private var owned: [String: Int] { store.ownedCounts() }
+
+    /// あつめた種類の数（全シールのうち、一度でも手に入れたもの）。
     private var collectedCount: Int {
-        StickerCatalog.all.filter { owned[$0, default: 0] > 0 }.count
+        StickerCatalog.all.filter { store.isDiscovered($0) }.count
     }
+
+    // MARK: 交換の画面の状態
+
+    /// カードを開いているシール（nil なら閉じている）。
+    @State private var selectedEmoji: String? = nil
+    /// 「つかっていない シールを ぜんぶ こうかん」の確かめを出しているか。
+    @State private var showExchangeAllConfirm = false
+    /// 交換して0枚になり、「これから じどうで こうかん する？」と聞いている種類（空なら聞いていない）。
+    @State private var askAutoFor: [String] = []
+    /// 交換したあとに一瞬出す「🔥 +30」（nil なら出さない）。
+    @State private var gainedKcal: Double? = nil
 
     // MARK: body
 
@@ -70,6 +91,15 @@ struct StickerDexView: View {
                     .background(DS.bg.ignoresSafeArea())
             }
         }
+        // ★ overlay で重ねる理由 ★
+        //   ZStack に並べると、カードが画面より高いとき（iPhone の横向きなど）に画面全体の大きさが
+        //   カードに引っぱられ、上の帯まで押し上げられてしまった。overlay は「重ねるだけ」で
+        //   もとの画面の大きさを変えないので、一覧の並びはそのまま、カードだけが上にのる。
+        .overlay { ZStack { exchangeOverlays } }
+        .animation(.easeInOut(duration: 0.2), value: selectedEmoji)
+        .animation(.easeInOut(duration: 0.2), value: showExchangeAllConfirm)
+        .animation(.easeInOut(duration: 0.2), value: askAutoFor)
+        .animation(.spring(response: 0.3, dampingFraction: 0.6), value: gainedKcal)
     }
 
     /// あつめた数と、カテゴリごとの一覧。
@@ -86,7 +116,15 @@ struct StickerDexView: View {
                                 spacing: 8
                             ) {
                                 ForEach(category.emojis, id: \.self) { emoji in
-                                    StickerDexCell(emoji: emoji, count: owned[emoji, default: 0])
+                                    let found = store.isDiscovered(emoji)
+                                    StickerDexCell(emoji: emoji, count: owned[emoji, default: 0],
+                                                   isCollected: found, isAuto: store.autoExchange.contains(emoji))
+                                        // 見つけたシールだけ押せる（まだのシールは、何もしない）
+                                        .onTapGesture {
+                                            guard found else { return }
+                                            SoundManager.shared.playTap()
+                                            selectedEmoji = emoji
+                                        }
                                 }
                             }
                         } header: {
@@ -144,6 +182,8 @@ struct StickerDexView: View {
                 }
                 .frame(height: 10)
             }
+
+            exchangeAllButton
         }
         .padding(.horizontal, 20)
         .padding(.top, 20)
@@ -152,7 +192,7 @@ struct StickerDexView: View {
 
     /// カテゴリの見出し。そのカテゴリで何種類あつめたかも出す。
     private func categoryHeader(_ category: StickerCatalog.Category) -> some View {
-        let got = category.emojis.filter { owned[$0, default: 0] > 0 }.count
+        let got = category.emojis.filter { store.isDiscovered($0) }.count
         // ⚠️ 変更注意: キーは文字列の連結で作ること。LocalizedStringKey の中で "\(...)" と埋め込むと
         //   「sticker_category_%@」という別のキーとして扱われ、翻訳が見つからなくなる。
         let titleKey = LocalizedStringKey("sticker_category_" + category.id)
@@ -172,14 +212,262 @@ struct StickerDexView: View {
     }
 }
 
+// MARK: - エネルギーへの交換
+
+extension StickerDexView {
+
+    /// 「つかっていない シールを ぜんぶ こうかん」ボタン（つかっていないシールがあるときだけ押せる）。
+    var exchangeAllButton: some View {
+        let count = store.unusedTotal
+        let kcal  = StickerExchangeTuning.kcalPerSticker * Double(count)
+        return Button {
+            SoundManager.shared.playTap()
+            showExchangeAllConfirm = true
+        } label: {
+            HStack(spacing: 6) {
+                Text(verbatim: "🔥")
+                Text("sticker_exchange_all_button \(count) \(EnergyStore.format(kcal))")
+                    .lineLimit(2)
+                    .minimumScaleFactor(0.8)
+            }
+            .font(.system(size: 14, weight: .bold, design: .rounded))
+            .foregroundStyle(count > 0 ? DS.energy : DS.muted)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 9)
+            .background(Capsule().fill((count > 0 ? DS.energy : DS.muted).opacity(0.10)))
+        }
+        .buttonStyle(.plain)
+        .disabled(count == 0)
+    }
+
+    /// 交換のカード・確かめ・自動交換の質問・「🔥 +30」を、一覧の上に重ねて出す。
+    @ViewBuilder
+    var exchangeOverlays: some View {
+        if let emoji = selectedEmoji {
+            dimmed { selectedEmoji = nil }
+            StickerExchangeCard(
+                emoji:     emoji,
+                unused:    store.unusedCount(of: emoji),
+                total:     owned[emoji, default: 0],
+                isAuto:    store.autoExchange.contains(emoji),
+                onExchange: { exchangeOne(emoji) },
+                onToggleAuto: { on in store.setAutoExchange(on, for: [emoji]) },
+                onClose:   { selectedEmoji = nil }
+            )
+            .transition(.scale(scale: 0.9).combined(with: .opacity))
+        }
+        if showExchangeAllConfirm {
+            dimmed { showExchangeAllConfirm = false }
+            confirmCard(
+                title:   "sticker_exchange_all_title",
+                body:    Text("sticker_exchange_all_body \(store.unusedTotal) \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker * Double(store.unusedTotal)))"),
+                yes:     "sticker_exchange_all_ok",
+                no:      "reset_confirm_cancel",
+                onYes:   { exchangeAll() },
+                onNo:    { showExchangeAllConfirm = false }
+            )
+        }
+        if !askAutoFor.isEmpty {
+            dimmed { askAutoFor = [] }
+            confirmCard(
+                title:   "sticker_auto_ask_title",
+                body:    Text("sticker_auto_ask_body \(askAutoFor.joined(separator: " "))"),
+                yes:     "sticker_auto_ask_yes",
+                no:      "sticker_auto_ask_no",
+                onYes:   { store.setAutoExchange(true, for: askAutoFor); askAutoFor = [] },
+                onNo:    { askAutoFor = [] }
+            )
+        }
+        if let kcal = gainedKcal {
+            Text(verbatim: "🔥 +\(EnergyStore.format(kcal))kcal")
+                .font(.system(size: 26, weight: .black, design: .rounded))
+                .foregroundStyle(DS.energy)
+                .padding(.horizontal, 20)
+                .padding(.vertical, 10)
+                .background(Capsule().fill(DS.card).shadow(color: DS.energy.opacity(0.25), radius: 10))
+                .transition(.scale(scale: 0.6).combined(with: .opacity))
+                .allowsHitTesting(false)
+        }
+    }
+
+    // MARK: 交換の処理
+
+    private func exchangeOne(_ emoji: String) {
+        let kcal = store.exchangeOne(emoji)
+        guard kcal > 0 else { return }
+        showGain(kcal)
+        // 交換して0枚になったら（自動交換がまだオフなら）、これから自動で交換するか聞く
+        if store.isEmpty(emoji) && !store.autoExchange.contains(emoji) {
+            selectedEmoji = nil
+            askAutoFor = [emoji]
+        }
+    }
+
+    private func exchangeAll() {
+        showExchangeAllConfirm = false
+        let result = store.exchangeAllUnused()
+        guard result.count > 0 else { return }
+        showGain(result.kcal)
+        if !result.emptied.isEmpty { askAutoFor = result.emptied }
+    }
+
+    /// 「🔥 +30kcal」を一瞬出して、振動で「エネルギーに なった」ことを手にも伝える。
+    private func showGain(_ kcal: Double) {
+        SoundManager.shared.playCoinLand()
+        SoundManager.shared.vibrate()
+        gainedKcal = kcal
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { gainedKcal = nil }   // ← 変更可（出している時間）
+    }
+
+    // MARK: 重ねる部品
+
+    /// 後ろを暗くする幕。押すと閉じる。
+    private func dimmed(_ onTap: @escaping () -> Void) -> some View {
+        Color.black.opacity(0.30)
+            .ignoresSafeArea()
+            .onTapGesture(perform: onTap)
+            .transition(.opacity)
+    }
+
+    /// 「はい／いいえ」の確かめのカード（まとめて交換・自動交換の質問）。
+    private func confirmCard(title: LocalizedStringKey, body: Text, yes: LocalizedStringKey, no: LocalizedStringKey,
+                             onYes: @escaping () -> Void, onNo: @escaping () -> Void) -> some View {
+        VStack(spacing: 16) {
+            Text(title)
+                .font(.system(size: 19, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.primary)
+                .multilineTextAlignment(.center)
+            body
+                .font(.system(size: 15, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.textDialog)
+                .multilineTextAlignment(.center)
+                .fixedSize(horizontal: false, vertical: true)
+            HStack(spacing: 12) {
+                Button(action: onNo) {
+                    Text(no)
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(RoundedRectangle(cornerRadius: DS.btnRadius).fill(Color.black.opacity(0.05)))
+                }
+                .buttonStyle(.plain)
+                Button(action: onYes) {
+                    Text(yes)
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(RoundedRectangle(cornerRadius: DS.btnRadius).fill(DS.energy))
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(24)
+        .frame(maxWidth: 360)
+        .background(
+            RoundedRectangle(cornerRadius: DS.sheetRadius)
+                .fill(DS.card)
+                .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
+        )
+        .padding(.horizontal, 32)
+        .transition(.scale(scale: 0.9).combined(with: .opacity))
+    }
+}
+
+// MARK: - StickerExchangeCard
+
+/// シール1種類のカード。枚数を見せ、1枚交換と、自動交換のオン／オフができる。
+private struct StickerExchangeCard: View {
+    let emoji:  String
+    /// つかっていない枚数（交換できる枚数）
+    let unused: Int
+    /// ぜんぶの枚数（貼ってある分も入れる）
+    let total:  Int
+    let isAuto: Bool
+    let onExchange:   () -> Void
+    let onToggleAuto: (Bool) -> Void
+    let onClose:      () -> Void
+
+    var body: some View {
+        // 収まるときはそのまま、収まらないとき（iPhone の横向きなど）はカードの中をスクロールする（設定画面と同じ）
+        ViewThatFits(in: .vertical) {
+            content
+            ScrollView { content }
+                .scrollBounceBehavior(.basedOnSize)
+        }
+        .frame(maxWidth: 340)
+        .background(
+            RoundedRectangle(cornerRadius: DS.sheetRadius)
+                .fill(DS.card)
+                .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: DS.sheetRadius))
+        .padding(.horizontal, 32)
+        .padding(.vertical, 12)
+    }
+
+    private var content: some View {
+        VStack(spacing: 14) {
+            Text(emoji)
+                .font(.system(size: 72))
+            // ★ 「2 / 3」のような分数にしない理由 ★
+            //   子どもが「3つのうち2つめ」や分数と読み違えないよう、ことばで「つかっていない」「ぜんぶ」と分けて書く。
+            Text("sticker_exchange_counts \(unused) \(total)")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.textBody)
+                .multilineTextAlignment(.center)
+
+            Button(action: onExchange) {
+                Text("sticker_exchange_one_button \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker))")
+                    .font(.system(size: 17, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 14)
+                    .background(RoundedRectangle(cornerRadius: DS.btnRadius).fill(unused > 0 ? DS.energy : DS.muted.opacity(0.35)))
+            }
+            .buttonStyle(.plain)
+            .disabled(unused == 0)
+
+            if unused == 0 && total > 0 {
+                // 貼ってあるシールしかないときは、なぜ押せないかを伝える
+                Text("sticker_exchange_only_used")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .multilineTextAlignment(.center)
+            }
+
+            Toggle(isOn: Binding(get: { isAuto }, set: { onToggleAuto($0) })) {
+                Text("sticker_auto_toggle")
+                    .font(.system(size: 14, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DS.textBody)
+            }
+            .tint(DS.energy)
+
+            Button(action: onClose) {
+                Text("settings_close_button")
+                    .font(.system(size: 16, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .padding(.horizontal, 30)
+                    .padding(.vertical, 10)
+                    .background(Capsule().fill(Color.black.opacity(0.05)))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(24)
+    }
+}
+
 // MARK: - StickerDexCell
 
 /// じてんの1マス。手に入れたシールは色つきで枚数を、まだのシールは黒いシルエットで出す。
 private struct StickerDexCell: View {
     let emoji: String
     let count: Int
-
-    private var isCollected: Bool { count > 0 }
+    /// 一度でも手に入れたか（0枚でも true のことがある。StickerStore.discovered を参照）
+    let isCollected: Bool
+    /// ガチャで出たら自動でエネルギーに交換する種類か（右上に 🔥 を出す）
+    let isAuto: Bool
 
     var body: some View {
         Text(emoji)
@@ -196,6 +484,13 @@ private struct StickerDexCell: View {
                 RoundedRectangle(cornerRadius: DS.rowRadius)
                     .fill(isCollected ? DS.card : Color.black.opacity(0.04))
             )
+            .overlay(alignment: .topTrailing) {
+                if isAuto {
+                    Text(verbatim: "🔥")
+                        .font(.system(size: 12))
+                        .padding(3)
+                }
+            }
             .overlay(alignment: .bottomTrailing) {
                 if isCollected {
                     Text(verbatim: "×\(count)")

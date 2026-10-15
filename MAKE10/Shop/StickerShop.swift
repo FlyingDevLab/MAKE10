@@ -105,8 +105,10 @@ final class StickerShop {
         guard state?.day != today else { return }
 
         var rng = SystemRandomNumberGenerator()
+        // 自動交換にした種類は並べない（買っても すぐエネルギーにしたい種類なので、品ぞろえの枠を使わない）
+        let autoExchange = StickerStore.shared.autoExchange
         let lineup = Self.makeLineup(
-            catalog: StickerCatalog.all,
+            catalog: StickerCatalog.all.filter { !autoExchange.contains($0) },
             owned:   StickerStore.shared.ownedCounts(),
             using:   &rng
         )

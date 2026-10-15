@@ -62,7 +62,8 @@ enum StickerGacha {
         guard energy.canAfford(pull.price) else { return nil }
 
         let results = draw(count: pull.count)
-        StickerStore.shared.addStickersToStorage(results)
+        // ガチャはランダムに出るので、自動交換にした種類はエネルギーに変える（StickerStore 冒頭の「エネルギーへの交換」を参照）
+        StickerStore.shared.addStickersToStorage(results, allowAutoExchange: true)
         energy.spend(pull.price)
         return results
     }

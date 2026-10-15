@@ -22,10 +22,31 @@
 //  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
 //    ゲームモードとストレージのシールを1つの記録（"stickers"）にする。2台で食い違ったら、あとで変えたほうを残す。
 //    シール帳に貼ったシールは、シール帳のページの記録（StickerBookStore）に入る。
+//
+//  ★ エネルギーへの交換（v1.6.0 から）★
+//    つかっていないシール（ストレージ）は、1枚 30kcal のエネルギーに交換できる（シールじてんから）。
+//    ゲーム画面やシール帳に貼ってあるシールは、作品をこわさないよう交換できない。
+//    ある種類を交換して0枚になったら「これから でたら じどうで こうかん する？」と聞き、
+//    はいなら、その種類はガチャで出たときに自動でエネルギーに変わる（autoExchange）。
+//    自分で選んだシール（どうぶつめくりのごほうび）と、買ったシール（シールやさん）は自動で変えない。
+//
+//  ★ 「見つけた」記録（discovered）★
+//    1.5 までは「1枚でも持っている＝見つけたことがある」としていた（シールが減らなかったため）。
+//    交換で0枚にできるようになったので、一度でも手に入れた種類を別に覚えておき、
+//    シールじてんは、こちらで「見つけた」かどうかを決める（0枚でも、黒いシルエットに戻らない）。
 
 // 絵文字シールの状態管理・永続化・ライフサイクル制御を担うシングルトン。
 
 import SwiftUI
+
+// MARK: - ⚙️ 調整パラメータ
+
+enum StickerExchangeTuning {
+    /// シール1枚をエネルギーに交換したときの量（kcal）。
+    /// ★ 30 にしている理由 ★ いちばん安い手に入れ方（10連ガチャ）でも1枚あたり約91kcal なので、
+    ///   これより低ければ「買って交換すると得をする」抜け道はできない。
+    static let kcalPerSticker: Double = 30   // ← 変更可（91 より小さくすること）
+}
 
 // MARK: - StickerStore
 
@@ -71,6 +92,12 @@ final class StickerStore {
         set { StickerBookStore.shared.currentStickers = newValue }
     }
 
+    /// 一度でも手に入れたことがある種類（シールじてんの「見つけた」。ファイル冒頭を参照）。
+    private(set) var discovered: Set<String> = []
+
+    /// ガチャで出たら自動でエネルギーに交換する種類（ファイル冒頭を参照）。
+    private(set) var autoExchange: Set<String> = []
+
     // MARK: - 上限定数
 
     private let gameDisplayLimit: Int    = 50    // ← 変更可：ゲームボードの表示上限
@@ -95,11 +122,89 @@ final class StickerStore {
 
     /// 複数の絵文字をまとめてストレージへ直接追加する（ガチャ・ショップで手に入れたシール）。
     /// ストレージには上限がないため必ず成功する。保存は最後に1回だけ行う。
-    func addStickersToStorage(_ emojis: [String]) {
-        guard !emojis.isEmpty else { return }
-        storageEmojis.append(contentsOf: emojis)
-        saveStorage()   // 直後に落ちてもシールを失わないよう即保存する
+    /// - Parameter allowAutoExchange: true なら、自動交換にした種類はストレージに入れず、エネルギーに変える。
+    ///   ランダムに出るガチャだけが true を渡す（自分で選んだ・買ったシールは変えない。ファイル冒頭を参照）。
+    /// - Returns: 自動でエネルギーに変えたシール（出た順）。ガチャの結果画面で「エネルギーに かえたよ」と見せる
+    @discardableResult
+    func addStickersToStorage(_ emojis: [String], allowAutoExchange: Bool = false) -> [String] {
+        guard !emojis.isEmpty else { return [] }
+        let exchanged = allowAutoExchange ? emojis.filter { autoExchange.contains($0) } : []
+        let kept      = allowAutoExchange ? emojis.filter { !autoExchange.contains($0) } : emojis
+        markDiscovered(emojis)   // 自動で変えたシールも「見つけた」ことにする
+        if !kept.isEmpty {
+            storageEmojis.append(contentsOf: kept)
+            saveStorage()   // 直後に落ちてもシールを失わないよう即保存する
+        }
+        if !exchanged.isEmpty {
+            EnergyStore.shared.grantGift(StickerExchangeTuning.kcalPerSticker * Double(exchanged.count))
+        }
+        return exchanged
     }
+
+    // MARK: - 公開API（エネルギーへの交換）
+
+    /// その種類の、つかっていない枚数（ストレージにある枚数）。交換できるのはこの枚数まで。
+    func unusedCount(of emoji: String) -> Int {
+        storageEmojis.filter { $0 == emoji }.count
+    }
+
+    /// つかっていないシールの、ぜんぶの枚数。
+    var unusedTotal: Int { storageEmojis.count }
+
+    /// その種類を「見つけた」ことがあるか（シールじてんで色つきにするか）。
+    func isDiscovered(_ emoji: String) -> Bool { discovered.contains(emoji) }
+
+    /// つかっていないシールを1枚、エネルギーに交換する。
+    /// - Returns: 増えたエネルギー（kcal）。つかっていないシールがなければ 0
+    @discardableResult
+    func exchangeOne(_ emoji: String) -> Double {
+        // 後ろから探して消す（最近手に入れたほうから減らす）
+        guard let index = storageEmojis.lastIndex(of: emoji) else { return 0 }
+        storageEmojis.remove(at: index)
+        saveStorage()   // シールを減らしてから
+        let kcal = StickerExchangeTuning.kcalPerSticker
+        EnergyStore.shared.grantGift(kcal)   // エネルギーを渡す（間で終了されても、子どもが損をしない順。StickerGacha.pull の逆）
+        return kcal
+    }
+
+    /// つかっていないシールを、ぜんぶエネルギーに交換する。
+    /// - Returns: 交換した枚数・増えたエネルギー・交換して0枚になった種類（自動交換を聞くのに使う）
+    func exchangeAllUnused() -> (count: Int, kcal: Double, emptied: [String]) {
+        let all = storageEmojis
+        guard !all.isEmpty else { return (0, 0, []) }
+        storageEmojis = []
+        saveStorage()
+        let kcal = StickerExchangeTuning.kcalPerSticker * Double(all.count)
+        EnergyStore.shared.grantGift(kcal)
+        let owned   = ownedCounts()
+        var emptied: [String] = []
+        for emoji in all where owned[emoji, default: 0] == 0 && !emptied.contains(emoji) && !autoExchange.contains(emoji) {
+            emptied.append(emoji)
+        }
+        return (all.count, kcal, emptied)
+    }
+
+    /// その種類を、ゲーム画面・シール帳・ストレージのどこにも持っていないか（交換して0枚になったかを調べる）。
+    func isEmpty(_ emoji: String) -> Bool { ownedCounts()[emoji, default: 0] == 0 }
+
+    /// 自動交換のオン／オフ。
+    func setAutoExchange(_ on: Bool, for emojis: [String]) {
+        if on { autoExchange.formUnion(emojis) } else { autoExchange.subtract(emojis) }
+        UserDefaults.standard.set(Array(autoExchange).sorted(), forKey: Self.autoExchangeKey)
+        touch()
+    }
+
+    /// 手に入れた種類を「見つけた」に足す（足したものがあれば保存する）。
+    private func markDiscovered(_ emojis: [String]) {
+        let new = Set(emojis).subtracting(discovered)
+        guard !new.isEmpty else { return }
+        discovered.formUnion(new)
+        UserDefaults.standard.set(Array(discovered).sorted(), forKey: Self.discoveredKey)
+        touch()
+    }
+
+    private static let discoveredKey   = "stickerDiscovered"
+    private static let autoExchangeKey = "stickerAutoExchange"
 
     // MARK: - 公開API（ゲームモード操作）
 
@@ -224,6 +329,10 @@ final class StickerStore {
         UserDefaults.standard.removeObject(forKey: UDKey.playStickers)
         UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
         UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)
+        discovered   = []
+        autoExchange = []
+        UserDefaults.standard.removeObject(forKey: Self.discoveredKey)
+        UserDefaults.standard.removeObject(forKey: Self.autoExchangeKey)
     }
 
     // MARK: - 公開API（所有数）
@@ -299,6 +408,9 @@ final class StickerStore {
     private struct CloudStickers: Codable {
         var game:    [Sticker]
         var storage: [String]
+        /// 見つけた種類・自動交換の種類（1.6.0 の途中で足したので、それより前に送った記録では nil）
+        var discovered:   [String]?
+        var autoExchange: [String]?
     }
 
     private func savePlay() {
@@ -328,6 +440,16 @@ final class StickerStore {
             storageEmojis.append(contentsOf: decoded)
             saveStorage()   // 先にストレージを保存してから配置待ちを消す（途中で落ちても失わない）
             UserDefaults.standard.removeObject(forKey: UDKey.pendingStickers)
+        }
+        autoExchange = Set(UserDefaults.standard.stringArray(forKey: Self.autoExchangeKey) ?? [])
+        if let saved = UserDefaults.standard.stringArray(forKey: Self.discoveredKey) {
+            discovered = Set(saved)
+        } else {
+            // ★ はじめて（1.6.0 に更新した最初の起動）★
+            //   まだ「見つけた」記録がないので、いま持っているシールから作る（1.5 までの「持っている＝見つけた」と同じ結果になる）。
+            //   シール帳のシールも数えるため、StickerBookStore（全ページ）を読んだうえで数える。
+            discovered = Set(ownedCounts().filter { $0.value > 0 }.keys)
+            UserDefaults.standard.set(Array(discovered).sorted(), forKey: Self.discoveredKey)
         }
     }
 
@@ -384,7 +506,9 @@ extension StickerStore: CloudSyncSource {
     var cloudRecordNames: [String] { [Self.recordName] }
 
     func cloudPayload(for name: String) -> CloudPayload? {
-        guard let data = try? JSONEncoder().encode(CloudStickers(game: stickers, storage: storageEmojis)) else {
+        let payload = CloudStickers(game: stickers, storage: storageEmojis,
+                                    discovered: Array(discovered).sorted(), autoExchange: Array(autoExchange).sorted())
+        guard let data = try? JSONEncoder().encode(payload) else {
             return nil
         }
         let modifiedAt = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
@@ -396,15 +520,29 @@ extension StickerStore: CloudSyncSource {
     func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
         guard let remote = try? JSONDecoder().decode(CloudStickers.self, from: payload.data) else { return .applied }
         let localDate = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
+        // 「見つけた」は、どちらの端末で見つけた種類も残す（足し合わせ）。減ることはない記録なので、新しさで選ばない
+        let remoteDiscovered = Set(remote.discovered ?? [])
         if !force && localDate > payload.modifiedAt {
+            let merged = discovered.union(remoteDiscovered)
+            if merged != discovered {
+                discovered = merged
+                UserDefaults.standard.set(Array(merged).sorted(), forKey: Self.discoveredKey)
+            }
             return .keptLocal   // この端末のほうがあとで変えた → この端末のシールを送り直す
         }
         stickers      = remote.game
         storageEmojis = remote.storage
+        autoExchange  = Set(remote.autoExchange ?? [])
+        // 「iCloud を もどす」（force）のときは iCloud の記録にそろえる。そうでなければ足し合わせる。
+        // どちらでも、いま持っているシールは「見つけた」に入れる（古い記録で discovered が nil のときのため）
+        let owned = Set(ownedCounts().filter { $0.value > 0 }.keys)
+        discovered = (force ? remoteDiscovered : discovered.union(remoteDiscovered)).union(owned)
         UserDefaults.standard.set(try? JSONEncoder().encode(remote.game),    forKey: UDKey.stickers)
         UserDefaults.standard.set(try? JSONEncoder().encode(remote.storage), forKey: UDKey.storageEmojis)
+        UserDefaults.standard.set(Array(autoExchange).sorted(), forKey: Self.autoExchangeKey)
+        UserDefaults.standard.set(Array(discovered).sorted(),   forKey: Self.discoveredKey)
         UserDefaults.standard.set(payload.modifiedAt, forKey: Self.modifiedAtKey)
-        return .applied
+        return discovered == remoteDiscovered ? .applied : .keptLocal
     }
 
     /// シールを1枚でも持っていれば「遊んだ」とみなす（シール帳に貼った分は StickerBookStore が答える）。
