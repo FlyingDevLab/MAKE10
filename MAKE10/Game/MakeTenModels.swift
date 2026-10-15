@@ -74,6 +74,7 @@ enum UDKey {
     static let questionAttempts    = "questionAttempts"    // 問題番号ごとの出題回数（内部統計）
     static let questionCorrects    = "questionCorrects"    // 問題番号ごとの正解回数（内部統計）
     static let quizMode            = "quizMode"            // 絵文字クイズの選択モード
+    static let memoryDeck          = "memoryDeck"          // どうぶつめくり：前回えらんだカードの種類（端末の中だけ）
     static let totalCorrectAllTime = "totalCorrectAllTime" // 1.4以前のシール用ポイント（Double）。1.5で energyDeciKcal へ移行後に削除される
     static let energyDeciKcal      = "energyDeciKcal"      // エネルギー残高（0.1kcal 単位の Int）
     static let stickerShopState    = "stickerShopState"    // ショップ：その日の品揃えと売り切れ（JSON）

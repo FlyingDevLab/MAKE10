@@ -53,7 +53,7 @@ final class MemoryGameEngine {
 
     // MARK: - 公開状態
 
-    /// 盤面のカード一覧。表示はこの並び順のまま5列で折り返す。
+    /// 盤面のカード一覧。表示はこの並び順のまま5列で折り返す（5×5 では、まん中にロゴが入る）。
     private(set) var cards: [CardState] = []
 
     /// 現在の局面。View はこれを見て入力可否や演出を切り替える。
@@ -65,10 +65,14 @@ final class MemoryGameEngine {
     /// 直近にそろえたときにもらったエネルギー。View はこれが変わるたびに「+◯」を浮かべる。
     private(set) var lastReward: MemoryReward? = nil
 
+    /// いまあそんでいるカードの種類。start(deck:) で変わる。
+    private(set) var deck: MemoryDeck = .animals
+
     // MARK: - 非公開
 
     /// カード面の供給役。ロジックはこれ越しにしか絵柄を知らない。
-    private let faceProvider: CardFaceProvider
+    /// 種類をえらび直すたびに作り直すので var にしている。
+    private var faceProvider: CardFaceProvider = DeckFaceProvider(deck: .animals)
 
     // ★ 世代番号 ★
     //   手番が切り替わるたびに1つ進む。予約された処理はこの値を照合して、
@@ -87,18 +91,6 @@ final class MemoryGameEngine {
     /// 盤面を生成済みかどうか。onAppear が複数回呼ばれても作り直さないための番人。
     private var hasStarted: Bool = false
 
-    // MARK: - 初期化
-
-    // ★ 引数に既定値を持たせている理由 ★
-    //   通常は MemoryGameEngine() と書くだけで動物の絵文字が使われます。
-    //   一方で、別の絵柄を使いたい場合や動作確認をしたい場合には、
-    //   呼び出し側から別の CardFaceProvider を渡せるようにしてあります。
-
-    /// - Parameter faceProvider: カード面の供給役。既定は動物絵文字。
-    init(faceProvider: CardFaceProvider = AnimalFaceProvider()) {
-        self.faceProvider = faceProvider
-    }
-
     // MARK: - 盤面の生成
 
     /// 未生成のときだけ盤面を作る。onAppear から呼ぶ用。
@@ -108,7 +100,14 @@ final class MemoryGameEngine {
         start()
     }
 
-    /// 盤面を作り直す。「もういちど」から呼ぶ用。
+    /// カードの種類をえらんで盤面を作る。スタート画面から呼ぶ用。
+    func start(deck: MemoryDeck) {
+        self.deck    = deck
+        faceProvider = DeckFaceProvider(deck: deck)
+        start()
+    }
+
+    /// いまの種類のまま盤面を作り直す。「もういちど」から呼ぶ用。
     func start() {
         // 進行中の予約をすべて無効化してから作り直す。
         // これを忘れると、前の盤面の予約が新しい盤面のカードを触りにくる。
@@ -119,8 +118,8 @@ final class MemoryGameEngine {
         lastReward       = nil
         EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
 
-        // 識別子をペア数ぶん受け取り、1つにつき2枚ずつカードを作る。
-        let pairIDs = faceProvider.pairIdentifiers(count: MemoryTuning.pairCount)
+        // 識別子をペアの数だけ受け取り、1つにつき2枚ずつカードを作る。
+        let pairIDs = faceProvider.pairIdentifiers()
         var built: [CardState] = []
         for pairID in pairIDs {
             built.append(CardState(pairID: pairID))
@@ -145,8 +144,8 @@ final class MemoryGameEngine {
     }
 
     /// カードの VoiceOver 用ラベルを返す。裏向きのカードは中身を明かさない。
-    func accessibilityLabel(for card: CardState) -> LocalizedStringKey {
-        guard card.isFaceUp || card.isMatched else { return "memory_card_face_down" }
+    func accessibilityLabel(for card: CardState) -> Text {
+        guard card.isFaceUp || card.isMatched else { return Text("memory_card_face_down") }
         return faceProvider.accessibilityLabel(for: card.pairID)
     }
 
@@ -272,6 +271,12 @@ final class MemoryGameEngine {
         // 二重にクリア処理が走ることはない。
         if cards.allSatisfy({ $0.isMatched }) {
             phase = .cleared
+            // むずかしい種類（せいざ・つき）なら「むずかしさ ボーナス」。
+            // クリアボーナスとして渡し、結果画面の内訳では「むずかしさ ボーナス」の名前で見せる（MemoryResultView を参照）
+            if deck.isHard {
+                EnergyStore.shared.grantClearBonus(MemoryTuning.hardClearBonus)
+            }
+            // 「きょう はじめての ボーナス」は、どの種類で遊んでも「どうぶつめくり」1つとして1日1回だけ
             GameDailyBonus.shared.claim(.memory)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
             SoundManager.shared.playTenClear()
             return
