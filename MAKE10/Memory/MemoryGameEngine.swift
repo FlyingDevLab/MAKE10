@@ -272,6 +272,7 @@ final class MemoryGameEngine {
         // 二重にクリア処理が走ることはない。
         if cards.allSatisfy({ $0.isMatched }) {
             phase = .cleared
+            GameDailyBonus.shared.claim(.memory)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
             SoundManager.shared.playTenClear()
             return
         }

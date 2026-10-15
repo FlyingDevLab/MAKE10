@@ -261,6 +261,7 @@ final class CoinDropViewModel {
         var bonus = Double(score) * EnergyRewards.coinDropBonusRate
         if isPerfect { bonus += EnergyRewards.perfectBonus }
         EnergyStore.shared.grantClearBonus(bonus)
+        GameDailyBonus.shared.claim(.coinDrop)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
         // withAnimation でリザルト画面への切り替えにアニメーションをかける
         withAnimation(.easeInOut(duration: 0.3)) {
             gameState = .finished

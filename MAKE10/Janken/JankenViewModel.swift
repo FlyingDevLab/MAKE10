@@ -449,6 +449,7 @@ final class JankenViewModel {
             ? ScoreBoard.saveIfFaster(time: elapsed, for: difficulty.bestTimeKey)
             : false
         awardClearBonus()
+        GameDailyBonus.shared.claim(.janken)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
         SoundManager.shared.playTenClear()
         withAnimation(.easeInOut(duration: 0.3)) {
             phase = .finished

@@ -212,6 +212,7 @@ final class EmojiQuizViewModel {
                              EnergyRewards.quizPerfectBonusMax)
             }
             EnergyStore.shared.grantClearBonus(bonus)
+            GameDailyBonus.shared.claim(.quiz)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
             isFinished = true
         } else {
             // 次の問題へ。answerState と selectedItem をリセットして未回答状態に戻す

@@ -329,6 +329,19 @@ struct GamePickerTile: View {
         }
         .padding(.vertical, 16)
         .frame(maxWidth: .infinity, maxHeight: .infinity)   // 行内の最大高さまで背景を伸ばす
+        // ★ 右下の 🎁 ★
+        //   きょうまだ最後まで遊んでいないゲームに付ける。遊ぶと「きょう はじめての ボーナス」がもらえる印
+        //   （GameDailyBonus.swift を参照）。遊び終わると、その日は消える。
+        //   右上ではなく右下に置くのは、横長の並べ方で、画面の上のまん中に出るエネルギー表示に隠れないようにするため。
+        .overlay(alignment: .bottomTrailing) {
+            if GameDailyBonus.shared.isAvailable(game) {
+                Text(verbatim: "🎁")
+                    .font(.system(size: 18))   // ← 変更可（印の大きさ）
+                    .padding(8)
+                    .accessibilityLabel(Text("daily_game_bonus_badge"))
+                    .allowsHitTesting(false)   // 印の上を押しても、カードのタップ・フリックになるように
+            }
+        }
         // かべがみの上でも透けないよう tintFill で塗る（DesignSystem の tintFill を参照）
         .background(
             RoundedRectangle(cornerRadius: DS.tagRadius)

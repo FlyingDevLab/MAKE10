@@ -9,7 +9,7 @@
 //
 //  役割分担:
 //    - EnergyRewardBanner（このファイル）: 今回の獲得量の表示と演出
-//    - EnergyStore                       : 今回の獲得量（sessionEarned / sessionClearBonus）を持つ
+//    - EnergyStore                       : 今回の獲得量（sessionEarned / sessionClearBonus / sessionDailyBonus）を持つ
 //    - 各ゲームの結果画面                  : EnergyRewardBanner() を1行差し込むだけ
 //
 //  ★ 呼び出し側が1行で済む理由 ★
@@ -46,12 +46,14 @@ struct EnergyRewardBanner: View {
     @State private var playKcal:  Double = 0
     /// 今回のクリアボーナス（kcal）。表示開始時に EnergyStore から読み取る。
     @State private var bonusKcal: Double = 0
+    /// 今回の「きょう はじめての ボーナス」（kcal。GameDailyBonus.swift を参照）。表示開始時に EnergyStore から読み取る。
+    @State private var dailyKcal: Double = 0
     /// いま画面に出している数字（kcal）。0 から playKcal + bonusKcal まで駆け上がる。
     @State private var shownKcal: Double = 0
     /// 数え終わった瞬間に数字を一瞬大きくする演出用のフラグ。
     @State private var isBumped:  Bool   = false
 
-    private var totalKcal: Double { playKcal + bonusKcal }
+    private var totalKcal: Double { playKcal + bonusKcal + dailyKcal }
 
     // MARK: body
 
@@ -91,6 +93,7 @@ struct EnergyRewardBanner: View {
                 .scaleEffect(isBumped ? 1.18 : 1.0)   // ← 変更可（数え終わりの膨らみ）
 
             breakdown
+            dailyBonusRow
         }
         .padding(.vertical, 14)
         .padding(.horizontal, 20)
@@ -124,6 +127,23 @@ struct EnergyRewardBanner: View {
         }
     }
 
+    /// 「きょう はじめての ボーナス」の行。そのゲームを、きょうはじめて最後まで遊んだときだけ出す。
+    /// ほかの内訳より目立つ色にして、「いろいろなゲームを遊ぶと もらえる」ことに気づいてもらう。
+    @ViewBuilder
+    private var dailyBonusRow: some View {
+        if dailyKcal > 0 {
+            HStack(spacing: 4) {
+                Text(verbatim: "🎁")
+                Text("daily_game_bonus_label")
+                Text(verbatim: "+\(EnergyStore.format(dailyKcal))")
+                    .monospacedDigit()
+            }
+            .font(.system(size: 13, weight: .heavy, design: .rounded))
+            .foregroundStyle(DS.energy)
+            .padding(.top, 2)
+        }
+    }
+
     private func breakdownItem(_ label: LocalizedStringKey, kcal: Double) -> some View {
         HStack(spacing: 3) {
             Text(label)
@@ -138,9 +158,10 @@ struct EnergyRewardBanner: View {
     private func playCountUp() async {
         let play  = energy.sessionEarned
         let bonus = energy.sessionClearBonus
+        let daily = energy.sessionDailyBonus
         // 結果画面は「ゲームの合間」なので、数え上げが終わったところで休憩の時間かを確かめる
         // （BreakReminder.swift を参照）。増えた量が 0 で数え上げをしないときは、すぐに確かめる
-        guard play + bonus > 0 else {
+        guard play + bonus + daily > 0 else {
             BreakReminder.shared.showIfDue()
             return
         }
@@ -148,10 +169,11 @@ struct EnergyRewardBanner: View {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.65)) {
             playKcal  = play
             bonusKcal = bonus
+            dailyKcal = daily
         }
 
         try? await Task.sleep(for: .seconds(startDelay))
-        let total = play + bonus
+        let total = play + bonus + daily
         for step in 1...countSteps {
             guard !Task.isCancelled else { return }
             // 最初は速く、終わりに向かってゆっくりになる（ease-out）と「ドサっと入った」感じが出る
