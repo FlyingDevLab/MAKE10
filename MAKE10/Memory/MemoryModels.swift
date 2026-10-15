@@ -488,6 +488,31 @@ enum MemoryZodiac: String, CaseIterable {
         }
     }
 
+    /// 星座のもとになった形の絵文字（シールを手に入れたときに、名前と一緒に出す。ZodiacCaption を参照）。
+    /// ⚠️ シールにはしない「説明の絵」。StickerCatalog・じてんには入れない。
+    var motif: String {
+        switch self {
+        case .aries:       return "🐏"   // ひつじ
+        case .taurus:      return "🐂"   // うし
+        case .gemini:      return "👬"   // ふたご（ギリシャ神話のカストルとポルックス）
+        case .cancer:      return "🦀"   // かに
+        case .leo:         return "🦁"   // らいおん
+        case .virgo:       return "👩"   // おとめ ← 変更可（👧 にしてもよい）
+        case .libra:       return "⚖️"   // てんびん
+        case .scorpio:     return "🦂"   // さそり
+        case .sagittarius: return "🏹"   // 弓矢
+        case .capricorn:   return "🐐"   // やぎ
+        case .aquarius:    return "🏺"   // 水がめ
+        case .pisces:      return "🐟"   // さかな
+        }
+    }
+
+    /// 絵文字（♈ など）から星座を引く。星座でなければ nil。
+    init?(emoji: String) {
+        guard let found = Self.allCases.first(where: { $0.emoji == emoji }) else { return nil }
+        self = found
+    }
+
     /// カード1組ぶんの定義。pairID には "zodiac_" を付けて、ほかの種類と重ならないようにする。
     var item: MemoryItem {
         MemoryItem(pairID: "zodiac_" + rawValue, face: .emoji(emoji),
