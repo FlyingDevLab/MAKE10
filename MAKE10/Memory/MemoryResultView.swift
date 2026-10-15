@@ -7,6 +7,7 @@
 
 // どうぶつめくりのクリア後画面。今回もらったエネルギーを見せ、そろえたカードの絵柄から好きなシールを1まい選ぶ。
 // （月のカードは文字なので、その月らしい季節の絵文字から選ぶ。MemoryMonth を参照）
+// （くだもの は、盤面に出た12種だけでなく、15種すべてから選べる。MemoryFruit を参照）
 //
 // ★ ごほうびは2つ ★
 //   ① エネルギー … そろえるたびに（連続ならコンボボーナス付きで）その場で増えている
@@ -60,7 +61,7 @@ struct MemoryResultView: View {
     /// 選ばれたシールの番号（choices の何番目か）。nil のあいだは選択グリッドを表示する。
     @State private var chosenIndex: Int? = nil
 
-    /// えらべるシール（絵文字と読み上げの名前）。
+    /// えらべるシール（絵文字と読み上げの名前）。その種類の全部（くだもの は15種）。
     private var choices: [(emoji: String, label: Text)] {
         deck.items.map { ($0.sticker, stickerLabel(for: $0)) }
     }
@@ -73,7 +74,7 @@ struct MemoryResultView: View {
         }
     }
 
-    /// 選択グリッドの列の数。12まいは 6列×2行 にすると、すき間なくそろう。
+    /// 選択グリッドの列の数。12まいは 6列×2行、10まい・15まいは 5列 にすると、すき間なくそろう。
     private var chooserColumns: Int { choices.count == 12 ? 6 : MemoryTuning.columns }   // ← 変更可
 
     // ★ 入力ガードについて ★
