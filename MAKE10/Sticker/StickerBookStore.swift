@@ -4,7 +4,7 @@
 //
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/09.
 //
-//  シール帳の「ページ」（1〜10ページ）を保存・読み込みするシングルトン。
+//  シール帳の「ページ」（1〜12ページ）を保存・読み込みするシングルトン。
 //  1ページは「紙の縦横比・背景色・貼ったシール・描いた線」でできている。
 //
 //  役割分担:
@@ -34,7 +34,7 @@
 //    古いデータは消さずに残しておく（移すのに失敗しても、元の絵が失われないように）。
 //
 //  ★ iCloud との同期 ★（CloudSyncManager.swift を参照）
-//    1ページを1つの記録（"page-01"〜"page-10"）にして、紙の縦横比・背景色・シール・線をまとめて送る。
+//    1ページを1つの記録（"page-01"〜"page-12"）にして、紙の縦横比・背景色・シール・線をまとめて送る。
 //    2台で同じページを変えていたときは、ページごとに「あとで変えたほう」を残す（modifiedAt で比べる）。
 
 import SwiftUI
@@ -66,14 +66,15 @@ final class StickerBookStore {
     // MARK: ⚙️ 調整パラメータ
 
     /// シール帳のページ数。← 変更可（減らすと、それより後ろのページは表示されなくなる。保存データは消えない）
-    static let pageCount = 10
+    /// 最初は10ページだったが、v1.6.0 の公開前に12ページにした（12は「1年の月の数」で切りがよく、13は縁起がよくないため）。
+    static let pageCount = 12
 
     // MARK: 状態
 
     /// 全ページの「紙の縦横比・背景色・シール」。小さいので、全ページぶんをいつも持っておく。
     private(set) var pages: [StickerBookPage]
 
-    /// いま開いているページ（0 始まり。画面には +1 して「1 / 10」のように出す）。
+    /// いま開いているページ（0 始まり。画面には +1 して「1 / 12」のように出す）。
     private(set) var currentPage: Int {
         didSet { UserDefaults.standard.set(currentPage, forKey: UDKey.stickerBookCurrentPage) }
     }
@@ -304,7 +305,7 @@ extension StickerBookStore: CloudSyncSource {
         var strokes: [DrawingStroke]
     }
 
-    /// 記録の名前（"page-01"〜"page-10"。ページ番号は 1 始まり・2桁。線のファイル名とそろえている）。
+    /// 記録の名前（"page-01"〜"page-12"。ページ番号は 1 始まり・2桁。線のファイル名とそろえている）。
     static func recordName(page index: Int) -> String {
         String(format: "page-%02d", index + 1)
     }
