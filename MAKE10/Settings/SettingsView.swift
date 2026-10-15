@@ -92,127 +92,24 @@ struct SettingsView: View {
                 .ignoresSafeArea()
                 .onTapGesture { isPresented = false }
 
-            VStack(spacing: 24) {
-                Text("settings_title")
-                    .font(.system(size: 26, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.primary)
-
-                // ── おと／ぶるぶる トグル ──────────────────
-                // AppSettings.shared に直接バインドし、変更が UserDefaults に即時保存される
-                VStack(spacing: 0) {
-                    settingRow(
-                        icon:  "speaker.wave.2.fill",
-                        label: "settings_sound_label",
-                        isOn:  $settings.isSoundOn
-                    )
-                    Divider().padding(.leading, 60)
-                    settingRow(
-                        icon:  "iphone.radiowaves.left.and.right",
-                        label: "settings_haptic_label",
-                        isOn:  $settings.isHapticOn
-                    )
-                    Divider().padding(.leading, 60)
-                    // 30分遊ぶと出る休憩カード。保護者が「集中させたいとき」に止められるようにする
-                    settingRow(
-                        icon:  "cup.and.saucer.fill",
-                        label: "settings_break_label",
-                        isOn:  $settings.isBreakReminderOn
-                    )
-                    Divider().padding(.leading, 60)
-                    // お絵かき画面で「かべがみに する」を押した絵を、背景に使うか。
-                    // まだ一度も押していなければ使う絵がないので、押せないようにする
-                    settingRow(
-                        icon:  "photo.fill",
-                        label: "settings_wallpaper_label",
-                        isOn:  $wallpaper.isOn
-                    )
-                    .disabled(wallpaper.image == nil)
-                    .opacity(wallpaper.image == nil ? 0.45 : 1)
-                    Divider().padding(.leading, 60)
-                    // アプリの記録を、本人の iCloud に保存して、機種変更でも戻せるようにする（保護者向け）
-                    settingRow(
-                        icon:  "icloud.fill",
-                        label: "settings_icloud_label",
-                        isOn:  Binding(get: { cloud.isEnabled }, set: { cloud.setEnabled($0) })
-                    )
-                    cloudStatusRow
-                }
-                .background(
-                    RoundedRectangle(cornerRadius: DS.sectionRadius)
-                        .fill(DS.settingsBg)
-                )
-
-                // ── リセットボタン（viewModel がある場合のみ）──
-                // ハイスコアリセットは常時表示、進捗リセットは Blitz 解放後のみ表示する。
-                //
-                // ★ 2つのリセットの違い ★
-                //   ハイスコアをリセット … 全ゲームの記録だけを消す。シール・エネルギー・解放状態は残る
-                //   さいしょからはじめる … 記録・シール・エネルギー・解放状態・統計をすべて消す（譲渡時など）
-                if showHighScoreReset || showProgressReset {
-                    VStack(spacing: 10) {
-                        if showHighScoreReset {
-                            // タップすると confirmTarget を .highScore にセットして確認ダイアログを出す。
-                            // 実行時は GameViewModel.resetHighScore() が全ゲームの記録を一括削除する
-                            resetButton(
-                                icon:  "trophy",
-                                label: "settings_reset_high_score",
-                                color: DS.gold
-                            ) { confirmTarget = .highScore }
-                        }
-                        if showProgressReset {
-                            // タップすると confirmTarget を .progress にセットして確認ダイアログを出す
-                            resetButton(
-                                icon:  "arrow.counterclockwise",
-                                label: "settings_reset_progress",
-                                color: DS.gaugeWarn
-                            ) { confirmTarget = .progress }
-                        }
-                    }
-                }
-
-                // ── プライバシーポリシー ────────────────────
-                // Safariや外部リンクは使わず、PolicyView を sheet で表示するアプリ内閲覧方式
-                // （外部リンクを使わない理由は ConsentView.swift 冒頭を参照）
-                Button { showPolicy = true } label: {
-                    HStack(spacing: 10) {
-                        Image(systemName: "doc.text")
-                            .font(.system(size: 15))
-                            .foregroundStyle(DS.muted)
-                        Text("settings_policy_button")
-                            .font(.system(size: 15, weight: .medium, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                        Spacer()
-                        Image(systemName: "chevron.right")
-                            .font(.system(size: 12))
-                            .foregroundStyle(DS.muted.opacity(0.5))
-                    }
-                    .padding(.horizontal, 16)
-                    .padding(.vertical, 13)
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.chipRadius)
-                            .fill(DS.muted.opacity(0.07))
-                    )
-                }
-                .buttonStyle(.plain)
-
-                // ── 閉じるボタン ────────────────────────────
-                Button { isPresented = false } label: {
-                    Text("settings_close_button")
-                        .font(.system(size: 18, weight: .semibold, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                        .padding(.horizontal, 36)
-                        .padding(.vertical, 11)
-                        .background(Capsule().fill(Color.black.opacity(0.05)))
-                }
-                .buttonStyle(.plain)
+            // ★ 収まらないときだけスクロールする ★
+            //   iPhone を横にすると高さが足りず、下の項目や「とじる」が画面の外に出てしまった。
+            //   ViewThatFits は、上から順に「収まるもの」を選ぶ。収まるときはそのまま（今までと同じ見た目）、
+            //   収まらないときは ScrollView に入れたほうを使う。
+            ViewThatFits(in: .vertical) {
+                panelContent
+                ScrollView { panelContent }
+                    .scrollBounceBehavior(.basedOnSize)
             }
-            .padding(32)
             .background(
                 RoundedRectangle(cornerRadius: DS.dialogRadius)
                     .fill(DS.card)
                     .shadow(color: .black.opacity(0.10), radius: 24, x: 0, y: 8)
             )
+            .clipShape(RoundedRectangle(cornerRadius: DS.dialogRadius))
+            .frame(maxWidth: 560)          // ← 変更可（横長の画面で、パネルが横に広がりすぎないように）
             .padding(.horizontal, 36)
+            .padding(.vertical, 12)
 
             // ── iCloud の2択 ──────────────────────────────
             // iCloud にも端末にも記録があるとき、保護者にどちらを使うか選んでもらう（CloudSyncManager の「2択」を参照）。
@@ -245,6 +142,128 @@ struct SettingsView: View {
             PolicyView()
                 .dynamicTypeSize(.large)
         }
+    }
+
+    // MARK: パネルの中身
+
+    /// 設定パネルの中身（見出し・トグル・リセット・ポリシー・とじる）。
+    /// 収まるときはそのまま、収まらないときは ScrollView に入れて使う（body の ViewThatFits を参照）。
+    private var panelContent: some View {
+        VStack(spacing: 24) {
+            Text("settings_title")
+                .font(.system(size: 26, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.primary)
+
+            // ── おと／ぶるぶる トグル ──────────────────
+            // AppSettings.shared に直接バインドし、変更が UserDefaults に即時保存される
+            VStack(spacing: 0) {
+                settingRow(
+                    icon:  "speaker.wave.2.fill",
+                    label: "settings_sound_label",
+                    isOn:  $settings.isSoundOn
+                )
+                Divider().padding(.leading, 60)
+                settingRow(
+                    icon:  "iphone.radiowaves.left.and.right",
+                    label: "settings_haptic_label",
+                    isOn:  $settings.isHapticOn
+                )
+                Divider().padding(.leading, 60)
+                // 30分遊ぶと出る休憩カード。保護者が「集中させたいとき」に止められるようにする
+                settingRow(
+                    icon:  "cup.and.saucer.fill",
+                    label: "settings_break_label",
+                    isOn:  $settings.isBreakReminderOn
+                )
+                Divider().padding(.leading, 60)
+                // お絵かき画面で「かべがみに する」を押した絵を、背景に使うか。
+                // まだ一度も押していなければ使う絵がないので、押せないようにする
+                settingRow(
+                    icon:  "photo.fill",
+                    label: "settings_wallpaper_label",
+                    isOn:  $wallpaper.isOn
+                )
+                .disabled(wallpaper.image == nil)
+                .opacity(wallpaper.image == nil ? 0.45 : 1)
+                Divider().padding(.leading, 60)
+                // アプリの記録を、本人の iCloud に保存して、機種変更でも戻せるようにする（保護者向け）
+                settingRow(
+                    icon:  "icloud.fill",
+                    label: "settings_icloud_label",
+                    isOn:  Binding(get: { cloud.isEnabled }, set: { cloud.setEnabled($0) })
+                )
+                cloudStatusRow
+            }
+            .background(
+                RoundedRectangle(cornerRadius: DS.sectionRadius)
+                    .fill(DS.settingsBg)
+            )
+
+            // ── リセットボタン（viewModel がある場合のみ）──
+            // ハイスコアリセットは常時表示、進捗リセットは Blitz 解放後のみ表示する。
+            //
+            // ★ 2つのリセットの違い ★
+            //   ハイスコアをリセット … 全ゲームの記録だけを消す。シール・エネルギー・解放状態は残る
+            //   さいしょからはじめる … 記録・シール・エネルギー・解放状態・統計をすべて消す（譲渡時など）
+            if showHighScoreReset || showProgressReset {
+                VStack(spacing: 10) {
+                    if showHighScoreReset {
+                        // タップすると confirmTarget を .highScore にセットして確認ダイアログを出す。
+                        // 実行時は GameViewModel.resetHighScore() が全ゲームの記録を一括削除する
+                        resetButton(
+                            icon:  "trophy",
+                            label: "settings_reset_high_score",
+                            color: DS.gold
+                        ) { confirmTarget = .highScore }
+                    }
+                    if showProgressReset {
+                        // タップすると confirmTarget を .progress にセットして確認ダイアログを出す
+                        resetButton(
+                            icon:  "arrow.counterclockwise",
+                            label: "settings_reset_progress",
+                            color: DS.gaugeWarn
+                        ) { confirmTarget = .progress }
+                    }
+                }
+            }
+
+            // ── プライバシーポリシー ────────────────────
+            // Safariや外部リンクは使わず、PolicyView を sheet で表示するアプリ内閲覧方式
+            // （外部リンクを使わない理由は ConsentView.swift 冒頭を参照）
+            Button { showPolicy = true } label: {
+                HStack(spacing: 10) {
+                    Image(systemName: "doc.text")
+                        .font(.system(size: 15))
+                        .foregroundStyle(DS.muted)
+                    Text("settings_policy_button")
+                        .font(.system(size: 15, weight: .medium, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                    Spacer()
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 12))
+                        .foregroundStyle(DS.muted.opacity(0.5))
+                }
+                .padding(.horizontal, 16)
+                .padding(.vertical, 13)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.chipRadius)
+                        .fill(DS.muted.opacity(0.07))
+                )
+            }
+            .buttonStyle(.plain)
+
+            // ── 閉じるボタン ────────────────────────────
+            Button { isPresented = false } label: {
+                Text("settings_close_button")
+                    .font(.system(size: 18, weight: .semibold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .padding(.horizontal, 36)
+                    .padding(.vertical, 11)
+                    .background(Capsule().fill(Color.black.opacity(0.05)))
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(32)
     }
 
     // MARK: iCloud の状態

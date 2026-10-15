@@ -51,123 +51,136 @@ struct ConsentView: View {
         ZStack {
             DS.bg.ignoresSafeArea()
 
-            VStack(spacing: 0) {
-                Spacer()
+            // ★ スクロールできるようにしている理由 ★
+            //   iPhone を横にすると高さが足りず、いちばん下の「同意してはじめる」ボタンが画面の外に出て押せなかった。
+            //   中身を ScrollView に入れ、中身の高さを「画面の高さ以上」にしておく（minHeight）。
+            //   こうすると、収まるとき（縦向き）は今までどおり Spacer で上下に広がり、
+            //   収まらないとき（横向き）はスクロールしてボタンまで行ける。
+            GeometryReader { geo in
+                ScrollView {
+                    VStack(spacing: 0) {
+                        Spacer(minLength: 24)
 
-                // ── ロゴ＆タイトル ──────────────────────────
-                VStack(spacing: 8) {
-                    Text("☁️")
-                        .font(.system(size: 56))
-                    Text("consent_app_name")
-                        .font(.system(size: 22, weight: .bold, design: .rounded))
-                        .foregroundStyle(DS.primary)
-                    Text("consent_developer_name")
-                        .font(.system(size: 14, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                }
-                .padding(.bottom, 32)
-
-                // ── 本文カード ──────────────────────────────
-                VStack(alignment: .leading, spacing: 16) {
-
-                    // 同意を求める説明文。ローカライズキーで多言語対応済み
-                    Text("consent_body")
-                        .font(.system(size: 15, weight: .regular, design: .rounded))
-                        .foregroundStyle(DS.textBody)
-                        .lineSpacing(4)
-                        .fixedSize(horizontal: false, vertical: true)
-
-                    // ポリシーをアプリ内で開くボタン
-                    // Safariや外部ブラウザへは遷移させず、PolicyViewをsheetで表示する
-                    Button {
-                        showPolicy = true
-                    } label: {
-                        HStack(spacing: 6) {
-                            Text("consent_policy_link")
-                                .font(.system(size: 14, weight: .semibold, design: .rounded))
+                        // ── ロゴ＆タイトル ──────────────────────────
+                        VStack(spacing: 8) {
+                            Text("☁️")
+                                .font(.system(size: 56))
+                            Text("consent_app_name")
+                                .font(.system(size: 22, weight: .bold, design: .rounded))
                                 .foregroundStyle(DS.primary)
-                            Image(systemName: "doc.text")
-                                .font(.system(size: 13))
-                                .foregroundStyle(DS.primary)
+                            Text("consent_developer_name")
+                                .font(.system(size: 14, weight: .medium, design: .rounded))
+                                .foregroundStyle(DS.muted)
                         }
-                    }
-                    .buttonStyle(.plain)
+                        .padding(.bottom, 32)
 
-                    Divider()
+                        // ── 本文カード ──────────────────────────────
+                        VStack(alignment: .leading, spacing: 16) {
 
-                    // ── チェックボックス ────────────────────
-                    // タップで isChecked をトグルし、スプリングアニメーションでチェックマークを表示する
-                    Button {
-                        withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
-                            isChecked.toggle()
-                        }
-                    } label: {
-                        HStack(alignment: .top, spacing: 12) {
-                            ZStack {
-                                // チェック状態に応じて枠線色・背景色を切り替えるカスタムチェックボックス
-                                RoundedRectangle(cornerRadius: DS.smallRadius)
-                                    .strokeBorder(
-                                        isChecked ? DS.primary : DS.muted.opacity(0.5),
-                                        lineWidth: 2
-                                    )
-                                    .frame(width: 24, height: 24)
-                                    .background(
-                                        RoundedRectangle(cornerRadius: DS.smallRadius)
-                                            .fill(isChecked ? DS.primary : Color.clear)
-                                    )
+                            // 同意を求める説明文。ローカライズキーで多言語対応済み
+                            Text("consent_body")
+                                .font(.system(size: 15, weight: .regular, design: .rounded))
+                                .foregroundStyle(DS.textBody)
+                                .lineSpacing(4)
+                                .fixedSize(horizontal: false, vertical: true)
 
-                                // チェック済みのときだけチェックマークアイコンを表示する
-                                // .transition修飾子でスケール＋フェードの組み合わせアニメーションを付与
-                                if isChecked {
-                                    Image(systemName: "checkmark")
-                                        .font(.system(size: 13, weight: .bold))
-                                        .foregroundStyle(.white)
-                                        .transition(.scale.combined(with: .opacity))
+                            // ポリシーをアプリ内で開くボタン
+                            // Safariや外部ブラウザへは遷移させず、PolicyViewをsheetで表示する
+                            Button {
+                                showPolicy = true
+                            } label: {
+                                HStack(spacing: 6) {
+                                    Text("consent_policy_link")
+                                        .font(.system(size: 14, weight: .semibold, design: .rounded))
+                                        .foregroundStyle(DS.primary)
+                                    Image(systemName: "doc.text")
+                                        .font(.system(size: 13))
+                                        .foregroundStyle(DS.primary)
                                 }
                             }
-                            .frame(width: 24, height: 24)
+                            .buttonStyle(.plain)
 
-                            Text("consent_checkbox_label")
-                                .font(.system(size: 14, weight: .medium, design: .rounded))
-                                .foregroundStyle(DS.textBody)
-                                .fixedSize(horizontal: false, vertical: true)
+                            Divider()
+
+                            // ── チェックボックス ────────────────────
+                            // タップで isChecked をトグルし、スプリングアニメーションでチェックマークを表示する
+                            Button {
+                                withAnimation(.spring(response: 0.25, dampingFraction: 0.7)) {
+                                    isChecked.toggle()
+                                }
+                            } label: {
+                                HStack(alignment: .top, spacing: 12) {
+                                    ZStack {
+                                        // チェック状態に応じて枠線色・背景色を切り替えるカスタムチェックボックス
+                                        RoundedRectangle(cornerRadius: DS.smallRadius)
+                                            .strokeBorder(
+                                                isChecked ? DS.primary : DS.muted.opacity(0.5),
+                                                lineWidth: 2
+                                            )
+                                            .frame(width: 24, height: 24)
+                                            .background(
+                                                RoundedRectangle(cornerRadius: DS.smallRadius)
+                                                    .fill(isChecked ? DS.primary : Color.clear)
+                                            )
+
+                                        // チェック済みのときだけチェックマークアイコンを表示する
+                                        // .transition修飾子でスケール＋フェードの組み合わせアニメーションを付与
+                                        if isChecked {
+                                            Image(systemName: "checkmark")
+                                                .font(.system(size: 13, weight: .bold))
+                                                .foregroundStyle(.white)
+                                                .transition(.scale.combined(with: .opacity))
+                                        }
+                                    }
+                                    .frame(width: 24, height: 24)
+
+                                    Text("consent_checkbox_label")
+                                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                                        .foregroundStyle(DS.textBody)
+                                        .fixedSize(horizontal: false, vertical: true)
+                                }
+                            }
+                            .buttonStyle(.plain)
                         }
-                    }
-                    .buttonStyle(.plain)
-                }
-                .padding(24)
-                .background(
-                    RoundedRectangle(cornerRadius: DS.cardRadius)
-                        .fill(DS.card)
-                        .shadow(color: .black.opacity(0.07), radius: 14, x: 0, y: 5)
-                )
-                .padding(.horizontal, 28)
-
-                Spacer()
-
-                // ── 同意ボタン（チェック前はグレーアウト）──────
-                // .disabled(!isChecked) でタップを無効化しつつ、
-                // 背景色・シャドウも isChecked に連動させて視覚的にも無効状態を伝える
-                Button(action: onAgree) {
-                    Text("consent_agree_button")
-                        .font(.system(size: 20, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 18)
+                        .padding(24)
                         .background(
-                            RoundedRectangle(cornerRadius: DS.btnRadius)
-                                .fill(isChecked ? DS.primary : DS.muted.opacity(0.35))
-                                .shadow(
-                                    color: isChecked ? DS.primary.opacity(0.35) : .clear,
-                                    radius: 8, x: 0, y: 4
-                                )
+                            RoundedRectangle(cornerRadius: DS.cardRadius)
+                                .fill(DS.card)
+                                .shadow(color: .black.opacity(0.07), radius: 14, x: 0, y: 5)
                         )
+                        .padding(.horizontal, 28)
+
+                        Spacer(minLength: 24)
+
+                        // ── 同意ボタン（チェック前はグレーアウト）──────
+                        // .disabled(!isChecked) でタップを無効化しつつ、
+                        // 背景色・シャドウも isChecked に連動させて視覚的にも無効状態を伝える
+                        Button(action: onAgree) {
+                            Text("consent_agree_button")
+                                .font(.system(size: 20, weight: .black, design: .rounded))
+                                .foregroundStyle(.white)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, 18)
+                                .background(
+                                    RoundedRectangle(cornerRadius: DS.btnRadius)
+                                        .fill(isChecked ? DS.primary : DS.muted.opacity(0.35))
+                                        .shadow(
+                                            color: isChecked ? DS.primary.opacity(0.35) : .clear,
+                                            radius: 8, x: 0, y: 4
+                                        )
+                                )
+                        }
+                        .buttonStyle(.plain)
+                        .disabled(!isChecked)
+                        .animation(.easeInOut(duration: 0.2), value: isChecked)
+                        .padding(.horizontal, 28)
+                        .padding(.bottom, 52)
+                    }
+                    // 横長の画面でも読みやすいよう、文の幅を抑えてまん中に置く
+                    .frame(maxWidth: 640)                                   // ← 変更可
+                    .frame(maxWidth: .infinity, minHeight: geo.size.height)
                 }
-                .buttonStyle(.plain)
-                .disabled(!isChecked)
-                .animation(.easeInOut(duration: 0.2), value: isChecked)
-                .padding(.horizontal, 28)
-                .padding(.bottom, 52)
+                .scrollBounceBehavior(.basedOnSize)   // 収まっているときは、引っぱっても揺れない
             }
         }
         // ポリシーリンクのタップで PolicyView をシートとして表示する
