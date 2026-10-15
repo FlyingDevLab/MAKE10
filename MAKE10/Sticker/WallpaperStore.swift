@@ -100,19 +100,26 @@ final class WallpaperStore {
 ///
 /// ★ 絵の合わせ方 ★
 ///   縦横の比率は変えずに、画面いっぱいになるまで広げ、はみ出した分は切る（scaledToFill）。
-///   iPad を横にしたときなど、描いたときと画面の形が違っても、絵がゆがまない。
+///   分割表示のウィンドウなど、描いたときと画面の形が違っても、絵がゆがまない。
+///
+/// ★ 絵は端末に対して縦向きに止める ★（DeviceFixedLayer.swift を参照）
+///   端末を横にしても、ボタンや文字だけが横を向き、かべがみの絵は端末に貼りついたまま動かない。
+///   シール帳の紙と同じ考え方なので、描いた絵が、描いたときと同じ向きで背景に出る。
+///   全画面で横にしたときは、縦長の絵が90°回って、ちょうど横長の画面いっぱいに重なる。
 struct AppBackground: View {
     private let wallpaper = WallpaperStore.shared
 
     var body: some View {
         if wallpaper.isShowing, let image = wallpaper.image {
-            GeometryReader { geo in
+            DeviceFixedLayer { size in
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-                    .frame(width: geo.size.width, height: geo.size.height)
+                    .frame(width: size.width, height: size.height)
                     .clipped()
             }
+            // 絵がウィンドウの形に合わず、回したときに隅がわずかに空いても目立たないよう、絵の背景色を敷く
+            .background(wallpaper.paperColor ?? DS.bg)
             .accessibilityHidden(true)
         } else {
             DS.bg

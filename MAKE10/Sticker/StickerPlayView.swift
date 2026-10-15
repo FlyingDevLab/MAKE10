@@ -73,6 +73,63 @@ private struct FrameKey: PreferenceKey {
     }
 }
 
+// MARK: - 紙の置き方（端末に対して縦に固定）
+
+/// 紙をどこに・どの向きで置くか。
+///
+/// ★ 紙を端末に対して縦向きに止めている理由 ★
+///   お絵かきは、iPad を回しても絵が端末に貼りついたまま動かないほうが描きやすい。
+///   そこで、ボタンやパネルは画面と一緒に回し、紙だけを逆向きに回し直す（DeviceFixedLayer.swift を参照）。
+///   iPad を横にすると、縦長の紙が90°回って、ちょうど横長の画面いっぱいに重なる。
+///
+/// ★ 2つの座標 ★
+///   - 紙の上の位置（"paper"）… 紙の左上が (0,0)。紙と一緒に回るので、いつも「端末を縦にしたときの向き」
+///   - 画面全体の位置（"playBoard"）… 画面の左上が (0,0)。トレイや道具パネルはこちらの位置で測る
+///   シールをトレイへ戻す・トレイから置くときは、この2つを行き来する（toBoard / fromBoard）。
+private struct PaperLayout: Equatable {
+    /// 紙の位置と大きさ。回す前の向き（端末を縦にしたときの向き）の「置き場所」の中での位置。
+    var rect:  CGRect
+    /// 回す前の向きでの、置き場所全体の大きさ（横向きなら、画面の幅と高さを入れ替えたもの）。
+    var inner: CGSize
+    /// 画面全体（"playBoard"）の大きさ。
+    var board: CGSize
+    /// 紙を回す角度（度・時計回りが +）。縦なら 0。
+    var angle: Double
+
+    static let zero = PaperLayout(rect: .zero, inner: .zero, board: .zero, angle: 0)
+
+    var size:   CGSize  { rect.size }
+    var width:  CGFloat { rect.width }
+    var height: CGFloat { rect.height }
+
+    /// 紙の上の位置（"paper"）を、画面全体の位置（"playBoard"）に直す。
+    ///
+    /// ★ 回し方の計算 ★
+    ///   置き場所のまん中を中心に、角度ぶん回してから、画面のまん中に重ねる。
+    ///   画面の座標は Y が下向きなので、次の式で「時計回りに θ 回す」ことになる。
+    ///     x' = x·cosθ − y·sinθ,  y' = x·sinθ + y·cosθ
+    func toBoard(_ p: CGPoint) -> CGPoint {
+        let d = CGPoint(x: p.x + rect.minX - inner.width / 2,
+                        y: p.y + rect.minY - inner.height / 2)
+        let r = Self.rotate(d, by: angle)
+        return CGPoint(x: board.width / 2 + r.x, y: board.height / 2 + r.y)
+    }
+
+    /// 画面全体の位置（"playBoard"）を、置き場所の中の位置（回す前の向き）に直す。toBoard の逆。
+    /// 紙の左上ではなく「置き場所」の左上が (0,0) なので、紙の上の位置にするには rect.minX / minY を引く。
+    func fromBoard(_ b: CGPoint) -> CGPoint {
+        let d = CGPoint(x: b.x - board.width / 2, y: b.y - board.height / 2)
+        let r = Self.rotate(d, by: -angle)
+        return CGPoint(x: inner.width / 2 + r.x, y: inner.height / 2 + r.y)
+    }
+
+    private static func rotate(_ p: CGPoint, by degrees: Double) -> CGPoint {
+        let t = degrees * .pi / 180
+        let c = CGFloat(cos(t)), s = CGFloat(sin(t))
+        return CGPoint(x: p.x * c - p.y * s, y: p.x * s + p.y * c)
+    }
+}
+
 // MARK: - StickerPlayView
 
 struct StickerPlayView: View {
@@ -116,6 +173,10 @@ struct StickerPlayView: View {
     /// パネルを 🎨 にたたんでいるか
     @State private var isPanelCollapsed = UserDefaults.standard.bool(forKey: UDKey.playPanelCollapsed)
 
+    /// いまの画面の向き（紙を回す角度を決める。PaperLayout を参照）。
+    /// 横から反対の横へ180°回したときも気づけるよう、InterfaceOrientationWatcher が見張っている。
+    @State private var orientationWatcher = InterfaceOrientationWatcher.shared
+
     // かべがみ
     @State private var showWallpaperConfirm = false
     @Environment(\.displayScale) private var displayScale
@@ -152,7 +213,7 @@ struct StickerPlayView: View {
         //   そこで、広げる前の外側（safeGeo）で帯の高さを測り、ヘッダーの位置決めに使う。
         GeometryReader { safeGeo in
             GeometryReader { geo in
-                let paper = paperFrame(in: geo.size)
+                let paper = paperLayout(in: geo.size)
                 ZStack(alignment: .top) {
                     // 紙の外（横長の場所などで、紙の左右や上下にできる余白）
                     PlayC.outsidePaperColor
@@ -163,6 +224,7 @@ struct StickerPlayView: View {
                     //   紙の縦横比をページごとに決めておき、どんな形の場所でもその比率のまま中央に置けば、
                     //   iPad を回したり iPhone Duo を開いたりしても、線とシールがずれず、絵もゆがまない。
                     //   iPhone を縦にしたときは、紙がちょうど画面いっぱいになる（1.5 までと同じ見た目）。
+                    //   さらに、紙は端末に対して縦向きに止める（PaperLayout の解説を参照）。
                     ZStack {
                         palette[bgIndex].color
 
@@ -188,7 +250,12 @@ struct StickerPlayView: View {
                     .contentShape(Rectangle())
                     .simultaneousGesture(drawingGesture(paper: paper))
                     .simultaneousGesture(transformGesture)
-                    .position(x: paper.midX, y: paper.midY)
+                    // ★ 回すのは、ジェスチャーを付けたあと ★
+                    //   こうすると、ジェスチャーが返す指の位置（"paper"）は、回す前の向き（紙にとっての縦向き）に
+                    //   直されて届く。線を描く・シールを動かす処理は、紙が回っていることを気にしなくてよい。
+                    .rotationEffect(.degrees(paper.angle))
+                    // 紙のまん中を、画面全体のどこに置くか
+                    .position(paper.toBoard(CGPoint(x: paper.width / 2, y: paper.height / 2)))
 
                     // トレイから引き出し中の絵文字（指に追従するゴースト。画面全体の位置で動く）
                     if let ghost = trayGhost {
@@ -252,7 +319,11 @@ struct StickerPlayView: View {
                 // パネルの大きさが変わったとき・画面の大きさが変わったときは、はみ出さないよう位置を直す
                 .onChange(of: isPanelCollapsed) { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
                 .onChange(of: showPalette)      { _, _ in keepPanelOnScreen(bounds: geo.size, afterLayout: true) }
-                .onChange(of: geo.size)         { _, size in keepPanelOnScreen(bounds: size, afterLayout: true) }
+                .onChange(of: geo.size)         { _, size in
+                    keepPanelOnScreen(bounds: size, afterLayout: true)
+                    // 分割表示・Stage Manager で大きさが変わったときにも、念のため向きを読み直す
+                    orientationWatcher.refresh()
+                }
                 .onAppear {
                     keepPanelOnScreen(bounds: geo.size, afterLayout: true)
                     openCurrentPage(paper: paper)
@@ -273,7 +344,7 @@ struct StickerPlayView: View {
 
     /// 道具パネル。ひらいているときは つまみ・色・編集バー・ペン・シールのトレイ、たたんでいるときは 🎨 だけ。
     @ViewBuilder
-    private func toolPanel(bounds: CGSize, paper: CGRect) -> some View {
+    private func toolPanel(bounds: CGSize, paper: PaperLayout) -> some View {
         if isPanelCollapsed {
             Button {
                 SoundManager.shared.vibrate()
@@ -442,7 +513,7 @@ struct StickerPlayView: View {
     /// シール選択中・掴んでいる間・2本指操作中は描かない。
     /// 選択中にシール以外へ触れて離した場合は、ここで選択を解除する。
     /// 指の位置は紙の上の位置（"paper"）で受け取り、紙に対する割合に直して DrawingStore に渡す。
-    private func drawingGesture(paper: CGRect) -> some Gesture {
+    private func drawingGesture(paper: PaperLayout) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("paper"))
             .onChanged { value in
                 guard selectedID == nil, !isGrabbing, !isTransforming,
@@ -497,7 +568,7 @@ struct StickerPlayView: View {
 
     /// 最上位で指の位置を追跡する。トレイで持ち上げた絵文字のゴースト表示と、
     /// 離した位置への配置に使う（詳細は冒頭コメント参照）。
-    private func liftedDragGesture(paper: CGRect) -> some Gesture {
+    private func liftedDragGesture(paper: PaperLayout) -> some Gesture {
         DragGesture(minimumDistance: 0, coordinateSpace: .named("playBoard"))
             .onChanged { value in
                 lastTouch = value.location
@@ -541,7 +612,7 @@ struct StickerPlayView: View {
 
     /// シールを離したときの処理。location が nil なら動かさずに離した（選択だけ）。
     /// location は画面全体（"playBoard"）の位置。紙に対する割合に直して保存する。
-    private func drop(sticker: StickerStore.Sticker, at location: CGPoint?, paper: CGRect) {
+    private func drop(sticker: StickerStore.Sticker, at location: CGPoint?, paper: PaperLayout) {
         defer {
             isGrabbing = false
             isOverTray = false
@@ -569,7 +640,7 @@ struct StickerPlayView: View {
 
     /// トレイからの追加。location が nil ならタップ（螺旋自動配置）。
     /// location は画面全体（"playBoard"）の位置。紙に対する割合に直して置く。
-    private func addFromTray(_ emoji: String, at location: CGPoint?, paper: CGRect) {
+    private func addFromTray(_ emoji: String, at location: CGPoint?, paper: PaperLayout) {
         if let location {
             // 道具パネルの上で離した場合は「やめた」とみなして何もしない
             guard !bottomBarFrame.contains(location) else { return }
@@ -593,18 +664,23 @@ struct StickerPlayView: View {
         max(PlayC.minScale, min(PlayC.maxScale, s))
     }
 
-    /// 画面全体の位置を、紙の中（ヘッダーの下・紙の端より内側）に収めてから、紙に対する割合（0.0〜1.0）に直す。
+    /// 画面全体の位置を、紙の中（紙の端より内側）に収めてから、紙に対する割合（0.0〜1.0）に直す。
     /// 道具パネルは動かせるので、パネルの下にも置ける（パネルを動かせば見える）。
-    private func paperRatio(of point: CGPoint, paper: CGRect) -> CGPoint {
+    /// 縦のときは、ヘッダーの下（上から 80pt より下）に収める。紙を回しているときは、紙の上と画面の上が
+    /// 別の向きになるので、ヘッダーの分は考えない（紙の端より内側に収めるだけにする）。
+    private func paperRatio(of point: CGPoint, paper: PaperLayout) -> CGPoint {
         guard paper.width > 0, paper.height > 0 else { return CGPoint(x: 0.5, y: 0.5) }
-        let x = max(paper.minX + 28, min(paper.maxX - 28, point.x))
-        let y = max(max(paper.minY, 80), min(paper.maxY - 40, point.y))
-        return CGPoint(x: (x - paper.minX) / paper.width, y: (y - paper.minY) / paper.height)
+        let p    = paper.fromBoard(point)
+        let rect = paper.rect
+        let top  = paper.angle == 0 ? max(rect.minY, 80) : rect.minY + 28
+        let x = max(rect.minX + 28, min(rect.maxX - 28, p.x))
+        let y = max(top, min(rect.maxY - 40, p.y))
+        return CGPoint(x: (x - rect.minX) / rect.width, y: (y - rect.minY) / rect.height)
     }
 
-    /// 紙の上の位置（"paper"）を、画面全体の位置（"playBoard"）に直す。
-    private func toBoard(_ point: CGPoint, paper: CGRect) -> CGPoint {
-        CGPoint(x: point.x + paper.minX, y: point.y + paper.minY)
+    /// 紙の上の位置（"paper"）を、画面全体の位置（"playBoard"）に直す（紙の回転も含めて。PaperLayout を参照）。
+    private func toBoard(_ point: CGPoint, paper: PaperLayout) -> CGPoint {
+        paper.toBoard(point)
     }
 
     // MARK: - 紙とページ
@@ -621,7 +697,17 @@ struct StickerPlayView: View {
         return CGSize(width: min(size.width, size.height), height: max(size.width, size.height))
     }
 
-    /// 紙の大きさと位置（画面全体の中で）。紙の縦横比を保ったまま、使える場所にいちばん大きく収めて中央に置く。
+    /// 紙の置き方。画面の向きから回す角度を決め、回す前の向きの置き場所に、紙をいちばん大きく収めて中央に置く。
+    /// 横向きの全画面なら、置き場所は「縦にしたときの画面」と同じ形になるので、紙がちょうど画面いっぱいになる。
+    private func paperLayout(in board: CGSize) -> PaperLayout {
+        let angle = DeviceFixedRotation.counterAngle(for: orientationWatcher.orientation)
+        let inner = DeviceFixedRotation.isQuarter(angle)
+            ? CGSize(width: board.height, height: board.width)
+            : board
+        return PaperLayout(rect: paperFrame(in: inner), inner: inner, board: board, angle: angle)
+    }
+
+    /// 紙の大きさと位置（置き場所の中で）。紙の縦横比を保ったまま、置き場所にいちばん大きく収めて中央に置く。
     private func paperFrame(in size: CGSize) -> CGRect {
         let portrait = portraitScreenSize
         let aspect   = CGFloat(book.currentPaperAspect ?? Double(portrait.width / portrait.height))
@@ -639,7 +725,7 @@ struct StickerPlayView: View {
     }
 
     /// 開いているページを表示できるように準備する（紙の形を決め、線を読み込む）。
-    private func openCurrentPage(paper: CGRect) {
+    private func openCurrentPage(paper: PaperLayout) {
         book.fixPaperAspectIfNeeded(portraitSize: portraitScreenSize)
         drawingStore.paperWidth = paper.width
         drawingStore.reloadForCurrentPage(portraitSize: portraitScreenSize)
