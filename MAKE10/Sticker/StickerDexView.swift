@@ -391,10 +391,8 @@ private struct StickerExchangeCard: View {
 
     var body: some View {
         // 収まるときはそのまま、収まらないとき（iPhone の横向きなど）はカードの中をスクロールする（設定画面と同じ）
-        ViewThatFits(in: .vertical) {
+        ScrollIfNeeded {
             content
-            ScrollView { content }
-                .scrollBounceBehavior(.basedOnSize)
         }
         .frame(maxWidth: 340)
         .background(

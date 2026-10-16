@@ -5,7 +5,7 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/08.
 //
 //  「いま画面をどの向きにしてよいか」をアプリ全体で1か所に持つ係。
-//  ふだんは Info.plist で許可した向き（iPad は縦横、iPhone は縦）を使い、
+//  ふだんは Info.plist で許可した向き（iPad も iPhone も縦横）を使い、
 //  縦で遊ぶゲーム（Pinball・CoinDrop・TenPuzzle）を開いているあいだだけ「縦のみ」に絞る。
 //
 //  役割分担:

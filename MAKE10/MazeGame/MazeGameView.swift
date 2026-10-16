@@ -76,10 +76,8 @@ private struct MazeTitleView: View {
             if DS.isWide(areaSize) {
                 HStack(alignment: .center, spacing: 20) {
                     // 遊び方は、収まらなければスクロールする
-                    ViewThatFits(in: .vertical) {
+                    ScrollIfNeeded {
                         howToCard
-                        ScrollView { howToCard }
-                            .scrollBounceBehavior(.basedOnSize)
                     }
                     .frame(maxWidth: .infinity)
 
@@ -95,10 +93,8 @@ private struct MazeTitleView: View {
             } else {
                 VStack(spacing: 20) {
                     Spacer(minLength: 0)
-                    ViewThatFits(in: .vertical) {
+                    ScrollIfNeeded {
                         howToCard
-                        ScrollView { howToCard }
-                            .scrollBounceBehavior(.basedOnSize)
                     }
                     .padding(.horizontal, 24)
                     highScoreBadge
@@ -907,10 +903,8 @@ private struct MazeResultView: View {
         Group {
             if DS.isWide(areaSize) {
                 HStack(alignment: .center, spacing: 20) {
-                    ViewThatFits(in: .vertical) {
+                    ScrollIfNeeded {
                         resultContent(isWide: true)
-                        ScrollView { resultContent(isWide: true) }
-                            .scrollBounceBehavior(.basedOnSize)
                     }
                     .frame(maxWidth: .infinity)
 
@@ -926,10 +920,8 @@ private struct MazeResultView: View {
             } else {
                 VStack(spacing: 20) {
                     Spacer(minLength: 0)
-                    ViewThatFits(in: .vertical) {
+                    ScrollIfNeeded {
                         resultContent(isWide: false)
-                        ScrollView { resultContent(isWide: false) }
-                            .scrollBounceBehavior(.basedOnSize)
                     }
                     Spacer(minLength: 0)
                     EnergyRewardBanner()
