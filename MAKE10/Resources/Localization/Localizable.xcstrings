@@ -184,7 +184,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "「凑不出！」答对"
+            "value" : "“凑不出！”答对"
           }
         },
         "zh-Hant" : {
@@ -591,7 +591,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld hands"
+            "value" : "%lld rounds"
           }
         },
         "es" : {
@@ -663,13 +663,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld手"
+            "value" : "%lld局"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld手"
+            "value" : "%lld局"
           }
         }
       }
@@ -873,7 +873,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "+5 Sek"
+            "value" : "+5 Sek."
           }
         },
         "en" : {
@@ -2934,7 +2934,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🧀 全部ゲット！"
+            "value" : "🧀 ぜんぶ ゲット！"
           }
         },
         "ko" : {
@@ -3791,7 +3791,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Solo problemi risolvibili.\nUsa gli aiuti al tuo ritmo."
+            "value" : "Solo problemi risolvibili.\nUsa i suggerimenti al tuo ritmo."
           }
         },
         "ja" : {
@@ -3970,7 +3970,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शीर्षक पर वापस"
+            "value" : "मुख्य स्क्रीन पर वापस"
           }
         },
         "id" : {
@@ -4041,7 +4041,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bester Rekord"
+            "value" : "Rekord"
           }
         },
         "en" : {
@@ -4832,7 +4832,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "इकट्ठा किया पनीर"
+            "value" : "इकट्ठा की गई चीज़"
           }
         },
         "id" : {
@@ -4903,43 +4903,43 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Münzregen"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Coin Drop"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Lluvia de monedas"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Pluie de pièces"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "सिक्कों की बारिश"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Hujan Koin"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Pioggia di monete"
           }
         },
         "ja" : {
@@ -4951,43 +4951,43 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "코인 드롭"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Muntenregen"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Chuva de moedas"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "ฝนเหรียญ"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "Mưa xu"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "硬币雨"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "CoinDrop"
+            "value" : "硬幣雨"
           }
         }
       }
@@ -5022,7 +5022,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "कोनों में 3 पनीर इकट्ठा करें!"
+            "value" : "कोनों में 3 चीज़ इकट्ठा करें!"
           }
         },
         "id" : {
@@ -5040,7 +5040,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "3コーナーのチーズを全部集めたら次のステージ！"
+            "value" : "3つの すみに ある チーズを ぜんぶ あつめたら つぎの ステージ！"
           }
         },
         "ko" : {
@@ -5136,7 +5136,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "$10 集めたら MAKE10！"
+            "value" : "$10 あつめたら MAKE10！"
           }
         },
         "ko" : {
@@ -5379,7 +5379,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte lies vor dem Start unsere Datenschutzrichtlinie und den Haftungsausschluss.\n\nKeine Werbung, keine Käufe und keine Datenerfassung – sicher für Kinder.\nSpielstände können nur in deiner eigenen iCloud gesichert werden (der Entwickler kann sie nicht sehen; du kannst das in den Einstellungen ausschalten).\n\nMit Tippen auf „Zustimmen und starten“ stimmst du der Datenschutzrichtlinie und dem Haftungsausschluss zu."
+            "value" : "Bitte lesen Sie vor dem Start unsere Datenschutzrichtlinie und den Haftungsausschluss.\n\nKeine Werbung, keine Käufe und keine Datenerfassung – sicher für Kinder.\nSpielstände können nur in Ihrer eigenen iCloud gesichert werden (der Entwickler kann sie nicht sehen; Sie können das in den Einstellungen ausschalten).\n\nMit Tippen auf „Zustimmen und starten“ stimmen Sie der Datenschutzrichtlinie und dem Haftungsausschluss zu."
           }
         },
         "en" : {
@@ -5391,13 +5391,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Antes de empezar, revisa nuestra Política de privacidad y el Aviso legal.\n\nSin anuncios, sin compras y sin recopilación de datos: segura para niños.\nLos registros de juego solo pueden guardarse en tu propio iCloud (el desarrollador no puede verlos; puedes desactivarlo en Ajustes).\n\nAl tocar «Aceptar y empezar», aceptas la Política de privacidad y el Aviso legal."
+            "value" : "Antes de empezar, revise nuestra Política de privacidad y el Aviso legal.\n\nSin anuncios, sin compras y sin recopilación de datos: segura para niños.\nLos registros de juego solo pueden guardarse en su propio iCloud (el desarrollador no puede verlos; puede desactivarlo en Ajustes).\n\nAl tocar «Aceptar y empezar», acepta la Política de privacidad y el Aviso legal."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Avant de commencer, consulte notre politique de confidentialité et la clause de non-responsabilité.\n\nSans publicité, sans achats et sans collecte de données : sûr pour les enfants.\nLes données de jeu peuvent être sauvegardées uniquement dans ton propre iCloud (le développeur ne peut pas les voir ; tu peux désactiver cela dans les réglages).\n\nEn touchant « Accepter et commencer », tu acceptes la politique de confidentialité et la clause de non-responsabilité."
+            "value" : "Avant de commencer, veuillez consulter notre politique de confidentialité et la clause de non-responsabilité.\n\nSans publicité, sans achats et sans collecte de données : une app sûre pour les enfants.\nLes données de jeu peuvent être sauvegardées uniquement dans votre propre iCloud (le développeur ne peut pas les voir ; vous pouvez désactiver cela dans les réglages).\n\nEn touchant « Accepter et commencer », vous acceptez la politique de confidentialité et la clause de non-responsabilité."
           }
         },
         "hi" : {
@@ -5415,7 +5415,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Prima di iniziare, leggi l'Informativa sulla privacy e la Dichiarazione di non responsabilità.\n\nNiente pubblicità, niente acquisti e nessuna raccolta di dati: sicura per i bambini.\nI dati di gioco possono essere salvati solo nel tuo iCloud (lo sviluppatore non può vederli; puoi disattivarlo nelle impostazioni).\n\nToccando \"Accetta e inizia\", accetti l'Informativa sulla privacy e la Dichiarazione di non responsabilità."
+            "value" : "Prima di iniziare, legga l'Informativa sulla privacy e la Dichiarazione di non responsabilità.\n\nNiente pubblicità, niente acquisti e nessuna raccolta di dati: sicura per i bambini.\nI dati di gioco possono essere salvati solo nel Suo iCloud (lo sviluppatore non può vederli; può disattivarlo nelle impostazioni).\n\nToccando \"Accetta e inizia\", accetta l'Informativa sulla privacy e la Dichiarazione di non responsabilità."
           }
         },
         "ja" : {
@@ -5433,7 +5433,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lees voordat je begint ons privacybeleid en de disclaimer.\n\nGeen advertenties, geen aankopen en geen gegevensverzameling — veilig voor kinderen.\nSpeelgegevens kunnen alleen in je eigen iCloud worden bewaard (de ontwikkelaar kan ze niet zien; je kunt dit uitzetten in de instellingen).\n\nDoor op \"Akkoord en starten\" te tikken, ga je akkoord met het privacybeleid en de disclaimer."
+            "value" : "Lees voordat u begint ons privacybeleid en de disclaimer.\n\nGeen advertenties, geen aankopen en geen gegevensverzameling — veilig voor kinderen.\nSpeelgegevens kunnen alleen in uw eigen iCloud worden bewaard (de ontwikkelaar kan ze niet zien; u kunt dit uitzetten in de instellingen).\n\nDoor op \"Akkoord en starten\" te tikken, gaat u akkoord met het privacybeleid en de disclaimer."
           }
         },
         "pt-BR" : {
@@ -5801,7 +5801,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ダークグレーのネズミに触れると HP が減る（HP0でゲームオーバー）"
+            "value" : "くろい ネズミに さわると HPが へるよ（HPが 0に なったら ゲームオーバー）"
           }
         },
         "ko" : {
@@ -5897,7 +5897,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "コインをドラッグして動かそう"
+            "value" : "コインを ドラッグして うごかそう"
           }
         },
         "ko" : {
@@ -5950,7 +5950,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Weißen Maus durch Ziehen bewegen"
+            "value" : "Weiße Maus durch Ziehen bewegen"
           }
         },
         "en" : {
@@ -5992,7 +5992,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ドラッグして白いネズミを動かそう"
+            "value" : "ドラッグして しろい ネズミを うごかそう"
           }
         },
         "ko" : {
@@ -6087,7 +6087,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この操作は元に戻せません。"
+            "value" : "けすと もとに もどせないよ。"
           }
         },
         "ko" : {
@@ -6146,7 +6146,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear All Drawing?"
+            "value" : "Clear the whole drawing?"
           }
         },
         "es" : {
@@ -6182,7 +6182,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "絵を全部消しますか？"
+            "value" : "えを ぜんぶ けす？"
           }
         },
         "ko" : {
@@ -6374,7 +6374,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "消す"
+            "value" : "けす"
           }
         },
         "ko" : {
@@ -6470,7 +6470,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "全消去"
+            "value" : "ぜんぶ けす"
           }
         },
         "ko" : {
@@ -6856,7 +6856,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "하늘"
+            "value" : "하늘색"
           }
         },
         "nl" : {
@@ -7706,7 +7706,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "消しゴム"
+            "value" : "けしゴム"
           }
         },
         "ko" : {
@@ -7973,7 +7973,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "क्लियर इनाम"
+            "value" : "पूरा करने का इनाम"
           }
         },
         "id" : {
@@ -8098,7 +8098,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spel"
+            "value" : "Gespeeld"
           }
         },
         "pt-BR" : {
@@ -8853,7 +8853,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎉 대단해!"
+            "value" : "🎉 대단해요!"
           }
         },
         "nl" : {
@@ -9141,7 +9141,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "NEW"
+            "value" : "신규"
           }
         },
         "nl" : {
@@ -9980,7 +9980,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pukul tikus sebanyak mungkin dalam 30 detik!"
+            "value" : "Pukul tikus tanah sebanyak mungkin dalam 30 detik!"
           }
         },
         "it" : {
@@ -9998,7 +9998,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "30초 안에 두더지를 최대한 많이 잡아!"
+            "value" : "30초 안에 두더지를 최대한 많이 잡아요!"
           }
         },
         "nl" : {
@@ -10099,7 +10099,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hoe te spelen"
+            "value" : "Zo speel je"
           }
         },
         "pt-BR" : {
@@ -10429,7 +10429,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ein Befehl erscheint — SIEGEN oder VERLIEREN!\nZeige so schnell wie möglich die passende Hand!"
+            "value" : "Ein Befehl erscheint — GEWINNEN oder VERLIEREN!\nZeige so schnell wie möglich die passende Hand!"
           }
         },
         "en" : {
@@ -10471,13 +10471,13 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指令が出るよ！\n「かって！」か「まけて！」に合う手をすばやく出そう！"
+            "value" : "しれいが でるよ！\n「かって！」か「まけて！」に あう てを すばやく だそう！"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "명령이 나타납니다 — 이겨라! 또는 져라!\n최대한 빨리 맞는 손을 내세요!"
+            "value" : "명령이 나와요 — 이겨라! 또는 져라!\n최대한 빨리 맞는 손을 내요!"
           }
         },
         "nl" : {
@@ -10525,7 +10525,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Falsche Antwort: +5 Sek"
+            "value" : "Falsche Antwort: +5 Sek."
           }
         },
         "en" : {
@@ -10621,7 +10621,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Wie man spielt"
+            "value" : "Spielanleitung"
           }
         },
         "en" : {
@@ -10651,7 +10651,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cara Bermain"
+            "value" : "Cara bermain"
           }
         },
         "it" : {
@@ -10669,13 +10669,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "게임 방법"
+            "value" : "플레이 방법"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hoe te spelen"
+            "value" : "Zo speel je"
           }
         },
         "pt-BR" : {
@@ -10699,13 +10699,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "玩法说明"
+            "value" : "怎么玩"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "玩法說明"
+            "value" : "怎麼玩"
           }
         }
       }
@@ -10813,7 +10813,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SIEGEN!"
+            "value" : "GEWINNEN!"
           }
         },
         "en" : {
@@ -10951,7 +10951,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "交互"
+            "value" : "こうご"
           }
         },
         "ko" : {
@@ -11147,7 +11147,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "돌아가기"
+            "value" : "뒤로"
           }
         },
         "nl" : {
@@ -11860,7 +11860,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Befehl Stein-Schere-Papier"
+            "value" : "Kommando-Schere-Stein-Papier"
           }
         },
         "en" : {
@@ -11872,37 +11872,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken de Comandos"
+            "value" : "Piedra, papel o tijera con órdenes"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken de Commande"
+            "value" : "Chifoumi des consignes"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "कमांड जनकेन"
+            "value" : "कमांड पत्थर-कागज़-कैंची"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken Perintah"
+            "value" : "Suit Perintah"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken dei Comandi"
+            "value" : "Morra cinese a comando"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指令じゃんけん"
+            "value" : "しれいじゃんけん"
           }
         },
         "ko" : {
@@ -11914,19 +11914,19 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opdracht Janken"
+            "value" : "Steen-papier-schaar met opdrachten"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken de Comandos"
+            "value" : "Jokenpô de comandos"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "แจงเก็นคำสั่ง"
+            "value" : "เป่ายิ้งฉุบตามคำสั่ง"
           }
         },
         "vi" : {
@@ -12068,7 +12068,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Merci d'être venu !"
+            "value" : "Merci de ta visite !"
           }
         },
         "hi" : {
@@ -12086,7 +12086,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grazie di essere passato!"
+            "value" : "Grazie della visita!"
           }
         },
         "ja" : {
@@ -12163,7 +12163,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Merci d'être encore venu aujourd'hui !"
+            "value" : "Merci d'être là aujourd'hui encore !"
           }
         },
         "hi" : {
@@ -12181,7 +12181,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Grazie di essere tornato anche oggi!"
+            "value" : "Grazie di essere qui anche oggi!"
           }
         },
         "ja" : {
@@ -12282,7 +12282,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "１０をつくろう"
+            "value" : "10をつくろう"
           }
         },
         "ko" : {
@@ -12768,7 +12768,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "30초 동안 몇 개나 풀 수 있을까?"
+            "value" : "30초 동안 몇 개나 풀 수 있을까요?"
           }
         },
         "nl" : {
@@ -12928,7 +12928,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chargement…"
+            "value" : "Recharge…"
           }
         },
         "hi" : {
@@ -13142,7 +13142,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "迷路"
+            "value" : "めいろ"
           }
         },
         "ko" : {
@@ -14276,7 +14276,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bravissimo!"
+            "value" : "Ottimo lavoro!"
           }
         },
         "ja" : {
@@ -14575,7 +14575,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "카드를 두 장 뒤집어 보자"
+            "value" : "카드를 두 장 뒤집어 봐요"
           }
         },
         "nl" : {
@@ -14736,7 +14736,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trouve toutes les paires et choisis ton autocollant préféré"
+            "value" : "Trouve toutes les paires et choisis ton sticker préféré"
           }
         },
         "hi" : {
@@ -14790,7 +14790,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ghép hết các cặp để chọn nhãn dán con thích"
+            "value" : "Ghép hết các cặp để chọn nhãn dán bạn thích"
           }
         },
         "zh-Hans" : {
@@ -14926,7 +14926,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisis ton autocollant préféré"
+            "value" : "Choisis ton sticker préféré"
           }
         },
         "hi" : {
@@ -14980,7 +14980,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chọn nhãn dán con thích"
+            "value" : "Chọn nhãn dán bạn thích"
           }
         },
         "zh-Hans" : {
@@ -15194,7 +15194,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "WEITER"
+            "value" : "NÄCHSTE"
           }
         },
         "en" : {
@@ -15212,7 +15212,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "SUITE"
+            "value" : "SUIVANTE"
           }
         },
         "hi" : {
@@ -15224,19 +15224,19 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "LANJUT"
+            "value" : "BERIKUTNYA"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "AVANTI"
+            "value" : "PROSSIMA"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "つぎへ"
+            "value" : "つぎ"
           }
         },
         "ko" : {
@@ -15272,13 +15272,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "下一步"
+            "value" : "下一个"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "下一步"
+            "value" : "下一個"
           }
         }
       }
@@ -15331,7 +15331,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "次のステージへ..."
+            "value" : "つぎの ステージへ..."
           }
         },
         "ko" : {
@@ -15444,7 +15444,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quando todas as bolas caem, você perde uma vez. 3 vezes!"
+            "value" : "Quando todas as bolas caem, você perde uma chance. 3 chances!"
           }
         },
         "th" : {
@@ -15574,7 +15574,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pinball"
+            "value" : "Flipper"
           }
         },
         "en" : {
@@ -15610,7 +15610,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pinball"
+            "value" : "Flipper"
           }
         },
         "ja" : {
@@ -15693,7 +15693,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "फिर कोशिश करें"
+            "value" : "फिर से खेलें"
           }
         },
         "id" : {
@@ -15735,7 +15735,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ลองอีกครั้ง"
+            "value" : "เล่นอีกครั้ง"
           }
         },
         "vi" : {
@@ -15859,7 +15859,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "WEITER"
+            "value" : "NÄCHSTE"
           }
         },
         "en" : {
@@ -16049,7 +16049,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte nutze das Kontaktformular auf unserer offiziellen Website.\nKopiere die URL und füge sie in deinen Browser ein."
+            "value" : "Bitte nutzen Sie das Kontaktformular auf unserer offiziellen Website.\nKopieren Sie die URL und fügen Sie sie in Ihren Browser ein."
           }
         },
         "en" : {
@@ -16061,7 +16061,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usa el formulario de contacto en nuestro sitio web oficial.\nCopia la URL y pégala en tu navegador."
+            "value" : "Utilice el formulario de contacto de nuestro sitio web oficial.\nCopie la URL y péguela en su navegador."
           }
         },
         "fr" : {
@@ -16085,7 +16085,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Usa il modulo di contatto sul nostro sito ufficiale.\nCopia l'URL e incollalo nel tuo browser."
+            "value" : "Utilizzi il modulo di contatto sul nostro sito ufficiale.\nCopi l'URL e lo incolli nel Suo browser."
           }
         },
         "ja" : {
@@ -16103,7 +16103,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gebruik het contactformulier op onze officiële website.\nKopieer de URL en plak deze in je browser."
+            "value" : "Gebruik het contactformulier op onze officiële website.\nKopieer de URL en plak deze in uw browser."
           }
         },
         "pt-BR" : {
@@ -16524,7 +16524,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Datenschutzrichtlinie\nLetztes Update: 15. Oktober 2026\n\n🚫 Keine Datenerfassung\n🚫 Keine Werbung\n🚫 Keine externen Links\n☁️ Deine Daten können nur in deiner eigenen iCloud gesichert werden\n\n📋 Übersicht\nMAKE10 (10をつくろう) ist ein kostenloses Mathe-Puzzle-Spiel für Kinder, entwickelt von Flying Dev Lab (空飛ぶ研究室).\nMAKE10 erfasst keinerlei personenbezogene Daten – von niemandem, egal welchen Alters. Der Entwickler erhält oder sieht deine Daten nie.\n\n📦 Erfasste Informationen\nWir erfassen nichts.\nMAKE10 erfasst, erfragt oder speichert nichts davon:\n· Name, E-Mail-Adresse oder Kontaktdaten\n· Gerätekennungen oder Werbe-IDs\n· Standortdaten\n· Nutzungsanalysen oder Verhaltensdaten\n· Cookies oder Tracking-Technologien\n· Sonstige personenbezogene oder nicht personenbezogene Informationen\n\n☁️ Sichern in iCloud\nDamit Spielstände (Zeichnungen im Stickerbuch, Sticker, Energie, Highscores, das Danke-Heft usw.) nach einem Gerätewechsel oder einer Neuinstallation wiederhergestellt werden können, kann MAKE10 sie in Apples iCloud sichern.\n· Sie werden im privaten Bereich der iCloud des auf dem Gerät angemeldeten Apple Accounts gesichert.\n· Nur dieser Apple Account kann diesen Bereich lesen. Niemand sonst, auch nicht der Entwickler, kann ihn sehen.\n· Es wird nichts an Server des Entwicklers oder an andere Unternehmen gesendet.\n· Schalte in der App unter Einstellungen „In iCloud sichern“ aus, um die Daten nur auf dem Gerät zu behalten. Geräte, die nicht bei iCloud angemeldet sind, behalten die Daten ebenfalls nur auf dem Gerät.\n· In iCloud gesicherte Daten kannst du in den Einstellungen des Geräts → [dein Name] → iCloud löschen.\nFür iCloud gilt die Datenschutzrichtlinie von Apple.\n\n📡 Netzwerkaktivität\nMAKE10 kommuniziert nur mit Apples iCloud und nur für das oben beschriebene Sichern in iCloud. Es baut keine anderen Verbindungen auf. Alle Funktionen funktionieren auch ohne Internetverbindung.\n\n🎯 Werbung & In-App-Käufe\nMAKE10 enthält keinerlei Werbung.\nMAKE10 enthält keine In-App-Käufe. Die App ist vollständig kostenlos.\nIn MAKE10 gibt es keine Links zu externen Websites, sozialen Medien oder anderen Apps.\n\n👶 Datenschutz für Kinder (COPPA)\nMAKE10 ist für Kinder konzipiert und hält COPPA sowie geltende internationale Datenschutzgesetze für Kinder ein.\nWir erfassen von niemandem personenbezogene Daten. In iCloud gesicherte Daten bleiben in deinem eigenen Apple Account; der Entwickler erhält sie nicht.\n\n🔄 Änderungen dieser Richtlinie\nWird diese Richtlinie aktualisiert, wird die neue Fassung mit geändertem Datum auf dieser Seite veröffentlicht.\n\n⚠️ Haftungsausschluss\nWir bemühen uns um korrekte Inhalte und einen stabilen Betrieb, garantieren jedoch nicht die Vollständigkeit, Richtigkeit oder den unterbrechungsfreien Betrieb der App.\niOS-Updates, Änderungen der Geräteumgebung oder der Zustand von iCloud können das Verhalten der App ohne Vorankündigung beeinflussen. Der Entwickler haftet nicht für daraus entstehende Datenverluste.\nDer Entwickler kann die App ohne Vorankündigung einstellen oder ändern."
+            "value" : "Datenschutzrichtlinie\nLetztes Update: 15. Oktober 2026\n\n🚫 Keine Datenerfassung\n🚫 Keine Werbung\n🚫 Keine externen Links\n☁️ Ihre Daten können nur in Ihrer eigenen iCloud gesichert werden\n\n📋 Übersicht\nMAKE10 (10をつくろう) ist ein kostenloses Mathe-Puzzle-Spiel für Kinder, entwickelt von Flying Dev Lab (空飛ぶ研究室).\nMAKE10 erfasst keinerlei personenbezogene Daten – von niemandem, egal welchen Alters. Der Entwickler erhält oder sieht Ihre Daten nie.\n\n📦 Erfasste Informationen\nWir erfassen nichts.\nMAKE10 erfasst, erfragt oder speichert nichts davon:\n· Name, E-Mail-Adresse oder Kontaktdaten\n· Gerätekennungen oder Werbe-IDs\n· Standortdaten\n· Nutzungsanalysen oder Verhaltensdaten\n· Cookies oder Tracking-Technologien\n· Sonstige personenbezogene oder nicht personenbezogene Informationen\n\n☁️ Sichern in iCloud\nDamit Spielstände (Zeichnungen im Stickerbuch, Sticker, Energie, Highscores, das Danke-Heft usw.) nach einem Gerätewechsel oder einer Neuinstallation wiederhergestellt werden können, kann MAKE10 sie in Apples iCloud sichern.\n· Sie werden im privaten Bereich der iCloud des auf dem Gerät angemeldeten Apple Accounts gesichert.\n· Nur dieser Apple Account kann diesen Bereich lesen. Niemand sonst, auch nicht der Entwickler, kann ihn sehen.\n· Es wird nichts an Server des Entwicklers oder an andere Unternehmen gesendet.\n· Schalten Sie in der App unter Einstellungen „In iCloud sichern“ aus, um die Daten nur auf dem Gerät zu behalten. Geräte, die nicht bei iCloud angemeldet sind, behalten die Daten ebenfalls nur auf dem Gerät.\n· In iCloud gesicherte Daten können Sie in den Einstellungen des Geräts → [Ihr Name] → iCloud löschen.\nFür iCloud gilt die Datenschutzrichtlinie von Apple.\n\n📡 Netzwerkaktivität\nMAKE10 kommuniziert nur mit Apples iCloud und nur für das oben beschriebene Sichern in iCloud. Es baut keine anderen Verbindungen auf. Alle Funktionen funktionieren auch ohne Internetverbindung.\n\n🎯 Werbung & In-App-Käufe\nMAKE10 enthält keinerlei Werbung.\nMAKE10 enthält keine In-App-Käufe. Die App ist vollständig kostenlos.\nIn MAKE10 gibt es keine Links zu externen Websites, sozialen Medien oder anderen Apps.\n\n👶 Datenschutz für Kinder (COPPA)\nMAKE10 ist für Kinder konzipiert und hält COPPA sowie geltende internationale Datenschutzgesetze für Kinder ein.\nWir erfassen von niemandem personenbezogene Daten. In iCloud gesicherte Daten bleiben in Ihrem eigenen Apple Account; der Entwickler erhält sie nicht.\n\n🔄 Änderungen dieser Richtlinie\nWird diese Richtlinie aktualisiert, wird die neue Fassung mit geändertem Datum auf dieser Seite veröffentlicht.\n\n⚠️ Haftungsausschluss\nWir bemühen uns um korrekte Inhalte und einen stabilen Betrieb, garantieren jedoch nicht die Vollständigkeit, Richtigkeit oder den unterbrechungsfreien Betrieb der App.\niOS-Updates, Änderungen der Geräteumgebung oder der Zustand von iCloud können das Verhalten der App ohne Vorankündigung beeinflussen. Der Entwickler haftet nicht für daraus entstehende Datenverluste.\nDer Entwickler kann die App ohne Vorankündigung einstellen oder ändern."
           }
         },
         "en" : {
@@ -16536,13 +16536,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Política de privacidad\nÚltima actualización: 15 de octubre de 2026\n\n🚫 Sin recopilación de datos\n🚫 Sin anuncios\n🚫 Sin enlaces externos\n☁️ Tus registros solo pueden guardarse en tu propio iCloud\n\n📋 Descripción general\nMAKE10 (10をつくろう) es un juego de puzle matemático gratuito para niños, desarrollado por Flying Dev Lab (空飛ぶ研究室).\nMAKE10 no recopila ninguna información personal, de nadie y de ninguna edad. El desarrollador nunca recibe ni ve tus datos.\n\n📦 Información recopilada\nNo recopilamos nada.\nMAKE10 no recopila, solicita ni guarda nada de lo siguiente:\n· Nombre, correo electrónico o datos de contacto\n· Identificadores del dispositivo o de publicidad\n· Datos de ubicación\n· Análisis de uso o datos de comportamiento\n· Cookies o tecnologías de seguimiento\n· Cualquier otra información personal o no personal\n\n☁️ Guardar en iCloud\nPara que los registros de juego (dibujos del álbum de pegatinas, pegatinas, energía, récords, el Cuaderno de gracias, etc.) puedan restaurarse después de cambiar de dispositivo o reinstalar, MAKE10 puede guardarlos en iCloud de Apple.\n· Se guardan en el área privada del iCloud de la cuenta de Apple con la que se inició sesión en el dispositivo.\n· Solo esa cuenta de Apple puede leer esta área. Nadie más, ni siquiera el desarrollador, puede verla.\n· No se envía nada a los servidores del desarrollador ni a ninguna otra empresa.\n· Desactiva «Guardar en iCloud» en los ajustes de la app para guardar los registros solo en el dispositivo. Los dispositivos sin sesión iniciada en iCloud también los guardan solo en el dispositivo.\n· Los registros guardados en iCloud se pueden eliminar desde Ajustes del dispositivo → [tu nombre] → iCloud.\nA iCloud se le aplica la Política de privacidad de Apple.\n\n📡 Actividad de red\nMAKE10 solo se comunica con iCloud de Apple, y solo para el guardado en iCloud descrito arriba. No realiza ninguna otra conexión. Todas las funciones se pueden usar sin conexión a internet.\n\n🎯 Publicidad y compras integradas\nMAKE10 no contiene publicidad de ningún tipo.\nMAKE10 no tiene compras integradas. La app es completamente gratuita.\nEn MAKE10 no hay enlaces a sitios web externos, redes sociales ni otras apps.\n\n👶 Privacidad infantil (COPPA)\nMAKE10 está diseñado para niños y cumple con la COPPA y las leyes internacionales aplicables de privacidad infantil.\nNo recopilamos información personal de nadie. Los registros guardados en iCloud permanecen en tu propia cuenta de Apple; el desarrollador no los recibe.\n\n🔄 Cambios en esta política\nSi esta política se actualiza, la nueva versión se publicará en esta página con una nueva fecha de vigencia.\n\n⚠️ Aviso legal\nNos esforzamos por ofrecer contenido preciso y un funcionamiento estable, pero no garantizamos la integridad, la exactitud ni el funcionamiento ininterrumpido de la app.\nLas actualizaciones de iOS, los cambios en el entorno del dispositivo o el estado de iCloud pueden afectar al funcionamiento de la app sin previo aviso. El desarrollador no se hace responsable de la pérdida de datos derivada de ello.\nEl desarrollador puede finalizar o modificar la app sin previo aviso."
+            "value" : "Política de privacidad\nÚltima actualización: 15 de octubre de 2026\n\n🚫 Sin recopilación de datos\n🚫 Sin anuncios\n🚫 Sin enlaces externos\n☁️ Sus registros solo pueden guardarse en su propio iCloud\n\n📋 Descripción general\nMAKE10 (10をつくろう) es un juego de puzle matemático gratuito para niños, desarrollado por Flying Dev Lab (空飛ぶ研究室).\nMAKE10 no recopila ninguna información personal, de nadie y de ninguna edad. El desarrollador nunca recibe ni ve sus datos.\n\n📦 Información recopilada\nNo recopilamos nada.\nMAKE10 no recopila, solicita ni guarda nada de lo siguiente:\n· Nombre, correo electrónico o datos de contacto\n· Identificadores del dispositivo o de publicidad\n· Datos de ubicación\n· Análisis de uso o datos de comportamiento\n· Cookies o tecnologías de seguimiento\n· Cualquier otra información personal o no personal\n\n☁️ Guardar en iCloud\nPara que los registros de juego (dibujos del álbum de pegatinas, pegatinas, energía, récords, el Cuaderno de gracias, etc.) puedan restaurarse después de cambiar de dispositivo o reinstalar, MAKE10 puede guardarlos en iCloud de Apple.\n· Se guardan en el área privada del iCloud de la cuenta de Apple con la que se inició sesión en el dispositivo.\n· Solo esa cuenta de Apple puede leer esta área. Nadie más, ni siquiera el desarrollador, puede verla.\n· No se envía nada a los servidores del desarrollador ni a ninguna otra empresa.\n· Desactive «Guardar en iCloud» en los ajustes de la app para guardar los registros solo en el dispositivo. Los dispositivos sin sesión iniciada en iCloud también los guardan solo en el dispositivo.\n· Los registros guardados en iCloud se pueden eliminar desde Ajustes del dispositivo → [su nombre] → iCloud.\nA iCloud se le aplica la Política de privacidad de Apple.\n\n📡 Actividad de red\nMAKE10 solo se comunica con iCloud de Apple, y solo para el guardado en iCloud descrito arriba. No realiza ninguna otra conexión. Todas las funciones se pueden usar sin conexión a internet.\n\n🎯 Publicidad y compras integradas\nMAKE10 no contiene publicidad de ningún tipo.\nMAKE10 no tiene compras integradas. La app es completamente gratuita.\nEn MAKE10 no hay enlaces a sitios web externos, redes sociales ni otras apps.\n\n👶 Privacidad infantil (COPPA)\nMAKE10 está diseñado para niños y cumple con la COPPA y las leyes internacionales aplicables de privacidad infantil.\nNo recopilamos información personal de nadie. Los registros guardados en iCloud permanecen en su propia cuenta de Apple; el desarrollador no los recibe.\n\n🔄 Cambios en esta política\nSi esta política se actualiza, la nueva versión se publicará en esta página con una nueva fecha de vigencia.\n\n⚠️ Aviso legal\nNos esforzamos por ofrecer contenido preciso y un funcionamiento estable, pero no garantizamos la integridad, la exactitud ni el funcionamiento ininterrumpido de la app.\nLas actualizaciones de iOS, los cambios en el entorno del dispositivo o el estado de iCloud pueden afectar al funcionamiento de la app sin previo aviso. El desarrollador no se hace responsable de la pérdida de datos derivada de ello.\nEl desarrollador puede finalizar o modificar la app sin previo aviso."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Politique de confidentialité\nDernière mise à jour : 15 octobre 2026\n\n🚫 Aucune collecte de données\n🚫 Aucune publicité\n🚫 Aucun lien externe\n☁️ Tes données peuvent être sauvegardées uniquement dans ton propre iCloud\n\n📋 Présentation\nMAKE10 (10をつくろう) est un jeu de puzzle mathématique gratuit pour enfants, développé par Flying Dev Lab (空飛ぶ研究室).\nMAKE10 ne collecte aucune information personnelle, auprès de qui que ce soit et quel que soit l'âge. Le développeur ne reçoit et ne voit jamais tes données.\n\n📦 Informations collectées\nNous ne collectons rien.\nMAKE10 ne collecte, ne demande ni ne conserve aucune des informations suivantes :\n· Nom, adresse e-mail ou coordonnées\n· Identifiants de l'appareil ou identifiants publicitaires\n· Données de localisation\n· Statistiques d'utilisation ou données comportementales\n· Cookies ou technologies de suivi\n· Toute autre information personnelle ou non personnelle\n\n☁️ Sauvegarde dans iCloud\nPour que les données de jeu (dessins de l'album de stickers, stickers, énergie, meilleurs scores, le Carnet de mercis, etc.) puissent être restaurées après un changement d'appareil ou une réinstallation, MAKE10 peut les sauvegarder dans iCloud d'Apple.\n· Elles sont sauvegardées dans l'espace privé de l'iCloud du compte Apple connecté sur l'appareil.\n· Seul ce compte Apple peut lire cet espace. Personne d'autre, y compris le développeur, ne peut le voir.\n· Rien n'est envoyé aux serveurs du développeur ni à une autre entreprise.\n· Désactive « Sauvegarder dans iCloud » dans les réglages de l'app pour garder les données uniquement sur l'appareil. Les appareils non connectés à iCloud les gardent aussi uniquement sur l'appareil.\n· Les données sauvegardées dans iCloud peuvent être supprimées depuis Réglages de l'appareil → [ton nom] → iCloud.\nLa politique de confidentialité d'Apple s'applique à iCloud.\n\n📡 Activité réseau\nMAKE10 communique uniquement avec iCloud d'Apple, et uniquement pour la sauvegarde dans iCloud décrite ci-dessus. Il n'établit aucune autre connexion. Toutes les fonctionnalités fonctionnent sans connexion Internet.\n\n🎯 Publicité et achats intégrés\nMAKE10 ne contient aucune publicité.\nMAKE10 ne contient aucun achat intégré. L'app est entièrement gratuite.\nMAKE10 ne contient aucun lien vers des sites web externes, des réseaux sociaux ou d'autres apps.\n\n👶 Confidentialité des enfants (COPPA)\nMAKE10 est conçu pour les enfants et respecte la COPPA ainsi que les lois internationales applicables sur la vie privée des enfants.\nNous ne collectons aucune information personnelle. Les données sauvegardées dans iCloud restent dans ton propre compte Apple ; le développeur ne les reçoit pas.\n\n🔄 Modifications de cette politique\nSi cette politique est mise à jour, la nouvelle version sera publiée sur cette page avec une nouvelle date d'entrée en vigueur.\n\n⚠️ Clause de non-responsabilité\nNous nous efforçons de proposer un contenu exact et un fonctionnement stable, mais nous ne garantissons pas l'exhaustivité, l'exactitude ni le fonctionnement ininterrompu de l'app.\nLes mises à jour d'iOS, les changements de l'environnement de l'appareil ou l'état d'iCloud peuvent affecter le fonctionnement de l'app sans préavis. Le développeur décline toute responsabilité en cas de perte de données qui en résulterait.\nLe développeur peut arrêter ou modifier l'app sans préavis."
+            "value" : "Politique de confidentialité\nDernière mise à jour : 15 octobre 2026\n\n🚫 Aucune collecte de données\n🚫 Aucune publicité\n🚫 Aucun lien externe\n☁️ Vos données peuvent être sauvegardées uniquement dans votre propre iCloud\n\n📋 Présentation\nMAKE10 (10をつくろう) est un jeu de puzzle mathématique gratuit pour enfants, développé par Flying Dev Lab (空飛ぶ研究室).\nMAKE10 ne collecte aucune information personnelle, auprès de qui que ce soit et quel que soit l'âge. Le développeur ne reçoit et ne voit jamais vos données.\n\n📦 Informations collectées\nNous ne collectons rien.\nMAKE10 ne collecte, ne demande ni ne conserve aucune des informations suivantes :\n· Nom, adresse e-mail ou coordonnées\n· Identifiants de l'appareil ou identifiants publicitaires\n· Données de localisation\n· Statistiques d'utilisation ou données comportementales\n· Cookies ou technologies de suivi\n· Toute autre information personnelle ou non personnelle\n\n☁️ Sauvegarde dans iCloud\nPour que les données de jeu (dessins de l'album de stickers, stickers, énergie, meilleurs scores, le Carnet de mercis, etc.) puissent être restaurées après un changement d'appareil ou une réinstallation, MAKE10 peut les sauvegarder dans iCloud d'Apple.\n· Elles sont sauvegardées dans l'espace privé de l'iCloud du compte Apple connecté sur l'appareil.\n· Seul ce compte Apple peut lire cet espace. Personne d'autre, y compris le développeur, ne peut le voir.\n· Rien n'est envoyé aux serveurs du développeur ni à une autre entreprise.\n· Désactivez « Sauvegarder dans iCloud » dans les réglages de l'app pour garder les données uniquement sur l'appareil. Les appareils non connectés à iCloud les gardent aussi uniquement sur l'appareil.\n· Les données sauvegardées dans iCloud peuvent être supprimées depuis Réglages de l'appareil → [votre nom] → iCloud.\nLa politique de confidentialité d'Apple s'applique à iCloud.\n\n📡 Activité réseau\nMAKE10 communique uniquement avec iCloud d'Apple, et uniquement pour la sauvegarde dans iCloud décrite ci-dessus. Il n'établit aucune autre connexion. Toutes les fonctionnalités fonctionnent sans connexion Internet.\n\n🎯 Publicité et achats intégrés\nMAKE10 ne contient aucune publicité.\nMAKE10 ne contient aucun achat intégré. L'app est entièrement gratuite.\nMAKE10 ne contient aucun lien vers des sites web externes, des réseaux sociaux ou d'autres apps.\n\n👶 Confidentialité des enfants (COPPA)\nMAKE10 est conçu pour les enfants et respecte la COPPA ainsi que les lois internationales applicables sur la vie privée des enfants.\nNous ne collectons aucune information personnelle. Les données sauvegardées dans iCloud restent dans votre propre compte Apple ; le développeur ne les reçoit pas.\n\n🔄 Modifications de cette politique\nSi cette politique est mise à jour, la nouvelle version sera publiée sur cette page avec une nouvelle date d'entrée en vigueur.\n\n⚠️ Clause de non-responsabilité\nNous nous efforçons de proposer un contenu exact et un fonctionnement stable, mais nous ne garantissons pas l'exhaustivité, l'exactitude ni le fonctionnement ininterrompu de l'app.\nLes mises à jour d'iOS, les changements de l'environnement de l'appareil ou l'état d'iCloud peuvent affecter le fonctionnement de l'app sans préavis. Le développeur décline toute responsabilité en cas de perte de données qui en résulterait.\nLe développeur peut arrêter ou modifier l'app sans préavis."
           }
         },
         "hi" : {
@@ -16560,7 +16560,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Informativa sulla privacy\nUltimo aggiornamento: 15 ottobre 2026\n\n🚫 Nessuna raccolta di dati\n🚫 Nessuna pubblicità\n🚫 Nessun link esterno\n☁️ I tuoi dati possono essere salvati solo nel tuo iCloud\n\n📋 Panoramica\nMAKE10 (10をつくろう) è un gioco di puzzle matematico gratuito per bambini, sviluppato da Flying Dev Lab (空飛ぶ研究室).\nMAKE10 non raccoglie alcuna informazione personale, da nessuno e a qualsiasi età. Lo sviluppatore non riceve né vede mai i tuoi dati.\n\n📦 Informazioni raccolte\nNon raccogliamo nulla.\nMAKE10 non raccoglie, richiede o conserva nessuno dei seguenti dati:\n· Nome, indirizzo email o dati di contatto\n· Identificatori del dispositivo o ID pubblicitari\n· Dati sulla posizione\n· Analisi di utilizzo o dati comportamentali\n· Cookie o tecnologie di tracciamento\n· Qualsiasi altra informazione personale o non personale\n\n☁️ Salvataggio su iCloud\nAffinché i dati di gioco (disegni dell'album di adesivi, adesivi, energia, record, il Quaderno dei grazie e così via) possano essere ripristinati dopo un cambio di dispositivo o una reinstallazione, MAKE10 può salvarli su iCloud di Apple.\n· Vengono salvati nell'area privata di iCloud dell'Account Apple con cui è stato effettuato l'accesso sul dispositivo.\n· Solo quell'Account Apple può leggere quest'area. Nessun altro, nemmeno lo sviluppatore, può vederla.\n· Nulla viene inviato ai server dello sviluppatore o ad altre aziende.\n· Disattiva \"Salva su iCloud\" nelle impostazioni dell'app per conservare i dati solo sul dispositivo. Anche i dispositivi senza accesso a iCloud conservano i dati solo sul dispositivo.\n· I dati salvati su iCloud possono essere eliminati da Impostazioni del dispositivo → [il tuo nome] → iCloud.\nA iCloud si applica l'Informativa sulla privacy di Apple.\n\n📡 Attività di rete\nMAKE10 comunica solo con iCloud di Apple, e solo per il salvataggio su iCloud descritto sopra. Non effettua altre connessioni. Tutte le funzioni sono utilizzabili anche senza connessione a Internet.\n\n🎯 Pubblicità e acquisti in-app\nMAKE10 non contiene alcun tipo di pubblicità.\nMAKE10 non contiene acquisti in-app. L'app è completamente gratuita.\nIn MAKE10 non ci sono link a siti web esterni, social network o altre app.\n\n👶 Privacy dei minori (COPPA)\nMAKE10 è pensato per i bambini e rispetta la COPPA e le leggi internazionali applicabili sulla privacy dei minori.\nNon raccogliamo informazioni personali da nessuno. I dati salvati su iCloud restano nel tuo Account Apple; lo sviluppatore non li riceve.\n\n🔄 Modifiche a questa informativa\nSe questa informativa viene aggiornata, la nuova versione sarà pubblicata su questa pagina con una nuova data di validità.\n\n⚠️ Dichiarazione di non responsabilità\nCi impegniamo a offrire contenuti accurati e un funzionamento stabile, ma non garantiamo la completezza, l'accuratezza o il funzionamento ininterrotto dell'app.\nGli aggiornamenti di iOS, i cambiamenti dell'ambiente del dispositivo o lo stato di iCloud possono influire sul funzionamento dell'app senza preavviso. Lo sviluppatore non è responsabile di eventuali perdite di dati che ne derivino.\nLo sviluppatore può interrompere o modificare l'app senza preavviso."
+            "value" : "Informativa sulla privacy\nUltimo aggiornamento: 15 ottobre 2026\n\n🚫 Nessuna raccolta di dati\n🚫 Nessuna pubblicità\n🚫 Nessun link esterno\n☁️ I Suoi dati possono essere salvati solo nel Suo iCloud\n\n📋 Panoramica\nMAKE10 (10をつくろう) è un gioco di puzzle matematico gratuito per bambini, sviluppato da Flying Dev Lab (空飛ぶ研究室).\nMAKE10 non raccoglie alcuna informazione personale, da nessuno e a qualsiasi età. Lo sviluppatore non riceve né vede mai i Suoi dati.\n\n📦 Informazioni raccolte\nNon raccogliamo nulla.\nMAKE10 non raccoglie, richiede o conserva nessuno dei seguenti dati:\n· Nome, indirizzo email o dati di contatto\n· Identificatori del dispositivo o ID pubblicitari\n· Dati sulla posizione\n· Analisi di utilizzo o dati comportamentali\n· Cookie o tecnologie di tracciamento\n· Qualsiasi altra informazione personale o non personale\n\n☁️ Salvataggio su iCloud\nAffinché i dati di gioco (disegni dell'album di adesivi, adesivi, energia, record, il Quaderno dei grazie e così via) possano essere ripristinati dopo un cambio di dispositivo o una reinstallazione, MAKE10 può salvarli su iCloud di Apple.\n· Vengono salvati nell'area privata di iCloud dell'Account Apple con cui è stato effettuato l'accesso sul dispositivo.\n· Solo quell'Account Apple può leggere quest'area. Nessun altro, nemmeno lo sviluppatore, può vederla.\n· Nulla viene inviato ai server dello sviluppatore o ad altre aziende.\n· Disattivi \"Salva su iCloud\" nelle impostazioni dell'app per conservare i dati solo sul dispositivo. Anche i dispositivi senza accesso a iCloud conservano i dati solo sul dispositivo.\n· I dati salvati su iCloud possono essere eliminati da Impostazioni del dispositivo → [il Suo nome] → iCloud.\nA iCloud si applica l'Informativa sulla privacy di Apple.\n\n📡 Attività di rete\nMAKE10 comunica solo con iCloud di Apple, e solo per il salvataggio su iCloud descritto sopra. Non effettua altre connessioni. Tutte le funzioni sono utilizzabili anche senza connessione a Internet.\n\n🎯 Pubblicità e acquisti in-app\nMAKE10 non contiene alcun tipo di pubblicità.\nMAKE10 non contiene acquisti in-app. L'app è completamente gratuita.\nIn MAKE10 non ci sono link a siti web esterni, social network o altre app.\n\n👶 Privacy dei minori (COPPA)\nMAKE10 è pensato per i bambini e rispetta la COPPA e le leggi internazionali applicabili sulla privacy dei minori.\nNon raccogliamo informazioni personali da nessuno. I dati salvati su iCloud restano nel Suo Account Apple; lo sviluppatore non li riceve.\n\n🔄 Modifiche a questa informativa\nSe questa informativa viene aggiornata, la nuova versione sarà pubblicata su questa pagina con una nuova data di validità.\n\n⚠️ Dichiarazione di non responsabilità\nCi impegniamo a offrire contenuti accurati e un funzionamento stabile, ma non garantiamo la completezza, l'accuratezza o il funzionamento ininterrotto dell'app.\nGli aggiornamenti di iOS, i cambiamenti dell'ambiente del dispositivo o lo stato di iCloud possono influire sul funzionamento dell'app senza preavviso. Lo sviluppatore non è responsabile di eventuali perdite di dati che ne derivino.\nLo sviluppatore può interrompere o modificare l'app senza preavviso."
           }
         },
         "ja" : {
@@ -16578,7 +16578,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacybeleid\nLaatst bijgewerkt: 15 oktober 2026\n\n🚫 Geen gegevensverzameling\n🚫 Geen advertenties\n🚫 Geen externe links\n☁️ Je gegevens kunnen alleen in je eigen iCloud worden bewaard\n\n📋 Overzicht\nMAKE10 (10をつくろう) is een gratis wiskundig puzzelspel voor kinderen, ontwikkeld door Flying Dev Lab (空飛ぶ研究室).\nMAKE10 verzamelt geen enkele persoonlijke informatie, van niemand en van geen enkele leeftijd. De ontwikkelaar ontvangt of ziet je gegevens nooit.\n\n📦 Verzamelde informatie\nWe verzamelen niets.\nMAKE10 verzamelt, vraagt of bewaart geen van het volgende:\n· Naam, e-mailadres of contactgegevens\n· Apparaat-ID's of advertentie-ID's\n· Locatiegegevens\n· Gebruiksanalyses of gedragsgegevens\n· Cookies of trackingtechnologieën\n· Andere persoonlijke of niet-persoonlijke informatie\n\n☁️ Bewaren in iCloud\nZodat speelgegevens (tekeningen in het stickerboek, stickers, energie, topscores, het Dankjewel-boekje enzovoort) na het wisselen van apparaat of opnieuw installeren kunnen worden hersteld, kan MAKE10 ze in iCloud van Apple bewaren.\n· Ze worden bewaard in het privégedeelte van de iCloud van de Apple-account waarmee op het apparaat is ingelogd.\n· Alleen die Apple-account kan dit gedeelte lezen. Niemand anders, ook de ontwikkelaar niet, kan het zien.\n· Er wordt niets naar servers van de ontwikkelaar of naar andere bedrijven gestuurd.\n· Zet \"Bewaren in iCloud\" uit in de instellingen van de app om de gegevens alleen op het apparaat te bewaren. Apparaten die niet bij iCloud zijn ingelogd, bewaren de gegevens ook alleen op het apparaat.\n· In iCloud bewaarde gegevens kun je verwijderen via Instellingen van het apparaat → [je naam] → iCloud.\nOp iCloud is het privacybeleid van Apple van toepassing.\n\n📡 Netwerkactiviteit\nMAKE10 communiceert alleen met iCloud van Apple, en alleen voor het bewaren in iCloud zoals hierboven beschreven. Er worden geen andere verbindingen gemaakt. Alle functies werken ook zonder internetverbinding.\n\n🎯 Advertenties en in-app aankopen\nMAKE10 bevat geen enkele vorm van advertenties.\nMAKE10 bevat geen in-app aankopen. De app is volledig gratis.\nIn MAKE10 staan geen links naar externe websites, sociale media of andere apps.\n\n👶 Privacy van kinderen (COPPA)\nMAKE10 is ontworpen voor kinderen en voldoet aan COPPA en de toepasselijke internationale wetten over de privacy van kinderen.\nWe verzamelen van niemand persoonlijke informatie. In iCloud bewaarde gegevens blijven in je eigen Apple-account; de ontwikkelaar ontvangt ze niet.\n\n🔄 Wijzigingen in dit beleid\nAls dit beleid wordt bijgewerkt, wordt de nieuwe versie met een nieuwe ingangsdatum op deze pagina gepubliceerd.\n\n⚠️ Disclaimer\nWe streven naar juiste inhoud en een stabiele werking, maar garanderen niet de volledigheid, juistheid of ononderbroken werking van de app.\niOS-updates, veranderingen in de apparaatomgeving of de toestand van iCloud kunnen de werking van de app zonder voorafgaande kennisgeving beïnvloeden. De ontwikkelaar is niet aansprakelijk voor gegevensverlies dat hierdoor ontstaat.\nDe ontwikkelaar kan de app zonder voorafgaande kennisgeving beëindigen of wijzigen."
+            "value" : "Privacybeleid\nLaatst bijgewerkt: 15 oktober 2026\n\n🚫 Geen gegevensverzameling\n🚫 Geen advertenties\n🚫 Geen externe links\n☁️ Uw gegevens kunnen alleen in uw eigen iCloud worden bewaard\n\n📋 Overzicht\nMAKE10 (10をつくろう) is een gratis wiskundig puzzelspel voor kinderen, ontwikkeld door Flying Dev Lab (空飛ぶ研究室).\nMAKE10 verzamelt geen enkele persoonlijke informatie, van niemand en van geen enkele leeftijd. De ontwikkelaar ontvangt of ziet uw gegevens nooit.\n\n📦 Verzamelde informatie\nWe verzamelen niets.\nMAKE10 verzamelt, vraagt of bewaart geen van het volgende:\n· Naam, e-mailadres of contactgegevens\n· Apparaat-ID's of advertentie-ID's\n· Locatiegegevens\n· Gebruiksanalyses of gedragsgegevens\n· Cookies of trackingtechnologieën\n· Andere persoonlijke of niet-persoonlijke informatie\n\n☁️ Bewaren in iCloud\nZodat speelgegevens (tekeningen in het stickerboek, stickers, energie, topscores, het Dankjewel-boekje enzovoort) na het wisselen van apparaat of opnieuw installeren kunnen worden hersteld, kan MAKE10 ze in iCloud van Apple bewaren.\n· Ze worden bewaard in het privégedeelte van de iCloud van de Apple-account waarmee op het apparaat is ingelogd.\n· Alleen die Apple-account kan dit gedeelte lezen. Niemand anders, ook de ontwikkelaar niet, kan het zien.\n· Er wordt niets naar servers van de ontwikkelaar of naar andere bedrijven gestuurd.\n· Zet \"Bewaren in iCloud\" uit in de instellingen van de app om de gegevens alleen op het apparaat te bewaren. Apparaten die niet bij iCloud zijn ingelogd, bewaren de gegevens ook alleen op het apparaat.\n· In iCloud bewaarde gegevens kunt u verwijderen via Instellingen van het apparaat → [uw naam] → iCloud.\nOp iCloud is het privacybeleid van Apple van toepassing.\n\n📡 Netwerkactiviteit\nMAKE10 communiceert alleen met iCloud van Apple, en alleen voor het bewaren in iCloud zoals hierboven beschreven. Er worden geen andere verbindingen gemaakt. Alle functies werken ook zonder internetverbinding.\n\n🎯 Advertenties en in-app aankopen\nMAKE10 bevat geen enkele vorm van advertenties.\nMAKE10 bevat geen in-app aankopen. De app is volledig gratis.\nIn MAKE10 staan geen links naar externe websites, sociale media of andere apps.\n\n👶 Privacy van kinderen (COPPA)\nMAKE10 is ontworpen voor kinderen en voldoet aan COPPA en de toepasselijke internationale wetten over de privacy van kinderen.\nWe verzamelen van niemand persoonlijke informatie. In iCloud bewaarde gegevens blijven in uw eigen Apple-account; de ontwikkelaar ontvangt ze niet.\n\n🔄 Wijzigingen in dit beleid\nAls dit beleid wordt bijgewerkt, wordt de nieuwe versie met een nieuwe ingangsdatum op deze pagina gepubliceerd.\n\n⚠️ Disclaimer\nWe streven naar juiste inhoud en een stabiele werking, maar garanderen niet de volledigheid, juistheid of ononderbroken werking van de app.\niOS-updates, veranderingen in de apparaatomgeving of de toestand van iCloud kunnen de werking van de app zonder voorafgaande kennisgeving beïnvloeden. De ontwikkelaar is niet aansprakelijk voor gegevensverlies dat hierdoor ontstaat.\nDe ontwikkelaar kan de app zonder voorafgaande kennisgeving beëindigen of wijzigen."
           }
         },
         "pt-BR" : {
@@ -16726,7 +16726,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡La próxima vez!"
+            "value" : "¡La próxima vez lo logras!"
           }
         },
         "fr" : {
@@ -16762,7 +16762,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다음엔 할 수 있어!"
+            "value" : "다음엔 할 수 있어요!"
           }
         },
         "nl" : {
@@ -16857,7 +16857,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "해냈어!"
+            "value" : "해냈어요!"
           }
         },
         "nl" : {
@@ -16952,7 +16952,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "잘했어!"
+            "value" : "잘했어요!"
           }
         },
         "nl" : {
@@ -17047,7 +17047,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "대단해!"
+            "value" : "대단해요!"
           }
         },
         "nl" : {
@@ -17142,7 +17142,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "믿기지 않아!"
+            "value" : "믿기지 않아요!"
           }
         },
         "nl" : {
@@ -17284,7 +17284,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 Der Beste 🎉"
+            "value" : "🥳 Spitze 🎉"
           }
         },
         "en" : {
@@ -17296,13 +17296,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 El mejor 🎉"
+            "value" : "🥳 Lo máximo 🎉"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 Le meilleur 🎉"
+            "value" : "🥳 Au top 🎉"
           }
         },
         "hi" : {
@@ -17320,7 +17320,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 Il migliore 🎉"
+            "value" : "🥳 Il top 🎉"
           }
         },
         "ja" : {
@@ -17332,19 +17332,19 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 최고야 🎉"
+            "value" : "🥳 최고예요 🎉"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 De beste 🎉"
+            "value" : "🥳 Top 🎉"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🥳 O melhor 🎉"
+            "value" : "🥳 O máximo 🎉"
           }
         },
         "th" : {
@@ -17469,48 +17469,48 @@
       }
     },
     "praise_score_max" : {
-      "comment" : "Praise for a score of 1000 or higher.",
+      "comment" : "Praise for a score of 1000 or higher. 'Legendary' level (avoid words for God or gods).",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Gottlevel 💫"
+            "value" : "💫 Legendär 💫"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 God Level 💫"
+            "value" : "💫 Legend Level 💫"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Nivel dios 💫"
+            "value" : "💫 Nivel leyenda 💫"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Niveau dieu 💫"
+            "value" : "💫 Niveau légende 💫"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 भगवान स्तर 💫"
+            "value" : "💫 महान स्तर 💫"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Level dewa 💫"
+            "value" : "💫 Level legenda 💫"
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Livello divino 💫"
+            "value" : "💫 Livello leggenda 💫"
           }
         },
         "ja" : {
@@ -17522,43 +17522,43 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 신의 경지 💫"
+            "value" : "💫 전설의 경지 💫"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Godsniveau 💫"
+            "value" : "💫 Legendarisch 💫"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Nível deus 💫"
+            "value" : "💫 Nível lenda 💫"
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 ระดับเทพ 💫"
+            "value" : "💫 ระดับตำนาน 💫"
           }
         },
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 Cấp độ thần 💫"
+            "value" : "💫 Cấp độ huyền thoại 💫"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 神的境界 💫"
+            "value" : "💫 传说级 💫"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "💫 神的境界 💫"
+            "value" : "💫 傳說級 💫"
           }
         }
       }
@@ -17575,7 +17575,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld Q"
+            "value" : "%lld questions"
           }
         },
         "es" : {
@@ -17587,7 +17587,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lld Q"
+            "value" : "%lld questions"
           }
         },
         "hi" : {
@@ -17664,7 +17664,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeichen sehen → Lesen wählen"
+            "value" : "Zeichen sehen → Aussprache wählen"
           }
         },
         "en" : {
@@ -17706,7 +17706,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "もじを見て → よみかたを選ぶ"
+            "value" : "もじを みて → よみかたを えらぶ"
           }
         },
         "ko" : {
@@ -17718,7 +17718,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zie karakter → kies lezing"
+            "value" : "Zie karakter → kies uitspraak"
           }
         },
         "pt-BR" : {
@@ -17801,7 +17801,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "コードを見て → 空港名を選ぶ"
+            "value" : "コードを みて → くうこうを えらぶ"
           }
         },
         "ko" : {
@@ -17854,7 +17854,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bild sehen → Lesen wählen (Leicht)"
+            "value" : "Bild sehen → Aussprache wählen (Leicht)"
           }
         },
         "en" : {
@@ -17896,7 +17896,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "絵を見て → よみかたを選ぶ（かんたん）"
+            "value" : "えを みて → よみかたを えらぶ（かんたん）"
           }
         },
         "ko" : {
@@ -17908,7 +17908,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zie afbeelding → kies lezing (Makkelijk)"
+            "value" : "Zie afbeelding → kies uitspraak (Makkelijk)"
           }
         },
         "pt-BR" : {
@@ -17991,7 +17991,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "空港名を見て → コードを選ぶ"
+            "value" : "くうこうを みて → コードを えらぶ"
           }
         },
         "ko" : {
@@ -18044,7 +18044,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lesen sehen → Zeichen wählen"
+            "value" : "Aussprache sehen → Zeichen wählen"
           }
         },
         "en" : {
@@ -18086,7 +18086,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "よみかたを見て → もじを選ぶ"
+            "value" : "よみかたを みて → もじを えらぶ"
           }
         },
         "ko" : {
@@ -18098,7 +18098,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zie lezing → kies karakter"
+            "value" : "Zie uitspraak → kies karakter"
           }
         },
         "pt-BR" : {
@@ -18139,7 +18139,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lesen sehen → Bild wählen (Schwer)"
+            "value" : "Aussprache sehen → Bild wählen (Schwer)"
           }
         },
         "en" : {
@@ -18181,7 +18181,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "よみかたを見て → 絵を選ぶ（むずかしい）"
+            "value" : "よみかたを みて → えを えらぶ（むずかしい）"
           }
         },
         "ko" : {
@@ -18193,7 +18193,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zie lezing → kies afbeelding (Moeilijk)"
+            "value" : "Zie uitspraak → kies afbeelding (Moeilijk)"
           }
         },
         "pt-BR" : {
@@ -18282,7 +18282,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "정답은 \"%@\"이야"
+            "value" : "정답은 바로 \"%@\"!"
           }
         },
         "nl" : {
@@ -18472,7 +18472,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "아쉽다…"
+            "value" : "아쉬워요…"
           }
         },
         "nl" : {
@@ -18502,13 +18502,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遗憾…"
+            "value" : "可惜…"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "遺憾…"
+            "value" : "可惜…"
           }
         }
       }
@@ -18804,7 +18804,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zeichen → Lesen"
+            "value" : "Zeichen → Aussprache"
           }
         },
         "en" : {
@@ -18858,7 +18858,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Karakter → Lezen"
+            "value" : "Karakter → Uitspraak"
           }
         },
         "pt-BR" : {
@@ -18941,7 +18941,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "コード→空港名"
+            "value" : "コード→くうこう"
           }
         },
         "ko" : {
@@ -18994,7 +18994,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Emoji → Lesen"
+            "value" : "Emoji → Aussprache"
           }
         },
         "en" : {
@@ -19036,7 +19036,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "絵文字→よみかた"
+            "value" : "えもじ→よみかた"
           }
         },
         "ko" : {
@@ -19048,7 +19048,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Emoji → Lezen"
+            "value" : "Emoji → Uitspraak"
           }
         },
         "pt-BR" : {
@@ -19131,7 +19131,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "空港名→コード"
+            "value" : "くうこう→コード"
           }
         },
         "ko" : {
@@ -19184,7 +19184,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lesen → Zeichen"
+            "value" : "Aussprache → Zeichen"
           }
         },
         "en" : {
@@ -19238,7 +19238,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lezen → Karakter"
+            "value" : "Uitspraak → Karakter"
           }
         },
         "pt-BR" : {
@@ -19279,7 +19279,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lesen → Emoji"
+            "value" : "Aussprache → Emoji"
           }
         },
         "en" : {
@@ -19321,7 +19321,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "よみかた→絵文字"
+            "value" : "よみかた→えもじ"
           }
         },
         "ko" : {
@@ -19333,7 +19333,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lezen → Emoji"
+            "value" : "Uitspraak → Emoji"
           }
         },
         "pt-BR" : {
@@ -19612,7 +19612,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "어떻게 읽어?"
+            "value" : "어떻게 읽을까요?"
           }
         },
         "nl" : {
@@ -19701,7 +19701,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "どの空港かな？"
+            "value" : "どの くうこうかな？"
           }
         },
         "ko" : {
@@ -19802,7 +19802,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "이게 뭐야?"
+            "value" : "이게 뭘까요?"
           }
         },
         "nl" : {
@@ -19891,7 +19891,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "空港コードはどれ？"
+            "value" : "くうこうの コードは どれ？"
           }
         },
         "ko" : {
@@ -20182,7 +20182,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "대단해! 거의 완벽!"
+            "value" : "대단해요! 거의 완벽해요!"
           }
         },
         "nl" : {
@@ -20277,7 +20277,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "잘했어!"
+            "value" : "잘했어요!"
           }
         },
         "nl" : {
@@ -20372,7 +20372,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "훌륭해!"
+            "value" : "훌륭해요!"
           }
         },
         "nl" : {
@@ -20467,7 +20467,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "도전했어!"
+            "value" : "도전했어요!"
           }
         },
         "nl" : {
@@ -20562,7 +20562,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "잘 노력했어!"
+            "value" : "열심히 했어요!"
           }
         },
         "nl" : {
@@ -20621,7 +20621,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "¡Perfecto! ¡Increíble!!"
+            "value" : "¡Perfecto! ¡¡Increíble!!"
           }
         },
         "fr" : {
@@ -20657,7 +20657,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "완벽해! 대단해!!"
+            "value" : "완벽해요! 대단해요!!"
           }
         },
         "nl" : {
@@ -20847,7 +20847,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "다음엔 더 잘할 거야!"
+            "value" : "다음엔 더 잘할 거예요!"
           }
         },
         "nl" : {
@@ -20936,7 +20936,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "赤いネズミと青いネズミは、壁に沿って迷路をまわる！"
+            "value" : "あかい ネズミと あおい ネズミは、かべに そって めいろを まわるよ！"
           }
         },
         "ko" : {
@@ -21274,7 +21274,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Spielrekorde werden gelöscht. Deine Sticker, deine Energie, dein Danke-Heft, deine Zeichnung und das Hintergrundbild bleiben erhalten."
+            "value" : "Alle Spielrekorde werden gelöscht. Sticker, Energie, Danke-Heft, Zeichnungen und Hintergrundbild bleiben erhalten."
           }
         },
         "en" : {
@@ -21286,13 +21286,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se borrarán los récords de todos los juegos. Tus pegatinas, tu energía, tu cuaderno de gracias, tu dibujo y el fondo se conservarán."
+            "value" : "Se borrarán los récords de todos los juegos. Las pegatinas, la energía, el cuaderno de gracias, el dibujo y el fondo se conservarán."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tous les records seront effacés. Tes autocollants, ton énergie, ton carnet de mercis, ton dessin et le fond seront conservés."
+            "value" : "Tous les records seront effacés. Les stickers, l'énergie, le carnet de mercis, le dessin et le fond seront conservés."
           }
         },
         "hi" : {
@@ -21310,7 +21310,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutti i record dei giochi verranno cancellati. I tuoi adesivi, la tua energia, il quaderno dei grazie, il disegno e lo sfondo resteranno."
+            "value" : "Tutti i record dei giochi verranno cancellati. Gli adesivi, l'energia, il quaderno dei grazie, il disegno e lo sfondo resteranno."
           }
         },
         "ja" : {
@@ -21322,13 +21322,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "모든 게임의 기록이 사라집니다. 스티커와 에너지와 고마워 수첩, 그림과 배경은 그대로 남아요."
+            "value" : "모든 게임의 기록이 사라져요. 스티커와 에너지와 고마워 수첩, 그림과 배경은 그대로 남아요."
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle spelrecords worden gewist. Je stickers, energie, dankjewel-boekje, tekening en achtergrond blijven bewaard."
+            "value" : "Alle spelrecords worden gewist. De stickers, energie, het dankjewel-boekje, de tekening en de achtergrond blijven bewaard."
           }
         },
         "pt-BR" : {
@@ -21464,7 +21464,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle Rekorde, Sticker, die Energie, das Danke-Heft, deine Zeichnung und das Hintergrundbild werden gelöscht. Bist du sicher?"
+            "value" : "Alle Rekorde, Sticker, die Energie, das Danke-Heft, die Zeichnung und das Hintergrundbild werden gelöscht. Möchten Sie fortfahren?"
           }
         },
         "en" : {
@@ -21476,19 +21476,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Se borrarán todos los récords, las pegatinas, la energía, el cuaderno de gracias, tu dibujo y el fondo. ¿Estás seguro?"
+            "value" : "Se borrarán todos los récords, las pegatinas, la energía, el cuaderno de gracias, el dibujo y el fondo. ¿Desea continuar?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tous les records, autocollants, l'énergie, le carnet de mercis, ton dessin et le fond seront effacés. Es-tu sûr ?"
+            "value" : "Tous les records, les stickers, l'énergie, le carnet de mercis, le dessin et le fond seront effacés. Voulez-vous continuer ?"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "सभी रिकॉर्ड, स्टिकर, ऊर्जा, धन्यवाद डायरी, तुम्हारा चित्र और वॉलपेपर मिट जाएंगे। क्या आप निश्चित हैं?"
+            "value" : "सभी रिकॉर्ड, स्टिकर, ऊर्जा, धन्यवाद डायरी, आपका चित्र और वॉलपेपर मिट जाएंगे। क्या आप निश्चित हैं?"
           }
         },
         "id" : {
@@ -21500,7 +21500,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tutti i record, gli adesivi, l'energia, il quaderno dei grazie, il tuo disegno e lo sfondo verranno cancellati. Sei sicuro?"
+            "value" : "Tutti i record, gli adesivi, l'energia, il quaderno dei grazie, il disegno e lo sfondo verranno cancellati. Vuole continuare?"
           }
         },
         "ja" : {
@@ -21512,13 +21512,13 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "기록도 스티커도 에너지도 고마워 수첩도 그림과 배경도 모두 사라집니다. 괜찮으세요?"
+            "value" : "기록도 스티커도 에너지도 고마워 수첩도 그림과 배경도 모두 사라져요. 괜찮으세요?"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Alle records, stickers, energie, het dankjewel-boekje, je tekening en de achtergrond worden gewist. Weet je het zeker?"
+            "value" : "Alle records, stickers, energie, het dankjewel-boekje, de tekening en de achtergrond worden gewist. Wilt u doorgaan?"
           }
         },
         "pt-BR" : {
@@ -21583,7 +21583,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शुरू से शुरू करें"
+            "value" : "नए सिरे से शुरू करें"
           }
         },
         "id" : {
@@ -21697,19 +21697,19 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "同じコインはくっついて合体する"
+            "value" : "おなじ コインは くっついて がったいするよ"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "같은 코인끼리 달라붙어 합쳐집니다"
+            "value" : "같은 코인끼리 달라붙어 합쳐져요"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dezelfde munten plakken samen en smelten"
+            "value" : "Dezelfde munten plakken aan elkaar en smelten samen"
           }
         },
         "pt-BR" : {
@@ -21750,7 +21750,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ergebnis"
+            "value" : "Punkte"
           }
         },
         "en" : {
@@ -22441,7 +22441,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "शुरू से शुरू करें"
+            "value" : "नए सिरे से शुरू करें"
           }
         },
         "id" : {
@@ -22625,7 +22625,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Paramètres"
+            "value" : "Réglages"
           }
         },
         "hi" : {
@@ -22667,7 +22667,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Configurações"
+            "value" : "Ajustes"
           }
         },
         "th" : {
@@ -22744,7 +22744,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "かべがみ（じぶんの絵）"
+            "value" : "かべがみ（じぶんの え）"
           }
         },
         "ko" : {
@@ -22774,7 +22774,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hình nền (tranh của em)"
+            "value" : "Hình nền (tranh của mình)"
           }
         },
         "zh-Hans" : {
@@ -24971,13 +24971,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🍌×20 2000 千卡大约是 20 根香蕉！用掉的能量真多呀！"
+            "value" : "🍌×20 2000kcal 大约是 20 根香蕉！用掉的能量真多呀！"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🍌×20 2000 大卡大約是 20 根香蕉！用掉的能量真多呀！"
+            "value" : "🍌×20 2000kcal 大約是 20 根香蕉！用掉的能量真多呀！"
           }
         }
       }
@@ -25301,7 +25301,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👨 एक बड़ा आदमी एक दिन में करीब 2,500 kcal ऊर्जा इस्तेमाल करता है।"
+            "value" : "👨 एक वयस्क पुरुष एक दिन में करीब 2,500 kcal ऊर्जा इस्तेमाल करता है।"
           }
         },
         "id" : {
@@ -25397,7 +25397,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "👩 एक बड़ी औरत एक दिन में करीब 2,000 kcal ऊर्जा इस्तेमाल करती है।"
+            "value" : "👩 एक वयस्क महिला एक दिन में करीब 2,000 kcal ऊर्जा इस्तेमाल करती है।"
           }
         },
         "id" : {
@@ -25661,7 +25661,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 In diesem Spiel drehst du mit Energie (kcal) die Gacha und tauschst sie gegen Sticker."
+            "value" : "🎁 In diesem Spiel kannst du mit Energie (kcal) das Gacha drehen oder Sticker eintauschen."
           }
         },
         "en" : {
@@ -25673,13 +25673,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 En este juego usas energía (kcal) para girar la gacha y cambiarla por pegatinas."
+            "value" : "🎁 En este juego usas energía (kcal) para girar el gacha y cambiarla por pegatinas."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 Dans ce jeu, tu utilises l'énergie (kcal) pour tourner la gacha et l'échanger contre des autocollants."
+            "value" : "🎁 Dans ce jeu, tu utilises l'énergie (kcal) pour tourner le gacha et l'échanger contre des stickers."
           }
         },
         "hi" : {
@@ -25697,7 +25697,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 In questo gioco usi l'energia (kcal) per girare la gacha e scambiarla con adesivi."
+            "value" : "🎁 In questo gioco usi l'energia (kcal) per girare il gacha e scambiarla con adesivi."
           }
         },
         "ja" : {
@@ -25709,7 +25709,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 이 게임에서는 에너지(kcal)로 가챠를 돌리거나 스티커와 바꿔요."
+            "value" : "🎁 이 게임에서는 에너지(kcal)로 뽑기를 하거나 스티커와 바꿔요."
           }
         },
         "nl" : {
@@ -25721,7 +25721,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "🎁 Neste jogo, você usa energia (kcal) para girar a gacha e trocar por adesivos."
+            "value" : "🎁 Neste jogo, você usa energia (kcal) para girar o gacha e trocar por adesivos."
           }
         },
         "th" : {
@@ -26307,7 +26307,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Động vật"
+            "value" : "Con vật"
           }
         },
         "zh-Hans" : {
@@ -28597,7 +28597,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ไม่มีสติ๊กเกอร์ในรวมเกมสำหรับเด็ก"
+            "value" : "ไม่มีสติกเกอร์ในรวมเกมสำหรับเด็ก"
           }
         },
         "vi" : {
@@ -29556,7 +29556,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Chúng sẽ quay về Nhãn dán của tôi."
+            "value" : "Chúng sẽ quay về Nhãn dán của mình."
           }
         },
         "zh-Hans" : {
@@ -29645,7 +29645,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "เก็บสติ๊กเกอร์ทั้งหมด?"
+            "value" : "เก็บสติกเกอร์ทั้งหมด?"
           }
         },
         "vi" : {
@@ -29841,7 +29841,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↓ vào Nhãn dán của tôi"
+            "value" : "↓ vào Nhãn dán của mình"
           }
         },
         "zh-Hans" : {
@@ -29937,7 +29937,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "↑ vào Nhãn dán của tôi"
+            "value" : "↑ vào Nhãn dán của mình"
           }
         },
         "zh-Hans" : {
@@ -30222,7 +30222,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Nhãn dán của tôi"
+            "value" : "Nhãn dán của mình"
           }
         },
         "zh-Hans" : {
@@ -30501,7 +30501,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ยังไม่มีสติ๊กเกอร์"
+            "value" : "ยังไม่มีสติกเกอร์"
           }
         },
         "vi" : {
@@ -30530,7 +30530,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Schnell tippen wenn sie aus dem Loch kommen!"
+            "value" : "Schnell tippen, wenn sie aus dem Loch kommen!"
           }
         },
         "en" : {
@@ -30578,7 +30578,7 @@
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "구멍에서 나오면 빨리 탭해!"
+            "value" : "구멍에서 나오면 빨리 탭해요!"
           }
         },
         "nl" : {
@@ -30667,7 +30667,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "画面の左をタップ → 左フリッパー"
+            "value" : "がめんの ひだりを タップ → ひだりの フリッパー"
           }
         },
         "ko" : {
@@ -30762,7 +30762,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "画面の右をタップ → 右フリッパー"
+            "value" : "がめんの みぎを タップ → みぎの フリッパー"
           }
         },
         "ko" : {
@@ -30857,7 +30857,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タップした場所へレーザー発射！通り道のネズミも、届いた先の衝撃波でも撃退！"
+            "value" : "タップした ところへ レーザー はっしゃ！ とおりみちの ネズミも、とどいた さきの しょうげきはでも やっつけよう！"
           }
         },
         "ko" : {
@@ -31036,7 +31036,7 @@
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tidak ada catatan hari ini"
+            "value" : "Tidak ada catatan di hari itu"
           }
         },
         "it" : {
@@ -31072,7 +31072,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "วันนี้ไม่มีบันทึก"
+            "value" : "วันนั้นไม่มีบันทึก"
           }
         },
         "vi" : {
@@ -31306,13 +31306,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vístete solo"
+            "value" : "Vístete sin ayuda"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Habille-toi tout seul"
+            "value" : "Habille-toi sans aide"
           }
         },
         "hi" : {
@@ -31330,7 +31330,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vestiti da solo"
+            "value" : "Vestiti senza aiuto"
           }
         },
         "ja" : {
@@ -31354,7 +31354,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Troque de roupa sozinho"
+            "value" : "Troque de roupa sem ajuda"
           }
         },
         "th" : {
@@ -32842,7 +32842,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dite a ti mismo «gracias» y «buen trabajo»"
+            "value" : "Date las gracias y dite «buen trabajo»"
           }
         },
         "fr" : {
@@ -32866,7 +32866,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Di' a te stesso \"grazie\" e \"bravo\""
+            "value" : "Di' a te \"grazie\" e \"ben fatto\""
           }
         },
         "ja" : {
@@ -32890,7 +32890,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Diga \"obrigado\" e \"muito bem\" para você mesmo"
+            "value" : "Diga para você \"obrigado\" e \"muito bem\""
           }
         },
         "th" : {
@@ -33598,7 +33598,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Freund"
+            "value" : "Freund/in"
           }
         },
         "en" : {
@@ -33610,13 +33610,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Amigo"
+            "value" : "Amigo/a"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ami"
+            "value" : "Ami(e)"
           }
         },
         "hi" : {
@@ -33634,7 +33634,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Amico"
+            "value" : "Amico/a"
           }
         },
         "ja" : {
@@ -33652,13 +33652,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Vriend"
+            "value" : "Vriend(in)"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Amigo"
+            "value" : "Amigo/a"
           }
         },
         "th" : {
@@ -33718,7 +33718,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "दादीजी"
+            "value" : "दादी-नानी"
           }
         },
         "id" : {
@@ -33760,7 +33760,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "คุณย่า"
+            "value" : "ย่า・ยาย"
           }
         },
         "vi" : {
@@ -33772,13 +33772,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "奶奶"
+            "value" : "奶奶・外婆"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "奶奶"
+            "value" : "奶奶・外婆"
           }
         }
       }
@@ -33814,7 +33814,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "दादाजी"
+            "value" : "दादा-नाना"
           }
         },
         "id" : {
@@ -33856,7 +33856,7 @@
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "คุณปู่"
+            "value" : "ปู่・ตา"
           }
         },
         "vi" : {
@@ -33868,13 +33868,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "爷爷"
+            "value" : "爷爷・外公"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "爺爺"
+            "value" : "爺爺・外公"
           }
         }
       }
@@ -34366,7 +34366,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Lehrer"
+            "value" : "Lehrer/in"
           }
         },
         "en" : {
@@ -34378,13 +34378,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maestro"
+            "value" : "Maestro/a"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maître"
+            "value" : "Maître(sse)"
           }
         },
         "hi" : {
@@ -34402,7 +34402,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Maestro"
+            "value" : "Maestro/a"
           }
         },
         "ja" : {
@@ -34420,13 +34420,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Leraar"
+            "value" : "Juf/meester"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Professor"
+            "value" : "Professor/a"
           }
         },
         "th" : {
@@ -34612,7 +34612,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Altijd"
+            "value" : "Sinds het begin"
           }
         },
         "pt-BR" : {
@@ -35943,7 +35943,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "HP が低いほど衝撃波が広くなり、たくさんためられる！"
+            "value" : "HPが ひくいほど しょうげきはが ひろく なって、たくさん ためられるよ！"
           }
         },
         "ko" : {
@@ -36378,7 +36378,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "10 Sek"
+            "value" : "10 Sek."
           }
         },
         "en" : {
@@ -36473,7 +36473,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "30 Sek"
+            "value" : "30 Sek."
           }
         },
         "en" : {
@@ -36568,7 +36568,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "„Befehl Stein-Schere-Papier“ zählt jetzt nur fehlerfreie Zeiten,\ndaher wurden die Bestzeiten zurückgesetzt."
+            "value" : "„Kommando-Schere-Stein-Papier“ zählt jetzt nur fehlerfreie Zeiten,\ndaher wurden die Bestzeiten zurückgesetzt."
           }
         },
         "en" : {
@@ -36580,37 +36580,37 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "«Janken de Comandos» ahora solo registra tiempos sin errores,\nasí que se reiniciaron los récords."
+            "value" : "«Piedra, papel o tijera con órdenes» ahora solo registra tiempos sin errores,\nasí que se reiniciaron los récords."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "« Janken de Commande » n'enregistre plus que les temps sans erreur,\nles records ont donc été réinitialisés."
+            "value" : "« Chifoumi des consignes » n'enregistre plus que les temps sans erreur,\nles records ont donc été réinitialisés."
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "कमांड जनकेन अब सिर्फ़ बिना गलती वाला समय दर्ज करता है,\nइसलिए रिकॉर्ड रीसेट कर दिए गए हैं।"
+            "value" : "कमांड पत्थर-कागज़-कैंची अब सिर्फ़ बिना गलती वाला समय दर्ज करता है,\nइसलिए रिकॉर्ड रीसेट कर दिए गए हैं।"
           }
         },
         "id" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Janken Perintah kini hanya mencatat waktu tanpa salah,\njadi rekornya sudah direset."
+            "value" : "Suit Perintah kini hanya mencatat waktu tanpa salah,\njadi rekornya sudah direset."
           }
         },
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "«Janken dei Comandi» ora registra solo i tempi senza errori,\nquindi i record sono stati azzerati."
+            "value" : "«Morra cinese a comando» ora registra solo i tempi senza errori,\nquindi i record sono stati azzerati."
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "指令じゃんけんは いちども まちがえなかった タイムだけを\nきろくするように なったので、きろくを リセットしたよ"
+            "value" : "しれいじゃんけんは いちども まちがえなかった タイムだけを\nきろくするように なったので、きろくを リセットしたよ"
           }
         },
         "ko" : {
@@ -36622,19 +36622,19 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "„Opdracht Janken” bewaart nu alleen tijden zonder fouten,\ndus de records zijn gewist."
+            "value" : "„Steen-papier-schaar met opdrachten” bewaart nu alleen tijden zonder fouten,\ndus de records zijn gewist."
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "“Janken de Comandos” agora só registra tempos sem erros,\npor isso os recordes foram zerados."
+            "value" : "“Jokenpô de comandos” agora só registra tempos sem erros,\npor isso os recordes foram zerados."
           }
         },
         "th" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "แจงเก็นคำสั่งจะบันทึกเฉพาะเวลาที่ไม่พลาดเลย\nจึงรีเซ็ตสถิติแล้ว"
+            "value" : "เป่ายิ้งฉุบตามคำสั่งจะบันทึกเฉพาะเวลาที่ไม่พลาดเลย\nจึงรีเซ็ตสถิติแล้ว"
           }
         },
         "vi" : {
@@ -36990,7 +36990,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "タイトルや ゲームの 背景に なるよ。せっていで もとに もどせるよ。"
+            "value" : "タイトルや ゲームの はいけいに なるよ。せっていで もとに もどせるよ。"
           }
         },
         "ko" : {
@@ -37180,7 +37180,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "この絵を かべがみに する？"
+            "value" : "この えを かべがみに する？"
           }
         },
         "ko" : {
@@ -37465,7 +37465,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "もぐら叩き"
+            "value" : "もぐらたたき"
           }
         },
         "ko" : {
@@ -37518,7 +37518,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dein Ergebnis"
+            "value" : "Deine Punkte"
           }
         },
         "en" : {
@@ -37715,7 +37715,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Game Start"
+            "value" : "Start Game"
           }
         },
         "es" : {
@@ -37727,7 +37727,7 @@
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Démarrer le jeu"
+            "value" : "Démarrer"
           }
         },
         "hi" : {
@@ -37781,7 +37781,7 @@
         "vi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bắt đầu trò chơi"
+            "value" : "Bắt đầu"
           }
         },
         "zh-Hans" : {
@@ -38129,7 +38129,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aiuto"
+            "value" : "Suggerimento"
           }
         },
         "ja" : {
@@ -38225,7 +38225,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Risolti senza aiuto"
+            "value" : "Risolti senza suggerimenti"
           }
         },
         "ja" : {
@@ -38319,7 +38319,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Risolti con aiuto"
+            "value" : "Risolti con suggerimento"
           }
         },
         "ja" : {
@@ -38415,7 +38415,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aiuti usati"
+            "value" : "Suggerimenti usati"
           }
         },
         "ja" : {
@@ -38511,7 +38511,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Aiuto mostrato"
+            "value" : "Suggerimento mostrato"
           }
         },
         "ja" : {
@@ -39146,7 +39146,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zehn-Puzzle"
+            "value" : "Rechenrätsel"
           }
         },
         "en" : {
@@ -39200,7 +39200,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Rekenrätsel"
+            "value" : "Rekenpuzzel"
           }
         },
         "pt-BR" : {
@@ -39360,7 +39360,7 @@
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "अंक टाइल्स टैप करें"
+            "value" : "अंक टाइल्स टैप करके समीकरण बनाओ"
           }
         },
         "id" : {
@@ -39636,13 +39636,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Resueltos por ti solo"
+            "value" : "Resueltos por tu cuenta"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Résolus tout seul"
+            "value" : "Résolus sans aide"
           }
         },
         "hi" : {
@@ -39660,7 +39660,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Risolti da solo"
+            "value" : "Risolti senza aiuto"
           }
         },
         "ja" : {
@@ -39684,7 +39684,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Acertos sozinho"
+            "value" : "Acertos sem ajuda"
           }
         },
         "th" : {
@@ -39754,7 +39754,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "Problemi tosti con poche soluzioni.\nGuarda un aiuto se ti blocchi."
+            "value" : "Problemi tosti con poche soluzioni.\nGuarda un suggerimento se ti blocchi."
           }
         },
         "ja" : {
@@ -39892,7 +39892,7 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "needs_review",
-            "value" : "难题与无解题混合。\n看穿了就点「凑不出！」。"
+            "value" : "难题与无解题混合。\n看穿了就点“凑不出！”。"
           }
         },
         "zh-Hant" : {
@@ -40198,7 +40198,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Mit iCloud synchronisieren …"
+            "value" : "Wird mit iCloud synchronisiert …"
           }
         },
         "en" : {
@@ -40486,7 +40486,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bitte wähle, welche Daten behalten werden"
+            "value" : "Bitte wählen Sie, welche Daten behalten werden"
           }
         },
         "en" : {
@@ -40498,13 +40498,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Elige qué registros conservar"
+            "value" : "Elija qué registros conservar"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choisis les données à conserver"
+            "value" : "Choisissez les données à conserver"
           }
         },
         "hi" : {
@@ -40522,7 +40522,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scegli quali dati conservare"
+            "value" : "Scelga quali dati conservare"
           }
         },
         "ja" : {
@@ -40540,7 +40540,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Kies welke gegevens je wilt houden"
+            "value" : "Kies welke gegevens u wilt houden"
           }
         },
         "pt-BR" : {
@@ -40774,7 +40774,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sowohl iCloud als auch dieses Gerät haben Daten. Welche möchtest du verwenden?"
+            "value" : "Sowohl iCloud als auch dieses Gerät haben Daten. Welche möchten Sie verwenden?"
           }
         },
         "en" : {
@@ -40786,7 +40786,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Tanto iCloud como este dispositivo tienen registros. ¿Cuáles quieres usar?"
+            "value" : "Tanto iCloud como este dispositivo tienen registros. ¿Cuáles quiere usar?"
           }
         },
         "fr" : {
@@ -40810,7 +40810,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sia iCloud sia questo dispositivo hanno dei dati. Quali vuoi usare?"
+            "value" : "Sia iCloud sia questo dispositivo hanno dei dati. Quali vuole usare?"
           }
         },
         "ja" : {
@@ -40828,7 +40828,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Zowel iCloud als dit apparaat heeft gegevens. Welke wil je gebruiken?"
+            "value" : "Zowel iCloud als dit apparaat heeft gegevens. Welke wilt u gebruiken?"
           }
         },
         "pt-BR" : {
@@ -40870,7 +40870,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In iCloud sind noch die früheren Daten. Welche möchtest du verwenden?"
+            "value" : "In iCloud sind noch die früheren Daten. Welche möchten Sie verwenden?"
           }
         },
         "en" : {
@@ -40882,7 +40882,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud aún tiene los registros anteriores. ¿Cuáles quieres usar?"
+            "value" : "iCloud aún tiene los registros anteriores. ¿Cuáles quiere usar?"
           }
         },
         "fr" : {
@@ -40906,7 +40906,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud contiene ancora i dati precedenti. Quali vuoi usare?"
+            "value" : "iCloud contiene ancora i dati precedenti. Quali vuole usare?"
           }
         },
         "ja" : {
@@ -40924,7 +40924,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "iCloud heeft nog de eerdere gegevens. Welke wil je gebruiken?"
+            "value" : "iCloud heeft nog de eerdere gegevens. Welke wilt u gebruiken?"
           }
         },
         "pt-BR" : {
@@ -40978,7 +40978,7 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los registros que no elijas se reemplazarán."
+            "value" : "Los registros que no elija se reemplazarán."
           }
         },
         "fr" : {
@@ -41002,7 +41002,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I dati che non scegli verranno sostituiti."
+            "value" : "I dati che non sceglie verranno sostituiti."
           }
         },
         "ja" : {
@@ -41020,7 +41020,7 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "De gegevens die je niet kiest, worden vervangen."
+            "value" : "De gegevens die u niet kiest, worden vervangen."
           }
         },
         "pt-BR" : {
@@ -41350,7 +41350,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Die Daten in iCloud bleiben erhalten. Schalte „In iCloud sichern“ in den Einstellungen wieder ein, um sie wiederherzustellen."
+            "value" : "Die Daten in iCloud bleiben erhalten. Schalten Sie „In iCloud sichern“ in den Einstellungen wieder ein, um sie wiederherzustellen."
           }
         },
         "en" : {
@@ -41362,13 +41362,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Los registros de iCloud se conservan. Vuelve a activar «Guardar en iCloud» en Ajustes para restaurarlos."
+            "value" : "Los registros de iCloud se conservan. Vuelva a activar «Guardar en iCloud» en Ajustes para restaurarlos."
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Les données dans iCloud sont conservées. Réactive « Sauvegarder dans iCloud » dans les réglages pour les restaurer."
+            "value" : "Les données dans iCloud sont conservées. Réactivez « Sauvegarder dans iCloud » dans les réglages pour les restaurer."
           }
         },
         "hi" : {
@@ -41386,7 +41386,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "I dati in iCloud vengono conservati. Riattiva \"Salva su iCloud\" nelle impostazioni per ripristinarli."
+            "value" : "I dati in iCloud vengono conservati. Riattivi \"Salva su iCloud\" nelle impostazioni per ripristinarli."
           }
         },
         "ja" : {
@@ -41908,13 +41908,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "把 %1$lld 张没用的贴纸全部兑换（+%2$@）"
+            "value" : "把 %1$lld 张没用过的贴纸全部兑换（+%2$@）"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "把 %1$lld 張沒用的貼紙全部兌換（+%2$@）"
+            "value" : "把 %1$lld 張沒用過的貼紙全部兌換（+%2$@）"
           }
         }
       }
@@ -42100,13 +42100,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld 张没用的贴纸会换成 🔥%2$@kcal 能量。贴在贴纸册或游戏画面上的贴纸会保留。"
+            "value" : "%1$lld 张没用过的贴纸会换成 🔥%2$@kcal 能量。贴在贴纸册或游戏画面上的贴纸会保留。"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%1$lld 張沒用的貼紙會換成 🔥%2$@kcal 能量。貼在貼紙冊或遊戲畫面上的貼紙會保留。"
+            "value" : "%1$lld 張沒用過的貼紙會換成 🔥%2$@kcal 能量。貼在貼紙冊或遊戲畫面上的貼紙會保留。"
           }
         }
       }
@@ -42310,7 +42310,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ ab jetzt automatisch zu Energie machen, wenn es aus dem Automaten kommt?"
+            "value" : "%@ ab jetzt automatisch zu Energie machen, wenn es aus dem Gacha kommt?"
           }
         },
         "en" : {
@@ -42322,19 +42322,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A partir de ahora, ¿convertir %@ en energía automáticamente cuando salga de la máquina?"
+            "value" : "A partir de ahora, ¿convertir %@ en energía automáticamente cuando salga del gacha?"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Désormais, transformer %@ en énergie automatiquement quand il sort de la machine ?"
+            "value" : "Désormais, transformer %@ en énergie automatiquement quand il sort du gacha ?"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "अब से %@ गचा में निकले तो अपने आप ऊर्जा में बदल दें?"
+            "value" : "अब से %@ गाचा में निकले तो अपने आप ऊर्जा में बदल दें?"
           }
         },
         "id" : {
@@ -42346,7 +42346,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "D’ora in poi, trasformare %@ in energia automaticamente quando esce dalla macchinetta?"
+            "value" : "D’ora in poi, trasformare %@ in energia automaticamente quando esce dal gacha?"
           }
         },
         "ja" : {
@@ -42364,13 +42364,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Voortaan %@ automatisch omzetten in energie als het uit de automaat komt?"
+            "value" : "Voortaan %@ automatisch omzetten in energie als het uit de gacha komt?"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A partir de agora, transformar %@ em energia automaticamente quando sair da máquina?"
+            "value" : "A partir de agora, transformar %@ em energia automaticamente quando sair do gacha?"
           }
         },
         "th" : {
@@ -42418,13 +42418,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambiar sola"
+            "value" : "Cambiar automáticamente"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Échanger auto"
+            "value" : "Échange automatique"
           }
         },
         "hi" : {
@@ -42466,7 +42466,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trocar sozinho"
+            "value" : "Trocar automaticamente"
           }
         },
         "th" : {
@@ -42676,13 +42676,13 @@
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "没用的 %1$lld 张 · 一共 %2$lld 张"
+            "value" : "没用过的 %1$lld 张 · 一共 %2$lld 张"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "沒用的 %1$lld 張 · 一共 %2$lld 張"
+            "value" : "沒用過的 %1$lld 張 · 一共 %2$lld 張"
           }
         }
       }
@@ -42886,7 +42886,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aus dem Automaten automatisch tauschen"
+            "value" : "Aus dem Gacha automatisch tauschen"
           }
         },
         "en" : {
@@ -42898,19 +42898,19 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cambiar sola si sale en la máquina"
+            "value" : "Cambiar automáticamente si sale en el gacha"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Échanger auto si elle sort de la machine"
+            "value" : "Échange automatique s’il sort du gacha"
           }
         },
         "hi" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "गचा में मिले तो अपने आप बदलें"
+            "value" : "गाचा में मिले तो अपने आप बदलें"
           }
         },
         "id" : {
@@ -42922,7 +42922,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Scambia in automatico se esce dalla macchinetta"
+            "value" : "Scambia in automatico se esce dal gacha"
           }
         },
         "ja" : {
@@ -42940,13 +42940,13 @@
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Automatisch ruilen als hij uit de automaat komt"
+            "value" : "Automatisch ruilen als hij uit de gacha komt"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Trocar sozinho se sair na máquina"
+            "value" : "Trocar automaticamente se sair no gacha"
           }
         },
         "th" : {
@@ -43186,13 +43186,13 @@
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Signos"
+            "value" : "Zodiaco"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Signes"
+            "value" : "Zodiaque"
           }
         },
         "hi" : {
@@ -43210,7 +43210,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Segni"
+            "value" : "Zodiaco"
           }
         },
         "ja" : {
@@ -43234,7 +43234,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Signos"
+            "value" : "Zodíaco"
           }
         },
         "th" : {
@@ -44656,7 +44656,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "おひつじ座"
+            "value" : "おひつじざ"
           }
         },
         "ko" : {
@@ -44752,7 +44752,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "おうし座"
+            "value" : "おうしざ"
           }
         },
         "ko" : {
@@ -44848,7 +44848,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ふたご座"
+            "value" : "ふたござ"
           }
         },
         "ko" : {
@@ -44944,7 +44944,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "かに座"
+            "value" : "かにざ"
           }
         },
         "ko" : {
@@ -45040,7 +45040,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "しし座"
+            "value" : "ししざ"
           }
         },
         "ko" : {
@@ -45136,7 +45136,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "おとめ座"
+            "value" : "おとめざ"
           }
         },
         "ko" : {
@@ -45232,7 +45232,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "てんびん座"
+            "value" : "てんびんざ"
           }
         },
         "ko" : {
@@ -45328,7 +45328,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "さそり座"
+            "value" : "さそりざ"
           }
         },
         "ko" : {
@@ -45424,7 +45424,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "いて座"
+            "value" : "いてざ"
           }
         },
         "ko" : {
@@ -45520,7 +45520,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "やぎ座"
+            "value" : "やぎざ"
           }
         },
         "ko" : {
@@ -45616,7 +45616,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "みずがめ座"
+            "value" : "みずがめざ"
           }
         },
         "ko" : {
@@ -45712,7 +45712,7 @@
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "うお座"
+            "value" : "うおざ"
           }
         },
         "ko" : {
@@ -47291,6 +47291,102 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "萊姆"
+          }
+        }
+      }
+    },
+    "sticker_category_zodiac" : {
+      "comment" : "Sticker encyclopedia: name of a sticker category (the 12 zodiac symbols ♈–♓). Keep it short.",
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sternzeichen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Star Signs"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodiaco"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodiaque"
+          }
+        },
+        "hi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "राशियाँ"
+          }
+        },
+        "id" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodiak"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodiaco"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "せいざ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "별자리"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sterrenbeelden"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodíaco"
+          }
+        },
+        "th" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ราศี"
+          }
+        },
+        "vi" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cung hoàng đạo"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星座"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "星座"
           }
         }
       }
