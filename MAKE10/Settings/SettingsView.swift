@@ -391,62 +391,76 @@ struct ResetConfirmView: View {
             // 背景の暗幕。設定パネル(0.22)より暗くして「さらに前面にある」ことを視覚的に伝える
             Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ 0.0〜1.0）
 
-            VStack(spacing: 20) {
-                Text(titleKey)
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.primary)
-                Text(bodyKey)
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
-                    .foregroundStyle(DS.textDialog)
-                    .multilineTextAlignment(.center)
-                // 「さいしょから はじめる」でも iCloud の記録は残ることを伝える（CloudSyncManager の「リセット」を参照）
-                if target == .progress && CloudSyncManager.shared.isEnabled {
-                    Text("reset_confirm_progress_icloud")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                        .multilineTextAlignment(.center)
-                }
-
-                HStack(spacing: 12) {
-                    // キャンセルボタン：目立たないスタイルで左側に配置し、誤タップを誘いにくくする
-                    Button(action: onCancel) {
-                        Text("reset_confirm_cancel")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 13)
-                            .background(
-                                RoundedRectangle(cornerRadius: DS.btnRadius)
-                                    .fill(Color.black.opacity(0.05))
-                            )
-                    }
-                    .buttonStyle(.plain)
-
-                    // 実行ボタン：警告色（赤系）で塗ってリセットの不可逆性を視覚的に伝える
-                    Button(action: onConfirm) {
-                        Text("reset_confirm_execute")
-                            .font(.system(size: 16, weight: .semibold, design: .rounded))
-                            .foregroundStyle(.white)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 13)
-                            .background(
-                                RoundedRectangle(cornerRadius: DS.btnRadius)
-                                    .fill(DS.gaugeWarn)
-                            )
-                    }
-                    .buttonStyle(.plain)
-                }
+            // 収まるときはそのまま、収まらないとき（iPhone の横向き・文の長い言語）は ScrollView に入れる
+            // （SettingsView の body の ViewThatFits と同じ考え方）
+            ViewThatFits(in: .vertical) {
+                dialogContent
+                ScrollView { dialogContent }
+                    .scrollBounceBehavior(.basedOnSize)
             }
-            .padding(28)
             .background(
                 RoundedRectangle(cornerRadius: DS.sheetRadius)
                     .fill(DS.card)
                     .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
             )
+            .clipShape(RoundedRectangle(cornerRadius: DS.sheetRadius))
+            .frame(maxWidth: 520)          // ← 変更可（iPad で横に広がりすぎないように）
             .padding(.horizontal, 44)
+            .padding(.vertical, 16)
         }
         // 出現・消去をフェードで行う
         .transition(.opacity)
+    }
+
+    /// ダイアログの中身（タイトル・本文・ボタン）。
+    private var dialogContent: some View {
+        VStack(spacing: 20) {
+            Text(titleKey)
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.primary)
+            Text(bodyKey)
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.textDialog)
+                .multilineTextAlignment(.center)
+            // 「さいしょから はじめる」でも iCloud の記録は残ることを伝える（CloudSyncManager の「リセット」を参照）
+            if target == .progress && CloudSyncManager.shared.isEnabled {
+                Text("reset_confirm_progress_icloud")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .multilineTextAlignment(.center)
+            }
+
+            HStack(spacing: 12) {
+                // キャンセルボタン：目立たないスタイルで左側に配置し、誤タップを誘いにくくする
+                Button(action: onCancel) {
+                    Text("reset_confirm_cancel")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(
+                            RoundedRectangle(cornerRadius: DS.btnRadius)
+                                .fill(Color.black.opacity(0.05))
+                        )
+                }
+                .buttonStyle(.plain)
+
+                // 実行ボタン：警告色（赤系）で塗ってリセットの不可逆性を視覚的に伝える
+                Button(action: onConfirm) {
+                    Text("reset_confirm_execute")
+                        .font(.system(size: 16, weight: .semibold, design: .rounded))
+                        .foregroundStyle(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 13)
+                        .background(
+                            RoundedRectangle(cornerRadius: DS.btnRadius)
+                                .fill(DS.gaugeWarn)
+                        )
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(28)
     }
 }
 
@@ -467,41 +481,54 @@ struct CloudChoiceView: View {
         ZStack {
             Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ。リセット確認と同じ）
 
-            VStack(spacing: 16) {
-                Text("icloud_choice_title")
-                    .font(.system(size: 20, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.primary)
-                Text(reason == .reenabled ? "icloud_choice_body_reenabled" : "icloud_choice_body_first")
-                    .font(.system(size: 16, weight: .medium, design: .rounded))
-                    .foregroundStyle(DS.textDialog)
-                    .multilineTextAlignment(.center)
-                Text("icloud_choice_note")
-                    .font(.system(size: 13, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.gaugeWarn)
-                    .multilineTextAlignment(.center)
-
-                VStack(spacing: 10) {
-                    choiceButton("icloud_choice_use_cloud", fill: DS.primary) { onChoose(true) }
-                    choiceButton("icloud_choice_use_local", fill: DS.gaugeWarn) { onChoose(false) }
-                    Button(action: onLater) {
-                        Text("icloud_choice_later")
-                            .font(.system(size: 15, weight: .semibold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                            .frame(maxWidth: .infinity)
-                            .padding(.vertical, 11)
-                    }
-                    .buttonStyle(.plain)
-                }
+            // 収まらないときはスクロールできるようにする（ResetConfirmView と同じ）
+            ViewThatFits(in: .vertical) {
+                dialogContent
+                ScrollView { dialogContent }
+                    .scrollBounceBehavior(.basedOnSize)
             }
-            .padding(28)
             .background(
                 RoundedRectangle(cornerRadius: DS.sheetRadius)
                     .fill(DS.card)
                     .shadow(color: .black.opacity(0.12), radius: 20, x: 0, y: 8)
             )
+            .clipShape(RoundedRectangle(cornerRadius: DS.sheetRadius))
+            .frame(maxWidth: 520)          // ← 変更可
             .padding(.horizontal, 44)
+            .padding(.vertical, 16)
         }
         .transition(.opacity)
+    }
+
+    /// ダイアログの中身（タイトル・本文・ボタン）。
+    private var dialogContent: some View {
+        VStack(spacing: 16) {
+            Text("icloud_choice_title")
+                .font(.system(size: 20, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.primary)
+            Text(reason == .reenabled ? "icloud_choice_body_reenabled" : "icloud_choice_body_first")
+                .font(.system(size: 16, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.textDialog)
+                .multilineTextAlignment(.center)
+            Text("icloud_choice_note")
+                .font(.system(size: 13, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.gaugeWarn)
+                .multilineTextAlignment(.center)
+
+            VStack(spacing: 10) {
+                choiceButton("icloud_choice_use_cloud", fill: DS.primary) { onChoose(true) }
+                choiceButton("icloud_choice_use_local", fill: DS.gaugeWarn) { onChoose(false) }
+                Button(action: onLater) {
+                    Text("icloud_choice_later")
+                        .font(.system(size: 15, weight: .semibold, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 11)
+                }
+                .buttonStyle(.plain)
+            }
+        }
+        .padding(28)
     }
 
     private func choiceButton(_ key: LocalizedStringKey, fill: Color, action: @escaping () -> Void) -> some View {

@@ -76,6 +76,9 @@ struct SharedFrame<Content: View>: View {
     /// 設定パネルの表示状態。true になると SettingsView が zIndex(100) で最前面にオーバーレイされる。
     @State private var showSettings = false
 
+    /// 画面の高さの大きさの区分。iPhone を横にすると .compact（高さが足りない）になる。
+    @Environment(\.verticalSizeClass) private var verticalSizeClass
+
     // MARK: body
 
     var body: some View {
@@ -96,7 +99,12 @@ struct SharedFrame<Content: View>: View {
                     }
                     .zIndex(1)
                 content()
-                footerRow
+                // ★ iPhone を横にしたときはフッターを出さない ★
+                //   高さが 300pt ほどしかなく、ゲームに使える場所を少しでも広くするため（ユーザーの要望）。
+                //   iPad は横にしても高さが足りるので、いままでどおり出す。
+                if verticalSizeClass != .compact {
+                    footerRow
+                }
             }
 
             // 設定パネルを最前面に重ねる（zIndex はヘッダの階層表を参照）
@@ -156,10 +164,13 @@ struct SharedFrame<Content: View>: View {
             .avoidsWindowControls()   // iPad のウィンドウ表示で、左上の操作ボタン（●●●）に隠れないように
 
             // タイトルテキスト。lineLimit(1) でタイトルが長くても1行に収める
+            // ★ minimumScaleFactor ★ 言語によってはゲームの名前が長い（例: スペイン語の
+            //   「Piedra, papel o tijera con órdenes」）。「…」で切れないよう、収まるまで文字を小さくする。
             Text(title ?? "")
                 .font(.system(size: 17, weight: .semibold, design: .rounded))
                 .foregroundStyle(DS.textPrimary)
                 .lineLimit(1)
+                .minimumScaleFactor(0.6)   // ← 変更可（どこまで小さくしてよいか）
                 .frame(maxWidth: .infinity)
 
             // 設定ボタン（常に右端に表示）。タップで SettingsView をオーバーレイとして表示する
