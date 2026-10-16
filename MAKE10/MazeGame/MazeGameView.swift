@@ -58,80 +58,133 @@ struct MazeGameView: View {
 
 // MARK: - MazeTitleView（タイトル画面）
 
-/// タイトル画面。遊び方カード・ハイスコア・スタートボタンを縦に並べる。
+/// タイトル画面。遊び方カード・ハイスコア・スタートボタンを並べる。
+///
+/// ★ 横長の場所では左右に並べる理由 ★
+///   iPhone を横にすると高さが 300pt ほどしかなく、縦に積むと遊び方の上とスタートボタンが画面の外へはみ出した。
+///   横長のときは、左に遊び方、右にハイスコアとスタートボタンを置く。
+///   それでも収まらないとき（文の長い言語など）は、遊び方をスクロールできるようにする。
+///   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide。JankenResultView と同じ）。
 private struct MazeTitleView: View {
     var model: MazeGameModel
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
     var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
-
-            // ── 遊び方カード ──────────────────────────────────
-            // 説明文を変えたいときはここを編集する
-            VStack(alignment: .leading, spacing: 12) {
-                Label("How to Play", systemImage: "map.fill")
-                    .font(.system(size: 16, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.muted)
-
-                // 絵文字と説明文のペア。LocalizedStringKey なので15言語に翻訳される。
-                let instructions: [(String, LocalizedStringKey)] = [
-                    ("🐭", "Drag to move the white mouse"),
-                    ("🧀", "Collect all 3 cheeses in the corners to advance!"),
-                    ("🐀", "Dark mice drain HP — game over at 0!"),
-                    ("🔴", "Red and blue mice patrol along the walls!"),
-                    ("💥", "Tap to shoot a laser! It pops mice in its path, and a shockwave bursts where it lands!"),
-                    ("⚡", "The lower your HP, the wider the shockwave — and the more you can store!"),
-                ]
-                ForEach(instructions, id: \.0) { emoji, desc in
-                    HStack(alignment: .top, spacing: 8) {
-                        Text(emoji).font(.system(size: 18))   // ← アイコンサイズ
-                        Text(desc)
-                            .font(.system(size: 14, weight: .medium, design: .rounded))  // ← 説明文サイズ
-                            .foregroundStyle(DS.textPrimary)
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(alignment: .center, spacing: 20) {
+                    // 遊び方は、収まらなければスクロールする
+                    ViewThatFits(in: .vertical) {
+                        howToCard
+                        ScrollView { howToCard }
+                            .scrollBounceBehavior(.basedOnSize)
                     }
+                    .frame(maxWidth: .infinity)
+
+                    VStack(spacing: 16) {
+                        highScoreBadge
+                        startButton
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 20) {
+                    Spacer(minLength: 0)
+                    ViewThatFits(in: .vertical) {
+                        howToCard
+                        ScrollView { howToCard }
+                            .scrollBounceBehavior(.basedOnSize)
+                    }
+                    .padding(.horizontal, 24)
+                    highScoreBadge
+                    Spacer(minLength: 0)
+                    startButton
+                        .padding(.horizontal, 24)
+                        .padding(.bottom, 24)
                 }
             }
-            .padding(16)
-            .frame(maxWidth: .infinity, alignment: .leading)
-            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            .padding(.horizontal, 24)
-
-            // ── ハイスコア（記録がある場合のみ表示）──────────
-            if model.highScore > 0 {
-                HStack(spacing: 8) {
-                    Text("🏆").font(.system(size: 20))
-                    Text("Best Record")
-                        .font(.system(size: 16, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text("🧀×\(model.highScore)")
-                        .font(.system(size: 24, weight: .black, design: .rounded))  // ← ハイスコア数値サイズ
-                        .foregroundStyle(DS.gold)
-                }
-                .padding(.horizontal, 20).padding(.vertical, 10)
-                .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            }
-
-            Spacer()
-
-            // ── スタートボタン ────────────────────────────────
-            Button {
-                SoundManager.shared.vibrate()
-                SoundManager.shared.playTap()
-                model.startGame()
-            } label: {
-                Text("Start Game")
-                    .font(.system(size: 26, weight: .black, design: .rounded))  // ← ボタン文字サイズ
-                    .foregroundStyle(.white)
-                    .frame(maxWidth: .infinity).padding(.vertical, 20)          // ← ボタン縦パディング
-                    .background(
-                        RoundedRectangle(cornerRadius: DS.btnRadius)
-                            .fill(DS.primary)
-                            .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
-                    )
-            }
-            .buttonStyle(.plain)
-            .padding(.horizontal, 24).padding(.bottom, 24)
         }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    /// 遊び方カード。説明文を変えたいときはここを編集する。
+    private var howToCard: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            Label("How to Play", systemImage: "map.fill")
+                .font(.system(size: 16, weight: .bold, design: .rounded))
+                .foregroundStyle(DS.muted)
+
+            // 絵文字と説明文のペア。LocalizedStringKey なので15言語に翻訳される。
+            let instructions: [(String, LocalizedStringKey)] = [
+                ("🐭", "Drag to move the white mouse"),
+                ("🧀", "Collect all 3 cheeses in the corners to advance!"),
+                ("🐀", "Dark mice drain HP — game over at 0!"),
+                ("🔴", "Red and blue mice patrol along the walls!"),
+                ("💥", "Tap to shoot a laser! It pops mice in its path, and a shockwave bursts where it lands!"),
+                ("⚡", "The lower your HP, the wider the shockwave — and the more you can store!"),
+            ]
+            ForEach(instructions, id: \.0) { emoji, desc in
+                HStack(alignment: .top, spacing: 8) {
+                    Text(emoji).font(.system(size: 18))   // ← アイコンサイズ
+                    Text(desc)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))  // ← 説明文サイズ
+                        .foregroundStyle(DS.textPrimary)
+                        .fixedSize(horizontal: false, vertical: true)   // 「…」で切らずに折り返す
+                }
+            }
+        }
+        .padding(16)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+    }
+
+    /// ハイスコア（記録がある場合のみ表示）。
+    @ViewBuilder
+    private var highScoreBadge: some View {
+        if model.highScore > 0 {
+            HStack(spacing: 8) {
+                Text("🏆").font(.system(size: 20))
+                Text("Best Record")
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text("🧀×\(model.highScore)")
+                    .font(.system(size: 24, weight: .black, design: .rounded))  // ← ハイスコア数値サイズ
+                    .foregroundStyle(DS.gold)
+            }
+            .padding(.horizontal, 20).padding(.vertical, 10)
+            .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+        }
+    }
+
+    /// スタートボタン。
+    private var startButton: some View {
+        Button {
+            SoundManager.shared.vibrate()
+            SoundManager.shared.playTap()
+            model.startGame()
+        } label: {
+            Text("Start Game")
+                .font(.system(size: 26, weight: .black, design: .rounded))  // ← ボタン文字サイズ
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity).padding(.vertical, 20)          // ← ボタン縦パディング
+                .background(
+                    RoundedRectangle(cornerRadius: DS.btnRadius)
+                        .fill(DS.primary)
+                        .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
+                )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -168,13 +221,17 @@ private struct MazePlayView: View {
     private let topBarHeight:    CGFloat = 56    // ← 変更可
     /// 迷路の下の帯（衝撃波ゲージ・さいこう記録）の高さ（pt）。
     private let bottomBarHeight: CGFloat = 92    // ← 変更可
-    /// 横長の場所で、迷路の右に帯を縦に並べるときの帯の幅（pt）。← 変更可
-    private let sidePanelWidth:  CGFloat = 280
+    /// 横長の場所で、迷路の左右に置く帯の幅の上限（pt）。← 変更可
+    private let sidePanelWidth:  CGFloat = 240
+    /// 横長の場所で、左右の帯にこれだけは確保する幅（pt）。迷路が大きすぎて帯がつぶれないようにする。← 変更可
+    private let sidePanelMinWidth: CGFloat = 160
 
-    // ★ 横長の場所では、帯を迷路の右に移す理由 ★
-    //   迷路は正方形なので、上下に帯を並べたまま横長の場所（iPad を横にしたときなど）に置くと、
+    // ★ 横長の場所では、帯を迷路の左右に分けて置く理由 ★
+    //   迷路は正方形なので、上下に帯を並べたまま横長の場所（iPad・iPhone を横にしたときなど）に置くと、
     //   高さから帯の分を引いた残りしか使えず、迷路がとても小さくなってしまう。
-    //   帯を右側に縦に並べれば、迷路は高さいっぱいの大きさで描ける。
+    //   帯を横に置けば、迷路は高さいっぱいの大きさで描ける。
+    //   さらに、ライフ・スコアを左、衝撃波ゲージを右に分けると、迷路が画面のまん中に来る
+    //   （以前は2つとも右に置いていたので、迷路が左に寄っていた）。
     //   どちらの並べ方にするかは、端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     //   GeometryReader が大きさの変わるたび（回転・分割表示・Duo の開閉）に測り直すので、並べ方もその都度切り替わる。
 
@@ -183,24 +240,24 @@ private struct MazePlayView: View {
             let isWide = DS.isWide(geo.size)
             // 帯を除いた場所に収まる最大の正方形サイズ（狭すぎてマイナスにならないよう、最低 1pt にする）
             let side = max(1, isWide
-                ? min(geo.size.height - 16, geo.size.width - sidePanelWidth - 16 * 3)
+                ? min(geo.size.height - 16, geo.size.width - (sidePanelMinWidth + 16) * 2)
                 : min(geo.size.width, geo.size.height - topBarHeight - bottomBarHeight - 16))
+            // 横長のとき、迷路の左右に残った場所に帯を置く（左右同じ幅にして、迷路をまん中にする）
+            let panelWidth = min(sidePanelWidth, max(1, (geo.size.width - side) / 2 - 16))
             // 論理座標 → ビュー座標の変換係数（view_px = logical_px * scale）
             let scale = side / model.BASE
 
             Group {
                 if isWide {
-                    // 横長：迷路を左、帯を右に縦に並べる
+                    // 横長：左にライフ・スコア、まん中に迷路、右に衝撃波ゲージ
                     HStack(spacing: 16) {
+                        MazeTopBar(model: model, isVertical: true)
+                            .frame(width: panelWidth, height: topBarHeight * 2)
+
                         mazeCanvas(side: side, scale: scale)
 
-                        VStack(spacing: 8) {
-                            MazeTopBar(model: model)
-                                .frame(height: topBarHeight)
-                            MazeShockwaveBar(model: model)
-                                .frame(height: bottomBarHeight)
-                        }
-                        .frame(width: sidePanelWidth)
+                        MazeShockwaveBar(model: model)
+                            .frame(width: panelWidth, height: bottomBarHeight + 24)
                     }
                 } else {
                     // 縦長：帯を迷路の上下に置く（今までの並べ方）
@@ -639,30 +696,51 @@ private func drawParticles(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 private struct MazeTopBar: View {
     let model: MazeGameModel
 
+    /// true なら、ライフとスコアを縦に積む（横長の場所で、迷路の左の細い帯に置くとき）。
+    var isVertical: Bool = false
+
     var body: some View {
-        HStack(spacing: 10) {
-            // ライフ：残りは ❤️、なくなったぶんは 💔
-            HStack(spacing: 6) {
-                ForEach(0..<3, id: \.self) { i in
-                    MazeLifeIcon(isAlive: i < model.cheeseHp)
-                        .frame(width: 34, height: 30)   // ← 変更可（ライフの大きさ）
+        Group {
+            if isVertical {
+                VStack(spacing: 10) {
+                    lives
+                    score
+                }
+            } else {
+                HStack(spacing: 10) {
+                    lives
+                    Spacer(minLength: 0)
+                    score
                 }
             }
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(Text(verbatim: "\(model.cheeseHp) / 3"))
-
-            Spacer(minLength: 0)
-
-            Text(verbatim: "🧀 × \(model.score)")
-                .font(.system(size: 30, weight: .black, design: .rounded))   // ← 変更可（スコアの大きさ）
-                .monospacedDigit()
-                .foregroundStyle(DS.textPrimary)
-                .contentTransition(.numericText(value: Double(model.score)))
-                .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.score)
         }
         .padding(.horizontal, 14)
         .frame(maxHeight: .infinity)
         .background(RoundedRectangle(cornerRadius: DS.sectionRadius).fill(DS.card))
+    }
+
+    /// ライフ：残りは ❤️、なくなったぶんは 💔
+    private var lives: some View {
+        HStack(spacing: 6) {
+            ForEach(0..<3, id: \.self) { i in
+                MazeLifeIcon(isAlive: i < model.cheeseHp)
+                    .frame(width: 34, height: 30)   // ← 変更可（ライフの大きさ）
+            }
+        }
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel(Text(verbatim: "\(model.cheeseHp) / 3"))
+    }
+
+    /// 集めたチーズの数。
+    private var score: some View {
+        Text(verbatim: "🧀 × \(model.score)")
+            .font(.system(size: 30, weight: .black, design: .rounded))   // ← 変更可（スコアの大きさ）
+            .monospacedDigit()
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)   // 細い帯でも桁が増えたときに収まるように
+            .foregroundStyle(DS.textPrimary)
+            .contentTransition(.numericText(value: Double(model.score)))
+            .animation(.spring(response: 0.35, dampingFraction: 0.7), value: model.score)
     }
 }
 
@@ -718,6 +796,8 @@ private struct MazeShockwaveBar: View {
                 Text(isReady ? "maze_hud_ready" : "maze_hud_charging")
                     .font(.system(size: 18, weight: .black, design: .rounded))   // ← 変更可
                     .foregroundStyle(isReady ? DS.energy : DS.muted)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.6)   // 横長で帯が細いとき・文の長い言語でも1行に収める
                 Spacer(minLength: 0)
                 Text(verbatim: powerIcons)
                     .font(.system(size: 24))   // ← 変更可
@@ -756,6 +836,8 @@ private struct MazeShockwaveBar: View {
                 Text(verbatim: "🧀 × \(model.highScore)")
                     .monospacedDigit()
             }
+            .lineLimit(1)
+            .minimumScaleFactor(0.7)
             .font(.system(size: 13, weight: .bold, design: .rounded))
             .foregroundStyle(DS.muted)
         }
@@ -810,15 +892,67 @@ private func drawDelivered(ctx: GraphicsContext, model: MazeGameModel, s: CGFloa
 // MARK: - MazeResultView（リザルト画面）
 
 /// ゲームオーバー画面。スコア・ハイスコア・新記録バナー・もう一度／タイトルへ戻るボタン。
+///
+/// ★ 横長の場所では左右に並べる理由 ★（MazeTitleView と同じ）
+///   iPhone を横にすると、縦に積んだままでは 😢 とボタンが画面の外へはみ出した。
+///   横長のときは、左に結果（スコア・ハイスコア）、右にエネルギーとボタンを置く。
+///   左側が収まらないときはスクロールできるようにする。
 private struct MazeResultView: View {
     var model: MazeGameModel
 
-    var body: some View {
-        VStack(spacing: 20) {
-            Spacer()
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
 
+    var body: some View {
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(alignment: .center, spacing: 20) {
+                    ViewThatFits(in: .vertical) {
+                        resultContent(isWide: true)
+                        ScrollView { resultContent(isWide: true) }
+                            .scrollBounceBehavior(.basedOnSize)
+                    }
+                    .frame(maxWidth: .infinity)
+
+                    VStack(spacing: 12) {
+                        EnergyRewardBanner()
+                        actionButtons
+                    }
+                    .frame(maxWidth: .infinity)
+                }
+                .padding(.horizontal, 24)
+                .padding(.vertical, 12)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 20) {
+                    Spacer(minLength: 0)
+                    ViewThatFits(in: .vertical) {
+                        resultContent(isWide: false)
+                        ScrollView { resultContent(isWide: false) }
+                            .scrollBounceBehavior(.basedOnSize)
+                    }
+                    Spacer(minLength: 0)
+                    EnergyRewardBanner()
+                    actionButtons
+                        .padding(.horizontal, 24).padding(.bottom, 24)
+                }
+            }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    /// 😢・新記録・スコア・ハイスコア。
+    /// - Parameter isWide: 横長のときは 😢 とスコアを少し小さくして、高さを節約する
+    private func resultContent(isWide: Bool) -> some View {
+        VStack(spacing: isWide ? 12 : 20) {
             // ゲームオーバー絵文字
-            Text("😢").font(.system(size: 56))  // ← サイズ変更可
+            Text("😢").font(.system(size: isWide ? 40 : 56))  // ← サイズ変更可
 
             // ── 新記録バナー（新記録のときのみ表示）──────────
             if model.isNewRecord {
@@ -835,12 +969,12 @@ private struct MazeResultView: View {
                     .font(.system(size: 15, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
                 Text("🧀×\(model.score)")
-                    .font(.system(size: 52, weight: .black, design: .rounded))  // ← スコア数値サイズ
+                    .font(.system(size: isWide ? 40 : 52, weight: .black, design: .rounded))  // ← スコア数値サイズ
                     .foregroundStyle(DS.gold)
             }
-            .padding(.vertical, 20).frame(maxWidth: .infinity)
+            .padding(.vertical, isWide ? 12 : 20).frame(maxWidth: .infinity)
             .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
-            .padding(.horizontal, 24)
+            .padding(.horizontal, isWide ? 0 : 24)
 
             // ── ハイスコア表示 ────────────────────────────────
             HStack(spacing: 8) {
@@ -854,46 +988,43 @@ private struct MazeResultView: View {
             }
             .padding(.horizontal, 20).padding(.vertical, 10)
             .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+        }
+    }
 
-            Spacer()
+    /// もういちどあそぶ・タイトルへもどる。
+    private var actionButtons: some View {
+        VStack(spacing: 12) {
 
-            EnergyRewardBanner()
-
-            // ── ボタン群 ──────────────────────────────────────
-            VStack(spacing: 12) {
-
-                // もういちどあそぶ
-                Button {
-                    SoundManager.shared.vibrate()
-                    SoundManager.shared.playTap()
-                    model.startGame()
-                } label: {
-                    Text("Play Again")
-                        .font(.system(size: 22, weight: .black, design: .rounded))
-                        .foregroundStyle(.white)
-                        .frame(maxWidth: .infinity).padding(.vertical, 18)
-                        .background(
-                            RoundedRectangle(cornerRadius: DS.btnRadius)
-                                .fill(DS.primary)
-                                .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
-                        )
-                }
-                .buttonStyle(.plain)
-
-                // タイトルへもどる（MazeGameModel.gameState を .title に戻す）
-                Button {
-                    SoundManager.shared.vibrate()
-                    withAnimation(.easeInOut(duration: 0.3)) { model.returnToTitle() }
-                } label: {
-                    Text("Back to Title")
-                        .font(.system(size: 18, weight: .bold, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                        .frame(maxWidth: .infinity).padding(.vertical, 14)
-                        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.btnRadius))
-                }
-                .buttonStyle(.plain)
+            // もういちどあそぶ
+            Button {
+                SoundManager.shared.vibrate()
+                SoundManager.shared.playTap()
+                model.startGame()
+            } label: {
+                Text("Play Again")
+                    .font(.system(size: 22, weight: .black, design: .rounded))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity).padding(.vertical, 18)
+                    .background(
+                        RoundedRectangle(cornerRadius: DS.btnRadius)
+                            .fill(DS.primary)
+                            .shadow(color: DS.primary.opacity(0.35), radius: 8, x: 0, y: 4)
+                    )
             }
-            .padding(.horizontal, 24).padding(.bottom, 24)
+            .buttonStyle(.plain)
+
+            // タイトルへもどる（MazeGameModel.gameState を .title に戻す）
+            Button {
+                SoundManager.shared.vibrate()
+                withAnimation(.easeInOut(duration: 0.3)) { model.returnToTitle() }
+            } label: {
+                Text("Back to Title")
+                    .font(.system(size: 18, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .frame(maxWidth: .infinity).padding(.vertical, 14)
+                    .background(DS.card, in: RoundedRectangle(cornerRadius: DS.btnRadius))
+            }
+            .buttonStyle(.plain)
         }
     }
 }

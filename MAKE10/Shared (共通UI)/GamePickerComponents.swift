@@ -322,9 +322,12 @@ struct GamePickerTile: View {
                 .accessibilityLabel(game.label)
             } else {
                 Text(game.icon).font(.largeTitle)
+                // 言語によってはゲームの名前が長く2行になるので、まん中にそろえ、左右に少し余白をとる
                 Text(game.label)
                     .font(.subheadline.weight(.medium))
                     .foregroundStyle(game.color)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 8)   // ← 変更可
             }
         }
         .padding(.vertical, 16)

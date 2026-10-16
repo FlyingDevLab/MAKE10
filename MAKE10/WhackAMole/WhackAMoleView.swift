@@ -142,69 +142,117 @@ private struct WAMPlayingView: View {
     ///   下の ForEach(0..<9) と連動している。変えるときは3箇所すべてを揃えること。
     private let columns = Array(repeating: GridItem(.flexible(), spacing: 12), count: 3)
 
+    /// この画面が使える場所の大きさ（回転・分割表示・Duo の開閉のたびに測り直す）。
+    @State private var areaSize: CGSize = .zero
+
+    // ★ 横長の場所では、スコアと残り時間を盤面の左右に分ける理由 ★
+    //   上にステータスバーを置いたままだと、iPhone を横にしたとき高さがバーの分だけ減り、
+    //   正方形の盤面がとても小さくなった。左にスコア、右に残り時間を置けば、
+    //   盤面は高さいっぱいの大きさで、画面のまん中に描ける（ユーザーの要望）。
+    //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
     var body: some View {
-        VStack(spacing: 0) {
-
-            // ── ステータスバー（スコア・残り時間）────────────
-            HStack {
-
-                // スコア（左）
-                VStack(spacing: 2) {
-                    Text("Score")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text("\(viewModel.score)")
-                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（スコア数値サイズ）
-                        .foregroundStyle(DS.primary)
-                        .contentTransition(.numericText())
-                        .animation(.spring(duration: 0.2), value: viewModel.score)  // ← 変更可（スコア増加アニメ速度）
+        Group {
+            if DS.isWide(areaSize) {
+                HStack(spacing: 16) {
+                    scoreBlock
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
+                    moleGrid
+                        .frame(width: wideBoardSide)
+                    timeBlock
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, 16)
+                        .background(DS.card, in: RoundedRectangle(cornerRadius: DS.sectionRadius))
                 }
-                .frame(maxWidth: .infinity)
-
-                // 残り時間（右）
-                VStack(spacing: 2) {
-                    Text("Remaining")
-                        .font(.system(size: 13, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
-                    Text("\(viewModel.timeLeft)")
-                        .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（タイマー数値サイズ）
-                        // 警告しきい値以下になると gaugeWarn 色に変わる（しきい値は WAMConfig.warningThreshold）
-                        .foregroundStyle(viewModel.isTimerWarning ? DS.gaugeWarn : DS.textPrimary)
-                        .contentTransition(.numericText())
-                        .animation(.spring(duration: 0.2), value: viewModel.timeLeft)
-                }
-                .frame(maxWidth: .infinity)
-            }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 16)  // ← 変更可（ステータスバーの上下余白）
-            .background(DS.card)
-
-            // ── モグラグリッド（3×3）──────────────────────────
-            // ★ 盤面の大きさを、幅と高さの小さい方で決める理由 ★
-            //   マスは正方形なので、3×3 の盤面も正方形になる。幅だけで大きさを決めると、
-            //   iPad を横にしたときなど「横に広く縦に短い」場所では、盤面が縦にはみ出してしまう。
-            //   残りの場所の幅と高さの小さい方を一辺にすれば、どんな形の場所にも収まる。
-            //   縦画面では幅の方が小さいので、今までと同じ大きさになる。
-            //   GeometryReader は大きさが変わるたび（回転・分割表示・Duo の開閉）に測り直す。
-            GeometryReader { geo in
-                // 一辺の長さ。余白（16×2）とマスの間隔（12×2）より小さくならないようにする
-                let side = max(min(geo.size.width, geo.size.height), 16 * 2 + 12 * 2)
-
-                LazyVGrid(columns: columns, spacing: 12) {  // ← 変更可（spacing でマス間隔を調整）
-                    // ⚠️ 変更注意: 9 は WAMConfig.holeCount と揃えること（columns の ⚠️ も参照）
-                    ForEach(0..<9, id: \.self) { index in
-                        MoleHoleView(
-                            state:   viewModel.moles[index],
-                            onWhack: { viewModel.whackMole(at: index) }
-                        )
-                        .aspectRatio(1, contentMode: .fit)  // 正方形を維持
+                .padding(.horizontal, 20)
+                .padding(.vertical, 8)
+                .frame(maxHeight: .infinity)
+            } else {
+                VStack(spacing: 0) {
+                    // ── ステータスバー（スコア・残り時間）────────────
+                    HStack {
+                        scoreBlock.frame(maxWidth: .infinity)   // スコア（左）
+                        timeBlock.frame(maxWidth: .infinity)    // 残り時間（右）
                     }
+                    .padding(.horizontal, 24)
+                    .padding(.vertical, 16)  // ← 変更可（ステータスバーの上下余白）
+                    .background(DS.card)
+
+                    moleGrid
                 }
-                .padding(16)   // ← 変更可（グリッド外周の余白）
-                .frame(width: side)
-                .background(DS.bg)
-                .frame(maxWidth: .infinity)   // 盤面を左右の真ん中に置く（上は詰めたまま）
             }
+        }
+        .onGeometryChange(for: CGSize.self) { proxy in
+            proxy.size
+        } action: { size in
+            areaSize = size
+        }
+    }
+
+    /// 横長のときの盤面の一辺。高さいっぱいにするが、左右のスコア・残り時間に 140pt ずつは残す。
+    private var wideBoardSide: CGFloat {
+        let sideMin: CGFloat = 140   // ← 変更可（左右の帯の最小の幅）
+        return max(1, min(areaSize.height - 16, areaSize.width - (sideMin + 16) * 2 - 40))
+    }
+
+    // MARK: 部品（縦長・横長の両方の並べ方で使う）
+
+    /// スコア。
+    private var scoreBlock: some View {
+        VStack(spacing: 2) {
+            Text("Score")
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.muted)
+            Text("\(viewModel.score)")
+                .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（スコア数値サイズ）
+                .foregroundStyle(DS.primary)
+                .contentTransition(.numericText())
+                .animation(.spring(duration: 0.2), value: viewModel.score)  // ← 変更可（スコア増加アニメ速度）
+        }
+    }
+
+    /// 残り時間。
+    private var timeBlock: some View {
+        VStack(spacing: 2) {
+            Text("Remaining")
+                .font(.system(size: 13, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.muted)
+            Text("\(viewModel.timeLeft)")
+                .font(.system(size: 36, weight: .black, design: .rounded))  // ← 変更可（タイマー数値サイズ）
+                // 警告しきい値以下になると gaugeWarn 色に変わる（しきい値は WAMConfig.warningThreshold）
+                .foregroundStyle(viewModel.isTimerWarning ? DS.gaugeWarn : DS.textPrimary)
+                .contentTransition(.numericText())
+                .animation(.spring(duration: 0.2), value: viewModel.timeLeft)
+        }
+    }
+
+    /// モグラの盤面（3×3）。
+    // ★ 盤面の大きさを、幅と高さの小さい方で決める理由 ★
+    //   マスは正方形なので、3×3 の盤面も正方形になる。幅だけで大きさを決めると、
+    //   「横に広く縦に短い」場所では、盤面が縦にはみ出してしまう。
+    //   残りの場所の幅と高さの小さい方を一辺にすれば、どんな形の場所にも収まる。
+    //   縦画面では幅の方が小さいので、今までと同じ大きさになる。
+    //   GeometryReader は大きさが変わるたび（回転・分割表示・Duo の開閉）に測り直す。
+    private var moleGrid: some View {
+        GeometryReader { geo in
+            // 一辺の長さ。余白（16×2）とマスの間隔（12×2）より小さくならないようにする
+            let side = max(min(geo.size.width, geo.size.height), 16 * 2 + 12 * 2)
+
+            LazyVGrid(columns: columns, spacing: 12) {  // ← 変更可（spacing でマス間隔を調整）
+                // ⚠️ 変更注意: 9 は WAMConfig.holeCount と揃えること（columns の ⚠️ も参照）
+                ForEach(0..<9, id: \.self) { index in
+                    MoleHoleView(
+                        state:   viewModel.moles[index],
+                        onWhack: { viewModel.whackMole(at: index) }
+                    )
+                    .aspectRatio(1, contentMode: .fit)  // 正方形を維持
+                }
+            }
+            .padding(16)   // ← 変更可（グリッド外周の余白）
+            .frame(width: side)
+            .background(DS.bg)
+            .frame(maxWidth: .infinity)   // 盤面を左右の真ん中に置く（上は詰めたまま）
         }
     }
 }

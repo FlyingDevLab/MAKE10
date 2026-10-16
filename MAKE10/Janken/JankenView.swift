@@ -276,6 +276,8 @@ private enum JankenHandButtonState: Equatable { case normal, correct, wrong }
 private struct JankenHandButton: View {
     let hand:   JankenHand
     let state:  JankenHandButtonState
+    /// true なら絵文字と余白を小さくする（横長の場所で、3つを縦に積むとき。高さが足りないため）
+    var compact: Bool = false
     let action: () -> Void
 
     // stateに応じた背景色。クイズと同じ opacity(0.15) の薄い色を使う
@@ -314,8 +316,8 @@ private struct JankenHandButton: View {
 
                 // ── 絵文字 ──────────────────────────────────
                 Text(hand.emoji)
-                    .font(.system(size: 52))   // ← 変更可
-                    .padding(.vertical, 16)    // ← 変更可
+                    .font(.system(size: compact ? 40 : 52))   // ← 変更可
+                    .padding(.vertical, compact ? 6 : 16)     // ← 変更可
 
                 // ── 正解アイコン（右上） ──────────────────────
                 if state == .correct {
@@ -369,30 +371,31 @@ private struct JankenPlayingView: View {
             AppBackground().ignoresSafeArea()
 
             // ── メインコンテンツ ──────────────────────────────
-            // ★ 横長の場所では、左に「CPUの手と指示」、右に「手のボタンとタイマー」を並べる理由 ★
-            //   縦に積んだままだと、iPad を横にしたときなどに高さが足りず、ボタンやタイマーがはみ出しやすい。
-            //   左右に分ければ、指示を見ながらすぐ右手でボタンを押せる並びになる。
+            // ★ 横長の場所では、3つの列に分ける理由 ★
+            //   縦に積んだままだと、iPhone・iPad を横にしたときに高さが足りず、ボタンやタイマーがはみ出しやすい。
+            //   左にタイマー、まん中に問題（CPUの手と指示）、右に手のボタンを縦に3つ並べる。
+            //   3つの列を同じ幅にしているので、問題がいつも画面のまん中に来る（ユーザーの要望）。
+            //   手のボタンは左右に分けず、右にまとめて縦に並べる（ユーザーと決めた並べ方）。
             //   どちらにするかは端末の向きではなく「使える場所が横長かどうか」で決める（DS.isWide）。
             VStack(spacing: 0) {
                 progressBar
 
                 if DS.isWide(areaSize) {
-                    HStack(spacing: 24) {
-                        VStack(spacing: 0) {
+                    HStack(spacing: 16) {
+                        VStack(spacing: 12) {
                             challengePhaseLabel
-                            Spacer()
-                            cpuHandAndInstruction
-                            Spacer()
-                        }
-                        .frame(maxWidth: .infinity)
-
-                        VStack(spacing: 0) {
-                            handButtons
-                                .padding(.top, 8)
                             timerText
                         }
                         .frame(maxWidth: .infinity)
+
+                        cpuHandAndInstruction
+                            .frame(maxWidth: .infinity)
+
+                        handButtonsVertical
+                            .frame(maxWidth: .infinity)
                     }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 12)
                 } else {
                     challengePhaseLabel
                     Spacer()
@@ -400,6 +403,7 @@ private struct JankenPlayingView: View {
                     Spacer()
                     handButtons
                     timerText
+                        .padding(.bottom, 28)
                 }
             }
             .onGeometryChange(for: CGSize.self) { proxy in
@@ -498,6 +502,8 @@ private struct JankenPlayingView: View {
                  ? LocalizedStringKey("janken_instruction_win")
                  : LocalizedStringKey("janken_instruction_lose"))
                 .font(.system(size: 44, weight: .black, design: .rounded))  // ← 変更可
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)   // 文の長い言語（例: GEWINNEN!）でも1行に収める
                 .foregroundStyle(instructionColor)
                 .wallpaperCushion()
                 .padding(.bottom, 4)
@@ -521,14 +527,33 @@ private struct JankenPlayingView: View {
         .padding(.bottom, 16)
     }
 
+    // ── プレイヤーの手ボタン（3択・縦に並べる）────
+    // 横長の場所で使う。高さを3つで分け合い、絵文字は少し小さくする（compact）
+    private var handButtonsVertical: some View {
+        VStack(spacing: 10) {
+            ForEach(JankenHand.allCases, id: \.self) { hand in
+                JankenHandButton(
+                    hand:    hand,
+                    state:   handButtonState(for: hand),
+                    compact: true
+                ) {
+                    viewModel.tap(hand)
+                }
+                .frame(maxHeight: .infinity)
+            }
+        }
+        .frame(maxWidth: 220)   // ← 変更可（iPad の横向きで、ボタンが横に広がりすぎないように）
+    }
+
     // ── タイマー ──────────────────────────────────
     private var timerText: some View {
         Text(viewModel.elapsedFormatted)
             .font(.system(size: 32, weight: .black, design: .rounded))  // ← 変更可
             .foregroundStyle(DS.textPrimary)
             .monospacedDigit()   // 数字の幅を固定し、桁が変わっても横揺れしないようにする
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
             .wallpaperCushion()
-            .padding(.bottom, 28)
     }
 
     // MARK: - ヘルパー
