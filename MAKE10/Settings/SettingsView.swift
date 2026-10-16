@@ -94,12 +94,9 @@ struct SettingsView: View {
 
             // ★ 収まらないときだけスクロールする ★
             //   iPhone を横にすると高さが足りず、下の項目や「とじる」が画面の外に出てしまった。
-            //   ViewThatFits は、上から順に「収まるもの」を選ぶ。収まるときはそのまま（今までと同じ見た目）、
-            //   収まらないときは ScrollView に入れたほうを使う。
-            ViewThatFits(in: .vertical) {
+            //   収まるときはそのまま（今までと同じ見た目）、収まらないときだけスクロールにする（ScrollIfNeeded を参照）。
+            ScrollIfNeeded {
                 panelContent
-                ScrollView { panelContent }
-                    .scrollBounceBehavior(.basedOnSize)
             }
             .background(
                 RoundedRectangle(cornerRadius: DS.dialogRadius)
@@ -147,7 +144,7 @@ struct SettingsView: View {
     // MARK: パネルの中身
 
     /// 設定パネルの中身（見出し・トグル・リセット・ポリシー・とじる）。
-    /// 収まるときはそのまま、収まらないときは ScrollView に入れて使う（body の ViewThatFits を参照）。
+    /// 収まるときはそのまま、収まらないときは ScrollView に入れて使う（body の ScrollIfNeeded を参照）。
     private var panelContent: some View {
         VStack(spacing: 24) {
             Text("settings_title")
@@ -392,11 +389,9 @@ struct ResetConfirmView: View {
             Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ 0.0〜1.0）
 
             // 収まるときはそのまま、収まらないとき（iPhone の横向き・文の長い言語）は ScrollView に入れる
-            // （SettingsView の body の ViewThatFits と同じ考え方）
-            ViewThatFits(in: .vertical) {
+            // （SettingsView の body と同じ ScrollIfNeeded）
+            ScrollIfNeeded {
                 dialogContent
-                ScrollView { dialogContent }
-                    .scrollBounceBehavior(.basedOnSize)
             }
             .background(
                 RoundedRectangle(cornerRadius: DS.sheetRadius)
@@ -482,10 +477,8 @@ struct CloudChoiceView: View {
             Color.black.opacity(0.30).ignoresSafeArea()   // ← 変更可（暗幕の濃さ。リセット確認と同じ）
 
             // 収まらないときはスクロールできるようにする（ResetConfirmView と同じ）
-            ViewThatFits(in: .vertical) {
+            ScrollIfNeeded {
                 dialogContent
-                ScrollView { dialogContent }
-                    .scrollBounceBehavior(.basedOnSize)
             }
             .background(
                 RoundedRectangle(cornerRadius: DS.sheetRadius)

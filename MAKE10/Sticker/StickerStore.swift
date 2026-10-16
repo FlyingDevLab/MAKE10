@@ -55,7 +55,9 @@ enum StickerExchangeTuning {
     ///   ガチャはどのシールも同じ確率で出るので、🍪 をねらって出すことはできない。
     static let specialKcal: [String: Double] = {
         var table: [String: Double] = [:]
-        for sign in ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"] { table[sign] = 50 }
+        // 星座の絵文字は、どうぶつめくりのカードと同じ一覧（MemoryZodiac）から取る。
+        // ここに12個を書き写すと、片方だけ直したときに食い違うため。
+        for sign in MemoryZodiac.allCases { table[sign.emoji] = 50 }
         table["🍪"] = 100
         return table
     }()
