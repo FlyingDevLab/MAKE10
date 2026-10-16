@@ -219,7 +219,7 @@ extension StickerDexView {
     /// 「つかっていない シールを ぜんぶ こうかん」ボタン（つかっていないシールがあるときだけ押せる）。
     var exchangeAllButton: some View {
         let count = store.unusedTotal
-        let kcal  = StickerExchangeTuning.kcalPerSticker * Double(count)
+        let kcal  = StickerExchangeTuning.kcal(for: store.storageEmojis)
         return Button {
             SoundManager.shared.playTap()
             showExchangeAllConfirm = true
@@ -260,7 +260,7 @@ extension StickerDexView {
             dimmed { showExchangeAllConfirm = false }
             confirmCard(
                 title:   "sticker_exchange_all_title",
-                body:    Text("sticker_exchange_all_body \(store.unusedTotal) \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker * Double(store.unusedTotal)))"),
+                body:    Text("sticker_exchange_all_body \(store.unusedTotal) \(EnergyStore.format(StickerExchangeTuning.kcal(for: store.storageEmojis)))"),
                 yes:     "sticker_exchange_all_ok",
                 no:      "reset_confirm_cancel",
                 onYes:   { exchangeAll() },
@@ -419,7 +419,8 @@ private struct StickerExchangeCard: View {
                 .multilineTextAlignment(.center)
 
             Button(action: onExchange) {
-                Text("sticker_exchange_one_button \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker))")
+                // 星座と 🍪 は、ほかのシールより多くもらえる（StickerExchangeTuning を参照）
+                Text("sticker_exchange_one_button \(EnergyStore.format(StickerExchangeTuning.kcal(for: emoji)))")
                     .font(.system(size: 17, weight: .black, design: .rounded))
                     .foregroundStyle(.white)
                     .frame(maxWidth: .infinity)
