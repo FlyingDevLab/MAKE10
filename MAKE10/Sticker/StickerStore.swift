@@ -42,10 +42,33 @@ import SwiftUI
 // MARK: - ⚙️ 調整パラメータ
 
 enum StickerExchangeTuning {
-    /// シール1枚をエネルギーに交換したときの量（kcal）。
+    /// シール1枚をエネルギーに交換したときの量（kcal）。ふつうのシール。
     /// ★ 30 にしている理由 ★ いちばん安い手に入れ方（10連ガチャ）でも1枚あたり約91kcal なので、
     ///   これより低ければ「買って交換すると得をする」抜け道はできない。
     static let kcalPerSticker: Double = 30   // ← 変更可（91 より小さくすること）
+
+    /// とくべつなシールを交換したときの量（kcal）。ユーザーと決めたもの。← 変更可
+    ///   ・星座の12種（♈〜♓）: 50kcal。どうぶつめくりの「せいざ」をクリアしないと選べないので、少し高くしている
+    ///   ・🍪: 100kcal
+    /// ★ 🍪 だけ 91 をこえても抜け道にならない理由 ★
+    ///   シールやさんでは1枚 200kcal なので、買って交換すると損をする。
+    ///   ガチャはどのシールも同じ確率で出るので、🍪 をねらって出すことはできない。
+    static let specialKcal: [String: Double] = {
+        var table: [String: Double] = [:]
+        for sign in ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"] { table[sign] = 50 }
+        table["🍪"] = 100
+        return table
+    }()
+
+    /// このシール1枚を交換したときの量（kcal）。
+    static func kcal(for emoji: String) -> Double {
+        specialKcal[emoji] ?? kcalPerSticker
+    }
+
+    /// 何枚かのシールをまとめて交換したときの量（kcal）。種類ごとの量を足し合わせる。
+    static func kcal(for emojis: [String]) -> Double {
+        emojis.reduce(0) { $0 + kcal(for: $1) }
+    }
 }
 
 // MARK: - StickerStore
@@ -136,7 +159,7 @@ final class StickerStore {
             saveStorage()   // 直後に落ちてもシールを失わないよう即保存する
         }
         if !exchanged.isEmpty {
-            EnergyStore.shared.grantGift(StickerExchangeTuning.kcalPerSticker * Double(exchanged.count))
+            EnergyStore.shared.grantGift(StickerExchangeTuning.kcal(for: exchanged))
         }
         return exchanged
     }
@@ -162,7 +185,7 @@ final class StickerStore {
         guard let index = storageEmojis.lastIndex(of: emoji) else { return 0 }
         storageEmojis.remove(at: index)
         saveStorage()   // シールを減らしてから
-        let kcal = StickerExchangeTuning.kcalPerSticker
+        let kcal = StickerExchangeTuning.kcal(for: emoji)
         EnergyStore.shared.grantGift(kcal)   // エネルギーを渡す（間で終了されても、子どもが損をしない順。StickerGacha.pull の逆）
         return kcal
     }
@@ -174,7 +197,7 @@ final class StickerStore {
         guard !all.isEmpty else { return (0, 0, []) }
         storageEmojis = []
         saveStorage()
-        let kcal = StickerExchangeTuning.kcalPerSticker * Double(all.count)
+        let kcal = StickerExchangeTuning.kcal(for: all)
         EnergyStore.shared.grantGift(kcal)
         let owned   = ownedCounts()
         var emptied: [String] = []

@@ -250,9 +250,10 @@ struct GachaView: View {
                     .foregroundStyle(DS.muted)
 
                 // 自動交換にした種類が出たときは、何枚をエネルギーに変えたかを伝える（勝手に消えたと思わないように）
-                let exchanged = items.filter(\.isExchanged).count
+                let exchangedItems = items.filter(\.isExchanged)
+                let exchanged = exchangedItems.count
                 if exchanged > 0 && revealedCount >= items.count {
-                    Text("gacha_auto_exchanged \(exchanged) \(EnergyStore.format(StickerExchangeTuning.kcalPerSticker * Double(exchanged)))")
+                    Text("gacha_auto_exchanged \(exchanged) \(EnergyStore.format(StickerExchangeTuning.kcal(for: exchangedItems.map(\.emoji))))")
                         .font(.system(size: 14, weight: .heavy, design: .rounded))
                         .foregroundStyle(DS.energy)
                         .multilineTextAlignment(.center)
