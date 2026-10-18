@@ -52,6 +52,8 @@ struct WhackAMoleView: View {
         .animation(.easeInOut(duration: 0.3), value: viewModel.gameState)
         // SharedFrame の戻るボタン・画面離脱でゲームを止める
         .onDisappear { viewModel.stopGame() }
+        // 撮影モード（ScreenshotMode.swift を参照）: すぐにゲームを始める
+        .onAppear { if ScreenshotMode.scene == .whackAMole { viewModel.startGame() } }
     }
 }
 

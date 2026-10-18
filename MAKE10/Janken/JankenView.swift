@@ -56,6 +56,23 @@ struct JankenView: View {
         // value に渡す Phase は Equatable なので、変化したときだけアニメが走る（仕組みは PlayingView 参照）
         .animation(.easeInOut(duration: 0.3), value: viewModel.phase)
         .onDisappear { viewModel.stopGame() }   // 画面を離れたらタイマーを止める
+        .onAppear { playScreenshotScene() }
+    }
+
+    /// 撮影モード（ScreenshotMode.swift を参照）: 「かんたん」を始め、カウントダウンのあと2回正解しておく。
+    private func playScreenshotScene() {
+        guard ScreenshotMode.scene == .janken else { return }
+        viewModel.start(difficulty: .easy)
+        for delay in [6.0, 7.4] {
+            ScreenshotMode.after(delay) {
+                // 指示が「かて」なら CPU の手に勝つ手、「まけて」なら負ける手をえらぶ
+                let cpu = viewModel.cpuHand
+                let hand = JankenHand.allCases.first { hand in
+                    viewModel.currentInstruction == .win ? hand.beats(cpu) : cpu.beats(hand)
+                }
+                if let hand { viewModel.tap(hand) }
+            }
+        }
     }
 }
 

@@ -337,7 +337,8 @@ struct GamePickerTile: View {
         //   （GameDailyBonus.swift を参照）。遊び終わると、その日は消える。
         //   右上ではなく右下に置くのは、横長の並べ方で、画面の上のまん中に出るエネルギー表示に隠れないようにするため。
         .overlay(alignment: .bottomTrailing) {
-            if GameDailyBonus.shared.isAvailable(game) {
+            // 撮影モード（ScreenshotMode.swift を参照）では出さない（スクリーンショットがごちゃつかないように）
+            if GameDailyBonus.shared.isAvailable(game) && !ScreenshotMode.isActive {
                 Text(verbatim: "🎁")
                     .font(.system(size: 18))   // ← 変更可（印の大きさ）
                     .padding(8)

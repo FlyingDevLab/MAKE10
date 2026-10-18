@@ -136,6 +136,8 @@ struct StickerStorageView: View {
             areaSize = size
         }
         .ignoresSafeArea(edges: .bottom)
+        // 撮影モード（ScreenshotMode.swift を参照）: シール帳であそぶ画面を開く
+        .onAppear { if ScreenshotMode.scene == .sticker { showPlayView = true } }
         .fullScreenCover(isPresented: $showPlayView) {
             StickerPlayView()
                 .dynamicTypeSize(.large)

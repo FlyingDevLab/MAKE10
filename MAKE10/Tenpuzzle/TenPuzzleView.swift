@@ -42,7 +42,7 @@ struct TenPuzzleView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.phase)
-        .onAppear    { viewModel.resume()  }
+        .onAppear    { viewModel.resume(); playScreenshotScene() }
         .onDisappear { viewModel.suspend() }
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.didEnterBackgroundNotification)
@@ -50,6 +50,39 @@ struct TenPuzzleView: View {
         .onReceive(NotificationCenter.default.publisher(
             for: UIApplication.willEnterForegroundNotification)
         ) { _ in viewModel.resume() }
+    }
+}
+
+extension TenPuzzleView {
+
+    /// 撮影モード（ScreenshotMode.swift を参照）: 「かんたん / ふつう」を始め、解の例どおりに式を組み立てておく。
+    /// 「=」は押さないので、組み立てた式と「= 10」が見えたままになる。
+    fileprivate func playScreenshotScene() {
+        guard ScreenshotMode.scene == .tenPuzzle else { return }
+        viewModel.startSession(mode: .modeA)
+        // ＋だけの式より、いろいろな記号を使う問題のほうが見ばえがよいので、×と−を使う問題を探して進める
+        while let p = viewModel.currentProblem, let ex = p.example,
+              !(ex.contains("×") && ex.contains("−")), viewModel.problemIndex < viewModel.pool.count - 1 {
+            viewModel.problemIndex += 1
+            viewModel.currentProblem = viewModel.pool[viewModel.problemIndex]
+        }
+        guard let problem = viewModel.currentProblem, let example = problem.example else { return }
+        var used: Set<Int> = []
+        for (i, ch) in example.enumerated() {
+            ScreenshotMode.after(1.0 + Double(i) * 0.15) {
+                if let digit = ch.wholeNumberValue {
+                    // 同じ数字が2枚あるときは、まだ使っていない方を使う
+                    if let slot = problem.digits.indices.first(where: { problem.digits[$0] == digit && !used.contains($0) }) {
+                        used.insert(slot)
+                        viewModel.tapDigit(slot: slot)
+                    }
+                } else if ch == "(" || ch == ")" {
+                    viewModel.tapParen(String(ch))
+                } else {
+                    viewModel.tapOperator(String(ch))
+                }
+            }
+        }
     }
 }
 

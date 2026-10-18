@@ -221,6 +221,7 @@ struct MakeTenContentView: View {
             // 休憩までの時間をここから数え始める（shared は初めて触ったときに作られるため、起動直後に触っておく）
             _ = BreakReminder.shared
             refreshGiftNotices()   // 同意直後・起動直後に、その日のログインボーナスなどを確認する
+            applyScreenshotScene() // 撮影モードで起動したときだけ、指定の場面を開く（ScreenshotMode.swift を参照）
         }
         // ★ onReceive / NotificationCenter とは？ ★
         //   iOS がアプリ全体に放送する「お知らせ」（通知）を受け取る仕組みです。
@@ -275,13 +276,14 @@ struct MakeTenContentView: View {
 
     /// タイトル画面にいて、ほかのお知らせカードが出ていなければ、休憩の時間かを確かめる。
     private func checkBreakReminder() {
-        guard isOnTitleScreen, giftNotices.isEmpty else { return }
+        guard isOnTitleScreen, giftNotices.isEmpty, !ScreenshotMode.isActive else { return }
         withAnimation(.easeInOut(duration: 0.25)) { BreakReminder.shared.showIfDue() }
     }
 
     /// その日のログインボーナスを受け取り、まだ見せていないお知らせを並べ直す。
     /// 出す順: アップデートのお礼 → はじめまして → ログインボーナス
     private func refreshGiftNotices() {
+        guard !ScreenshotMode.isActive else { return }   // 撮影中はお知らせのカードを出さない
         DailyBonus.checkIn()
         var notices: [GiftNotice] = []
         if AppMigration.hasPendingGiftNotice { notices.append(.updateThanks) }
@@ -445,6 +447,33 @@ struct MakeTenContentView: View {
         }
     }
 
+    // MARK: 撮影モード
+
+    /// 撮影モードで指定された場面を開く。ゲームの中の操作は、それぞれのゲームの画面が行う
+    /// （どうぶつめくり・テンパズル・じゃんけんなど。ScreenshotMode.scene で探すと見つかる）。
+    /// 撮影モードでないとき（ふつうの起動・リリース版）は何もしない。
+    private func applyScreenshotScene() {
+        guard let scene = ScreenshotMode.scene else { return }
+        switch scene {
+        case .title:      break
+        case .make10:     viewModel.startGame(mode: .normal)
+        case .tenPuzzle:  screen = .tenPuzzle
+        case .memory:     screen = .memory
+        case .sticker:    screen = .stickerStorage
+        case .janken:     screen = .janken
+        case .maze:       screen = .maze
+        case .whackAMole: screen = .whackAMole
+        case .quiz:
+            // ヨーロッパの国旗を出題し、少し待ってから正解をえらぶ（「せいかい！」の画面を撮るため）
+            guard let category = QuizCategoryLoader.loadAll().first(where: { $0.id == "flagsEurope" }) else { return }
+            let vm = EmojiQuizViewModel(category: category, mode: .emojiToText, totalCount: 10)
+            screen = .quizPlaying(vm)
+            ScreenshotMode.after(2.0) {
+                if let question = vm.currentQuestion { vm.select(question.correct) }
+            }
+        }
+    }
+
     // MARK: MAKE10 コンテンツ
 
     /// MAKE10 本体の画面。gameState に応じてタイトル / スタート画面 / プレイ中 / 結果を切り替える。
@@ -456,7 +485,8 @@ struct MakeTenContentView: View {
             TitleView(
                 viewModel: viewModel,
                 // お知らせ・休憩のカードが重なっているあいだは、タイトルの自動デモを止める
-                pausesDemo: !giftNotices.isEmpty || BreakReminder.shared.isShowing,
+                // 撮影モードのときも止める（指のアニメーションが写りこまないように）
+                pausesDemo: !giftNotices.isEmpty || BreakReminder.shared.isShowing || ScreenshotMode.isActive,
                 onSelectGame: { selected in
                     withAnimation(.easeInOut(duration: 0.3)) {
                         switch selected {

@@ -121,6 +121,23 @@ struct MemoryGameView: View {
             guard let reward else { return }
             rewardPopups.append(reward)
         }
+        .onAppear { playScreenshotScene() }
+    }
+
+    /// 撮影モード（ScreenshotMode.swift を参照）: 5×5（まん中にロゴ）を始め、4組そろえてから1枚だけめくっておく。
+    private func playScreenshotScene() {
+        guard ScreenshotMode.scene == .memory else { return }
+        startGame(.animals12)
+        let pairs = Dictionary(grouping: engine.cards, by: \.pairID).values.map { $0 }
+        for (i, pair) in pairs.prefix(4).enumerated() where pair.count == 2 {
+            ScreenshotMode.after(1.0 + Double(i) * 1.2) {
+                engine.tap(pair[0].id)
+                engine.tap(pair[1].id)
+            }
+        }
+        if pairs.count > 4, let single = pairs[4].first {
+            ScreenshotMode.after(1.0 + 4 * 1.2) { engine.tap(single.id) }
+        }
     }
 
     // MARK: - スタート画面

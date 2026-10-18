@@ -53,6 +53,8 @@ struct MazeGameView: View {
         .animation(.easeInOut(duration: 0.3), value: model.gameState == .playing)
         // SharedFrame の戻るボタンや画面離脱時にループを止める（CADisplayLink を残さない）
         .onDisappear { model.stopLoop() }
+        // 撮影モード（ScreenshotMode.swift を参照）: すぐにゲームを始める
+        .onAppear { if ScreenshotMode.scene == .maze { model.startGame() } }
     }
 }
 
