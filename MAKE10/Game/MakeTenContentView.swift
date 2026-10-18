@@ -463,6 +463,12 @@ struct MakeTenContentView: View {
         case .janken:     screen = .janken
         case .maze:       screen = .maze
         case .whackAMole: screen = .whackAMole
+        case .pinball:    screen = .pinball
+        case .coinDrop:   screen = .coinDrop
+        case .shop:       screen = .stickerShop
+        case .gacha:      screen = .gacha
+        case .stickerDex: screen = .stickerDex
+        case .thanks:     screen = .thanksNotebook
         case .quiz:
             // ヨーロッパの国旗を出題し、少し待ってから正解をえらぶ（「せいかい！」の画面を撮るため）
             guard let category = QuizCategoryLoader.loadAll().first(where: { $0.id == "flagsEurope" }) else { return }

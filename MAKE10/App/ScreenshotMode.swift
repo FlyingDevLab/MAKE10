@@ -37,6 +37,12 @@ enum ScreenshotScene: String {
     case janken       // しれいじゃんけんのプレイ中
     case maze         // 迷路のプレイ中
     case whackAMole   // もぐらたたきのプレイ中
+    case pinball      // ピンボールのプレイ中
+    case coinDrop     // コインドロップのプレイ中
+    case shop         // シールやさん
+    case gacha        // ガチャ
+    case stickerDex   // シールじてん
+    case thanks       // ありがとう てちょう
 }
 
 // MARK: - ScreenshotMode
