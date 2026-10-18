@@ -85,7 +85,7 @@ struct GiftNoticeView: View {
 
     private var kcal: Double {
         switch notice {
-        case .updateThanks:                  return AppMigrationTuning.updateGift150
+        case .updateThanks:                  return AppMigration.pendingGiftKcal
         case .daily(.welcome):               return DailyBonusTuning.welcomeGift
         case .daily(.login(let kcal, _)):    return kcal
         }
@@ -128,7 +128,8 @@ struct GiftNoticeView: View {
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.textBody)
                     .multilineTextAlignment(.center)
-                if notice == .updateThanks {
+                // じゃんけんの記録を消したのは 1.5.0 の引っ越しだけなので、そのときだけ出す（AppMigration を参照）
+                if notice == .updateThanks && AppMigration.showsJankenResetNote {
                     Text("update_gift_janken_note")
                         .font(.system(size: 12, weight: .medium, design: .rounded))
                         .foregroundStyle(DS.muted)

@@ -30,6 +30,8 @@ import Foundation
 enum AppMigrationTuning {
     /// 1.5.0 に更新してくれた人へのプレゼント（kcal）。
     static let updateGift150: Double = 10_000   // ← 変更可
+    /// 1.6.0 に更新してくれた人へのプレゼント（kcal）。
+    static let updateGift160: Double = 10_000   // ← 変更可
 }
 
 // MARK: - AppMigration
@@ -62,8 +64,8 @@ enum AppMigration {
             for key in [UDKey.jankenBestTimeEasy, UDKey.jankenBestTimeHard, UDKey.jankenBestTimeChallenge] {
                 defaults.removeObject(forKey: key)
             }
-            EnergyStore.shared.grantGift(AppMigrationTuning.updateGift150)
-            defaults.set(true, forKey: UDKey.updateGiftPending)
+            defaults.set(true, forKey: Self.jankenNotePendingKey)   // お知らせのカードで、記録を消したことを伝える
+            grantUpdateGift(AppMigrationTuning.updateGift150)
         }
         // 新規インストールでも印は付ける（あとで同意しても、プレゼントの対象にしないため）
         defaults.set(true, forKey: UDKey.migration150Done)
@@ -72,6 +74,7 @@ enum AppMigration {
     // MARK: 1.6.0
 
     /// 1.6.0 への更新時の処理。
+    ///   ・エネルギーをプレゼントし、タイトル画面でお知らせを出す
     ///   ・プライバシーポリシーをもう一度確かめて、同意してもらう
     ///
     /// ★ もう一度同意してもらう理由 ★（ユーザーと決めた「A」）
@@ -81,7 +84,10 @@ enum AppMigration {
     private static func migrateTo160() {
         let defaults = UserDefaults.standard
         guard !defaults.bool(forKey: Self.migration160Done) else { return }
+        // ⚠️ 順番に注意: 同意の印を外す「前」に、更新した人かどうかを見分ける（冒頭の「見分け方」を参照）
         if defaults.bool(forKey: UDKey.hasAgreedToTerms) {
+            // お知らせのカードは、もう一度同意したあとのタイトル画面で出る（MakeTenContentView を参照）
+            grantUpdateGift(AppMigrationTuning.updateGift160)
             // AppSettings を通して外す（画面が読む値と UserDefaults の両方がそろうように）
             AppSettings.shared.hasAgreedToTerms = false
         }
@@ -91,7 +97,40 @@ enum AppMigration {
     /// 1.6.0 への更新時の処理を済ませたかの印（UserDefaults のキー）。
     private static let migration160Done = "migration_1_6_0_done"
 
+    // MARK: プレゼント
+
+    /// 更新してくれた人にエネルギーを渡し、タイトル画面でお知らせを出す予定にする。
+    ///
+    /// ★ 渡した量を足しておく理由 ★
+    ///   1.4 から 1.6 へ一気に更新した人は、1.5.0 と 1.6.0 の両方のプレゼントを同じ起動でもらう。
+    ///   お知らせのカードは1枚だけ出すので、カードに出す量を「まだ見せていない分の合計」にする。
+    private static func grantUpdateGift(_ kcal: Double) {
+        let defaults = UserDefaults.standard
+        EnergyStore.shared.grantGift(kcal)
+        defaults.set(defaults.double(forKey: Self.pendingGiftKcalKey) + kcal, forKey: Self.pendingGiftKcalKey)
+        defaults.set(true, forKey: UDKey.updateGiftPending)
+    }
+
+    /// まだお知らせしていないプレゼントの合計（kcal）。UserDefaults のキー。
+    private static let pendingGiftKcalKey = "updateGiftPendingKcal"
+
     // MARK: お知らせ
+
+    /// お知らせのカードに出すプレゼントの量（kcal）。
+    /// 1.5.x のときに受け取って、まだカードを見ていない人は合計が残っていないので、そのときは 1.5.0 の量を出す。
+    static var pendingGiftKcal: Double {
+        let total = UserDefaults.standard.double(forKey: pendingGiftKcalKey)
+        return total > 0 ? total : AppMigrationTuning.updateGift150
+    }
+
+    /// お知らせのカードに「しれいじゃんけんの記録をリセットした」の一文を出すか。
+    /// 1.5.0 の引っ越しで記録を消した人だけ。1.6.0 のプレゼントだけの人には出さない。
+    static var showsJankenResetNote: Bool {
+        UserDefaults.standard.bool(forKey: jankenNotePendingKey)
+    }
+
+    /// 「じゃんけんの記録を消した」とまだ伝えていない印（UserDefaults のキー）。
+    private static let jankenNotePendingKey = "updateGiftJankenNotePending"
 
     /// アップデートのプレゼントのお知らせを、まだ見せていないか。
     static var hasPendingGiftNotice: Bool {
@@ -101,5 +140,7 @@ enum AppMigration {
     /// お知らせを見せ終わったときに呼ぶ。次の起動からは出さない。
     static func markGiftNoticeShown() {
         UserDefaults.standard.removeObject(forKey: UDKey.updateGiftPending)
+        UserDefaults.standard.removeObject(forKey: pendingGiftKcalKey)
+        UserDefaults.standard.removeObject(forKey: jankenNotePendingKey)
     }
 }
