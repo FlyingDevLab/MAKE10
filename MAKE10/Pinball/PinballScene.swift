@@ -69,8 +69,8 @@ private enum Tuning {
 
     // ── ボール発射直後のゆっくりタイム ─────────────────────────
     // ★ 発射直後だけ重力を弱くしている理由 ★
-    //   ボールは左フリッパーのすぐ上（約46px）に出るため、普通の重力だと約0.3秒で着地し、
-    //   そのままフリッパーの先から転がり落ちてしまう。初めての子は構える前に1球目を失いやすい。
+    //   普通の重力のままだと、出たボールはすぐにフリッパーまで落ちてきて、
+    //   初めての子は構える前に1球目を失いやすい。
     //   出た直後だけ重力を弱くして「落ちる・転がる」をゆっくりにし、フリッパーを押す余裕をつくる。
     //   その後、少しずつ普通の重力に戻す（急に戻すとボールが急加速して驚かせてしまう）。
     /// 発射直後の重力の倍率（0.0〜1.0）。小さいほどゆっくり落ちる。
@@ -79,9 +79,15 @@ private enum Tuning {
     static let launchSlowHold:      TimeInterval = 1.5   // ← 変更可
     /// そこから普通の重力に戻すまでの時間（秒）。
     static let launchSlowRamp:      TimeInterval = 1.5   // ← 変更可
-    /// ボールを出す高さの上乗せ分 (px)。0 だと左フリッパーの面まで約46px、44 で約90px になる。
-    /// 高くするほど落ちてくるまでの時間が長くなり、構える余裕ができる。
-    static let launchExtraHeight:   CGFloat      = 44    // ← 変更可
+    /// ボールを出す場所（SpriteKit 座標。左下が原点）。← 変更可
+    /// 左のスリングショット（オレンジの三角）の左の通り道の、少し上に出す（ユーザーと決めた場所）。
+    /// ★ ここにした理由 ★
+    ///   左の壁（x=0）と三角の縦の壁（x=54.6、高さ 167〜216）のあいだは、ボール1個ぶんの通り道になっている。
+    ///   ここから出すと、通り道を落ちて斜めの壁を転がり、かならず左フリッパーの上に来る。
+    ///   以前の「左フリッパーのすぐ上」より転がる距離が長く、構える余裕ができる。
+    ///   x は通り道のまん中（ボールの半径 13 なので、左右に1px ずつのすき間）。
+    ///   y を高くしすぎると、通り道に入る前に三角の上に乗ってしまうので、三角の上の端（216）より少しだけ上にしている。
+    static let launchPosition:      CGPoint      = CGPoint(x: 27, y: 240)
 
     // ── ボール ────────────────────────────────────────────────
     /// ボール反発係数 (0=吸収 / 1=完全弾性)
@@ -92,8 +98,6 @@ private enum Tuning {
     static let ballDamping:     CGFloat = 0.05
 
     // ── 発射初速 ──────────────────────────────────────────────
-    /// 横方向の打ち出し速度 (px/s)。大きいほど斜めに飛ぶ
-    static let launchVX:        CGFloat = 5
     /// 上方向の打ち出し速度 (px/s)。gravity とセットで調整
     static let launchVY:        CGFloat = 10
 
@@ -164,6 +168,18 @@ private enum Tuning {
     // ── 速度上限 ──────────────────────────────────────────────
     /// ボール最高速度 (px/s)。バンパー連打での無限加速を防止
     static let maxSpeed:    CGFloat = 1200
+
+    // ── フリッパーボタン（左右の下の角に出す、押す場所の目印）──────
+    /// ボタンの半径 (px)。← 変更可（大きくすると目立つ。右下の残り回数「BALLS ●●●」に重ならない大きさにする）
+    static let buttonRadius:       CGFloat = 22
+    /// ボタンの中心の、下の端からの高さ (px)。← 変更可
+    static let buttonY:            CGFloat = 28
+    /// ボタンの中心の、左右の端からの距離 (px)。← 変更可
+    static let buttonInsetX:       CGFloat = 36
+    /// 押していないときの濃さ (0〜1)。← 変更可（薄めにして、盤面のじゃまにならないようにする）
+    static let buttonIdleAlpha:    CGFloat = 0.7
+    /// 押しているあいだの大きさ（1 = そのまま）。← 変更可（少し小さくして「沈んだ」ように見せる）
+    static let buttonPressedScale: CGFloat = 0.9
 }
 
 // MARK: - PinballScene
@@ -207,6 +223,9 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     private var ballsLabel:  SKLabelNode!
     /// 「マルチボール！」の表示（以前の「×2」表示を流用している）
     private var multiBallLabel: SKLabelNode!
+    /// 左右のフリッパーボタン（setupFlipperButtons を参照）
+    private var lButton = SKShapeNode()
+    private var rButton = SKShapeNode()
 
     // ── State ─────────────────────────────────────────────────
     private var internalScore = 0
@@ -278,6 +297,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         setupTargets()
         setupFlippers()
         setupHUD()
+        setupFlipperButtons()
         launchBall()
     }
 
@@ -613,6 +633,60 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         addChild(multiBallLabel)
     }
 
+    // MARK: - フリッパーボタン（押す場所の目印）
+
+    /// 左右の下の角に、丸いボタンの絵を置く。
+    ///
+    /// ★ ボタンを置く理由 ★
+    ///   このゲームは、画面の左半分・右半分のどこを押してもフリッパーが動く。
+    ///   ただ、何もないと小さい子には「どこを押せばいいか」が分からない。
+    ///   指を置きやすい下の角にボタンの絵を出し、押しているあいだは光らせて、
+    ///   「ここを押すと、こっちのフリッパーが動く」と分かるようにする。
+    ///
+    /// ★ ボタンは「絵」だけで、押せる場所は今までどおり ★
+    ///   ボタンの外を押しても、今までどおり左右の半分でフリッパーが動く（touchesBegan を参照）。
+    ///   ボタンの上だけで反応させると、ボタンを外したときに動かず、かえって遊びにくくなるため。
+    ///
+    /// 置き場所は、フリッパーの外側の斜めの壁より下の、ボールが来ない角（盤面の外）。
+    private func setupFlipperButtons() {
+        // ★ 指の絵は上向き（👆）。左のボタンだけ左右を反転させる理由 ★
+        //   👆 は右手の絵。左のボタンは左手で押すので、反転させて左手に見せる。
+        //   「左手で左、右手で右」と、どちらの手で押すかがひと目で分かる（ユーザーの要望）。
+        lButton = makeFlipperButton(emoji: "👆", isLeftHand: true,  x: Tuning.buttonInsetX)
+        rButton = makeFlipperButton(emoji: "👆", isLeftHand: false, x: CW - Tuning.buttonInsetX)
+        addChild(lButton)
+        addChild(rButton)
+        refreshButtonAppearance()
+    }
+
+    /// ボタン1つ分（光る丸と、まん中の指の絵文字）を作る。
+    private func makeFlipperButton(emoji: String, isLeftHand: Bool, x: CGFloat) -> SKShapeNode {
+        let button = SKShapeNode(circleOfRadius: Tuning.buttonRadius)
+        button.position    = CGPoint(x: x, y: Tuning.buttonY)
+        button.fillColor   = SKColor(red: 0.0, green: 0.9, blue: 1.0, alpha: 0.18)   // フリッパーのシアングローと同じ色
+        button.strokeColor = SKColor(red: 0.0, green: 0.9, blue: 1.0, alpha: 0.9)
+        button.lineWidth   = 2
+        button.zPosition   = 5
+
+        let label = SKLabelNode(text: emoji)
+        label.fontSize                = Tuning.buttonRadius * 1.1
+        label.verticalAlignmentMode   = .center
+        label.horizontalAlignmentMode = .center
+        if isLeftHand { label.xScale = -1 }   // 左右を反転して左手にする（上の解説を参照）
+        button.addChild(label)
+        return button
+    }
+
+    /// 押しているほうのボタンを光らせて沈ませ、離したら元に戻す。
+    private func refreshButtonAppearance() {
+        for (button, pressed) in [(lButton, lFlipRaised), (rButton, rFlipRaised)] {
+            button.alpha     = pressed ? 1 : Tuning.buttonIdleAlpha
+            button.setScale(pressed ? Tuning.buttonPressedScale : 1)
+            button.glowWidth = pressed ? 6 : 0
+            button.fillColor = SKColor(red: 0.0, green: 0.9, blue: 1.0, alpha: pressed ? 0.45 : 0.18)
+        }
+    }
+
     /// 残機ドット（●○）を現在の残数に合わせて更新する。
     private func refreshBallsHUD(ballsLeft: Int) {
         var s = ""
@@ -623,21 +697,18 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     // MARK: - ボールの発射
 
     /// 残り回数を1つ使って、新しいボールを出す（ゲーム開始時・全部のボールが落ちた後）。
-    /// 左フリッパーの上から出し、出た直後はゆっくりタイムにする。
+    /// 左のスリングショットの左の通り道から出し、出た直後はゆっくりタイムにする。
     func launchBall() {
         removeAllBalls()
 
         // ── 発射位置 ──────────────────────────────────────────
-        // FY = フリッパーピボットY。BR*4 上に配置してフリッパーと干渉しないようにし、
-        // さらに launchExtraHeight だけ高くして、落ちてくるまでの時間を稼ぐ（Tuning を参照）
-        let position = CGPoint(x: LPX + 20, y: FY + BR * 4 + Tuning.launchExtraHeight)  // ← 左フリッパー上(LPX+20)
+        // 場所は Tuning.launchPosition（左のスリングショットの左）。理由はその定義のコメントを参照
+        let position = Tuning.launchPosition
 
         // ── 発射初速 ──────────────────────────────────────────
-        // SpriteKit は Y 上向き正。dx で左右の振り分け、dy で上方向の打ち出し。
-        // 初速は Tuning.launchVX / launchVY で調整する。重力（Tuning.gravity）と
-        // セットでバランスを取ること（詳細は Tuning の定義コメント参照）。
-        let vx: CGFloat = Bool.random() ? Tuning.launchVX : -Tuning.launchVX
-        spawnBall(at: position, velocity: CGVector(dx: vx, dy: Tuning.launchVY))
+        // SpriteKit は Y 上向き正。dy で上方向の打ち出し。重力（Tuning.gravity）とセットで調整する。
+        // 細い通り道から出すので、横には飛ばさずまっすぐ（dx = 0）。横に動くと三角の上に乗ってしまうため
+        spawnBall(at: position, velocity: CGVector(dx: 0, dy: Tuning.launchVY))
 
         // ── ゆっくりタイムの開始 ──────────────────────────────
         // 重力を弱くしておき、update で少しずつ普通の強さに戻す（updateLaunchGravity を参照）
@@ -1022,6 +1093,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
     private func refreshFlipperState() {
         lFlipRaised = touchSides.values.contains(true)
         rFlipRaised = touchSides.values.contains(false)
+        refreshButtonAppearance()
     }
 
     // MARK: - リセット
@@ -1032,6 +1104,7 @@ final class PinballScene: SKScene, SKPhysicsContactDelegate {
         scoreLabel.text = "0"
         touchSides.removeAll()
         lFlipRaised = false; rFlipRaised = false
+        refreshButtonAppearance()
         // ターゲット・バンパーを初期状態に
         for i in 0..<targetStates.count { activateTarget(at: i) }
         for i in 0..<bumperFlash.count  { bumperFlash[i] = 0; updateBumperAppearance(at: i) }

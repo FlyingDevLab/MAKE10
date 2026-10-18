@@ -46,7 +46,12 @@ struct PinballView: View {
             }
         }
         .animation(.easeInOut(duration: 0.3), value: viewModel.gameState)
-        .onDisappear { scene?.isPaused = true }   // 画面を離れたら物理を一時停止
+        .onDisappear {
+            scene?.isPaused = true          // 画面を離れたら物理を一時停止
+            viewModel.isOnScreen = false    // 離れたあとに終了の音を鳴らさない（PinballViewModel.endGame を参照）
+        }
+        // 撮影モード（ScreenshotMode.swift を参照）: すぐにゲームを始める
+        .onAppear { if ScreenshotMode.scene == .pinball { viewModel.startGame() } }
     }
 }
 

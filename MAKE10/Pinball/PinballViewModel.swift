@@ -37,6 +37,8 @@ final class PinballViewModel {
     var ballsLeft:   Int       = 3
     /// 今回のプレイで自己ベストを更新したか
     var isNewRecord: Bool      = false
+    /// ピンボールの画面を開いているか。画面を離れたら false（PinballView の onDisappear で切り替える）。
+    var isOnScreen:  Bool      = true
 
     /// 歴代最高スコア。ScoreBoard 経由で読み取る。
     var highScore: Int { ScoreBoard.highScore(for: UDKey.pinballHighScore) }
@@ -90,6 +92,12 @@ final class PinballViewModel {
         let corrects = Double(score) / Double(EnergyRewards.pinballPointsPerCorrect)   // 500点 = 0.5
         EnergyStore.shared.grantClearBonus(corrects * EnergyRewards.pinballBonusRate)
         GameDailyBonus.shared.claim(.pinball)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
+
+        // ★ 画面を離れていたら、音と画面の切り替えはしない ★
+        //   最後のボールが落ちてから終了処理までの少しのあいだ（0.7秒）に「＜」で戻ると、
+        //   タイトル画面に戻ったあとでゲームオーバーの音が鳴ってしまっていた。
+        //   記録とエネルギーは遊んだ分なので、上で保存・付与したまま残す。
+        guard isOnScreen else { return }
 
         // 新記録ならアンロック風の祝福音、そうでなければ通常のゲームオーバー音
         // （Scene 側で鳴らす ballDrain 音の余韻の後に、結果を告げる音として重ねる）
