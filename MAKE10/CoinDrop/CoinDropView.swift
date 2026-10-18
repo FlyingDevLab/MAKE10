@@ -57,6 +57,8 @@ struct CoinDropView: View {
         .animation(.easeInOut(duration: 0.3), value: viewModel.gameState)
         // 画面を離れた（タイトルに戻るなど）ときにシーンを一時停止してCPU負荷を下げる
         .onDisappear { scene?.isPaused = true }
+        // 撮影モード（ScreenshotMode.swift を参照）: すぐにゲームを始める
+        .onAppear { if ScreenshotMode.scene == .coinDrop { viewModel.startGame() } }
     }
 }
 
@@ -214,87 +216,49 @@ private struct CDPlayingView: View {
     /// 盤面に敷く白い台紙の濃さ（0.0〜1.0）。← 変更可
     private let fieldPaperOpacity: Double = 0.45
 
+    /// 上の得点表示（スコア・つぎ・タイム）の高さ (pt)。盤面の大きさを決めるのに使う。← 変更可
+    private let hudHeight: CGFloat = 64
+    /// 得点表示と盤面のすき間 (pt)。← 変更可
+    private let hudSpacing: CGFloat = 6
+
     // ★ 盤面の枠を、盤面と同じ縦横比にしている理由 ★
     //   scaleMode = .aspectFit は、縦横比を保ったまま盤面を枠に収める。枠の形が盤面と違うと、
     //   余った左右（または上下）の隙間を SpriteKit が黒く塗ってしまう。
-    //   枠そのものを盤面と同じ縦横比（.aspectRatio）にしておけば隙間ができず、
-    //   盤面の外にはいつもの背景（かべがみ）が見える。HUD も同じ枠の中に置くので、盤面の幅にそろう。
+    //   枠そのものを盤面と同じ縦横比にしておけば隙間ができず、盤面の外にはいつもの背景（かべがみ）が見える。
+    //
+    // ★ 得点表示を盤面の「上」に置く理由 ★
+    //   以前は得点表示を盤面の上に重ねていたので、落とす前のコイン（盤面の一番上に出る）と
+    //   赤い点線（ここを超えると終わり）の上半分が隠れて、見えにくかった。
+    //   盤面の上に並べれば重ならない。ゲームの中身（コインの出る高さ・点線の高さ）は変えていない。
+    //   得点表示の幅は、盤面の幅にそろえる。
     var body: some View {
-        // ZStack で SpriteKit 画面と HUD を重ねる
-        // alignment: .top → HUD を画面上部に固定する
-        ZStack(alignment: .top) {
+        GeometryReader { geo in
+            // 得点表示とすき間を除いた場所に、盤面を縦横比を保って収める
+            let boardHeight = max(1, min(geo.size.height - hudHeight - hudSpacing,
+                                         geo.size.width * Self.sceneSize.height / Self.sceneSize.width))
+            let boardWidth  = boardHeight * Self.sceneSize.width / Self.sceneSize.height
 
-            // ── SpriteKit フィールド（全画面）────────────────
-            GeometryReader { _ in
+            VStack(spacing: hudSpacing) {
+                // ── HUD（スコア・残り時間・次のコイン）────────────
+                hud
+                    .frame(width: boardWidth, height: hudHeight)
+
+                // ── SpriteKit フィールド ────────────────
                 // SpriteView は SpriteKit の SKScene を SwiftUI に埋め込むコンポーネント
                 // scene ?? ... は scene が nil のときのフォールバック（通常は onAppear で設定済み）
                 SpriteView(
                     scene: scene ?? CoinDropScene(size: Self.sceneSize),
                     options: [.allowsTransparency]  // 背景透過を許可（DS.bg がそのまま見える）
                 )
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .ignoresSafeArea()  // ノッチ・Dynamic Island 領域まで広げる
+                .frame(width: boardWidth, height: boardHeight)
+                // ★ 盤面にうすい台紙を敷く理由 ★
+                //   左右の壁は当たり判定だけで、目に見える線がない。盤面の外が背景と同じだと、どこまでが盤面か分からない。
+                //   盤面にうすい白を重ねて範囲を見せる。かべがみのときは tintFill が下にいつもの背景色を敷くので、
+                //   コインが絵にまぎれない（tintFill の解説は DesignSystem.swift を参照）。
+                .background(Rectangle().tintFill(DS.card.opacity(fieldPaperOpacity)))
             }
-
-            // ── HUD（スコア・残り時間・次のコイン）────────────
-            // SpriteKit の上に SwiftUI ビューを重ねることで、
-            // 物理演算はそのままにUIだけ Swift らしく書ける
-            VStack(spacing: 8) {
-                HStack {
-
-                    // スコア（左）
-                    VStack(alignment: .leading, spacing: 0) {
-                        Text("SCORE")
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                        Text("$\(viewModel.score)")
-                            .font(.system(size: 30, weight: .black, design: .rounded))
-                            .foregroundStyle(DS.primary)
-                    }
-
-                    Spacer()
-
-                    // 次に落ちてくるコインのプレビュー（中央）
-                    HStack(spacing: 6) {
-                        Text("NEXT")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                        CoinChip(type: viewModel.nextCoin, size: 30)
-                    }
-
-                    Spacer()
-
-                    // 残り時間（右）
-                    VStack(alignment: .trailing, spacing: 0) {
-                        Text("TIME")
-                            .font(.system(size: 10, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                        Text("\(viewModel.displaySeconds)")
-                            .font(.system(size: 30, weight: .black, design: .rounded))
-                            // 残り10秒以下になったら警告色（赤）に切り替える
-                            .foregroundStyle(viewModel.displaySeconds <= 10 ? DS.gaugeWarn : DS.textPrimary)
-                            .monospacedDigit()  // 数字が変わっても幅が変わらない等幅フォントにする
-                    }
-                }
-                .padding(.horizontal, 18)
-                .padding(.vertical, 10)
-                .background(
-                    // 半透明の角丸カードでHUDを浮かせる
-                    RoundedRectangle(cornerRadius: DS.sectionRadius)
-                        .fill(DS.card.opacity(0.92))
-                        .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
-                )
-                .padding(.horizontal, 16)
-                .padding(.top, 6)
-            }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)  // 余った場所の真ん中に置く
         }
-        .aspectRatio(Self.sceneSize, contentMode: .fit)   // 盤面と同じ縦横比の枠にする（上の解説を参照）
-        // ★ 盤面にうすい台紙を敷く理由 ★
-        //   左右の壁は当たり判定だけで、目に見える線がない。盤面の外が背景と同じだと、どこまでが盤面か分からない。
-        //   盤面にうすい白を重ねて範囲を見せる。かべがみのときは tintFill が下にいつもの背景色を敷くので、
-        //   コインが絵にまぎれない（tintFill の解説は DesignSystem.swift を参照）。
-        .background(Rectangle().tintFill(DS.card.opacity(fieldPaperOpacity)))
-        .frame(maxWidth: .infinity, maxHeight: .infinity)  // 余った場所の真ん中に置く
         // ビューが画面に表示された瞬間に呼ばれる
         .onAppear {
             if let existing = scene {
@@ -324,6 +288,55 @@ private struct CDPlayingView: View {
                 DispatchQueue.main.async { newScene.resetGame() }
             }
         }
+    }
+
+    /// 上の得点表示（スコア・次のコイン・残り時間）。
+    /// SpriteKit の上に SwiftUI ビューを置くことで、物理演算はそのままに UI だけ Swift らしく書ける。
+    private var hud: some View {
+        HStack {
+
+            // スコア（左）
+            VStack(alignment: .leading, spacing: 0) {
+                Text("SCORE")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text("$\(viewModel.score)")
+                    .font(.system(size: 30, weight: .black, design: .rounded))
+                    .foregroundStyle(DS.primary)
+            }
+
+            Spacer()
+
+            // 次に落ちてくるコインのプレビュー（中央）
+            HStack(spacing: 6) {
+                Text("NEXT")
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                CoinChip(type: viewModel.nextCoin, size: 30)
+            }
+
+            Spacer()
+
+            // 残り時間（右）
+            VStack(alignment: .trailing, spacing: 0) {
+                Text("TIME")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text("\(viewModel.displaySeconds)")
+                    .font(.system(size: 30, weight: .black, design: .rounded))
+                    // 残り10秒以下になったら警告色（赤）に切り替える
+                    .foregroundStyle(viewModel.displaySeconds <= 10 ? DS.gaugeWarn : DS.textPrimary)
+                    .monospacedDigit()  // 数字が変わっても幅が変わらない等幅フォントにする
+            }
+        }
+        .padding(.horizontal, 18)
+        .padding(.vertical, 10)
+        .background(
+            // 半透明の角丸カードでHUDを浮かせる
+            RoundedRectangle(cornerRadius: DS.sectionRadius)
+                .fill(DS.card.opacity(0.92))
+                .shadow(color: .black.opacity(0.06), radius: 8, x: 0, y: 3)
+        )
     }
 }
 
