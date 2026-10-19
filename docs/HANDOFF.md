@@ -23,14 +23,15 @@
 - **v1.6.0 は審査を通過した**（2026-10-19）。**2026-11-01 にリリース**される予定。
   - 作業ブランチ `feature/v1.6.0-resizable` を main にマージ済み。
   - アプリ名は「キッズゲームコレクション by 空飛ぶ研究室」（英語: Kids Games by Flying Dev Lab。各言語は `appstore/1.6.0/`）。
+- CloudKit のスキーマ（記録の型 `AppData`、項目 `modifiedAt`・`payload`・`payloadAsset`）は 2026-10-19 に Production へデプロイ済み。
+  記録の型や項目を増やしたときは、リリース前に CloudKit Console の「Deploy Schema Changes…」で Production へ送ること。
 - タグ: `v1.5.0`（`a60c3ba`）と `v1.6.0`（審査通過の時点）を付けて、GitHub にもプッシュ済み。
 - Web 版プライバシーポリシー（iCloud 対応・敬語）は公開済み: https://flyingdevlab.com/privacy-policy/make10（`flyingdevlab.public` の `67bb997`。原本は `docs/privacy_policy_v1.6.0_make10.html`）。
 - 作業ツリーの `AppStoreScreenshots/` は未追跡のまま置いている（スクリーンショットとヘッダー画像の作り方は、その中の README.md）。
 
 ## 次にやること
 
-1. **CloudKit**: スキーマを Production にデプロイ済みか確かめる（していないと配信後のアプリで iCloud 同期が動かない）。
-2. **リリース後の様子見**: iCloud の2択（端末と iCloud の両方に記録があるとき）や、アップデートのお礼のカードで問い合わせがないか。
+1. **リリース後の様子見**: iCloud の2択（端末と iCloud の両方に記録があるとき）や、アップデートのお礼のカードで問い合わせがないか。
 
 将来の構想（まだ作らない）:
 - クッキーづくりゲーム（実時間で冷やす・焼く、妖精を雇う自動化）。
