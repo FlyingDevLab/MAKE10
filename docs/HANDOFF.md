@@ -24,15 +24,14 @@
   - 作業ブランチ `feature/v1.6.0-resizable` を main にマージ済み。
   - アプリ名は「キッズゲームコレクション by 空飛ぶ研究室」（英語: Kids Games by Flying Dev Lab。各言語は `appstore/1.6.0/`）。
 - v1.5.0 も main に入っている（タグはまだ付けていない）。
+- Web 版プライバシーポリシー（iCloud 対応・敬語）は公開済み: https://flyingdevlab.com/privacy-policy/make10（`flyingdevlab.public` の `67bb997`。原本は `docs/privacy_policy_v1.6.0_make10.html`）。
 - 作業ツリーの `AppStoreScreenshots/` は未追跡のまま置いている（スクリーンショットとヘッダー画像の作り方は、その中の README.md）。
 
 ## 次にやること
 
-1. **Web 版プライバシーポリシーの公開**: `flyingdevlab.public/privacy-policy/make10.html`（iCloud 対応・敬語）は、まだコミット・プッシュしていない。
-   v1.6.0 のリリース（11月1日）までに公開する。原本は `docs/privacy_policy_v1.6.0_make10.html`。
-2. **タグ**: リリースしたら main に `v1.6.0` のタグを付ける（v1.5.0 のタグも付けていない）。
-3. **CloudKit**: スキーマを Production にデプロイ済みか確かめる（していないと配信後のアプリで iCloud 同期が動かない）。
-4. **リリース後の様子見**: iCloud の2択（端末と iCloud の両方に記録があるとき）や、アップデートのお礼のカードで問い合わせがないか。
+1. **タグ**: リリースしたら main に `v1.6.0` のタグを付ける（v1.5.0 のタグも付けていない）。
+2. **CloudKit**: スキーマを Production にデプロイ済みか確かめる（していないと配信後のアプリで iCloud 同期が動かない）。
+3. **リリース後の様子見**: iCloud の2択（端末と iCloud の両方に記録があるとき）や、アップデートのお礼のカードで問い合わせがないか。
 
 将来の構想（まだ作らない）:
 - クッキーづくりゲーム（実時間で冷やす・焼く、妖精を雇う自動化）。
