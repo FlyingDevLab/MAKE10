@@ -90,7 +90,8 @@ See [LICENSE](LICENSE) for details.
 
 ### Privacy Policy
 
-[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+This app: [flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
+Developer: [flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
 
 ### App Store
 
@@ -181,7 +182,8 @@ MITライセンス — このコードは自由に使ってください。
 
 ### プライバシーポリシー
 
-[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+このアプリ：[flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
+開発者：[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
 
 ### App Store
 
