@@ -1,8 +1,10 @@
-# MAKE10
+# Kids Games by Flying Dev Lab
 
-**Kids Game Collection** — safe, offline, and ad-free.
+*旧名 MAKE10 - Kids Game Collection*
 
-**English** | [日本語](#日本語)
+**Kids Games by Flying Dev Lab** — safe, offline, and ad-free.
+
+**English** | [日本語](#キッズゲームコレクション-by-空飛ぶ研究室)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Platform](https://img.shields.io/badge/Platform-iOS-blue.svg)]()
@@ -14,7 +16,7 @@
 
 ### Overview
 
-**MAKE10** is a free multi-game collection for children — safe, offline, and ad-free.
+**Kids Games by Flying Dev Lab** is a free multi-game collection for children — safe, offline, and ad-free.
 
 Included games:
 - **MAKE10** — tap number cards to make sums of 10
@@ -50,7 +52,7 @@ You can read every line of code to verify that this app:
 
 We believe parents and caregivers deserve to see exactly what a children's app does under the hood.
 
-And openness here is not only for parents. It is for fellow developers who want a reference, for learners who want to read real production code — and for ourselves. By publishing everything we can about MAKE10, we make sure we never stray from the path we promised to walk.
+And openness here is not only for parents. It is for fellow developers who want a reference, for learners who want to read real production code — and for ourselves. By publishing everything we can about this app, we make sure we never stray from the path we promised to walk.
 
 ### Learning from This Code
 
@@ -66,7 +68,7 @@ Age ratings are not a disclaimer. We never stop thinking about the children who 
 Every decision we make is guided by one question: **does this protect the child?**  
 If it doesn't, we don't do it. No exceptions. Money will never come before the safety of a child.
 
-[Read our full pledge →](https://flyingdevlab.com/pledge.html)
+[Read our full pledge →](https://flyingdevlab.com/pledge)
 
 ### Requirements
 
@@ -88,11 +90,12 @@ See [LICENSE](LICENSE) for details.
 
 ### Privacy Policy
 
-[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+This app: [flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
+Developer: [flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy)
 
 ### App Store
 
-Published as **"Kids Game Collection"**:  
+Published as **"Kids Games by Flying Dev Lab"**:  
 [Download on the App Store](https://apps.apple.com/app/id6760253962)
 
 ### Developer
@@ -101,11 +104,11 @@ Published as **"Kids Game Collection"**:
 
 ---
 
-## 日本語
+## キッズゲームコレクション by 空飛ぶ研究室
 
 ### 概要
 
-**MAKE10**は、こども向けの無料マルチゲームコレクションです。安心・オフライン・広告なし。
+**キッズゲームコレクション by 空飛ぶ研究室**は、こども向けの無料マルチゲームコレクションです。安心・オフライン・広告なし。
 
 収録ゲーム：
 - **MAKE10** — 数字カードをタップして合計10をつくろう
@@ -141,7 +144,7 @@ Published as **"Kids Game Collection"**:
 
 子ども向けアプリが内部で何をしているか、保護者の方が確認できるべきだと考えています。
 
-そして、この公開は保護者の方のためだけではありません。参考にしたい開発者のため、実際のコードで学びたい学習者のため——そして私たち自身のためでもあります。MAKE10に関して公開できるすべてを公開することで、自分たちが約束した道を踏み外さないようにしています。
+そして、この公開は保護者の方のためだけではありません。参考にしたい開発者のため、実際のコードで学びたい学習者のため——そして私たち自身のためでもあります。このアプリに関して公開できるすべてを公開することで、自分たちが約束した道を踏み外さないようにしています。
 
 ### このコードで学ぶ
 
@@ -157,7 +160,7 @@ Published as **"Kids Game Collection"**:
 すべての判断において問い続けること：**これはこどもを守っているか？**  
 守れないなら、やらない。例外なし。こどもの安全より利益を優先することは、絶対にありません。
 
-[誓いの全文を読む →](https://flyingdevlab.com/pledge.html)
+[誓いの全文を読む →](https://flyingdevlab.com/pledge)
 
 ### 動作環境
 
@@ -179,11 +182,12 @@ MITライセンス — このコードは自由に使ってください。
 
 ### プライバシーポリシー
 
-[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+このアプリ：[flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
+開発者：[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy)
 
 ### App Store
 
-App Storeでは **「MAKE10 - Kids Game Collection」** として公開しています：  
+App Storeでは **「キッズゲームコレクション by 空飛ぶ研究室」** として公開しています：  
 [App Storeでダウンロード](https://apps.apple.com/app/id6760253962)
 
 ### 開発者

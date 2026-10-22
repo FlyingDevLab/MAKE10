@@ -9,7 +9,7 @@ def q(query):
     url='https://query.wikidata.org/sparql?'+urllib.parse.urlencode({'query':query,'format':'json'})
     for attempt in range(4):
         try:
-            req=urllib.request.Request(url,headers={'User-Agent':'MAKE10-quiz-data/1.0 (REDACTED_EMAIL)','Accept':'application/sparql-results+json'})
+            req=urllib.request.Request(url,headers={'User-Agent':'MAKE10-quiz-data/1.0 (https://flyingdevlab.com)','Accept':'application/sparql-results+json'})
             return json.load(urllib.request.urlopen(req,timeout=120))['results']['bindings']
         except Exception as e:
             print('retry',e); time.sleep(5*(attempt+1))
