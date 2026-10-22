@@ -68,7 +68,7 @@ Age ratings are not a disclaimer. We never stop thinking about the children who 
 Every decision we make is guided by one question: **does this protect the child?**  
 If it doesn't, we don't do it. No exceptions. Money will never come before the safety of a child.
 
-[Read our full pledge →](https://flyingdevlab.com/pledge.html)
+[Read our full pledge →](https://flyingdevlab.com/pledge)
 
 ### Requirements
 
@@ -91,7 +91,7 @@ See [LICENSE](LICENSE) for details.
 ### Privacy Policy
 
 This app: [flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
-Developer: [flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+Developer: [flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy)
 
 ### App Store
 
@@ -160,7 +160,7 @@ Published as **"Kids Games by Flying Dev Lab"**:
 すべての判断において問い続けること：**これはこどもを守っているか？**  
 守れないなら、やらない。例外なし。こどもの安全より利益を優先することは、絶対にありません。
 
-[誓いの全文を読む →](https://flyingdevlab.com/pledge.html)
+[誓いの全文を読む →](https://flyingdevlab.com/pledge)
 
 ### 動作環境
 
@@ -183,7 +183,7 @@ MITライセンス — このコードは自由に使ってください。
 ### プライバシーポリシー
 
 このアプリ：[flyingdevlab.com/privacy-policy/make10](https://flyingdevlab.com/privacy-policy/make10)  
-開発者：[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy.html)
+開発者：[flyingdevlab.com/privacy-policy](https://flyingdevlab.com/privacy-policy)
 
 ### App Store
 
