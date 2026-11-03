@@ -198,6 +198,7 @@ final class TenPuzzleViewModel {
         elapsedBeforePause = 0
         activeSince        = Date()
         sessionGeneration += 1
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
         phase              = .playing
         loadNextProblem()
     }

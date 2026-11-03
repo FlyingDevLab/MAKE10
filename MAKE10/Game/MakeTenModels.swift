@@ -113,6 +113,11 @@ enum UDKey {
     static let tenPuzzleBestTimeA     = "tenpuzzle_best_time_a"         // テンパズル：ふつうのクリアタイムベスト（秒）
     static let tenPuzzleBestTimeB     = "tenpuzzle_best_time_b"         // テンパズル：むずかしいのクリアタイムベスト（秒）
     static let tenPuzzleBestTimeC     = "tenpuzzle_best_time_c"         // テンパズル：チャレンジのクリアタイムベスト（秒）
+    static let riverCrossingBestWolf   = "river_best_wolf"              // 川わたり：おおかみと やぎと キャベツの最少回数
+    static let riverCrossingBestWeight = "river_best_weight"            // 川わたり：おとなと こどもの最少回数
+    static let riverCrossingBestPairs  = "river_best_pairs"             // 川わたり：3くみの おやこの最少回数
+    static let riverCrossingBestRaft   = "river_best_raft"              // 川わたり：8にんの いかだの最少回数
+    static let riverCrossingLastStage  = "river_last_stage"             // 川わたり：最後に選んだステージ（端末の中だけ）
 }
 
 // MARK: - Reaction

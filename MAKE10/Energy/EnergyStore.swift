@@ -137,6 +137,11 @@ enum EnergyRewards {
     /// 四則テンパズルで、ヒントなしで20問（満点）続けて正解したときのボーナス（kcal）。
     /// tenPuzzleStreakBonus10 に足すのではなく、これに置きかわる。
     static let tenPuzzleStreakBonus20: Double = 2_000  // ← 変更可
+
+    /// 川わたり。わたりきったときだけ、クリアボーナス = そのステージの最短の回数 × この倍率。
+    /// 最短の回数（7 / 9 / 11 / 17）がそのまま難しさの重みになる。最短で渡れたら perfectBonus を上乗せ。
+    /// 渡るたびには増やさない（戻す と わたる をくり返すだけで増やせてしまうため）。
+    static let riverCrossingBonusRate: Double = 10   // ← 変更可
 }
 
 // MARK: - EnergyStore

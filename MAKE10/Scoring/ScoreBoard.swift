@@ -65,6 +65,11 @@ enum ScoreBoard {
         UDKey.tenPuzzleBestTimeA,
         UDKey.tenPuzzleBestTimeB,
         UDKey.tenPuzzleBestTimeC,
+        // ── RiverCrossing ─────────────────────────
+        UDKey.riverCrossingBestWolf,
+        UDKey.riverCrossingBestWeight,
+        UDKey.riverCrossingBestPairs,
+        UDKey.riverCrossingBestRaft,
     ]
 
     // MARK: Int 型スコア（Pinball / CoinDrop / Maze / Blitz / TenPuzzle の連続正解）
@@ -113,7 +118,7 @@ enum ScoreBoard {
         return true
     }
 
-    /// ベストタイム（速いほどよい記録）のキー。iCloud で合わせるときに「小さいほう」を残すために使う。
+    /// 小さいほどよい記録（ベストタイム・最少回数）のキー。iCloud で合わせるときに「小さいほう」を残すために使う。
     static let timeKeys: Set<String> = [
         UDKey.jankenBestTimeEasy,
         UDKey.jankenBestTimeHard,
@@ -121,7 +126,28 @@ enum ScoreBoard {
         UDKey.tenPuzzleBestTimeA,
         UDKey.tenPuzzleBestTimeB,
         UDKey.tenPuzzleBestTimeC,
+        UDKey.riverCrossingBestWolf,
+        UDKey.riverCrossingBestWeight,
+        UDKey.riverCrossingBestPairs,
+        UDKey.riverCrossingBestRaft,
     ]
+
+    // MARK: Int 型の最少回数（RiverCrossing）
+    //
+    // ★ ベストタイムと同じしくみに乗せている理由 ★
+    //   「小さいほどよい」「0 は記録なし」という性質がベストタイムとまったく同じなので、
+    //   保存も iCloud での合わせ方（timeKeys）も同じものを使う。値は Double で入るが、回数なので Int で返す。
+
+    /// 指定キーの最少回数を返す。未記録の場合は nil。
+    static func fewestMoves(for key: String) -> Int? {
+        bestTime(for: key).map { Int($0.rounded()) }
+    }
+
+    /// moves が過去の最少（または未記録）より少なければ保存して true を返す。
+    @discardableResult
+    static func saveIfFewer(moves: Int, for key: String) -> Bool {
+        saveIfFaster(time: TimeInterval(moves), for: key)
+    }
 
     // MARK: リセット
 

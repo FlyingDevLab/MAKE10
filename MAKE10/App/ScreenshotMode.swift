@@ -31,6 +31,7 @@ enum ScreenshotScene: String {
     case title        // タイトル画面（ゲーム一覧）
     case make10       // MAKE10 の30びょうモードのプレイ中
     case tenPuzzle    // テンパズルで式を組み立てたところ
+    case river        // 川わたり（おおかみと やぎと キャベツ）で、やぎを舟に乗せたところ
     case memory       // どうぶつめくり 5×5（まん中にロゴ）で、何組かそろえたところ
     case quiz         // 絵文字クイズ（ヨーロッパの国旗）で正解したところ
     case sticker      // シール帳であそぶ画面

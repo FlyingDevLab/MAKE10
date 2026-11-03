@@ -47,6 +47,7 @@ private enum Screen {
     case coinDrop
     case janken
     case tenPuzzle
+    case riverCrossing
     case memory
     case stickerStorage
     case stickerDex
@@ -142,6 +143,10 @@ struct MakeTenContentView: View {
                 case .tenPuzzle:
                     TenPuzzleView()
                         .portraitFramed()
+                        .transition(.opacity)
+                case .riverCrossing:
+                    RiverCrossingView()
+                        .portraitFramed()   // 岸を上下に積む縦長の盤（RiverCrossingView 冒頭を参照）
                         .transition(.opacity)
                 case .memory:
                     MemoryGameView()
@@ -332,7 +337,7 @@ struct MakeTenContentView: View {
     /// 縦のみで遊ぶ画面かどうか。盤面が縦長の前提で作られているゲームだけ true を返す。
     private var isPortraitOnlyScreen: Bool {
         switch screen {
-        case .pinball, .coinDrop, .tenPuzzle:
+        case .pinball, .coinDrop, .tenPuzzle, .riverCrossing:
             return true
         case .make10, .quizHome, .quizPlaying, .whackAMole, .maze, .janken, .memory,
              .stickerStorage, .stickerDex, .stickerShop, .gacha, .thanksNotebook:
@@ -366,6 +371,7 @@ struct MakeTenContentView: View {
         case .coinDrop:            return String(localized: "coindrop_title")
         case .janken:              return String(localized: "janken_title")
         case .tenPuzzle:           return String(localized: "tenpuzzle_title")
+        case .riverCrossing:       return String(localized: "river_title")
         case .memory:              return String(localized: "memory_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         case .stickerDex:          return String(localized: "sticker_dex_title")
@@ -396,7 +402,7 @@ struct MakeTenContentView: View {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerDex,
+             .janken, .tenPuzzle, .riverCrossing, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
@@ -415,7 +421,7 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .memory, .stickerStorage, .stickerDex,
+             .janken, .tenPuzzle, .riverCrossing, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:                       return nil
         }
     }
@@ -438,6 +444,7 @@ struct MakeTenContentView: View {
         case .coinDrop:            return "coinDrop"
         case .janken:              return "janken"
         case .tenPuzzle:           return "tenPuzzle"
+        case .riverCrossing:       return "riverCrossing"
         case .memory:              return "memory"
         case .stickerStorage:      return "stickerStorage"
         case .stickerDex:          return "stickerDex"
@@ -458,6 +465,7 @@ struct MakeTenContentView: View {
         case .title:      break
         case .make10:     viewModel.startGame(mode: .normal)
         case .tenPuzzle:  screen = .tenPuzzle
+        case .river:      screen = .riverCrossing
         case .memory:     screen = .memory
         case .sticker:    screen = .stickerStorage
         case .janken:     screen = .janken
@@ -507,6 +515,7 @@ struct MakeTenContentView: View {
                         case .coinDrop:       screen = .coinDrop
                         case .janken:         screen = .janken
                         case .tenPuzzle:      screen = .tenPuzzle
+                        case .riverCrossing:  screen = .riverCrossing
                         case .memory:         screen = .memory
                         case .stickerStorage: screen = .stickerStorage
                         case .stickerDex:     screen = .stickerDex
