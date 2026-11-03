@@ -12,10 +12,11 @@
 // ★ このファイルの構成 ★
 //   TenPuzzleProblem    … 1問分のデータ（数字・解数・ヒント・難易度）
 //   TenPuzzleDifficulty … 難易度の4段階（easy / normal / hard / impossible）
-//   TenPuzzleMode       … ゲームモード（modeA / modeB / modeC）
+//   TenPuzzleMode       … ゲームモード（modeA / modeB / modeC）と、出題数・スコアの決まり
 //   ExprToken           … 式を構成するトークン（数字・演算子・括弧）
 //   TenPuzzleJudgment   … 式の判定結果（正解・不正解・構文エラーなど）
 //   TenPuzzleDatabase   … JSONから問題を読み込むデータベース（遅延ロード）
+//   TenPuzzleProblemSupplier … モードに合った問題を1問ずつ出す
 //   TenPuzzleValidator  … トークン配列を評価して判定結果を返す
 //   ExprParser          … 再帰下降法による四則演算パーサー
 
@@ -48,12 +49,16 @@ enum TenPuzzleDifficulty: String, Codable {
 // MARK: - ゲームモード
 
 /// プレイヤーが選ぶ3つのゲームモード。
-/// モードAは解ける問題のみ、モードBはヒントあり、
-/// モードCは難問と不可能問題が混在するチャレンジ。
+/// 出題範囲は難易度コード（easy / normal / hard / impossible）とは別に、
+/// 「＋ − だけで作れるか」で分けている（TenPuzzleDatabase.canMakeWithPlusMinus を参照）。
+///
+/// ★ rawValue（modeA など）を変えない理由 ★
+///   ベスト記録のキー（UDKey.tenPuzzleBestStreakA など）がモードと対応しているため。
+///   画面に出す名前は title で変えられる。
 enum TenPuzzleMode: String, CaseIterable {
-    case modeA  // かんたん / ふつう問題のみ
-    case modeB  // むずかしい問題のみ、ヒントあり
-    case modeC  // チャレンジ：難問 + 不可能問題が混在
+    case modeA  // ふつう：＋ − だけで作れる問題（175問）
+    case modeB  // むずかしい：10を作れる問題すべて（552問）
+    case modeC  // チャレンジ：＋ − では作れない問題（377問）＋ 作れない問題（163問）
 
     var icon: String {
         switch self {
@@ -70,7 +75,7 @@ enum TenPuzzleMode: String, CaseIterable {
     ///   リテラルを直接返す形にすることで自動抽出の対象になる。
     var title: LocalizedStringKey {
         switch self {
-        case .modeA: return "かんたん / ふつう"
+        case .modeA: return "ふつう"
         case .modeB: return "むずかしい"
         case .modeC: return "チャレンジ"
         }
@@ -81,9 +86,30 @@ enum TenPuzzleMode: String, CaseIterable {
     // ★ LocalizedStringKey を返す理由は title と同じ（このファイル冒頭のコメント参照）★
     var subtitle: LocalizedStringKey {
         switch self {
-        case .modeA: return "10を作れる問題だけ。\nヒントを使いながら自分のペースで。"
-        case .modeB: return "解が少ない難問。\nわからなければヒントを見よう。"
-        case .modeC: return "難問 + 作れない問題が混在。\n「作れない！」と見破れたら正解。"
+        case .modeA: return "＋と−だけで作れる問題。\nまずはここから。"
+        case .modeB: return "どの問題も10を作れる。\n×と÷も使ってみよう。"
+        case .modeC: return "＋と−では作れない問題に、作れない問題もまざる。\n見やぶったら「作れない！」。"
+        }
+    }
+
+    /// 作れない問題がまざるか（「作れない！」ボタンを出すか）
+    var allowsImpossible: Bool { self == .modeC }
+
+    /// 連続正解のベストを保存するキー
+    var bestStreakKey: String {
+        switch self {
+        case .modeA: return UDKey.tenPuzzleBestStreakA
+        case .modeB: return UDKey.tenPuzzleBestStreakB
+        case .modeC: return UDKey.tenPuzzleBestStreakC
+        }
+    }
+
+    /// クリアタイムのベストを保存するキー
+    var bestTimeKey: String {
+        switch self {
+        case .modeA: return UDKey.tenPuzzleBestTimeA
+        case .modeB: return UDKey.tenPuzzleBestTimeB
+        case .modeC: return UDKey.tenPuzzleBestTimeC
         }
     }
 
@@ -95,8 +121,46 @@ enum TenPuzzleMode: String, CaseIterable {
         }
     }
 
-    /// 1セッションあたりの出題数
-    static let problemsPerSession: Int = 10
+    // ★ 出題数とスコアの決まり ★
+    //   スコアは「ヒントを使わずに続けて正解した数」。ヒントを使った時点で止まり、
+    //   以後は正解しても増えない。まちがえた（10にならなかった）だけでは止まらない。
+    //   ヒントを使っても minQuestions 問目までは必ず遊べる。
+    //   その時点でまだヒントを使っていなければ、maxQuestions 問目まで続く。
+    //
+    //   上限が無いと、ふつうは「＋側と−側に分けて差が10になる組を探す」コツが
+    //   分かればほぼ全問解けてしまい、記録が実力ではなく根気の記録になる。
+    //   上限を置くと maxQuestions 点が満点になり、ふつうを取り切ったら
+    //   むずかしいへ、という3モードの階段がはじめて機能する。
+    //
+    // ★ 満点とクリアタイム ★
+    //   maxQuestions 問すべてをヒントなしで正解すると「クリア」。
+    //   不正解では問題が進まないので、あきらめずに粘れば必ず満点になる。
+    //   満点は誰でも同じ点なので、クリアしたときは所要タイムを記録にする。
+    //   プレイ中は時間を見せない。画面に時計があると、計測のつもりでも
+    //   制限時間と同じ焦りを生むため。
+    //   （Web 版 flyingdevlab.com/kids/ten-puzzle/ と同じルール）
+
+    /// ヒントを使っても必ず遊べる問題数
+    static let minQuestions: Int = 10   // ← 変更可
+    /// ヒントを使わなければ続けられる問題数（＝満点）
+    static let maxQuestions: Int = 20   // ← 変更可
+
+    /// 「作れない！」を外したときにクリアタイムへ足す秒数。
+    ///
+    /// ★ なぜ代償が必要か ★
+    ///   外しても問題が進まないので、代償が無いと「まず押して、作れると分かってから解を探す」
+    ///   のが最適手になり、チャレンジの山場（解が無いと確信するまで探す判断）が消えてしまう。
+    ///   タイムにだけ効かせるので、記録を狙わない子には何も起きない（スコアも減らない）。
+    ///   足すのは1問につき1回だけ。ダブルタップや連打で倍にしないため。
+    ///   こたえあわせの不正解には代償を付けない。式が10にならないのは作りかけの試行で、
+    ///   「作れない！」は結論の宣言だから。
+    ///   ※ 秒数を変えたら、メッセージ「この問題は作れるよ（タイム +1分）」と
+    ///     ホーム画面のルール説明も直すこと。
+    static let impossibleMissPenalty: TimeInterval = 60
+
+    /// チャレンジで10問ごとに混ぜる「作れない問題」の数。
+    /// 毎回ちょうど同じ数だと、数えれば最後の数問が読めてしまうので幅を持たせる。
+    static let impossiblePer10: ClosedRange<Int> = 2...4
 }
 
 // MARK: - 式トークン
@@ -146,13 +210,16 @@ struct ExprToken: Identifiable {
 
 // MARK: - 判定結果
 
-/// 式を評価したときの4種類の結果。
+/// 式の判定や「作れない！」宣言の結果。
 /// Viewはこれをもとにフィードバックの色と文言を切り替える。
 enum TenPuzzleJudgment: Equatable {
-    case correct              // ✅ 式の値が10になった
-    case wrongAnswer          // ❌ 式は正しいが10にならない
+    case correct              // ✅ 式の値が10になった（または「作れない！」が当たった）
+    case wrongAnswer          // ❌ 式は正しいが10にならない（÷0 もここ）
     case notAllDigitsUsed     // ⚠️ 4つの数字を全部使っていない
     case syntaxError          // ⚠️ 式が不完全または構文エラー
+    /// ❌ 「作れない！」と宣言したが、実は作れる問題だった。
+    /// penalized はこの宣言でクリアタイムに秒数を足したか（1問につき1回目だけ true）。
+    case actuallySolvable(penalized: Bool)
 
     /// フィードバック表示用の色
     var color: Color {
@@ -167,6 +234,9 @@ enum TenPuzzleJudgment: Equatable {
         case .wrongAnswer:      return "ちがう…"
         case .notAllDigitsUsed: return "4つ全部使おう"
         case .syntaxError:      return "式が不完全だよ"
+        // 2回目以降は何も足さないので、秒数も出さない
+        case .actuallySolvable(let penalized):
+            return penalized ? "この問題は作れるよ（タイム +1分）" : "この問題は作れるよ"
         }
     }
 }
@@ -195,28 +265,35 @@ enum TenPuzzleDatabase {
         return loaded
     }
 
-    static var easyPool:       [TenPuzzleProblem] { all.filter { $0.difficulty == .easy       } }
-    static var normalPool:     [TenPuzzleProblem] { all.filter { $0.difficulty == .normal     } }
-    static var hardPool:       [TenPuzzleProblem] { all.filter { $0.difficulty == .hard       } }
-    static var impossiblePool: [TenPuzzleProblem] { all.filter { $0.difficulty == .impossible } }
+    /// 10を作れる問題（552問）
+    static var solvablePool:   [TenPuzzleProblem] { all.filter { $0.solutionCount > 0 } }
+    /// 10を作れない問題（163問）
+    static var impossiblePool: [TenPuzzleProblem] { all.filter { $0.solutionCount == 0 } }
 
-    /// モードに応じた出題プールをシャッフルして返す。
-    /// モードCは難問と不可能問題を半々に混ぜる。
-    static func pool(for mode: TenPuzzleMode) -> [TenPuzzleProblem] {
+    /// モードの「作れる問題」の出題範囲。
+    static func solvablePool(for mode: TenPuzzleMode) -> [TenPuzzleProblem] {
         switch mode {
-        case .modeA:
-            // かんたん(403問) + ふつう(102問)をシャッフル
-            return (easyPool + normalPool).shuffled()
-        case .modeB:
-            // むずかしい(47問)のみ
-            return hardPool.shuffled()
-        case .modeC:
-            // 難問 n/2 問 + 不可能問題 n/2 問をシャッフルして混ぜる
-            let half  = TenPuzzleMode.problemsPerSession / 2
-            let hard  = Array(hardPool.shuffled().prefix(half))
-            let impos = Array(impossiblePool.shuffled().prefix(half))
-            return (hard + impos).shuffled()
+        case .modeA: return solvablePool.filter {  canMakeWithPlusMinus($0.digits) }  // 175問
+        case .modeB: return solvablePool                                               // 552問
+        case .modeC: return solvablePool.filter { !canMakeWithPlusMinus($0.digits) }  // 377問
         }
+    }
+
+    /// ＋ と − だけで10を作れるか調べる。
+    ///
+    /// 単項マイナスは使えないので、先頭に来る数字は必ず＋側になる。
+    /// 括弧で 9−(3−4) のように書いても 9−3＋4 と同じなので、
+    /// 結局「4つの数字を＋側と−側に分けて、差が10になるか」を見ればよい。
+    /// ＋側が空（全部マイナス）の分け方は、先頭に置ける数字が無いので除く（mask は 1 から）。
+    static func canMakeWithPlusMinus(_ digits: [Int]) -> Bool {
+        for mask in 1..<(1 << digits.count) {
+            var sum = 0
+            for (i, d) in digits.enumerated() {
+                sum += (mask & (1 << i)) != 0 ? d : -d
+            }
+            if sum == 10 { return true }
+        }
+        return false
     }
 
     // MARK: JSON読み込み
@@ -250,6 +327,50 @@ enum TenPuzzleDatabase {
     }
 }
 
+// MARK: - 出題係
+
+/// モードに合った問題を1問ずつ出す。
+///
+/// ★ 袋（bag）方式にしている理由 ★
+///   毎回ランダムに1問選ぶと、同じ問題が続けて出ることがある。
+///   範囲の全問をシャッフルして袋に入れ、1問ずつ引いて、空になったら混ぜ直して補充する。
+///   ふつうは175問あるので、1回（最大20問）の中で同じ問題は出ない。
+///
+/// ★ チャレンジの「作れない問題」の混ぜ方 ★
+///   10問を1区切りにして、その中に作れない問題を 2〜4 問ちらばらせる。
+///   1問ごとに確率で決めると、0問の回や7問の回が出てしまい、割合が安定しないため。
+struct TenPuzzleProblemSupplier {
+
+    private let solvable:   [TenPuzzleProblem]
+    private let impossible: [TenPuzzleProblem]
+    private var solvableBag:   [TenPuzzleProblem] = []
+    private var impossibleBag: [TenPuzzleProblem] = []
+    private var schedule:      [Bool]             = []   // true = 作れない問題を出す
+
+    init(mode: TenPuzzleMode) {
+        solvable   = TenPuzzleDatabase.solvablePool(for: mode)
+        impossible = mode.allowsImpossible ? TenPuzzleDatabase.impossiblePool : []
+    }
+
+    /// 次の1問。問題データが読めなかったときだけ nil。
+    mutating func next() -> TenPuzzleProblem? {
+        guard !impossible.isEmpty else { return Self.draw(&solvableBag, from: solvable) }
+
+        if schedule.isEmpty {
+            let count = Int.random(in: TenPuzzleMode.impossiblePer10)
+            schedule = (0..<10).map { $0 < count }.shuffled()
+        }
+        return schedule.removeLast()
+            ? Self.draw(&impossibleBag, from: impossible)
+            : Self.draw(&solvableBag,   from: solvable)
+    }
+
+    private static func draw(_ bag: inout [TenPuzzleProblem], from pool: [TenPuzzleProblem]) -> TenPuzzleProblem? {
+        if bag.isEmpty { bag = pool.shuffled() }
+        return bag.popLast()
+    }
+}
+
 // MARK: - 式の判定器
 
 /// トークン配列と問題の数字を受け取り、判定結果を返す純粋関数の集まり。
@@ -277,12 +398,18 @@ enum TenPuzzleValidator {
         }
 
         // ── 結果判定（浮動小数点の誤差を考慮して1e-9以内を正解とする）──
+        // ÷0 の結果（無限大・NaN）は 10 との差が 1e-9 未満にならないので、ここで不正解になる
         return abs(result - 10.0) < 1e-9 ? .correct : .wrongAnswer
     }
 
     /// トークン配列を評価用の式文字列に変換する。
     /// 表示用の記号（× ÷ −）を計算用記号（* / -）に置き換える。
     private static func buildExprString(_ tokens: [ExprToken]) -> String {
+        evalSymbols(tokens).joined()
+    }
+
+    /// トークン配列を、計算用の記号1つずつの配列にする。
+    private static func evalSymbols(_ tokens: [ExprToken]) -> [String] {
         tokens.map { token -> String in
             switch token.type {
             case .digit(let v, _): return "\(v)"
@@ -295,21 +422,56 @@ enum TenPuzzleValidator {
                 }
             case .paren(let s): return s
             }
-        }.joined()
+        }
     }
 
-    /// 入力途中の式を部分評価する。構文が成立していれば現在の値を返し、不完全なら nil を返す。
+    /// 組み立て途中の式を、いま計算できるところまで計算する。
     /// ExpressionDisplay の「途中計算表示」に使用する（全数字を使い切っていなくてもよい）。
+    ///
+    /// 入力の途中では「3 + 4 ×」や「(3 + 4」のように式が閉じていない。
+    /// 末尾の記号と開き括弧はまだ書きかけなので外し、閉じていない括弧は
+    /// 補って計算する。たとえば「(3 + 4 ×」は「(3 + 4)」として 7 を返す。
+    /// 補っても式にならない形は nil。÷0 を含むと無限大か NaN を返す（呼び出し側で isFinite を見る）。
     static func partialEvaluate(tokens: [ExprToken]) -> Double? {
-        guard !tokens.isEmpty else { return nil }
-        return ExprParser.evaluate(buildExprString(tokens))
+        var symbols = evalSymbols(tokens)
+        while let last = symbols.last, ["+", "-", "*", "/", "("].contains(last) { symbols.removeLast() }
+        guard !symbols.isEmpty else { return nil }
+
+        var open = 0
+        for s in symbols {
+            if s == "(" { open += 1 }
+            if s == ")" { open -= 1 }
+            if open < 0 { return nil }   // 閉じ括弧が多すぎる
+        }
+        symbols += Array(repeating: ")", count: open)
+
+        return ExprParser.evaluate(symbols.joined())
+    }
+
+    /// 計算結果を表示用の文字列にする。割り切れないときは分数で出す。
+    ///
+    /// 0.333 と出すより 1/3 の方が、こどもにも次の一手が考えやすい。
+    /// 1桁の数字4つと四則演算で作れる分母は 9×9×9 = 729 までなので、
+    /// 1000 までの分母を試せば必ず見つかる。
+    static func formatValue(_ value: Double) -> String {
+        let sign = value < 0 ? "−" : ""   // 表示に合わせて U+2212 を使う
+        let absValue = abs(value)
+        for den in 1...1000 {
+            let num = (absValue * Double(den)).rounded()
+            if abs(absValue * Double(den) - num) < 1e-9 {
+                return sign + (den == 1 ? "\(Int(num))" : "\(Int(num))/\(den)")
+            }
+        }
+        return sign + String(format: "%.3f", absValue)   // ここには来ない想定の保険
     }
 }
 
 // MARK: - 式パーサー（再帰下降法）
 
 /// 文字列の四則演算式を評価して Double を返す内部パーサー。
-/// ÷0・構文エラーは nil を返す（クラッシュしない）。
+/// 構文エラーは nil を返す（クラッシュしない）。
+/// ÷0 は構文としては正しいので nil にせず、無限大（0÷0 は NaN）をそのまま返す。
+/// 「式が不完全」ではなく「10にならない」「0では割れない」と伝えるため。
 ///
 /// ★ 再帰下降法とは？ ★
 ///   文法のルールをそのまま関数に落とし込む方式。
@@ -319,7 +481,11 @@ enum TenPuzzleValidator {
 ///   文法ルール（BNF記法）:
 ///     expression := term (('+' | '-') term)*
 ///     term       := factor (('*' | '/') factor)*
-///     factor     := '-' factor | '(' expression ')' | number
+///     factor     := '(' expression ')' | number
+///
+/// ★ 単項マイナス（-3 のような書き方）には対応していません ★
+///   4つの数字と二項演算だけで10を作るゲームなので要らないうえ、
+///   使えると「＋ − だけで作れる問題」（ふつう）の分け方が成り立たなくなるため。
 private struct ExprParser {
 
     let tokens: [String]  // tokenize() で分割済みのトークン列
@@ -385,27 +551,16 @@ private struct ExprParser {
         while pos < tokens.count, tokens[pos] == "*" || tokens[pos] == "/" {
             let op = tokens[pos]; pos += 1
             guard let right = parseFactor() else { return nil }
-            if op == "/" {
-                guard right != 0 else { return nil }  // ÷0 は無効（nilを返す）
-                left /= right
-            } else {
-                left *= right
-            }
+            // ÷0 は無限大（0÷0 は NaN）になる。10 にはならないので不正解として流れる
+            left = op == "/" ? left / right : left * right
         }
         return left
     }
 
-    // factor := '-' factor | '(' expression ')' | number
-    // 単項マイナス・括弧・数値リテラルを処理する
+    // factor := '(' expression ')' | number
+    // 括弧・数値リテラルを処理する
     mutating func parseFactor() -> Double? {
         guard pos < tokens.count else { return nil }
-
-        // 単項マイナス（例: -5）
-        if tokens[pos] == "-" {
-            pos += 1
-            guard let v = parseFactor() else { return nil }
-            return -v
-        }
 
         // 括弧（例: (1+2)）
         if tokens[pos] == "(" {

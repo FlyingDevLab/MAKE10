@@ -126,13 +126,17 @@ enum EnergyRewards {
     }
 
     /// 四則テンパズル（難易度の予想: いちばんむずかしい。大人向け）。
-    /// クリアボーナス = ヒントを見ずに正解した数 × モードごとの倍率。ヒントなしで全問正解なら tenPuzzlePerfectBonus。
+    /// クリアボーナス = スコア（ヒントを使わずに続けて正解した数）× モードごとの倍率
+    ///                + スコアが10に届いたら tenPuzzleStreakBonus10、20（満点）なら tenPuzzleStreakBonus20。
     /// 保護者が挑戦してエネルギーを貯める場として、ほかのゲームより大きくしている。
-    static let tenPuzzleBonusRateA: Double = 20   // ← 変更可（かんたん / ふつう）
+    static let tenPuzzleBonusRateA: Double = 20   // ← 変更可（ふつう）
     static let tenPuzzleBonusRateB: Double = 50   // ← 変更可（むずかしい）
     static let tenPuzzleBonusRateC: Double = 100  // ← 変更可（チャレンジ）
-    /// 四則テンパズルの全問正解ボーナス（kcal）。ほかのゲームの perfectBonus より大きい。
-    static let tenPuzzlePerfectBonus: Double = 1_000  // ← 変更可
+    /// 四則テンパズルで、ヒントなしで10問続けて正解したときのボーナス（kcal）。
+    static let tenPuzzleStreakBonus10: Double = 1_000  // ← 変更可
+    /// 四則テンパズルで、ヒントなしで20問（満点）続けて正解したときのボーナス（kcal）。
+    /// tenPuzzleStreakBonus10 に足すのではなく、これに置きかわる。
+    static let tenPuzzleStreakBonus20: Double = 2_000  // ← 変更可
 }
 
 // MARK: - EnergyStore

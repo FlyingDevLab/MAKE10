@@ -11,10 +11,11 @@
 //   - ゲームフェーズの管理（home → playing → result）
 //   - 式トークンの追加・削除・リセット
 //     ※ 数字の直後に数字を置けない（12のような結合を防ぐ）
-//   - 式の提出と判定
-//   - ヒント表示（全モード共通）：答えをバナー表示、プレイヤーは引き続き回答
-//   - 「作れない！」宣言（モードCのみ）
-//   - セッション記録（正解数・ヒント使用数など）
+//   - 式の提出と判定（不正解なら同じ問題にもう一度。式は消さない）
+//   - ヒント表示（全モード共通）：答えをバナー表示。使うとスコアがそこで止まる
+//   - 「作れない！」宣言（チャレンジのみ）：外すとクリアタイムに1分足す
+//   - スコア・出題数・クリアタイムの管理と、ベスト記録の保存
+//   ルールの考え方は TenPuzzleMode の「出題数とスコアの決まり」を参照。
 
 import SwiftUI
 import Combine
@@ -34,25 +35,24 @@ enum TenPuzzleProblemState: Equatable {
     case solving   // 回答中（式を組み立て中）
     case correct   // 正解フィードバック表示中（次の問題に自動で移行）
     case wrong     // 不正解フィードバック表示中（同じ問題に再挑戦）
-    case declared  // 「作れない！」宣言後・不正解（モードC：解を表示してから次へ）
 }
 
 // MARK: - セッション記録
 
+/// 1回のプレイの結果。結果画面はこれだけを見て描く。
 struct TenPuzzleSessionRecord {
-    var mode:       TenPuzzleMode = .modeA
-    var correct:    Int           = 0  // 正解数（ヒント使用分を含む）
-    var hintUsed:   Int           = 0  // ヒントを見て正解した数
-    var impossible: Int           = 0  // 「作れない！」で正解した数（モードCのみ）
-    var total:      Int           = TenPuzzleMode.problemsPerSession
+    var mode:          TenPuzzleMode = .modeA
+    var score:         Int           = 0      // ヒントを使わずに続けて正解した数
+    var questionCount: Int           = 0      // 遊んだ問題数
+    var hintUsed:      Int           = 0      // ヒントを使った問題の数
+    var impossible:    Int           = 0      // 「作れない！」で正解した数（チャレンジのみ）
+    var penalty:       TimeInterval  = 0      // 「作れない！」を外して足された秒数
+    /// クリアタイム（秒。ペナルティ込み）。満点で終わったときだけ入る。
+    var clearTime:     TimeInterval? = nil
+    /// 今回でベスト記録（クリアならタイム、そうでなければ連続正解）を更新したか
+    var isNewBest:     Bool          = false
 
-    /// ヒントなしで自力で正解した数
-    var selfSolved: Int { correct - hintUsed - impossible }
-    /// ヒントを見ずに正解した数（「作れない」の宣言も含む）。エネルギーはこの数だけで計算する。
-    /// ★ ヒントを使った正解を数えない理由 ★
-    ///   ヒントには解き方がそのまま出るので、写せば誰でも正解できてしまう。
-    ///   大きなボーナスを付けているゲームなので、自分の力で解いた問題だけを数える。
-    var noHintCorrect: Int { correct - hintUsed }
+    var isCleared: Bool { clearTime != nil }
 }
 
 // MARK: - ViewModel
@@ -63,7 +63,7 @@ final class TenPuzzleViewModel {
     private enum C {
         static let correctFeedback: Double = 1.0   // 正解フィードバック表示時間（秒）← 変更可
         static let wrongFeedback:   Double = 0.8   // 不正解フィードバック表示時間（秒）← 変更可
-        static let declaredDisplay: Double = 3.5   // 宣言不正解時の解表示時間（秒）← 変更可
+        static let declaredDisplay: Double = 1.6   // 「作れない！」を外したときのメッセージ表示時間（秒）← 変更可
     }
 
     // MARK: ゲームフェーズ・モード
@@ -73,11 +73,20 @@ final class TenPuzzleViewModel {
 
     // MARK: 問題管理
 
-    var pool:           [TenPuzzleProblem] = []
-    var problemIndex:   Int                = 0
+    private var supplier = TenPuzzleProblemSupplier(mode: .modeA)
     var currentProblem: TenPuzzleProblem?
 
-    var problemNumber: Int { min(problemIndex + 1, TenPuzzleMode.problemsPerSession) }
+    /// 何問目か（1始まり。出題した時点で増える）
+    private(set) var problemNumber: Int = 0
+
+    /// 進行表示（n / 総数）の分母。「この先いくつ遊べるか」をそのまま出す。
+    ///   ノーヒントで続いている … maxQuestions 問目まで遊べる
+    ///   ヒントを使った         … minQuestions 問目までは遊べる。それを越えていたら今の問題が最後
+    /// 分母を maxQuestions に固定していると、11問目で「11 / 20」と出した直後に
+    /// ヒントを使った人がその問題で終わってしまい、打ち切られたように見える。
+    var problemTotal: Int {
+        streakActive ? TenPuzzleMode.maxQuestions : max(TenPuzzleMode.minQuestions, problemNumber)
+    }
 
     // MARK: 式の状態
 
@@ -85,18 +94,25 @@ final class TenPuzzleViewModel {
     var usedSlots:    Set<Int>              = []
     var problemState: TenPuzzleProblemState = .solving
     var lastJudgment: TenPuzzleJudgment?    = nil
-    /// 「作れない！」宣言が不正解だったときに表示する解の文字列
-    var shownHint:    String?               = nil
+
+    // MARK: スコア
+
+    /// ヒントを使わずに続けて正解した数
+    private(set) var score: Int = 0
+    /// まだヒントを使っていないか（false になると加点が止まり、出題も minQuestions 問目で終わる）
+    private(set) var streakActive: Bool = true
 
     // MARK: ヒント
     //
     // ★ ヒントの設計方針 ★
     //   ヒントボタンを押すと答えをバナー表示するが、問題は自動で進まない。
     //   プレイヤーは答えを見ながら自分でトークンを組み立てて提出する。
-    //   ヒントを見て正解した問題は record.hintUsed にカウントされる。
+    //   初めて使ったときにスコアが止まる（その問題も加点されない）。
 
-    /// ヒントボタンを押したかどうか
+    /// 今の問題でヒントボタンを押したかどうか
     var hintShown: Bool = false
+    /// このヒントでスコアが止まったか（バナーに「スコアは N で止まります」を出す）
+    private(set) var hintStoppedScore: Bool = false
 
     /// ヒントバナーに表示する内容。
     /// 解ける問題なら解の例（式そのものなので翻訳不要）、
@@ -125,59 +141,82 @@ final class TenPuzzleViewModel {
 
     // MARK: 途中計算
 
-    /// 現在の式の途中計算値。式が評価できれば値を返し、不完全なら nil。
+    /// 現在の式の途中計算値。計算できる形でなければ nil。
+    /// ÷0 を含むと無限大か NaN になる（View が「0では割れない」と出す）。
     var liveValue: Double? {
         guard !tokens.isEmpty, problemState == .solving else { return nil }
         return TenPuzzleValidator.partialEvaluate(tokens: tokens)
     }
 
-    // MARK: スコア・記録
+    // MARK: 記録
 
     var record = TenPuzzleSessionRecord()
+
+    /// 今の問題で「作れない！」を外したか（ペナルティは1問につき1回だけ）
+    private var missDeclared = false
+
+    // ★ クリアタイムの計り方 ★
+    //   画面には時計を出さないが、裏で経過時間を足していく。
+    //   アプリが裏に回っている間は数えない（電話やおやつで中断しても損をしないように）。
+    private var elapsedBeforePause: TimeInterval = 0
+    private var activeSince:        Date?        = nil
+
+    private var elapsed: TimeInterval {
+        elapsedBeforePause + (activeSince.map { Date().timeIntervalSince($0) } ?? 0)
+    }
 
     // MARK: セッション世代番号（asyncAfter の競合防止）
     private var sessionGeneration: Int = 0
 
+    // MARK: - ベスト記録（ホーム・結果画面用）
+
+    /// 連続正解のベスト（未記録は0）
+    func bestStreak(for mode: TenPuzzleMode) -> Int {
+        ScoreBoard.highScore(for: mode.bestStreakKey)
+    }
+
+    /// クリアタイムのベスト（未クリアは nil）
+    func bestTime(for mode: TenPuzzleMode) -> TimeInterval? {
+        ScoreBoard.bestTime(for: mode.bestTimeKey)
+    }
+
+    /// 秒を m:ss の形にする。1/100 秒まで出すと競技的になりすぎるので秒までにしている。
+    static func formatTime(_ seconds: TimeInterval) -> String {
+        let total = Int(seconds.rounded())
+        return String(format: "%d:%02d", total / 60, total % 60)
+    }
+
     // MARK: - ゲーム開始
 
     func startSession(mode: TenPuzzleMode) {
-        selectedMode      = mode
-        pool              = TenPuzzleDatabase.pool(for: mode)
-        problemIndex      = 0
-        record            = TenPuzzleSessionRecord(mode: mode)
+        selectedMode       = mode
+        supplier           = TenPuzzleProblemSupplier(mode: mode)
+        problemNumber      = 0
+        score              = 0
+        streakActive       = true
+        record             = TenPuzzleSessionRecord(mode: mode)
+        elapsedBeforePause = 0
+        activeSince        = Date()
         sessionGeneration += 1
-        phase             = .playing
-        loadCurrentProblem()
+        phase              = .playing
+        loadNextProblem()
     }
 
-    private func loadCurrentProblem() {
-        let n = TenPuzzleMode.problemsPerSession
-        guard problemIndex < n && problemIndex < pool.count else {
-            // クリアボーナス = 正解の数 × モードごとの倍率。全問正解ならさらに上乗せする。
-            // リザルト画面でまとめて増える演出を見せる
-            let bonusRate: Double = {
-                switch selectedMode {
-                case .modeA: return EnergyRewards.tenPuzzleBonusRateA
-                case .modeB: return EnergyRewards.tenPuzzleBonusRateB
-                case .modeC: return EnergyRewards.tenPuzzleBonusRateC
-                }
-            }()
-            // ヒントを使った正解は数えない（noHintCorrect の解説を参照）
-            var bonus = Double(record.noHintCorrect) * bonusRate
-            if record.noHintCorrect == record.total { bonus += EnergyRewards.tenPuzzlePerfectBonus }
-            EnergyStore.shared.grantClearBonus(bonus)
-            GameDailyBonus.shared.claim(.tenPuzzle)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
-            withAnimation(.easeInOut(duration: 0.3)) { phase = .result }
+    private func loadNextProblem() {
+        guard let problem = supplier.next() else {
+            // 問題データが読めなかったとき（通常は起きない）。何も出せないのでホームへ戻す
+            phase = .home
             return
         }
-
-        currentProblem = pool[problemIndex]
-        tokens         = []
-        usedSlots      = []
-        problemState   = .solving
-        lastJudgment   = nil
-        shownHint      = nil
-        hintShown      = false  // 毎問リセット
+        problemNumber   += 1
+        currentProblem   = problem
+        tokens           = []
+        usedSlots        = []
+        problemState     = .solving
+        lastJudgment     = nil
+        hintShown        = false  // 毎問リセット
+        hintStoppedScore = false
+        missDeclared     = false
     }
 
     // MARK: - 式の操作
@@ -221,13 +260,9 @@ final class TenPuzzleViewModel {
 
     func resetExpression() {
         guard problemState == .solving else { return }
-        clearExpression()
-        SoundManager.shared.playTap()
-    }
-
-    private func clearExpression() {
         tokens    = []
         usedSlots = []
+        SoundManager.shared.playTap()
     }
 
     // MARK: - 提出
@@ -241,37 +276,11 @@ final class TenPuzzleViewModel {
         SoundManager.shared.vibrate()
 
         if judgment == .correct {
-            record.correct += 1
-            // ヒントを見て正解した場合は hintUsed にカウント
-            if hintShown { record.hintUsed += 1 }
-            problemState = .correct
-            SoundManager.shared.playCorrect()
-            // ヒントを見ずに正解したときだけエネルギーを +1（noHintCorrect の解説を参照）
-            if !hintShown { EnergyStore.shared.earn(EnergyRewards.perCorrect) }
-            scheduleNextProblem(after: C.correctFeedback)
-
-        } else if judgment == .wrongAnswer {
-            problemState = .wrong
-            SoundManager.shared.playWrong()
-            let gen = sessionGeneration
-            DispatchQueue.main.asyncAfter(deadline: .now() + C.wrongFeedback) { [weak self] in
-                guard let self, self.sessionGeneration == gen else { return }
-                withAnimation { self.problemState = .solving }
-                self.clearExpression()
-            }
-
+            finishProblem()
         } else {
-            // 構文エラー / 数字不足
-            problemState = .wrong
-            SoundManager.shared.playWrong()
-            let gen = sessionGeneration
-            DispatchQueue.main.asyncAfter(deadline: .now() + C.wrongFeedback * 0.7) { [weak self] in
-                guard let self, self.sessionGeneration == gen else { return }
-                withAnimation { self.problemState = .solving }
-                if !self.tokens.isEmpty, !self.tokens.last!.isDigit {
-                    self.tokens.removeLast()
-                }
-            }
+            // 不正解でも問題は進めない。式も消さないので、少し直してまた出せる
+            // （途中の計算結果は式の横にすでに出ている）。
+            showWrongFeedback(for: judgment == .wrongAnswer ? C.wrongFeedback : C.wrongFeedback * 0.7)
         }
     }
 
@@ -284,60 +293,144 @@ final class TenPuzzleViewModel {
         guard problemState == .solving else { return }
         guard !hintShown else { return }  // 2回押し防止
         hintShown = true
+        record.hintUsed += 1
+        if streakActive {
+            // ここでスコアが止まる。分母（problemTotal）もこの時点で変わる
+            streakActive     = false
+            hintStoppedScore = true
+        }
         SoundManager.shared.playTap()
-        // hintUsed のカウントは正解時に行う（押しただけでは増えない）
     }
 
-    // MARK: - 「作れない！」宣言（モードCのみ）
+    // MARK: - 「作れない！」宣言（チャレンジのみ）
 
     func declareImpossible() {
-        guard selectedMode == .modeC else { return }
+        guard selectedMode.allowsImpossible else { return }
         guard problemState == .solving else { return }
         guard let problem = currentProblem else { return }
 
         SoundManager.shared.vibrate()
 
-        let isActuallyImpossible = (problem.difficulty == .impossible)
-
-        if isActuallyImpossible {
-            record.correct    += 1
+        if problem.solutionCount == 0 {
             record.impossible += 1
-            if hintShown { record.hintUsed += 1 }  // ヒントを見てから宣言した場合
-            lastJudgment       = .correct
-            problemState       = .correct
-            SoundManager.shared.playCorrect()
-            if !hintShown { EnergyStore.shared.earn(EnergyRewards.perCorrect) }
-            scheduleNextProblem(after: C.correctFeedback)
+            lastJudgment = .correct
+            finishProblem()
         } else {
-            // 不正解：実は作れる問題だった → 解を表示してから次へ
-            shownHint    = problem.example
-            lastJudgment = .wrongAnswer
-            problemState = .declared
-            SoundManager.shared.playWrong()
-            scheduleNextProblem(after: C.declaredDisplay)
+            // 外れ。問題は進めないしスコアも減らないが、クリアタイムには足す。
+            // 同じ問題で何度押しても足すのは1回だけ（誤タップで倍にしないため）。
+            let penalized = !missDeclared
+            if penalized {
+                missDeclared    = true
+                record.penalty += TenPuzzleMode.impossibleMissPenalty
+            }
+            lastJudgment = .actuallySolvable(penalized: penalized)
+            showWrongFeedback(for: C.declaredDisplay)
         }
     }
 
-    // MARK: - 次の問題へ
+    // MARK: - 正解・不正解の後始末
 
-    private func scheduleNextProblem(after delay: Double) {
+    private func showWrongFeedback(for delay: Double) {
+        problemState = .wrong
+        SoundManager.shared.playWrong()
         let gen = sessionGeneration
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) { [weak self] in
             guard let self, self.sessionGeneration == gen else { return }
-            self.problemIndex += 1
+            withAnimation { self.problemState = .solving }
+        }
+    }
+
+    /// 正解（式か「作れない！」）したときの処理。スコアを数えて、次の問題か結果画面へ進む。
+    private func finishProblem() {
+        problemState = .correct
+        SoundManager.shared.playCorrect()
+
+        // ヒントを一度でも使っていたら加点しない（連続正解はそこで止まっている）
+        if streakActive { score += 1 }
+        // ヒントを見ずに正解したときだけエネルギーを +1。
+        // スコアが止まったあとでも、自分の力で解いた問題は数える。
+        if !hintShown { EnergyStore.shared.earn(EnergyRewards.perCorrect) }
+
+        // 満点で終わったときだけタイムを確定させる。正解した瞬間に止めるので、このあとの余韻は記録に入らない。
+        // score が maxQuestions に届くのは全問ノーヒント正解のときだけ（不正解では問題が進まない）。
+        if score >= TenPuzzleMode.maxQuestions {
+            record.clearTime = elapsed + record.penalty
+        }
+
+        // 上限に達したか、ヒントを使ったうえで minQuestions 問目まで来たら終わり
+        let done = problemNumber >= TenPuzzleMode.maxQuestions
+                || (!streakActive && problemNumber >= TenPuzzleMode.minQuestions)
+
+        let gen = sessionGeneration
+        DispatchQueue.main.asyncAfter(deadline: .now() + C.correctFeedback) { [weak self] in
+            guard let self, self.sessionGeneration == gen else { return }
             withAnimation(.easeInOut(duration: 0.3)) {
-                self.loadCurrentProblem()
+                if done {
+                    self.finishSession()
+                } else {
+                    self.loadNextProblem()
+                }
             }
         }
+    }
+
+    // MARK: - 結果
+
+    private func finishSession() {
+        activeSince          = nil
+        record.score         = score
+        record.questionCount = problemNumber
+
+        // クリアしたらタイム、そうでなければ連続正解の数をベスト記録と比べる。
+        // 満点は誰でも同じ点なので、クリアしたモードで追う記録はタイムだけになる。
+        if let time = record.clearTime {
+            record.isNewBest = ScoreBoard.saveIfFaster(time: time, for: selectedMode.bestTimeKey)
+            ScoreBoard.saveIfBetter(score: score, for: selectedMode.bestStreakKey)
+        } else {
+            record.isNewBest = ScoreBoard.saveIfBetter(score: score, for: selectedMode.bestStreakKey)
+        }
+
+        // クリアボーナス = スコア × モードごとの倍率。10問・20問続けて正解したらさらに上乗せする。
+        // リザルト画面でまとめて増える演出を見せる
+        let bonusRate: Double = {
+            switch selectedMode {
+            case .modeA: return EnergyRewards.tenPuzzleBonusRateA
+            case .modeB: return EnergyRewards.tenPuzzleBonusRateB
+            case .modeC: return EnergyRewards.tenPuzzleBonusRateC
+            }
+        }()
+        var bonus = Double(score) * bonusRate
+        if score >= TenPuzzleMode.maxQuestions {
+            bonus += EnergyRewards.tenPuzzleStreakBonus20
+        } else if score >= TenPuzzleMode.minQuestions {
+            bonus += EnergyRewards.tenPuzzleStreakBonus10
+        }
+        EnergyStore.shared.grantClearBonus(bonus)
+        GameDailyBonus.shared.claim(.tenPuzzle)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
+        phase = .result
     }
 
     // MARK: - ホームへ戻る
 
     func returnToHome() {
+        activeSince = nil
+        sessionGeneration += 1   // 予約済みの「次の問題へ」を捨てる
         withAnimation(.easeInOut(duration: 0.3)) { phase = .home }
     }
 
-    // MARK: - Suspend / Resume（互換性維持）
-    func suspend() {}
-    func resume()  {}
+    // MARK: - Suspend / Resume
+    //
+    // アプリが裏に回る・画面を離れるときに suspend、戻ってきたときに resume が呼ばれる。
+    // 裏にいた時間をクリアタイムに数えないために使う。
+
+    func suspend() {
+        guard let since = activeSince else { return }
+        elapsedBeforePause += Date().timeIntervalSince(since)
+        activeSince = nil
+    }
+
+    func resume() {
+        guard phase == .playing, activeSince == nil else { return }
+        activeSince = Date()
+    }
 }

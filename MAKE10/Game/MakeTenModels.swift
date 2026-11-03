@@ -107,6 +107,12 @@ enum UDKey {
     static let jankenBestTimeEasy     = "janken_best_time_easy"         // じゃんけん：Easyベストタイム
     static let jankenBestTimeHard     = "janken_best_time_hard"         // じゃんけん：Hardベストタイム
     static let jankenBestTimeChallenge = "janken_best_time_challenge"   // じゃんけん：Challengeベストタイム
+    static let tenPuzzleBestStreakA   = "tenpuzzle_best_streak_a"       // テンパズル：ふつうの連続正解ベスト
+    static let tenPuzzleBestStreakB   = "tenpuzzle_best_streak_b"       // テンパズル：むずかしいの連続正解ベスト
+    static let tenPuzzleBestStreakC   = "tenpuzzle_best_streak_c"       // テンパズル：チャレンジの連続正解ベスト
+    static let tenPuzzleBestTimeA     = "tenpuzzle_best_time_a"         // テンパズル：ふつうのクリアタイムベスト（秒）
+    static let tenPuzzleBestTimeB     = "tenpuzzle_best_time_b"         // テンパズル：むずかしいのクリアタイムベスト（秒）
+    static let tenPuzzleBestTimeC     = "tenpuzzle_best_time_c"         // テンパズル：チャレンジのクリアタイムベスト（秒）
 }
 
 // MARK: - Reaction

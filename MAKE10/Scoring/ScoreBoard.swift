@@ -58,9 +58,16 @@ enum ScoreBoard {
         UDKey.jankenBestTimeEasy,
         UDKey.jankenBestTimeHard,
         UDKey.jankenBestTimeChallenge,
+        // ── TenPuzzle ─────────────────────────────
+        UDKey.tenPuzzleBestStreakA,
+        UDKey.tenPuzzleBestStreakB,
+        UDKey.tenPuzzleBestStreakC,
+        UDKey.tenPuzzleBestTimeA,
+        UDKey.tenPuzzleBestTimeB,
+        UDKey.tenPuzzleBestTimeC,
     ]
 
-    // MARK: Int 型スコア（Pinball / CoinDrop / Maze / Blitz）
+    // MARK: Int 型スコア（Pinball / CoinDrop / Maze / Blitz / TenPuzzle の連続正解）
 
     /// 指定キーの最高スコアを返す。未記録の場合は 0。
     static func highScore(for key: String) -> Int {
@@ -83,7 +90,7 @@ enum ScoreBoard {
         return true
     }
 
-    // MARK: TimeInterval 型ベストタイム（Janken）
+    // MARK: TimeInterval 型ベストタイム（Janken / TenPuzzle）
 
     /// 指定キーのベストタイムを返す。未記録の場合は nil。
     ///
@@ -111,6 +118,9 @@ enum ScoreBoard {
         UDKey.jankenBestTimeEasy,
         UDKey.jankenBestTimeHard,
         UDKey.jankenBestTimeChallenge,
+        UDKey.tenPuzzleBestTimeA,
+        UDKey.tenPuzzleBestTimeB,
+        UDKey.tenPuzzleBestTimeC,
     ]
 
     // MARK: リセット

@@ -55,16 +55,17 @@ struct TenPuzzleView: View {
 
 extension TenPuzzleView {
 
-    /// 撮影モード（ScreenshotMode.swift を参照）: 「かんたん / ふつう」を始め、解の例どおりに式を組み立てておく。
+    /// 撮影モード（ScreenshotMode.swift を参照）: 「むずかしい」を始め、解の例どおりに式を組み立てておく。
     /// 「=」は押さないので、組み立てた式と「= 10」が見えたままになる。
     fileprivate func playScreenshotScene() {
         guard ScreenshotMode.scene == .tenPuzzle else { return }
-        viewModel.startSession(mode: .modeA)
-        // ＋だけの式より、いろいろな記号を使う問題のほうが見ばえがよいので、×と−を使う問題を探して進める
-        while let p = viewModel.currentProblem, let ex = p.example,
-              !(ex.contains("×") && ex.contains("−")), viewModel.problemIndex < viewModel.pool.count - 1 {
-            viewModel.problemIndex += 1
-            viewModel.currentProblem = viewModel.pool[viewModel.problemIndex]
+        viewModel.startSession(mode: .modeB)
+        // ＋だけの式より、いろいろな記号を使う問題のほうが見ばえがよいので、×と−を使う問題に差しかえる
+        if let p = TenPuzzleDatabase.solvablePool.shuffled().first(where: {
+            guard let ex = $0.example else { return false }
+            return ex.contains("×") && ex.contains("−")
+        }) {
+            viewModel.currentProblem = p
         }
         guard let problem = viewModel.currentProblem, let example = problem.example else { return }
         var used: Set<Int> = []
@@ -92,42 +93,87 @@ private struct TenPuzzleHomeView: View {
 
     var viewModel: TenPuzzleViewModel
 
+    // ★ ScrollView で包んでいる理由 ★
+    //   ルールの説明を足したので、横向きや小さい画面では縦に収まらないことがある。
+    //   収まるときは minHeight で画面いっぱいに広げて中央に置き、揺れもしない（basedOnSize）。
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        GeometryReader { geo in
+            ScrollView {
+                VStack(spacing: 0) {
+                    Spacer(minLength: 16)
 
-            VStack(spacing: 6) {
-                Text("🔢")
-                    .font(.system(size: 56))
-                Text("四則演算テンパズル")
-                    .font(.system(size: 22, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.textPrimary)
-                Text("4つの数字で10を作ろう！")
-                    .font(.system(size: 14, weight: .medium, design: .rounded))
-                    .foregroundStyle(DS.muted)
-            }
-            .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
-            .padding(.bottom, 36)
-
-            VStack(spacing: 14) {
-                ForEach(TenPuzzleMode.allCases, id: \.rawValue) { mode in
-                    ModeCard(mode: mode) {
-                        SoundManager.shared.vibrate()
-                        SoundManager.shared.playTap()
-                        viewModel.startSession(mode: mode)
+                    VStack(spacing: 6) {
+                        Text("🔢")
+                            .font(.system(size: 56))
+                        Text("四則演算テンパズル")
+                            .font(.system(size: 22, weight: .bold, design: .rounded))
+                            .foregroundStyle(DS.textPrimary)
+                        Text("4つの数字で10を作ろう！")
+                            .font(.system(size: 14, weight: .medium, design: .rounded))
+                            .foregroundStyle(DS.muted)
                     }
-                }
-            }
-            .padding(.horizontal, 24)
+                    .wallpaperCushion()   // かべがみの上でも読めるように（DesignSystem.swift を参照）
+                    .padding(.bottom, 28)
 
-            Spacer()
+                    VStack(spacing: 14) {
+                        ForEach(TenPuzzleMode.allCases, id: \.rawValue) { mode in
+                            ModeCard(
+                                mode:       mode,
+                                bestStreak: viewModel.bestStreak(for: mode),
+                                bestTime:   viewModel.bestTime(for: mode)
+                            ) {
+                                SoundManager.shared.vibrate()
+                                SoundManager.shared.playTap()
+                                viewModel.startSession(mode: mode)
+                            }
+                        }
+                    }
+                    .padding(.horizontal, 24)
+
+                    TenPuzzleRuleList()
+                        .padding(.horizontal, 28)
+                        .padding(.top, 18)
+
+                    Spacer(minLength: 16)
+                }
+                .frame(maxWidth: .infinity, minHeight: geo.size.height)
+            }
+            .scrollBounceBehavior(.basedOnSize)
         }
     }
 }
 
+/// スコアと出題数の決まり。遊び始める前に一度目に入るよう、モードの下に小さく置く。
+private struct TenPuzzleRuleList: View {
+    private let rules: [LocalizedStringKey] = [
+        "スコアは、ヒントを使わずに続けて正解した数。ヒントを使うとそこで止まる。",
+        "10問はかならず遊べる。ヒントを使っていなければ、20問目まで続く。",
+        "20問ぜんぶヒントなしで正解するとクリア。記録はクリアタイムにかわる。",
+        "チャレンジで「作れない！」を外すと、クリアタイムに1分たされる。",
+    ]
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 6) {
+            ForEach(rules.indices, id: \.self) { i in
+                HStack(alignment: .firstTextBaseline, spacing: 6) {
+                    Text("・")
+                    Text(rules[i])
+                        .fixedSize(horizontal: false, vertical: true)
+                }
+            }
+        }
+        .font(.system(size: 12, weight: .regular, design: .rounded))
+        .foregroundStyle(DS.muted)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .wallpaperCushion()
+    }
+}
+
 private struct ModeCard: View {
-    let mode:  TenPuzzleMode
-    let onTap: () -> Void
+    let mode:       TenPuzzleMode
+    let bestStreak: Int
+    let bestTime:   TimeInterval?
+    let onTap:      () -> Void
 
     var body: some View {
         Button(action: onTap) {
@@ -136,9 +182,13 @@ private struct ModeCard: View {
                     .font(.system(size: 28))
 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(mode.title)
-                        .font(.system(size: 16, weight: .bold, design: .rounded))
-                        .foregroundStyle(DS.textPrimary)
+                    // ベスト記録はモード名の横に置く（右端に置くと説明文の幅が狭くなって折り返しが増えるため）
+                    HStack(alignment: .firstTextBaseline, spacing: 8) {
+                        Text(mode.title)
+                            .font(.system(size: 16, weight: .bold, design: .rounded))
+                            .foregroundStyle(DS.textPrimary)
+                        bestRecord
+                    }
                     Text(mode.subtitle)
                         .font(.system(size: 12, weight: .regular, design: .rounded))
                         .foregroundStyle(DS.muted)
@@ -164,6 +214,24 @@ private struct ModeCard: View {
         }
         .buttonStyle(.plain)
     }
+
+    /// ベスト記録。クリア済みのモードは「★ 連続正解」から「🏆 クリアタイム」に変わる
+    /// （満点は誰でも同じ点なので、数字を出しても差が見えないため）。
+    /// 記録がないときは何も出さない（初回プレイで 0 が並ぶのを避ける）。
+    @ViewBuilder
+    private var bestRecord: some View {
+        if let bestTime {
+            Text(verbatim: "🏆 \(TenPuzzleViewModel.formatTime(bestTime))")
+                .font(.system(size: 13, weight: .heavy, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(DS.gaugeFull)
+        } else if bestStreak > 0 {
+            Text(verbatim: "★ \(bestStreak)")
+                .font(.system(size: 13, weight: .heavy, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(mode.color)
+        }
+    }
 }
 
 // MARK: - TenPuzzleGameView（メインゲーム）
@@ -176,9 +244,11 @@ private struct TenPuzzleGameView: View {
         VStack(spacing: 0) {
             // 問題カウンター
             ProblemCounter(
-                current: viewModel.problemNumber,
-                total:   TenPuzzleMode.problemsPerSession,
-                mode:    viewModel.selectedMode
+                current:      viewModel.problemNumber,
+                total:        viewModel.problemTotal,
+                score:        viewModel.score,
+                scoreStopped: !viewModel.streakActive,
+                mode:         viewModel.selectedMode
             )
             .padding(.horizontal, 24)
             .padding(.top, 8)
@@ -199,7 +269,8 @@ private struct TenPuzzleGameView: View {
 
             // ヒントバナー（ヒントボタンを押したときだけ表示）
             if let content = viewModel.hintBannerContent {
-                HintBanner(content: content)
+                HintBanner(content: content,
+                           stoppedScore: viewModel.hintStoppedScore ? viewModel.score : nil)
                     .padding(.horizontal, 20)
                     .padding(.bottom, 8)
                     .transition(.opacity.combined(with: .move(edge: .top)))
@@ -210,7 +281,6 @@ private struct TenPuzzleGameView: View {
                 tokens:    viewModel.tokens,
                 judgment:  viewModel.lastJudgment,
                 state:     viewModel.problemState,
-                shownHint: viewModel.shownHint,
                 liveValue: viewModel.liveValue
             )
             .padding(.horizontal, 20)
@@ -239,24 +309,42 @@ private struct TenPuzzleGameView: View {
 
 // MARK: - 問題カウンター
 
+/// 「n / 総数」と、スコア・モード名。
+/// 総数は「この先いくつ遊べるか」（TenPuzzleViewModel.problemTotal を参照）なので、ヒントを使うと変わる。
 private struct ProblemCounter: View {
-    let current: Int
-    let total:   Int
-    let mode:    TenPuzzleMode
+    let current:      Int
+    let total:        Int
+    let score:        Int
+    let scoreStopped: Bool
+    let mode:         TenPuzzleMode
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
             HStack(spacing: 2) {
-                Text("\(current)")
+                Text(verbatim: "\(current)")
                     .font(.system(size: 20, weight: .bold, design: .rounded))
                     .foregroundStyle(mode.color)
-                Text("/ \(total)")
+                Text(verbatim: "/ \(total)")
                     .font(.system(size: 14, weight: .medium, design: .rounded))
                     .foregroundStyle(DS.muted)
             }
+            .monospacedDigit()
             .wallpaperCushion()
 
             Spacer()
+
+            // ヒントで止まったスコアは色を落とすだけにする。
+            // 打ち消し線だと「取り消された」と読めてしまうため。
+            HStack(spacing: 4) {
+                Text("SCORE")
+                    .font(.system(size: 11, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                Text(verbatim: "\(score)")
+                    .font(.system(size: 18, weight: .black, design: .rounded))
+                    .monospacedDigit()
+                    .foregroundStyle(scoreStopped ? DS.muted : DS.textPrimary)
+            }
+            .wallpaperCushion()
 
             Text(mode.title)
                 .font(.system(size: 12, weight: .semibold, design: .rounded))
@@ -340,8 +428,11 @@ private struct DigitTile: View {
 
 /// ヒントボタンを押したときに表示されるバナー。
 /// 解ける問題なら解の例、不可能問題なら「作れません」メッセージを表示する。
+/// このヒントでスコアが止まったときは、2行目に「スコアは N で止まります」も出す。
 private struct HintBanner: View {
     let content: TenPuzzleViewModel.HintBannerContent
+    /// このヒントで止まったスコア（止まったのが前の問題なら nil）
+    let stoppedScore: Int?
 
     var body: some View {
         HStack(spacing: 10) {
@@ -349,22 +440,32 @@ private struct HintBanner: View {
                 .foregroundStyle(.orange)
                 .font(.system(size: 15))
 
-            // ★ 解の例（数式）は翻訳不要なので Text(String) のまま、
-            //   「作れません」は翻訳が必要なので LocalizedStringKey で渡す。
-            //   （設計の理由は TenPuzzleViewModel.HintBannerContent のコメント参照）
-            switch content {
-            case .example(let expr):
-                Text(expr)
-                    .font(.system(size: 15, weight: .bold, design: .monospaced))
-                    .foregroundStyle(DS.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-            case .impossibleMessage:
-                Text("この問題は10を作れません")
-                    .font(.system(size: 15, weight: .bold, design: .rounded))
-                    .foregroundStyle(DS.textPrimary)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+            VStack(alignment: .leading, spacing: 2) {
+                // ★ 解の例（数式）は翻訳不要なので Text(String) のまま、
+                //   「作れません」は翻訳が必要なので LocalizedStringKey で渡す。
+                //   （設計の理由は TenPuzzleViewModel.HintBannerContent のコメント参照）
+                switch content {
+                case .example(let expr):
+                    Text(expr)
+                        .font(.system(size: 15, weight: .bold, design: .monospaced))
+                        .foregroundStyle(DS.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                case .impossibleMessage:
+                    Text("この問題は10を作れません")
+                        .font(.system(size: 15, weight: .bold, design: .rounded))
+                        .foregroundStyle(DS.textPrimary)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
+
+                if let stoppedScore {
+                    Text("スコアは \(stoppedScore) で止まります")
+                        .font(.system(size: 11, weight: .semibold, design: .rounded))
+                        .foregroundStyle(DS.muted)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.7)
+                }
             }
 
             Spacer()
@@ -385,15 +486,14 @@ private struct HintBanner: View {
 // MARK: - 式の表示エリア
 
 /// 状態に応じて表示を切り替える：
-///   .declared          → 「宣言不正解」解の表示（ExpressionDisplay 内）
-///   .correct / .wrong  → 正解・不正解フィードバック
+///   .correct / .wrong  → 正解・不正解フィードバック（「作れない！」の外れもここ）
 ///   tokens が空         → プレースホルダー
 ///   tokens あり         → トークン + 途中計算値（liveValue）
+/// 不正解のあとも式は消さないので、フィードバックが終わると組み立てた式に戻る。
 private struct ExpressionDisplay: View {
     let tokens:    [ExprToken]
     let judgment:  TenPuzzleJudgment?
     let state:     TenPuzzleProblemState
-    let shownHint: String?   // .declared 時のみ non-nil
     let liveValue: Double?
 
     var body: some View {
@@ -406,18 +506,7 @@ private struct ExpressionDisplay: View {
                 )
 
             Group {
-                if state == .declared, let hint = shownHint {
-                    // 「作れない！」宣言が不正解だったとき：解を表示
-                    VStack(spacing: 3) {
-                        Text("作れます！")
-                            .font(.system(size: 11, weight: .bold, design: .rounded))
-                            .foregroundStyle(DS.muted)
-                        Text(hint)
-                            .font(.system(size: 18, weight: .bold, design: .monospaced))
-                            .foregroundStyle(DS.textPrimary)
-                    }
-
-                } else if state == .correct || state == .wrong {
+                if state == .correct || state == .wrong {
                     HStack(spacing: 8) {
                         Text(state == .correct ? "⭕️" : "❌")
                             .font(.system(size: 28))
@@ -425,8 +514,11 @@ private struct ExpressionDisplay: View {
                             Text(j.message)
                                 .font(.system(size: 16, weight: .bold, design: .rounded))
                                 .foregroundStyle(j.color)
+                                .lineLimit(2)
+                                .minimumScaleFactor(0.7)
                         }
                     }
+                    .padding(.horizontal, 12)
 
                 } else if tokens.isEmpty {
                     Text("数字タイルをタップして式を作ろう")
@@ -447,13 +539,24 @@ private struct ExpressionDisplay: View {
                         }
 
                         if let val = liveValue {
-                            Text("= \(formatLiveValue(val))")
-                                .font(.system(size: 14, weight: .bold, design: .monospaced))
-                                .foregroundStyle(
-                                    abs(val - 10) < 1e-9 ? DS.gaugeFull : DS.muted.opacity(0.7)
-                                )
-                                .padding(.trailing, 12)
-                                .lineLimit(1)
+                            if val.isFinite {
+                                // 割り切れないときは 1/3 のように分数で出す（TenPuzzleValidator.formatValue を参照）
+                                Text(verbatim: "= \(TenPuzzleValidator.formatValue(val))")
+                                    .font(.system(size: 14, weight: .bold, design: .monospaced))
+                                    .foregroundStyle(
+                                        abs(val - 10) < 1e-9 ? DS.gaugeFull : DS.muted.opacity(0.7)
+                                    )
+                                    .padding(.trailing, 12)
+                                    .lineLimit(1)
+                            } else {
+                                // 0 で割ると無限大か NaN になる
+                                Text("0では割れないよ")
+                                    .font(.system(size: 12, weight: .bold, design: .rounded))
+                                    .foregroundStyle(DS.gaugeWarn)
+                                    .padding(.trailing, 12)
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.7)
+                            }
                         }
                     }
                 }
@@ -465,24 +568,18 @@ private struct ExpressionDisplay: View {
 
     private var bgColor: Color {
         switch state {
-        case .correct:          return DS.gaugeFull.opacity(0.08)
-        case .wrong, .declared: return DS.gaugeWarn.opacity(0.08)
-        default:                return DS.choiceFill
+        case .correct: return DS.gaugeFull.opacity(0.08)
+        case .wrong:   return DS.gaugeWarn.opacity(0.08)
+        default:       return DS.choiceFill
         }
     }
 
     private var borderColor: Color {
         switch state {
-        case .correct:          return DS.gaugeFull.opacity(0.4)
-        case .wrong, .declared: return DS.gaugeWarn.opacity(0.4)
-        default:                return DS.muted.opacity(0.15)
+        case .correct: return DS.gaugeFull.opacity(0.4)
+        case .wrong:   return DS.gaugeWarn.opacity(0.4)
+        default:       return DS.muted.opacity(0.15)
         }
-    }
-
-    private func formatLiveValue(_ val: Double) -> String {
-        let rounded = val.rounded()
-        if abs(val - rounded) < 1e-9 { return "\(Int(rounded))" }
-        return String(format: "%.3g", val)
     }
 }
 
@@ -639,8 +736,8 @@ private struct SubmitArea: View {
                     disabled: !isSolving || viewModel.hintShown
                 )
 
-                // 「作れない！」ボタン（モードCのみ）
-                if viewModel.selectedMode == .modeC {
+                // 「作れない！」ボタン（チャレンジのみ）
+                if viewModel.selectedMode.allowsImpossible {
                     ActionButton(
                         label:    "作れない！",
                         icon:     "xmark.circle",
@@ -698,29 +795,41 @@ private struct TenPuzzleResultView: View {
                 VStack(spacing: 6) {
                     Text(resultEmoji)
                         .font(.system(size: 60))
-                    Text("\(record.correct) / \(record.total)")
+
+                    // クリア（満点）はタイム勝負にする。満点は誰でも同じ点なので、
+                    // 連続正解の数字を出しても人による差が見えないため。
+                    Group {
+                        if record.isCleared { Text("クリアタイム") } else { Text("連続正解") }
+                    }
+                    .font(.system(size: 15, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    Text(verbatim: record.clearTime.map(TenPuzzleViewModel.formatTime) ?? "\(record.score)")
                         .font(.system(size: 52, weight: .black, design: .rounded))
+                        .monospacedDigit()
                         .foregroundStyle(mode.color)
-                    Text("正解")
-                        .font(.system(size: 18, weight: .medium, design: .rounded))
-                        .foregroundStyle(DS.muted)
+
+                    bestLine
+                        .padding(.top, 2)
+
+                    if record.isCleared {
+                        Text("クリア！")
+                            .font(.system(size: 20, weight: .black, design: .rounded))
+                            .foregroundStyle(DS.accent)
+                            .padding(.top, 4)
+                    }
                 }
 
                 VStack(spacing: 8) {
-                    switch mode {
-                    case .modeA:
-                        if record.hintUsed > 0 {
-                            ResultRow(label: "ヒントを使って正解", value: "\(record.hintUsed)問")
-                        }
-                    case .modeB:
-                        ResultRow(label: "ヒントなしで正解", value: "\(record.selfSolved)問")
-                        ResultRow(label: "ヒントを使って正解", value: "\(record.hintUsed)問")
-                    case .modeC:
-                        ResultRow(label: "自力で正解",           value: "\(record.correct - record.impossible)問")
+                    ResultRow(label: "あそんだ問題", value: "\(record.questionCount)問")
+                    if mode.allowsImpossible {
                         ResultRow(label: "「作れない！」で正解", value: "\(record.impossible)問")
-                        if record.hintUsed > 0 {
-                            ResultRow(label: "ヒントを使用",     value: "\(record.hintUsed)問")
-                        }
+                    }
+                    if record.hintUsed > 0 {
+                        ResultRow(label: "ヒントを使用", value: "\(record.hintUsed)問")
+                    }
+                    if record.penalty > 0 {
+                        ResultRow(label: "タイムにたされた時間",
+                                  verbatim: "+\(TenPuzzleViewModel.formatTime(record.penalty))")
                     }
                 }
                 .padding(.horizontal, 8)
@@ -764,14 +873,44 @@ private struct TenPuzzleResultView: View {
         }
     }
 
+    /// ベスト記録の行。
+    ///   クリアした      … 新記録なら「さいこうきろく！」、そうでなければベストタイム
+    ///   クリアしていない … そのモードを前にクリアしていればベストタイム
+    ///                      （更新すべき記録がもうタイムだけなので）、
+    ///                      まだなら連続正解の新記録かベスト
+    @ViewBuilder
+    private var bestLine: some View {
+        let bestTime = viewModel.bestTime(for: mode)
+        if record.isNewBest && (record.isCleared || bestTime == nil) {
+            Text("tenpuzzle_new_best")
+                .font(.system(size: 18, weight: .black, design: .rounded))
+                .foregroundStyle(DS.gold)
+        } else if let bestTime {
+            bestLabel(value: "🏆 \(TenPuzzleViewModel.formatTime(bestTime))")
+        } else if viewModel.bestStreak(for: mode) > 0 {
+            bestLabel(value: "★ \(viewModel.bestStreak(for: mode))")
+        }
+    }
+
+    private func bestLabel(value: String) -> some View {
+        HStack(spacing: 6) {
+            Text("tenpuzzle_best_label")
+                .font(.system(size: 14, weight: .medium, design: .rounded))
+                .foregroundStyle(DS.muted)
+            Text(verbatim: value)
+                .font(.system(size: 17, weight: .black, design: .rounded))
+                .monospacedDigit()
+                .foregroundStyle(DS.accent)
+        }
+    }
+
     private var resultEmoji: String {
-        let ratio = Double(record.correct) / Double(record.total)
-        switch ratio {
-        case 1.0:    return "🏆"
-        case 0.8...: return "🎉"
-        case 0.6...: return "😊"
-        case 0.4...: return "🙂"
-        default:     return "💪"
+        if record.isCleared { return "🏆" }
+        switch record.score {
+        case 16...: return "🎉"
+        case 10...: return "😊"
+        case 5...:  return "🙂"
+        default:    return "💪"
         }
     }
 }
@@ -785,7 +924,18 @@ private struct ResultRow: View {
     //   "%lld問" という書式キーとして自動抽出・翻訳される
     //  （janken の "\(difficulty.totalRounds)手" と同じパターン）。
     let label: LocalizedStringKey
-    let value: LocalizedStringKey
+    let value: Text
+
+    init(label: LocalizedStringKey, value: LocalizedStringKey) {
+        self.label = label
+        self.value = Text(value)
+    }
+
+    /// 値が「+1:00」のような、どの言語でも同じ文字列のとき（翻訳キーにしない）
+    init(label: LocalizedStringKey, verbatim value: String) {
+        self.label = label
+        self.value = Text(verbatim: value)
+    }
 
     var body: some View {
         HStack {
@@ -793,7 +943,7 @@ private struct ResultRow: View {
                 .font(.system(size: 14, weight: .regular, design: .rounded))
                 .foregroundStyle(DS.muted)
             Spacer()
-            Text(value)
+            value
                 .font(.system(size: 14, weight: .bold, design: .rounded))
                 .foregroundStyle(DS.textPrimary)
         }
