@@ -38,7 +38,7 @@
 //   保存するのは「前回えらんだカードの種類」だけです（UDKey.memoryDeck。端末の中だけ。iCloud には送らない）。
 //
 // ★ 「十二支」と書かない理由 ★
-//   5×5 の動物は 🐁🐇🐅🐂🐉🐍🫏🐏🐒🐓🐕🐖 の12種ですが、画面・読み上げ・コメントのどこにも
+//   5×5 の動物は 🐁🐂🐅🐇🐉🐍🫏🐏🐒🐓🐕🐖 の12種ですが、画面・読み上げ・コメントのどこにも
 //   特定の暦の名前は出しません。国によって入る動物が違う（たとえば日本では 🐖 の代わりにイノシシ）ため、
 //   「12種の動物」としてだけ扱います。
 
@@ -282,9 +282,9 @@ enum MemoryAnimal: String, CaseIterable {
     case monkey
     // 5×5 の12種（全身の絵文字）
     case mouseBody
-    case rabbitBody
-    case tigerBody
     case oxBody
+    case tigerBody
+    case rabbitBody
     case dragonBody
     case snakeBody
     case donkeyBody
@@ -302,7 +302,7 @@ enum MemoryAnimal: String, CaseIterable {
 
     /// 5×5（12組）で使う動物。
     static let twelve: [MemoryAnimal] = [
-        .mouseBody, .rabbitBody, .tigerBody, .oxBody, .dragonBody, .snakeBody,
+        .mouseBody, .oxBody, .tigerBody, .rabbitBody, .dragonBody, .snakeBody,
         .donkeyBody, .sheepBody, .monkeyBody, .roosterBody, .dogBody, .pigBody,
     ]
 
@@ -320,9 +320,9 @@ enum MemoryAnimal: String, CaseIterable {
         case .butterfly:   return "🦋"
         case .monkey:      return "🐵"
         case .mouseBody:   return "🐁"
-        case .rabbitBody:  return "🐇"
-        case .tigerBody:   return "🐅"
         case .oxBody:      return "🐂"
+        case .tigerBody:   return "🐅"
+        case .rabbitBody:  return "🐇"
         case .dragonBody:  return "🐉"
         case .snakeBody:   return "🐍"
         case .donkeyBody:  return "🫏"
