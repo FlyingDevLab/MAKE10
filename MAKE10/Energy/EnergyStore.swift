@@ -142,6 +142,11 @@ enum EnergyRewards {
     /// 最短の回数（7 / 9 / 11 / 17）がそのまま難しさの重みになる。最短で渡れたら perfectBonus を上乗せ。
     /// 渡るたびには増やさない（戻す と わたる をくり返すだけで増やせてしまうため）。
     static let riverCrossingBonusRate: Double = 10   // ← 変更可
+
+    /// スライドパズル（クロツキ・箱入り娘・華容道）。解けたときだけ、クリアボーナス = 最短の手数 × この倍率。
+    /// 最短の手数（32 / 81 / 81）がそのまま難しさの重みになる（160 / 405 / 405）。最短で解けたら perfectBonus を上乗せ。
+    /// 動かすたびには増やさない（同じ駒を行ったり来たりさせるだけで増やせてしまうため）。
+    static let slidingPuzzleBonusRate: Double = 5   // ← 変更可
 }
 
 // MARK: - EnergyStore

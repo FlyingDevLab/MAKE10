@@ -118,6 +118,12 @@ enum UDKey {
     static let riverCrossingBestPairs  = "river_best_pairs"             // 川わたり：3くみの おやこの最少回数
     static let riverCrossingBestRaft   = "river_best_raft"              // 川わたり：8にんの いかだの最少回数
     static let riverCrossingLastStage  = "river_last_stage"             // 川わたり：最後に選んだステージ（端末の中だけ）
+    static let klotskiBest       = "slide_best_klotski"        // クロツキ：最少手数
+    static let hakoiriBest       = "slide_best_hakoiri"        // 箱入り娘（標準）：最少手数
+    static let huarongdaoBest    = "slide_best_huarongdao"     // 華容道：最少手数
+    static let klotskiClears     = "slide_clears_klotski"      // クロツキ：クリアした回数
+    static let hakoiriClears     = "slide_clears_hakoiri"      // 箱入り娘（標準）：クリアした回数
+    static let huarongdaoClears  = "slide_clears_huarongdao"   // 華容道：クリアした回数
 }
 
 // MARK: - Reaction

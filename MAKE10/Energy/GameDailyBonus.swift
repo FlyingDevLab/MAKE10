@@ -31,7 +31,7 @@ import Foundation
 
 enum GameDailyBonusTuning {
     /// 1つのゲームで、その日はじめて最後まで遊んだときのボーナス（kcal）。
-    /// 11種類ぜんぶ遊ぶと 1日 550。ログインボーナス（100）・ガチャ1回（100）と比べて決めた。
+    /// 14種類ぜんぶ遊ぶと 1日 700。ログインボーナス（100）・ガチャ1回（100）と比べて決めた。
     static let amount: Double = 50   // ← 変更可
 }
 
@@ -46,7 +46,8 @@ final class GameDailyBonus {
     /// ボーナスの対象になるゲーム。シールやさん・ガチャ・てちょう・シール帳・じてんは、ゲームではないので入れない。
     static let targets: Set<GamePickerSelection> = [
         .normal, .blitz, .quiz, .whackAMole, .maze,
-        .pinball, .coinDrop, .janken, .tenPuzzle, .riverCrossing, .memory,
+        .pinball, .coinDrop, .janken, .tenPuzzle, .riverCrossing,
+        .klotski, .hakoiri, .huarongdao, .memory,
     ]
 
     /// ゲームごとに、最後に受け取った日（キーは GamePickerSelection の rawValue、値は "2026-10-15"）。

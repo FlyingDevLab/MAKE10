@@ -70,6 +70,13 @@ enum ScoreBoard {
         UDKey.riverCrossingBestWeight,
         UDKey.riverCrossingBestPairs,
         UDKey.riverCrossingBestRaft,
+        // ── SlidingPuzzle（クロツキ・箱入り娘・華容道）──
+        UDKey.klotskiBest,
+        UDKey.hakoiriBest,
+        UDKey.huarongdaoBest,
+        UDKey.klotskiClears,
+        UDKey.hakoiriClears,
+        UDKey.huarongdaoClears,
     ]
 
     // MARK: Int 型スコア（Pinball / CoinDrop / Maze / Blitz / TenPuzzle の連続正解）
@@ -130,9 +137,12 @@ enum ScoreBoard {
         UDKey.riverCrossingBestWeight,
         UDKey.riverCrossingBestPairs,
         UDKey.riverCrossingBestRaft,
+        UDKey.klotskiBest,
+        UDKey.hakoiriBest,
+        UDKey.huarongdaoBest,
     ]
 
-    // MARK: Int 型の最少回数（RiverCrossing）
+    // MARK: Int 型の最少回数（RiverCrossing / SlidingPuzzle）
     //
     // ★ ベストタイムと同じしくみに乗せている理由 ★
     //   「小さいほどよい」「0 は記録なし」という性質がベストタイムとまったく同じなので、

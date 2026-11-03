@@ -28,6 +28,7 @@ Included games:
 - **Command Janken** — rock-paper-scissors with a twist: follow the command to win *or* lose on purpose
 - **Ten Puzzle** — combine four numbers with + − × ÷ to make 10
 - **River Crossing** — take everyone across the river by boat without leaving a risky pair behind (four classic puzzles)
+- **Klotski / Hakoiri Musume / Huarong Dao** — the same sliding-block puzzle in three dresses: slide the pieces and get the big one out through the exit
 - **Animal Match** — a memory game; earn energy for every pair (more for streaks), then pick a sticker
 - **Stickers & Drawing** — decorate your own canvas with stickers and draw freely with crayons, then turn your picture into the app's wallpaper
 
@@ -121,6 +122,7 @@ Published as **"Kids Games by Flying Dev Lab"**:
 - **指令じゃんけん** — 「勝って！」「負けて！」の指令どおりに出せるかな？
 - **四則テンパズル** — 4つの数字と ＋ − × ÷ で10をつくろう
 - **かわわたり** — 舟でみんなを むこうぎしへ。のこすと あぶない くみあわせに気をつけて（古典パズル4題）
+- **クロツキ・箱入り娘・華容道** — 同じスライドパズルの3つの姿。駒をすべらせて、大きな駒を出口から出そう
 - **どうぶつめくり** — 神経衰弱。そろえるたびにエネルギー（れんぞくで増える）、ぜんぶそろえたら好きなシールをもらえる
 - **シール＆おえかき** — シールを自分のキャンバスに貼ったり、クレヨンで自由にお絵かき。描いた絵はアプリのかべがみにもできる
 

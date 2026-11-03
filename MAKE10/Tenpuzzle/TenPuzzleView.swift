@@ -156,7 +156,7 @@ private struct TenPuzzleRuleList: View {
         VStack(alignment: .leading, spacing: 6) {
             ForEach(rules.indices, id: \.self) { i in
                 HStack(alignment: .firstTextBaseline, spacing: 6) {
-                    Text("・")
+                    Text(verbatim: "・")
                     Text(rules[i])
                         .fixedSize(horizontal: false, vertical: true)
                 }
