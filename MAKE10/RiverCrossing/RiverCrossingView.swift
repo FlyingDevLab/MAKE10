@@ -65,9 +65,6 @@ struct RiverCrossingView: View {
                 RiverScene(viewModel: viewModel, tokenSpace: tokenSpace)
                     // クリアしたら盤は触れない。下に見えている川は、重ねたカードの背景として残す
                     .allowsHitTesting(!viewModel.isCleared)
-                    // ★ ZStack ではなく overlay で重ねている理由 ★
-                    //   ScrollView の中の ZStack に if で足したところ、クリアしても
-                    //   カードが描かれないことがあった（盤は触れなくなっていた）。overlay なら確実に出る。
                     .overlay {
                         if viewModel.isCleared {
                             ClearCard(viewModel: viewModel)
@@ -81,7 +78,10 @@ struct RiverCrossingView: View {
             .padding(.vertical, 10)
         }
         .scrollBounceBehavior(.basedOnSize)
-        .onAppear(perform: playScreenshotScene)
+        .onAppear {
+            EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+            playScreenshotScene()
+        }
     }
 
     // MARK: ボタン
@@ -115,7 +115,9 @@ struct RiverCrossingView: View {
 
 // MARK: - ステージ選択
 
-/// 4つとも最初から選べる。遊んでいる途中でも切り替えられるが、切り替えると盤は最初からになる。
+/// 順番に開く（前のステージをクリアすると次が開く）。まだ開いていないものは 🔒 を付けて薄く見せ、
+/// この先に何があるかだけ分かるようにしている。
+/// 遊んでいる途中でも切り替えられるが、切り替えると盤は最初からになる。
 /// ボタンには短い名前だけを出す（正式な名前は下の RulesCard の見出しに出る）。
 private struct StageBar: View {
     var viewModel: RiverCrossingViewModel
@@ -124,12 +126,21 @@ private struct StageBar: View {
         HStack(spacing: 6) {
             ForEach(Array(RiverStage.allCases.enumerated()), id: \.element) { index, stage in
                 let isOn = stage == viewModel.stage
+                let isOpen = viewModel.isUnlocked(stage)
                 Button {
                     SoundManager.shared.playTap()
                     withAnimation(.easeInOut(duration: 0.25)) { viewModel.select(stage) }
                 } label: {
                     VStack(spacing: 2) {
-                        ActorFace(actor: stage.iconActor, size: 24, emojiSize: 18)
+                        Group {
+                            if isOpen {
+                                ActorFace(actor: stage.iconActor, size: 24, emojiSize: 18)
+                            } else {
+                                Text(verbatim: "🔒")
+                                    .font(.system(size: 18))
+                                    .frame(width: 24, height: 24)
+                            }
+                        }
                         Text(stage.shortTitle)
                             .font(.system(size: 11, weight: .bold, design: .rounded))
                             .foregroundStyle(isOn ? DS.primary : DS.textPrimary)
@@ -161,7 +172,10 @@ private struct StageBar: View {
                     }
                 }
                 .buttonStyle(.plain)
+                .disabled(!isOpen)
+                .opacity(isOpen ? 1 : 0.55)
                 .accessibilityLabel(Text(stage.title))
+                .accessibilityValue(isOpen ? Text(verbatim: "") : Text("puzzle_locked"))
                 .accessibilityAddTraits(isOn ? .isSelected : [])
             }
         }
@@ -580,6 +594,14 @@ private struct ClearCard: View {
             .font(.system(size: 12, weight: .medium, design: .rounded))
             .foregroundStyle(DS.muted)
             .multilineTextAlignment(.center)
+
+            // 今回のクリアで開いたもの
+            if let opened = viewModel.openedStep {
+                Text("puzzle_opened \(opened.openedName)")
+                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .foregroundStyle(DS.accent)
+                    .multilineTextAlignment(.center)
+            }
 
             EnergyRewardBanner()
 

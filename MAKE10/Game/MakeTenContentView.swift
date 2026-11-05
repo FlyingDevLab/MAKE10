@@ -381,7 +381,7 @@ struct MakeTenContentView: View {
         case .slidingPuzzle(let kind):
             switch kind {
             case .klotski:    return String(localized: "klotski_title")
-            case .hakoiri:    return String(localized: "hakoiri_title")
+            case .hakoiri, .hakoiriHard: return String(localized: "hakoiri_title")
             case .huarongdao: return String(localized: "huarongdao_title")
             }
         case .memory:              return String(localized: "memory_title")

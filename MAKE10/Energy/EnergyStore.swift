@@ -144,9 +144,17 @@ enum EnergyRewards {
     static let riverCrossingBonusRate: Double = 10   // ← 変更可
 
     /// スライドパズル（クロツキ・箱入り娘・華容道）。解けたときだけ、クリアボーナス = 最短の手数 × この倍率。
-    /// 最短の手数（32 / 81 / 81）がそのまま難しさの重みになる（160 / 405 / 405）。最短で解けたら perfectBonus を上乗せ。
+    /// 最短の手数（32 / 81 / 81 / 120）がそのまま難しさの重みになる（320 / 810 / 810 / 1,200）。
+    /// 最短で解けたら perfectBonus を上乗せ。
     /// 動かすたびには増やさない（同じ駒を行ったり来たりさせるだけで増やせてしまうため）。
-    static let slidingPuzzleBonusRate: Double = 5   // ← 変更可
+    static let slidingPuzzleBonusRate: Double = 10   // ← 変更可
+
+    /// 初回クリア報酬（kcal）。段ごとに1回だけ、ふつうのクリアボーナスに足して渡す（PuzzleProgress.swift を参照）。
+    static let firstClearRiver1: Double = 1_000         // ← 変更可（おおかみと やぎと キャベツ）
+    static let firstClearRiver2: Double = 2_000         // ← 変更可（おとなと こども）
+    static let firstClearRiver3: Double = 4_000         // ← 変更可（3くみの おやこ）
+    static let firstClearRiver4: Double = 8_000         // ← 変更可（8にんの いかだ）
+    static let firstClearSlidingPuzzle: Double = 10_000 // ← 変更可（クロツキ・華容道・箱入り娘の標準とむずかしい）
 }
 
 // MARK: - EnergyStore
@@ -177,6 +185,9 @@ final class EnergyStore {
     /// 今回のプレイで grantDailyGameBonus()（きょう はじめての ボーナス）により増えた量（0.1kcal 単位）。
     private(set) var sessionDailyBonusDeci: Int = 0
 
+    /// 今回のプレイで grantFirstClearBonus()（はじめての クリア）により増えた量（0.1kcal 単位）。
+    private(set) var sessionFirstClearDeci: Int = 0
+
     // MARK: 表示用の値
 
     /// 残高（kcal）。
@@ -191,6 +202,9 @@ final class EnergyStore {
     /// 今回の「きょう はじめての ボーナス」（kcal）。結果画面の内訳表示に使う。
     var sessionDailyBonus: Double { Double(sessionDailyBonusDeci) / 10 }
 
+    /// 今回の「はじめての クリア」の報酬（kcal）。結果画面の内訳表示に使う。
+    var sessionFirstClear: Double { Double(sessionFirstClearDeci) / 10 }
+
     // MARK: 初期化
 
     private init() { load() }
@@ -202,6 +216,7 @@ final class EnergyStore {
         sessionEarnedDeci     = 0
         sessionClearBonusDeci = 0
         sessionDailyBonusDeci = 0
+        sessionFirstClearDeci = 0
     }
 
     /// プレイ中の獲得（正解1問ごとなど）。残高にすぐ加算して保存する。
@@ -232,6 +247,16 @@ final class EnergyStore {
         guard deci > 0 else { return }
         balanceDeci           += deci
         sessionDailyBonusDeci += deci
+        save()
+    }
+
+    /// 初回クリア報酬（PuzzleProgress が額を決める）。
+    /// クリアボーナスとは分けて数え、結果画面の内訳で「はじめての クリア」として見せる。
+    func grantFirstClearBonus(_ kcal: Double) {
+        let deci = Self.toDeci(kcal)
+        guard deci > 0 else { return }
+        balanceDeci           += deci
+        sessionFirstClearDeci += deci
         save()
     }
 
@@ -271,6 +296,7 @@ final class EnergyStore {
         sessionEarnedDeci     = 0
         sessionClearBonusDeci = 0
         sessionDailyBonusDeci = 0
+        sessionFirstClearDeci = 0
         UserDefaults.standard.removeObject(forKey: UDKey.energyDeciKcal)
         UserDefaults.standard.removeObject(forKey: UDKey.totalCorrectAllTime)
         UserDefaults.standard.removeObject(forKey: Self.modifiedAtKey)

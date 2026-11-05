@@ -215,6 +215,14 @@ final class GameRankManager {
         return all
     }
 
+    /// 開いたばかりのゲームを先頭へ出す。タイトル画面に見えるのは上から9〜10枚だけなので、
+    /// 後ろのままだと、開いたのに見えない（ロゴが先頭のときはロゴのすぐ後ろ。loadSaved と同じ理由）。
+    func bringToFront(_ game: GamePickerSelection) {
+        sortedGames.removeAll { $0 == game }
+        sortedGames.insert(game, at: sortedGames.first == .logoCard ? 1 : 0)
+        save()
+    }
+
     /// 指定ゲームを並び順の最後尾へ移動する（フリックで吹き飛ばしたときに呼ばれる）。
     /// - Parameter persist: 保存するか。自動デモでは false にして、見た目だけ動かす
     ///   （ユーザーが自分で並べた順番を、デモが勝手に書き換えないようにするため）。

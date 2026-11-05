@@ -124,6 +124,12 @@ enum UDKey {
     static let klotskiClears     = "slide_clears_klotski"      // クロツキ：クリアした回数
     static let hakoiriClears     = "slide_clears_hakoiri"      // 箱入り娘（標準）：クリアした回数
     static let huarongdaoClears  = "slide_clears_huarongdao"   // 華容道：クリアした回数
+    static let hakoiriHardBest   = "slide_best_hakoiri_hard"   // 箱入り娘（むずかしい）：最少手数
+    static let hakoiriHardClears = "slide_clears_hakoiri_hard" // 箱入り娘（むずかしい）：クリアした回数
+    static let hakoiriLastMode   = "slide_hakoiri_last_mode"   // 箱入り娘：最後に選んだモード（端末の中だけ）
+    static let puzzleUnlocked    = "puzzle_unlocked"           // 解放の道のり：開いた段（PuzzleProgress.swift を参照）
+    static let puzzleFirstCleared = "puzzle_first_cleared"     // 解放の道のり：初回クリア報酬を渡した段
+    static let puzzleTilesToBringForward = "puzzle_tiles_forward" // 解放の道のり：タイトル画面の前へ出すタイル（端末の中だけ）
 }
 
 // MARK: - Reaction

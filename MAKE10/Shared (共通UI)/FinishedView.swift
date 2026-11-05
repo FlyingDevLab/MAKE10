@@ -192,6 +192,24 @@ struct FinishedView: View {
             .padding(.bottom, 16)
             .transition(.scale.combined(with: .opacity))
         }
+
+        // ── かわわたり解放バナー ─────────────────────────
+        // 10びょうモードで はじめて記録ができたセッションのみ表示する
+        if viewModel.showRiverUnlockBanner {
+            Text("puzzle_opened \(PuzzleStep.river1.openedName)")
+                .font(.system(size: 18, weight: .black, design: .rounded))
+                .foregroundStyle(DS.blitzColor)
+                .multilineTextAlignment(.center)
+                .padding(.vertical, 12)
+                .padding(.horizontal, 24)
+                .background(
+                    RoundedRectangle(cornerRadius: DS.sectionRadius)
+                        .fill(DS.card)
+                        .shadow(color: .black.opacity(0.08), radius: 10, x: 0, y: 4)
+                )
+                .padding(.bottom, 16)
+                .transition(.scale.combined(with: .opacity))
+        }
     }
 
     private var playAgainButton: some View {

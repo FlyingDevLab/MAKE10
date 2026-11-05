@@ -32,7 +32,11 @@ struct SlidingPuzzleView: View {
     @State private var viewModel: SlidingPuzzleViewModel
 
     init(kind: SlidingPuzzleKind) {
-        _viewModel = State(initialValue: SlidingPuzzleViewModel(kind: kind))
+        // 箱入り娘は、前に選んでいたモードから始める。開いていなければ標準のまま
+        let saved = UserDefaults.standard.string(forKey: UDKey.hakoiriLastMode)
+            .flatMap(SlidingPuzzleKind.init(rawValue:))
+        let start = saved.flatMap { kind.modes.contains($0) && PuzzleProgress.shared.isUnlocked($0.step) ? $0 : nil }
+        _viewModel = State(initialValue: SlidingPuzzleViewModel(kind: start ?? kind))
     }
 
     private var kind:  SlidingPuzzleKind  { viewModel.kind }
@@ -44,6 +48,8 @@ struct SlidingPuzzleView: View {
     /// 盤以外（ひとこと・手数・地名・出口の名前・ボタン・余白）が使う高さの見積もり（pt）。
     /// 盤のマスの大きさを決めるのに使う。ここを直し忘れると、背の低い画面でボタンがはみ出す。
     private let chromeHeight: CGFloat = 250
+    /// モードの切り替えがあるゲームで、そのぶん足す高さ（pt）
+    private let modeBarHeight: CGFloat = 46
 
     var body: some View {
         GeometryReader { geo in
@@ -55,6 +61,8 @@ struct SlidingPuzzleView: View {
                     .multilineTextAlignment(.center)
                     .lineLimit(2)
                     .minimumScaleFactor(0.8)
+
+                if kind.modes.count > 1 { modeBar }
 
                 stats
 
@@ -70,14 +78,57 @@ struct SlidingPuzzleView: View {
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
         }
-        .onAppear(perform: playScreenshotScene)
+        .onAppear {
+            EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+            playScreenshotScene()
+        }
     }
 
     /// 幅にも高さにも収まる、いちばん大きいマスの大きさ（pt）
     private func cellSize(for size: CGSize) -> CGFloat {
         let byWidth  = (size.width - 24 - 28 - rimWidth * 2) / CGFloat(SlidingPuzzleViewModel.cols)
-        let byHeight = (size.height - chromeHeight - rimWidth * 2) / CGFloat(SlidingPuzzleViewModel.rows)
+        let chrome = chromeHeight + (kind.modes.count > 1 ? modeBarHeight : 0)
+        let byHeight = (size.height - chrome - rimWidth * 2) / CGFloat(SlidingPuzzleViewModel.rows)
         return max(40, min(byWidth, byHeight, 96))
+    }
+
+    // MARK: モードの切り替え
+
+    /// 箱入り娘の「標準」「むずかしい」。切り替えると盤は最初からになる（途中の盤は保存しない）。
+    /// まだ開いていないモードは 🔒 を付けて薄く見せ、この先に何があるかだけ分かるようにする。
+    private var modeBar: some View {
+        HStack(spacing: 8) {
+            ForEach(kind.modes) { mode in
+                let isOn = mode == kind
+                let isOpen = PuzzleProgress.shared.isUnlocked(mode.step)
+                Button {
+                    guard !isOn else { return }
+                    SoundManager.shared.playTap()
+                    UserDefaults.standard.set(mode.rawValue, forKey: UDKey.hakoiriLastMode)
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        viewModel = SlidingPuzzleViewModel(kind: mode)
+                    }
+                    EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+                } label: {
+                    HStack(spacing: 4) {
+                        if !isOpen { Text(verbatim: "🔒").font(.system(size: 12)) }
+                        Text(mode.modeLabel)
+                            .font(.system(size: 14, weight: .bold, design: .rounded))
+                            .lineLimit(1)
+                            .minimumScaleFactor(0.7)
+                    }
+                    .foregroundStyle(isOn ? theme.accentInk : theme.text)
+                    .frame(maxWidth: .infinity)
+                    .frame(height: 36)
+                    .background(RoundedRectangle(cornerRadius: 10).fill(isOn ? theme.accent : theme.groundDeep))
+                }
+                .buttonStyle(.plain)
+                .disabled(!isOpen)
+                .opacity(isOpen ? 1 : 0.55)
+                .accessibilityValue(isOpen ? Text(verbatim: "") : Text("puzzle_locked"))
+                .accessibilityAddTraits(isOn ? .isSelected : [])
+            }
+        }
     }
 
     // MARK: 手数とクリア回数
@@ -441,6 +492,14 @@ private struct PuzzleResultCard: View {
             .font(.system(size: 13, weight: .medium, design: .rounded))
             .foregroundStyle(theme.muted)
             .multilineTextAlignment(.center)
+
+            // 今回のクリアで開いたもの
+            if let opened = viewModel.openedStep {
+                Text("puzzle_opened \(opened.openedName)")
+                    .font(.system(size: 15, weight: .black, design: .rounded))
+                    .foregroundStyle(theme.accent)
+                    .multilineTextAlignment(.center)
+            }
 
             EnergyRewardBanner()
                 .padding(.vertical, 2)

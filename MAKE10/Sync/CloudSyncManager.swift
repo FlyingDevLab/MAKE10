@@ -185,6 +185,7 @@ final class CloudSyncManager {
         manager.register(ScoreBoardSync.shared)        // ハイスコア・ベストタイム（scores）
         manager.register(ThanksNotebookStore.shared)   // ありがとう てちょう（thanks）
         manager.register(GameRecordSync.shared)        // MAKE10 の Blitz の解放・統計（game）
+        manager.register(PuzzleProgress.shared)        // パズルの解放・初回クリア報酬（puzzles）
         manager.start()
     }
 

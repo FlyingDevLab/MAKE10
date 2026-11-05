@@ -233,6 +233,9 @@ struct TitleView: View {
         .onAppear {
             // デモで見た目だけ動いていた並びを捨て、保存済みの（自分で並べた）順番に戻す
             rankManager.reloadSaved()
+            // 10びょうモードの記録があれば かわわたり を開き、開いたばかりのタイルを前へ出す（PuzzleProgress.swift を参照）
+            PuzzleProgress.shared.refreshBlitzRecord()
+            PuzzleProgress.shared.takeTilesToBringForward().forEach(rankManager.bringToFront)
             // ← 変更可：初回デモ開始までの待機時間（秒）
             scheduleDemo(delay: 2.5)
         }
@@ -317,10 +320,12 @@ struct TitleView: View {
 
     // MARK: 表示ゲームの算出
 
-    /// blitz の解放状態を反映した、ロゴを含む全ゲームの並び順。
+    /// blitz とパズルの解放状態を反映した、ロゴを含む全ゲームの並び順。
     /// visibleGames / currentVisibleCount の両方から参照される共通の下地。
     private var filteredGames: [GamePickerSelection] {
-        rankManager.sortedGames.filter { $0 != .blitz || viewModel.isBlitzUnlocked }
+        rankManager.sortedGames.filter {
+            ($0 != .blitz || viewModel.isBlitzUnlocked) && PuzzleProgress.shared.isTileVisible($0)
+        }
     }
 
     /// 現在の表示枚数上限。ロゴの位置によって9（バナーあり）と10（バナーなし）を動的に切り替える。

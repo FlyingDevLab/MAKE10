@@ -78,6 +78,8 @@ final class SlidingPuzzleViewModel {
     private(set) var isNewBest:    Bool = false
     /// 更新する前の記録（初めて解いたときは nil）
     private(set) var previousBest: Int? = nil
+    /// 今回のクリアであたらしく開いた段（「○○が ひらいた！」に使う）
+    private(set) var openedStep:   PuzzleStep? = nil
 
     /// 自己最少手数（未クリアなら nil）
     var best: Int? { ScoreBoard.fewestMoves(for: kind.bestKey) }
@@ -89,7 +91,7 @@ final class SlidingPuzzleViewModel {
 
     init(kind: SlidingPuzzleKind) {
         self.kind = kind
-        reset()
+        setUpBoard()
     }
 
     // MARK: - 盤の読み取り
@@ -267,6 +269,10 @@ final class SlidingPuzzleViewModel {
         var bonus = Double(kind.par) * EnergyRewards.slidingPuzzleBonusRate
         if moves == kind.par { bonus += EnergyRewards.perfectBonus }
         EnergyStore.shared.grantClearBonus(bonus)
+        // 次の段を開き、はじめてのクリアなら初回クリア報酬を渡す（PuzzleProgress.swift を参照）
+        let result = PuzzleProgress.shared.clear(kind.step)
+        EnergyStore.shared.grantFirstClearBonus(result.firstClearReward)
+        openedStep = result.opened
         GameDailyBonus.shared.claim(kind.pickerSelection)   // その日はじめてなら「きょう はじめての ボーナス」
         SoundManager.shared.playCorrect()
 
@@ -298,8 +304,20 @@ final class SlidingPuzzleViewModel {
         SoundManager.shared.playTap()
     }
 
-    /// 最初の配置に戻す。配置表は毎回作り直して使う（前の遊びの位置を引き継がないように）。
+    /// 最初の配置に戻して、新しく遊び始める。
     func reset() {
+        setUpBoard()
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+    }
+
+    // ★ init で EnergyStore.beginSession() を呼ばない理由 ★
+    //   親の画面が描き直されるたびに、SwiftUI は @State に渡す初期値を作り直してから捨てる。
+    //   init で呼ぶと、その捨てられるインスタンスが「今回の獲得量」を 0 に戻してしまい、
+    //   解けた直後の結果画面からエネルギーの表示が消える（残高は増えているので気づきにくい）。
+    //   遊び始めの 0 戻しは、画面の onAppear とやり直しのボタンから行う。
+
+    /// 盤を最初の配置にする。配置表は毎回作り直して使う（前の遊びの位置を引き継がないように）。
+    private func setUpBoard() {
         generation  += 1
         drag         = nil
         pieces       = kind.pieces
@@ -311,6 +329,6 @@ final class SlidingPuzzleViewModel {
         showsResult  = false
         isNewBest    = false
         previousBest = nil
-        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+        openedStep   = nil
     }
 }

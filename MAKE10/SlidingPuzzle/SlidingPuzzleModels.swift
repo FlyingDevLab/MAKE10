@@ -15,12 +15,14 @@
 //   このファイルの SlidingPuzzleKind に「配置・名札・色」を持たせている。
 //   （Web 版 flyingdevlab.com/kids/ の /shared/klotski.js と同じ分け方）
 //
-// ★ むずかしさは標準だけ ★
-//   Web 版の箱入り娘には4段（標準・難関・おこ・激おこ）があるが、アプリは標準だけにしている。
-//   箱入り娘の標準は、華容道と同じ「橫刀立馬」の並び（最短81手）。名札と色だけが違う。
+// ★ 箱入り娘だけ2モードある ★
+//   Web 版の箱入り娘には4段（標準・難関・おこ・激おこ）があるが、アプリは「標準」と「むずかしい」の2つにしている。
+//   標準は、華容道と同じ「橫刀立馬」の並び（最短81手）で、名札と色だけが違う。
+//   むずかしいは Web 版の「激おこ」の並び（最短120手）。父・母・番頭の横長3枚が三段の壁になる。
+//   モードごとに SlidingPuzzleKind を1つ持ち、記録も別々にしている（タイルは1枚）。
 //
 // ★ 最短の手数は総当たりで確かめた値 ★
-//   クロツキ 32手 / 華容道 81手 / 箱入り娘（標準）81手。
+//   クロツキ 32手 / 華容道 81手 / 箱入り娘 標準 81手・むずかしい 120手。
 //   同じ駒を続けて動かしている間は1手と数える（このパズルの慣習。SlidingPuzzleViewModel を参照）。
 //   配置を変えたら必ず解き直し、par も書き換えること。
 //
@@ -75,6 +77,7 @@ struct SlidingPuzzleTheme {
 enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
     case klotski      // クロツキ（英語圏の名前。文字のない積み木。最短32手・いちばんやさしい）
     case hakoiri      // 箱入り娘（日本。娘と奉公人。標準の並びで最短81手）
+    case hakoiriHard  // 箱入り娘のむずかしいモード（最短120手）
     case huarongdao   // 華容道（中国。三國演義の武将。橫刀立馬の並びで最短81手）
 
     var id: String { rawValue }
@@ -83,7 +86,7 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
     var title: LocalizedStringKey {
         switch self {
         case .klotski:    return "klotski_title"
-        case .hakoiri:    return "hakoiri_title"
+        case .hakoiri, .hakoiriHard: return "hakoiri_title"
         case .huarongdao: return "huarongdao_title"
         }
     }
@@ -92,7 +95,7 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
     var tagline: LocalizedStringKey {
         switch self {
         case .klotski:    return "klotski_tagline"
-        case .hakoiri:    return "hakoiri_tagline"
+        case .hakoiri, .hakoiriHard: return "hakoiri_tagline"
         case .huarongdao: return "huarongdao_tagline"
         }
     }
@@ -100,9 +103,33 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
     /// 最短の手数（総当たりで確かめた値。このファイル冒頭を参照）
     var par: Int {
         switch self {
-        case .klotski:    return 32
-        case .hakoiri:    return 81
-        case .huarongdao: return 81
+        case .klotski:     return 32
+        case .hakoiri:     return 81
+        case .hakoiriHard: return 120
+        case .huarongdao:  return 81
+        }
+    }
+
+    /// 同じタイルの中で選べるモード。1つだけなら切り替えのボタンは出さない。
+    var modes: [SlidingPuzzleKind] {
+        switch self {
+        case .hakoiri, .hakoiriHard: return [.hakoiri, .hakoiriHard]
+        default:                     return [self]
+        }
+    }
+
+    /// モードのボタンに出す名前
+    var modeLabel: LocalizedStringKey {
+        self == .hakoiriHard ? "むずかしい" : "slide_mode_standard"
+    }
+
+    /// 解放の道のりの中での位置（PuzzleProgress.swift を参照）
+    var step: PuzzleStep {
+        switch self {
+        case .klotski:     return .klotski
+        case .hakoiri:     return .hakoiri
+        case .hakoiriHard: return .hakoiriHard
+        case .huarongdao:  return .huarongdao
         }
     }
 
@@ -136,7 +163,7 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
                 accentInk: .white,
                 typesetting: nil)
         // 藍の台に、欅の枠と木の駒（娘だけ朱漆）
-        case .hakoiri:
+        case .hakoiri, .hakoiriHard:
             return SlidingPuzzleTheme(
                 ground: Color(red: 0.11, green: 0.16, blue: 0.26),
                 groundDeep: Color(red: 0.07, green: 0.10, blue: 0.18),
@@ -198,13 +225,9 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
         // 出口（下）を店先、上を奥と見立て、商売の丁稚を表に、家事の女中を奥に置く。
         // 標準だけは丁稚が女中より上にいる（丁稚は番頭に付いて商売を覚えるので、番頭のそば）。
         case .hakoiri:
-            let shu     = Color(red: 0.75, green: 0.26, blue: 0.18)   // 娘（朱漆）
-            let walnut  = Color(red: 0.60, green: 0.42, blue: 0.25)   // 縦駒（胡桃）
-            let kaya    = Color(red: 0.79, green: 0.60, blue: 0.39)   // 横駒（榧）
-            let hinoki  = Color(red: 0.89, green: 0.75, blue: 0.56)   // 小駒（檜）
-            let gold    = Color(red: 0.93, green: 0.79, blue: 0.42)
-            let woodInk = Color(red: 0.23, green: 0.14, blue: 0.08)
-            let pale    = Color(red: 1.00, green: 0.96, blue: 0.89)
+            let shu = HakoiriWood.shu, walnut = HakoiriWood.walnut, kaya = HakoiriWood.kaya
+            let hinoki = HakoiriWood.hinoki, gold = HakoiriWood.gold
+            let woodInk = HakoiriWood.ink, pale = HakoiriWood.pale
             return [
                 SlidingPiece(id: "musume",  w: 2, h: 2, x: 1, y: 0, face: "娘",   ruby: "むすめ",     label: "むすめ",     fill: shu,    ink: gold),
                 SlidingPiece(id: "chichi",  w: 1, h: 2, x: 0, y: 0, face: "父",   ruby: "ちち",       label: "ちち",       fill: walnut, ink: pale),
@@ -216,6 +239,31 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
                 SlidingPiece(id: "decchi2", w: 1, h: 1, x: 2, y: 3, face: "丁稚", ruby: "でっち",     label: "でっち",     fill: hinoki, ink: woodInk),
                 SlidingPiece(id: "jochu1",  w: 1, h: 1, x: 0, y: 4, face: "女中", ruby: "じょちゅう", label: "じょちゅう", fill: hinoki, ink: woodInk),
                 SlidingPiece(id: "jochu2",  w: 1, h: 1, x: 3, y: 4, face: "女中", ruby: "じょちゅう", label: "じょちゅう", fill: hinoki, ink: woodInk),
+            ]
+
+        // むずかしい（Web 版の「激おこ」。最短120手）。
+        //  女 娘 娘 女
+        //  祖 娘 娘 祖
+        //  祖 父 父 祖
+        //  丁 母 母 丁
+        //  ・ 番 番 ・
+        // 横長の駒は、横に1マス空いていないと動けず、縦に動くには上下に2マスの空きが要る。
+        // それが3枚あるので、盤が一気に重くなる。
+        case .hakoiriHard:
+            let shu = HakoiriWood.shu, walnut = HakoiriWood.walnut, kaya = HakoiriWood.kaya
+            let hinoki = HakoiriWood.hinoki, gold = HakoiriWood.gold
+            let woodInk = HakoiriWood.ink, pale = HakoiriWood.pale
+            return [
+                SlidingPiece(id: "musume",  w: 2, h: 2, x: 1, y: 0, face: "娘",   ruby: "むすめ",     label: "むすめ",     fill: shu,    ink: gold),
+                SlidingPiece(id: "sofu",    w: 1, h: 2, x: 0, y: 1, face: "祖父", ruby: "そふ",       label: "そふ",       fill: walnut, ink: pale),
+                SlidingPiece(id: "sobo",    w: 1, h: 2, x: 3, y: 1, face: "祖母", ruby: "そぼ",       label: "そぼ",       fill: walnut, ink: pale),
+                SlidingPiece(id: "chichi",  w: 2, h: 1, x: 1, y: 2, face: "父",   ruby: "ちち",       label: "ちち",       fill: kaya,   ink: woodInk),
+                SlidingPiece(id: "haha",    w: 2, h: 1, x: 1, y: 3, face: "母",   ruby: "はは",       label: "はは",       fill: kaya,   ink: woodInk),
+                SlidingPiece(id: "banto",   w: 2, h: 1, x: 1, y: 4, face: "番頭", ruby: "ばんとう",   label: "ばんとう",   fill: kaya,   ink: woodInk),
+                SlidingPiece(id: "jochu1",  w: 1, h: 1, x: 0, y: 0, face: "女中", ruby: "じょちゅう", label: "じょちゅう", fill: hinoki, ink: woodInk),
+                SlidingPiece(id: "jochu2",  w: 1, h: 1, x: 3, y: 0, face: "女中", ruby: "じょちゅう", label: "じょちゅう", fill: hinoki, ink: woodInk),
+                SlidingPiece(id: "decchi1", w: 1, h: 1, x: 0, y: 3, face: "丁稚", ruby: "でっち",     label: "でっち",     fill: hinoki, ink: woodInk),
+                SlidingPiece(id: "decchi2", w: 1, h: 1, x: 3, y: 3, face: "丁稚", ruby: "でっち",     label: "でっち",     fill: hinoki, ink: woodInk),
             ]
 
         // 橫刀立馬（最短81手）。名前を確かめられた唯一の布局。
@@ -256,6 +304,7 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
         switch self {
         case .klotski:    return UDKey.klotskiBest
         case .hakoiri:    return UDKey.hakoiriBest
+        case .hakoiriHard: return UDKey.hakoiriHardBest
         case .huarongdao: return UDKey.huarongdaoBest
         }
     }
@@ -265,6 +314,7 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
         switch self {
         case .klotski:    return UDKey.klotskiClears
         case .hakoiri:    return UDKey.hakoiriClears
+        case .hakoiriHard: return UDKey.hakoiriHardClears
         case .huarongdao: return UDKey.huarongdaoClears
         }
     }
@@ -273,8 +323,21 @@ enum SlidingPuzzleKind: String, CaseIterable, Identifiable {
     var pickerSelection: GamePickerSelection {
         switch self {
         case .klotski:    return .klotski
-        case .hakoiri:    return .hakoiri
+        case .hakoiri, .hakoiriHard: return .hakoiri
         case .huarongdao: return .huarongdao
         }
     }
+}
+
+// MARK: - 箱入り娘の木の色
+
+/// 標準とむずかしいで共有する、箱入り娘の駒の色。
+private enum HakoiriWood {
+    static let shu    = Color(red: 0.75, green: 0.26, blue: 0.18)   // 娘（朱漆）
+    static let walnut = Color(red: 0.60, green: 0.42, blue: 0.25)   // 縦駒（胡桃）
+    static let kaya   = Color(red: 0.79, green: 0.60, blue: 0.39)   // 横駒（榧）
+    static let hinoki = Color(red: 0.89, green: 0.75, blue: 0.56)   // 小駒（檜）
+    static let gold   = Color(red: 0.93, green: 0.79, blue: 0.42)
+    static let ink    = Color(red: 0.23, green: 0.14, blue: 0.08)
+    static let pale   = Color(red: 1.00, green: 0.96, blue: 0.89)
 }

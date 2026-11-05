@@ -74,9 +74,11 @@ enum ScoreBoard {
         UDKey.klotskiBest,
         UDKey.hakoiriBest,
         UDKey.huarongdaoBest,
+        UDKey.hakoiriHardBest,
         UDKey.klotskiClears,
         UDKey.hakoiriClears,
         UDKey.huarongdaoClears,
+        UDKey.hakoiriHardClears,
     ]
 
     // MARK: Int 型スコア（Pinball / CoinDrop / Maze / Blitz / TenPuzzle の連続正解）
@@ -140,6 +142,7 @@ enum ScoreBoard {
         UDKey.klotskiBest,
         UDKey.hakoiriBest,
         UDKey.huarongdaoBest,
+        UDKey.hakoiriHardBest,
     ]
 
     // MARK: Int 型の最少回数（RiverCrossing / SlidingPuzzle）

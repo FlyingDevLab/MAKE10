@@ -153,6 +153,8 @@ final class GameViewModel {
     var tappedTileValue:  Int?        = nil
     /// Blitzモード解放バナーの表示フラグ（解放直後のゲーム終了画面で1度だけ表示）
     var showUnlockBanner: Bool        = false
+    /// 10びょうモードで はじめて記録ができて、かわわたりが開いたセッションか
+    var showRiverUnlockBanner: Bool   = false
     /// 今回が歴代最高スコアかどうか（リザルト画面の「New Record!」表示に使う）。
     /// 30びょう・10びょうそれぞれのモードで、そのモードの記録を更新したときに true になる。
     var isNewHighScore:   Bool        = false
@@ -256,6 +258,7 @@ final class GameViewModel {
         tappedTileValue     = nil  // タイルフィードバック状態をリセット
         isNewHighScore      = false
         showUnlockBanner    = false
+        showRiverUnlockBanner = false
         gameState           = .playing
         questionNumber     = Int.random(in: 1...9)
         // 次の問題を先読みしておくことで、正解後の問題切り替えを瞬時に行える
@@ -526,6 +529,12 @@ final class GameViewModel {
         // 保存先は currentScoreKey がモードに応じて振り分ける（30びょうと10びょうは別キー）。
         isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: currentScoreKey)
 
+        // 10びょうモードに記録ができたら、かわわたりを開く（PuzzleProgress.swift を参照）
+        if gameMode == .blitz && score > 0 {
+            showRiverUnlockBanner = PuzzleProgress.shared.unlock(.river1)
+            if showRiverUnlockBanner { SoundManager.shared.playUnlock() }
+        }
+
         // ── クリアボーナス ────────────────────────────────
         // 正解の数 × モードごとの倍率。10びょうは短い時間で答えるぶん倍率を高くしている
         let bonusRate = gameMode == .blitz ? EnergyRewards.make10BonusRateBlitz
@@ -580,6 +589,7 @@ final class GameViewModel {
         isBlitzUnlocked     = false
         isNewHighScore      = false
         showUnlockBanner    = false
+        showRiverUnlockBanner = false
         // Array(repeating:count:) でゼロ埋め配列を作り直して統計をクリア
         questionAttempts    = Array(repeating: 0, count: 10)
         questionCorrects    = Array(repeating: 0, count: 10)
@@ -591,6 +601,7 @@ final class GameViewModel {
         DrawingStore.shared.clearAll()       // お絵かきの線も消す
         WallpaperStore.shared.reset()        // かべがみも消して、いつもの背景に戻す
         GameDailyBonus.shared.reset()        // ゲームごとの「きょう はじめての ボーナス」の記録も消す
+        PuzzleProgress.shared.reset()        // パズルの解放と初回クリア報酬の記録も消す
         // お絵かき画面の背景色・道具パネルの位置とたたみ具合も、はじめの状態に戻す
         for key in [UDKey.playBoardBackground, UDKey.playPanelOffsetX,
                     UDKey.playPanelOffsetY, UDKey.playPanelCollapsed] {

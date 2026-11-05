@@ -33,6 +33,10 @@
 //   渡るたびに増やすと、戻す と わたる をくり返すだけで増やせてしまう。
 //   クリアしたときに「最短の回数 × 倍率」を渡し、最短で渡れたらさらに上乗せする。
 //   （Web 版と同じ盤・同じルール。エネルギーはアプリだけのもの）
+//
+// ★ ステージは順番に開く ★
+//   Web 版は4つとも最初から選べるが、アプリは1問目をクリアすると2問目が開く形にしている。
+//   4問目をクリアするとクロツキが開く（PuzzleProgress.swift を参照）。
 
 import SwiftUI
 
@@ -44,6 +48,8 @@ final class RiverCrossingViewModel {
         static let crossDuration: Double = 0.55
         /// 違反を見せてから引き返すまでの時間（秒）← 変更可
         static let holdDuration:  Double = 1.2
+        /// 全員が着いてから結果を出すまでの時間（秒）← 変更可
+        static let resultDelay:   Double = 0.4
     }
 
     // MARK: ステージ
@@ -81,6 +87,8 @@ final class RiverCrossingViewModel {
     private(set) var isNewBest: Bool = false
     /// 更新する前のベスト（初めてクリアしたときは nil）
     private(set) var previousBest: Int? = nil
+    /// 今回のクリアであたらしく開いた段（「○○が ひらいた！」に使う）
+    private(set) var openedStep: PuzzleStep? = nil
 
     // ★ 盤の世代番号が要る理由 ★
     //   渡る処理は「舟が着いたあと」「違反を見せたあと」を asyncAfter で予約する。
@@ -93,8 +101,10 @@ final class RiverCrossingViewModel {
 
     init() {
         let saved = UserDefaults.standard.string(forKey: UDKey.riverCrossingLastStage)
-        stage = saved.flatMap(RiverStage.init(rawValue:)) ?? .wolf
-        restart()
+        // 前に選んでいたステージから始める。開いていないものが保存されていたら1問目に戻す
+        stage = saved.flatMap(RiverStage.init(rawValue:))
+            .flatMap { PuzzleProgress.shared.isUnlocked($0.step) ? $0 : nil } ?? .wolf
+        setUpBoard()
     }
 
     // MARK: - 盤の読み取り
@@ -132,8 +142,13 @@ final class RiverCrossingViewModel {
 
     // MARK: - ステージ
 
+    /// そのステージが開いているか
+    func isUnlocked(_ stage: RiverStage) -> Bool {
+        PuzzleProgress.shared.isUnlocked(stage.step)
+    }
+
     func select(_ newStage: RiverStage) {
-        guard newStage != stage else { return }
+        guard newStage != stage, isUnlocked(newStage) else { return }
         stage = newStage
         UserDefaults.standard.set(newStage.rawValue, forKey: UDKey.riverCrossingLastStage)
         restart()
@@ -146,8 +161,16 @@ final class RiverCrossingViewModel {
         return all[i + 1]
     }
 
-    /// 盤を最初の状態に戻す。途中の盤は保存しない（途中でやめたら最初から）。
+    /// 盤を最初の状態に戻して、新しく遊び始める。
     func restart() {
+        setUpBoard()
+        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+    }
+
+    /// 盤を最初の状態にする。途中の盤は保存しない（途中でやめたら最初から）。
+    /// init でも呼ぶので、ここでは EnergyStore に触らない
+    /// （理由は SlidingPuzzleViewModel の「init で EnergyStore.beginSession() を呼ばない理由」を参照）。
+    private func setUpBoard() {
         generation  += 1
         whereIs      = Dictionary(uniqueKeysWithValues: stage.actors.map { ($0.id, RiverSide.near) })
         boatAt       = .near
@@ -158,7 +181,7 @@ final class RiverCrossingViewModel {
         isCleared    = false
         isNewBest    = false
         previousBest = nil
-        EnergyStore.shared.beginSession()   // 結果画面に出す「今回の獲得量」を 0 に戻す
+        openedStep   = nil
     }
 
     // MARK: - 操作
@@ -274,10 +297,25 @@ final class RiverCrossingViewModel {
         var bonus = Double(stage.par) * EnergyRewards.riverCrossingBonusRate
         if moves == stage.par { bonus += EnergyRewards.perfectBonus }
         EnergyStore.shared.grantClearBonus(bonus)
+        // 次のステージ（4問目ならクロツキ）を開き、はじめてのクリアなら初回クリア報酬を渡す
+        let result = PuzzleProgress.shared.clear(stage.step)
+        EnergyStore.shared.grantFirstClearBonus(result.firstClearReward)
+        openedStep = result.opened
         GameDailyBonus.shared.claim(.riverCrossing)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
 
         SoundManager.shared.playCorrect()
-        withAnimation(.easeOut(duration: 0.3)) { isCleared = true }
+
+        // ★ 結果を少し待ってから出す理由 ★
+        //   全員がむこう岸に着いた様子を見せるため。また、渡り終えた処理と同じ瞬間に isCleared を変えると、
+        //   新記録のときに結果のカードが出ず、ボタンの状態も古いまま残ることがあった
+        //   （スライドパズルは結果を遅らせて出していて、この症状が起きない）。
+        isBusy = true
+        let gen = generation
+        DispatchQueue.main.asyncAfter(deadline: .now() + C.resultDelay) { [weak self] in
+            guard let self, self.generation == gen else { return }
+            self.isBusy = false
+            withAnimation(.easeOut(duration: 0.3)) { self.isCleared = true }
+        }
     }
 
     // MARK: - 動きを減らす設定
@@ -302,6 +340,16 @@ extension RiverStage {
         case .weight: return UDKey.riverCrossingBestWeight
         case .pairs:  return UDKey.riverCrossingBestPairs
         case .raft:   return UDKey.riverCrossingBestRaft
+        }
+    }
+
+    /// 解放の道のりの中での位置（PuzzleProgress.swift を参照）
+    var step: PuzzleStep {
+        switch self {
+        case .wolf:   return .river1
+        case .weight: return .river2
+        case .pairs:  return .river3
+        case .raft:   return .river4
         }
     }
 }
