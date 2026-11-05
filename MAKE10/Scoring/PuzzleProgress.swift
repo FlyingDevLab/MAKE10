@@ -25,8 +25,6 @@
 // ★ CHESS をクロツキの次にしている理由 ★
 //   かわわたりとクロツキを自力で解ける子なら、チェスのルールは十分に理解できるため。
 //   華容道・箱入り娘は同じ盤の続きなので、チェスを遊ぶのにそこまで解く必要はない。
-//   まだ作っていないが、解放の記録だけは先に残す。作った時点で、もう条件を満たした人にはすぐ開く。
-//   画面には何も出さない（isPlayable を参照）。
 //
 // ★ 数字ではなく名前の集まりで持っている理由 ★
 //   「何段目まで進んだか」を数字で持つと、将来ゲームを途中に足したときに、保存した数字の意味がずれる。
@@ -60,9 +58,6 @@ enum PuzzleStep: String, CaseIterable {
         }
     }
 
-    /// 遊べるものか。CHESS はまだ無いので、解放しても画面には何も出さない。
-    var isPlayable: Bool { self != .chess }
-
     /// 初回クリア報酬（kcal）
     var firstClearReward: Double {
         switch self {
@@ -82,6 +77,7 @@ enum PuzzleStep: String, CaseIterable {
         case .klotski:    return .klotski
         case .huarongdao: return .huarongdao
         case .hakoiri:    return .hakoiri
+        case .chess:      return .chess
         default:          return nil
         }
     }
@@ -97,7 +93,7 @@ enum PuzzleStep: String, CaseIterable {
         case .huarongdao:  return String(localized: "huarongdao_title")
         case .hakoiri:     return String(localized: "hakoiri_title")
         case .hakoiriHard: return String(localized: "puzzle_name_hakoiri_hard")
-        case .chess:       return ""
+        case .chess:       return String(localized: "chess_title")
         }
     }
 }
@@ -180,15 +176,14 @@ final class PuzzleProgress: CloudSyncSource {
     struct ClearResult {
         /// 初回クリア報酬（kcal）。2回目以降は 0
         let firstClearReward: Double
-        /// 今回あたらしく開いた、遊べる段（画面に知らせる。CHESS はまだ無いので知らせない）
-        let opened: PuzzleStep?
+        /// 今回あたらしく開いた段（画面に知らせる）。クロツキでは華容道と CHESS の 2 つ
+        let opened: [PuzzleStep]
     }
 
     /// 段をクリアした。次の段を開き、はじめてのクリアなら報酬の額を返す（渡すのは呼び出し側）。
     func clear(_ step: PuzzleStep) -> ClearResult {
         let isFirst = firstCleared.insert(step.rawValue).inserted
-        var opened: PuzzleStep? = nil
-        for next in step.opens where unlock(next) && next.isPlayable { opened = next }
+        let opened = step.opens.filter { unlock($0) }
         save()
         return ClearResult(firstClearReward: isFirst ? step.firstClearReward : 0, opened: opened)
     }

@@ -130,6 +130,10 @@ enum UDKey {
     static let puzzleUnlocked    = "puzzle_unlocked"           // 解放の道のり：開いた段（PuzzleProgress.swift を参照）
     static let puzzleFirstCleared = "puzzle_first_cleared"     // 解放の道のり：初回クリア報酬を渡した段
     static let puzzleTilesToBringForward = "puzzle_tiles_forward" // 解放の道のり：タイトル画面の前へ出すタイル（端末の中だけ）
+    static let chessLevel        = "chess_level"               // チェス：コンピュータの強さの段（端末の中だけ。画面には出さない）
+    static let chessPlayerColor  = "chess_player_color"        // チェス：前回えらんだ色（端末の中だけ）
+    static let chessLastMode     = "chess_last_mode"           // チェス：前回えらんだモード（端末の中だけ）
+    static let chessSavedGames   = "chess_saved_games"         // チェス：途中の対局（端末の中だけ）
 }
 
 // MARK: - Reaction

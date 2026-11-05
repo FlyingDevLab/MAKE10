@@ -300,7 +300,7 @@ final class RiverCrossingViewModel {
         // 次のステージ（4問目ならクロツキ）を開き、はじめてのクリアなら初回クリア報酬を渡す
         let result = PuzzleProgress.shared.clear(stage.step)
         EnergyStore.shared.grantFirstClearBonus(result.firstClearReward)
-        openedStep = result.opened
+        openedStep = result.opened.first
         GameDailyBonus.shared.claim(.riverCrossing)   // その日はじめてなら「きょう はじめての ボーナス」（GameDailyBonus.swift を参照）
 
         SoundManager.shared.playCorrect()

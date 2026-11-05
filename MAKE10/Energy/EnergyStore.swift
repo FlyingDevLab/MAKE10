@@ -154,6 +154,14 @@ enum EnergyRewards {
     static let firstClearRiver2: Double = 2_000         // ← 変更可（おとなと こども）
     static let firstClearRiver3: Double = 4_000         // ← 変更可（3くみの おやこ）
     static let firstClearRiver4: Double = 8_000         // ← 変更可（8にんの いかだ）
+    /// チェス。コンピュータに勝ったときだけ、勝った瞬間の段で額が決まる（1〜10 段）。
+    /// レッスンと、ふたりで・ならべては 0（ChessViewModel.swift を参照）。
+    static let chessWinRewards: [Double] = [100, 200, 400, 800, 1_600, 3_200, 6_400, 10_000, 10_000, 10_000]   // ← 変更可
+
+    static func chessWinReward(level: Int) -> Double {
+        chessWinRewards[min(chessWinRewards.count, max(1, level)) - 1]
+    }
+
     static let firstClearSlidingPuzzle: Double = 10_000 // ← 変更可（クロツキ・華容道・箱入り娘の標準とむずかしい）
 }
 

@@ -6,23 +6,26 @@
 //
 // ★ 何を良しとするか（Web 版と同じ）★
 //   駒のねうち（これが大半）＋ マスの良し悪し ＋ 少しの気まぐれ。
-//   キングの安全やポーンの形は見ていない。そこまで入れると、
-//   なぜその手なのかを人が読んで追えなくなる。
+//   下の段はこれだけで指す。なぜその手なのかを、人が読んで追える範囲に留めている。
+//   中ほどの段から上は、もっと細かく見る（下の 4）。
 //
 // ★ Web 版から変えたところ ★
 //   1. マスの良し悪しの向きを直した。
 //      Web 版は白の表を上下ひっくり返して引いているが、表は白から見た形（上が 8 段目）で
 //      書いてあるので、白はそのまま、黒をひっくり返すのが正しい。Web 版のままだと
 //      ポーンを進めるほど点が下がり（e2-e4 で −25）、キングは敵陣へ向かいたがる。
-//   2. 8〜10 段を足した。読む深さは 4・5・6。
-//      1〜7 段の深さ・雑さ・静止探索は Web 版の値のまま。
+//   2. 全 10 段にして、全体を強くした。上の段は Web 版では読めない深さを読む。
 //   3. 速くした（同じ深さなら、選ぶ手の評価は変わらない）。
 //      ・一度調べた局面を覚える（置換表）
 //      ・良さそうな手から調べる（置換表の手・取る手・キラー手・履歴）
 //      置換表は「残りの深さがちょうど同じ」ときだけ点を使う。
 //      深いほうの点まで流用すると、段ごとの読みの深さが崩れるため。
-//   4. 8 段以上は、3 回目の同一局面になる手を引き分けとして数える。
-//      有利なのに同じ手を繰り返して引き分けにしないため。1〜7 段は Web 版どおり見ない。
+//   4. 中ほどの段から上は、局面をもっと細かく見る（rich）。
+//      Web 版の見方だけでは、有利になっても勝ち切れず、千日手の引き分けが多かった。
+//      ・終盤のキングは中央へ、ポーンが進むほど強い（パスポーン）
+//      ・ビショップ 2 枚・開いた筋のルーク・キングの前のポーン
+//      ・駒で勝っている終盤は、相手のキングを隅へ追い詰める
+//   5. 上の段は読みの枝を落として深く読み（prunes）、千日手を避ける（avoidsRepetition）。
 //
 // ★ 深さは固定。端末の速さで強さを変えない ★
 //   時間だけで区切ると、速い端末ほど深く読んで強くなる。
@@ -30,8 +33,9 @@
 //   超えたら最後に読み終わった深さの答えを使う。
 //
 // ★ 確かめたこと ★
-//   マスの向きを直した chess-ai.js と、局面の点数と読みの結果の点数が一致すること
-//   （2026-11-05）。検証のスクリプトはこのリポジトリに入れていない。
+//   rich・prunes・avoidsRepetition を使わない読みは、マスの向きを直した chess-ai.js と
+//   局面の点数と読みの結果の点数が一致すること（2026-11-05）。
+//   段の強さは隣の段との対局で確かめた。検証のスクリプトはこのリポジトリに入れていない。
 //
 // 裏のスレッドで呼ぶこと。深い段は 1 手に数秒かかることがある。
 //
@@ -51,30 +55,34 @@ nonisolated enum ChessAI {
         var quiescence: Int
         /// なにも見ないで指す割合
         var blunder: Double = 0
-        /// 3 回目の同一局面になる手を引き分けとして数えるか
+        /// 3 回目の同一局面になる手を引き分けとして数え、読みの中でも同じ局面を避けるか
         var avoidsRepetition = false
+        /// 局面を細かく見るか（このファイル冒頭の 4）
+        var rich = false
+        /// 枝を落として深く読むか。「深さ」は目安になるが、同じ時間でずっと先まで読める
+        var prunes = false
     }
 
     /// 強さのはしご。段のことは画面に出さない（ChessLadder.swift）。
+    /// 1〜2 段は「ただで取れる駒を取る」練習の相手なので、ときどき何も見ずに指す。
     static let levels: [Settings] = [
-        // 1 段 半分は、なにも見ないで指す。ただで駒を置いていく
-        Settings(depth: 1, slack: 300, quiescence: 0, blunder: 0.5),
+        // 1 段 3 回に 1 回ほど、なにも見ないで指す。ただで駒を置いていく
+        Settings(depth: 1, slack: 250, quiescence: 0, blunder: 0.35),
         // 2 段 ときどき、なにも見ないで指す
-        Settings(depth: 1, slack: 300, quiescence: 0, blunder: 0.2),
-        // 3 段 取り合いの先を読まない。取り返されるのに気づかず駒を損する
-        Settings(depth: 1, slack: 300, quiescence: 0),
-        // 4 段 取り返しだけは見える
-        Settings(depth: 1, slack: 150, quiescence: 2),
-        // 5 段 相手の返しが見える
-        Settings(depth: 2, slack: 50, quiescence: 4),
-        // 6 段
-        Settings(depth: 2, slack: 0, quiescence: 4),
-        // 7 段 2 手の組み合わせが見える
-        Settings(depth: 3, slack: 0, quiescence: 4),
-        // 8〜10 段 アプリで足した段。Web 版では読めない深さ
-        Settings(depth: 4, slack: 0, quiescence: 4, avoidsRepetition: true),
-        Settings(depth: 5, slack: 0, quiescence: 4, avoidsRepetition: true),
-        Settings(depth: 6, slack: 0, quiescence: 4, avoidsRepetition: true),
+        Settings(depth: 1, slack: 150, quiescence: 1, blunder: 0.12),
+        // 3 段 取り返しが見える
+        Settings(depth: 1, slack: 80, quiescence: 2),
+        // 4 段 相手の返しが見える
+        Settings(depth: 2, slack: 50, quiescence: 4, rich: true),
+        // 5 段
+        Settings(depth: 3, slack: 25, quiescence: 4, rich: true),
+        // 6 段 2 手の組み合わせが見える
+        Settings(depth: 4, slack: 10, quiescence: 4, rich: true),
+        // 7 段〜 Web 版では読めない深さ
+        Settings(depth: 5, slack: 0, quiescence: 4, avoidsRepetition: true, rich: true, prunes: true),
+        Settings(depth: 6, slack: 0, quiescence: 6, avoidsRepetition: true, rich: true, prunes: true),
+        Settings(depth: 7, slack: 0, quiescence: 6, avoidsRepetition: true, rich: true, prunes: true),
+        Settings(depth: 9, slack: 0, quiescence: 6, avoidsRepetition: true, rich: true, prunes: true),
     ]
 
     /// 遅い端末を守る安全弁（秒）。
@@ -182,6 +190,130 @@ nonisolated enum ChessAI {
         return color == .white ? Int(score) : -Int(score)
     }
 
+    /// 終盤のキングのマスの良し悪し。中央へ出た方が良い。
+    private static let kingEndgame: [Int32] = [
+        -50,-40,-30,-20,-20,-30,-40,-50,
+        -30,-20,-10,  0,  0,-10,-20,-30,
+        -30,-10, 20, 30, 30, 20,-10,-30,
+        -30,-10, 30, 40, 40, 30,-10,-30,
+        -30,-10, 30, 40, 40, 30,-10,-30,
+        -30,-10, 20, 30, 30, 20,-10,-30,
+        -30,-30,  0,  0,  0,  0,-30,-30,
+        -50,-30,-30,-30,-30,-30,-30,-50,
+    ]
+
+    /// [色 × 64 + マス]。終盤のキングの点から、ふつうのキングの点を引いたもの
+    fileprivate nonisolated(unsafe) static let kingShift: UnsafePointer<Int32> = {
+        let table = UnsafeMutablePointer<Int32>.allocate(capacity: 128)
+        for square in 0..<64 {
+            table[square] = kingEndgame[square] - squareValues[5][square]
+            table[64 + square] = kingEndgame[square ^ 56] - squareValues[5][square ^ 56]
+        }
+        return UnsafePointer(table)
+    }()
+
+    /// [色 × 64 + マス]。そのポーンより前の、同じ筋と隣の筋。相手のポーンがいなければパスポーン
+    fileprivate nonisolated(unsafe) static let passedMask: UnsafePointer<UInt64> = {
+        let table = UnsafeMutablePointer<UInt64>.allocate(capacity: 128)
+        table.initialize(repeating: 0, count: 128)
+        for square in 0..<64 {
+            let file = ChessSquare.file(square), rank = ChessSquare.rank(square)
+            for f in max(0, file - 1)...min(7, file + 1) {
+                for r in 1...8 {
+                    let target = UInt64(1) << UInt64(ChessSquare.at(file: f, rank: r))
+                    if r > rank { table[square] |= target }
+                    if r < rank { table[64 + square] |= target }
+                }
+            }
+        }
+        return UnsafePointer(table)
+    }()
+
+    /// パスポーンのねうち。段（手前から 0〜7）ごと
+    private static let passedBonus: [Int] = [0, 5, 10, 20, 40, 70, 120, 0]
+
+    /// 局面の点数（細かく見る版）。color から見た点。
+    static func evaluateRich(_ position: ChessPosition, for color: ChessColor) -> Int {
+        var score = evaluate(position, for: .white)
+        let whites = position.whites, blacks = position.blacks
+        let pawns = position.pawns
+
+        // どれだけ終盤か。駒が減るほど phase が小さい（24 が開始の局面）
+        let phase = min(24, (position.knights | position.bishops).nonzeroBitCount
+                            + position.rooks.nonzeroBitCount * 2 + position.queens.nonzeroBitCount * 4)
+        let endgame = 24 - phase
+
+        // キング
+        let shift = kingShift
+        let whiteKing = position.kings & whites, blackKing = position.kings & blacks
+        let whiteKingSquare = whiteKing.trailingZeroBitCount, blackKingSquare = blackKing.trailingZeroBitCount
+        if whiteKing != 0 { score += Int(shift[whiteKingSquare]) * endgame / 24 }
+        if blackKing != 0 { score -= Int(shift[64 &+ blackKingSquare]) * endgame / 24 }
+
+        // キングの前のポーン。駒が多いうちだけ見る
+        if phase >= 10 {
+            let t = ChessTables.shared
+            if whiteKing != 0 {
+                let front = t.pawn[whiteKingSquare] | (whiteKing >> 8)
+                score += (front & pawns & whites).nonzeroBitCount * 12 * phase / 24
+            }
+            if blackKing != 0 {
+                let front = t.pawn[64 &+ blackKingSquare] | (blackKing << 8)
+                score -= (front & pawns & blacks).nonzeroBitCount * 12 * phase / 24
+            }
+        }
+
+        // パスポーン。終盤ほど重い
+        let mask = passedMask
+        var bits = pawns & whites
+        while bits != 0 {
+            let s = bits.trailingZeroBitCount
+            bits &= bits &- 1
+            if mask[s] & pawns & blacks == 0 {
+                score += passedBonus[8 &- (s >> 3) &- 1] * (24 + endgame) / 24
+            }
+        }
+        bits = pawns & blacks
+        while bits != 0 {
+            let s = bits.trailingZeroBitCount
+            bits &= bits &- 1
+            if mask[64 &+ s] & pawns & whites == 0 {
+                score -= passedBonus[s >> 3] * (24 + endgame) / 24
+            }
+        }
+
+        // ビショップ 2 枚
+        if (position.bishops & whites).nonzeroBitCount >= 2 { score += 30 }
+        if (position.bishops & blacks).nonzeroBitCount >= 2 { score -= 30 }
+
+        // 開いた筋のルーク
+        let fileA: UInt64 = 0x0101_0101_0101_0101
+        bits = position.rooks
+        while bits != 0 {
+            let s = bits.trailingZeroBitCount
+            bits &= bits &- 1
+            let file = fileA << UInt64(s & 7)
+            let white = whites >> UInt64(s) & 1 != 0
+            if file & pawns == 0 {
+                score += white ? 20 : -20
+            } else if file & pawns & (white ? whites : blacks) == 0 {
+                score += white ? 10 : -10
+            }
+        }
+
+        // 勝っている終盤は、相手のキングを隅へ追い詰め、自分のキングを近づける
+        if phase <= 8 && abs(score) >= 300 && whiteKing != 0 && blackKing != 0 {
+            let loser = score > 0 ? blackKingSquare : whiteKingSquare
+            let winner = score > 0 ? whiteKingSquare : blackKingSquare
+            let file = loser & 7, rank = loser >> 3
+            let edge = max(3 &- file, file &- 4) &+ max(3 &- rank, rank &- 4)
+            let distance = abs(file &- (winner & 7)) &+ abs(rank &- (winner >> 3))
+            let mopUp = edge &* 12 &+ (14 &- distance) &* 5
+            score += score > 0 ? mopUp : -mopUp
+        }
+        return color == .white ? score : -score
+    }
+
     // MARK: 手を選ぶ
 
     struct Choice: Sendable {
@@ -222,7 +354,8 @@ nonisolated enum ChessAI {
             return Choice(move: pick(root), depth: 0, score: 0, nodes: 0)
         }
 
-        let searcher = ChessSearcher(settings: settings, budget: budget, shouldStop: shouldStop)
+        let searcher = ChessSearcher(settings: settings, budget: budget, shouldStop: shouldStop,
+                                     gameHashes: settings.avoidsRepetition ? game.hashes : [])
         var bestMove = root[0]
         var bestScore = 0
         var reached = 0
@@ -284,10 +417,17 @@ private nonisolated final class ChessSearcher {
     private static let boundExact: UInt8 = 0
     private static let boundLower: UInt8 = 1
     private static let boundUpper: UInt8 = 2
-    private static let maxPly = 32
+    private static let maxPly = 40
     private static let perPly = ChessPosition.moveBufferCapacity
 
     private let quiescenceDepth: Int
+    private let rich: Bool
+    private let prunes: Bool
+    private let avoidsRepetition: Bool
+    /// 実際の対局に現れた局面の札
+    private let played: Set<UInt64>
+    /// 読みの途中の局面の札。[ply]
+    private let path: UnsafeMutablePointer<UInt64>
     private let moves: UnsafeMutablePointer<ChessMove>
     private let ranks: UnsafeMutablePointer<Int32>
     private let table: UnsafeMutablePointer<Entry>
@@ -300,15 +440,21 @@ private nonisolated final class ChessSearcher {
     private(set) var nodes = 0
     private(set) var aborted = false
 
-    init(settings: ChessAI.Settings, budget: TimeInterval, shouldStop: (() -> Bool)?) {
+    init(settings: ChessAI.Settings, budget: TimeInterval, shouldStop: (() -> Bool)?, gameHashes: [UInt64]) {
         quiescenceDepth = settings.quiescence
+        rich = settings.rich
+        prunes = settings.prunes
+        avoidsRepetition = settings.avoidsRepetition
+        played = Set(gameHashes)
+        path = .allocate(capacity: Self.maxPly + 1)
+        path.initialize(repeating: 0, count: Self.maxPly + 1)
         self.shouldStop = shouldStop
         deadline = DispatchTime.now().uptimeNanoseconds &+ UInt64(max(budget, 0) * 1_000_000_000)
 
         moves = .allocate(capacity: Self.maxPly * Self.perPly)
         ranks = .allocate(capacity: Self.maxPly * Self.perPly)
-        // 深く読む段だけ大きな表を使う。1 行 16 バイトなので 4MB
-        let size = settings.depth >= 4 ? 1 << 18 : 1 << 12
+        // 深く読む段だけ大きな表を使う。1 行 16 バイトなので 16MB
+        let size = settings.depth >= 4 ? 1 << 20 : 1 << 12
         table = .allocate(capacity: size)
         table.initialize(repeating: Entry(), count: size)
         tableMask = UInt64(size - 1)
@@ -324,6 +470,7 @@ private nonisolated final class ChessSearcher {
         table.deallocate()
         killers.deallocate()
         history.deallocate()
+        path.deallocate()
     }
 
     private func checkTime() {
@@ -337,6 +484,19 @@ private nonisolated final class ChessSearcher {
         nodes &+= 1
         if nodes & 1023 == 0 { checkTime() }
         if aborted { return 0 }
+
+        // 同じ局面に戻る手は引き分けとして数える。戻れるのは取りもポーンの動きもない間だけ
+        if avoidsRepetition {
+            path[ply] = position.hash
+            if position.halfMove > 0 {
+                if played.contains(position.hash) { return 0 }
+                var back = ply &- 2
+                while back >= 1 {
+                    if path[back] == position.hash { return 0 }
+                    back &-= 2
+                }
+            }
+        }
 
         let color = position.turn
         let base = moves + ply &* Self.perPly
@@ -358,7 +518,8 @@ private nonisolated final class ChessSearcher {
         let slot = table + Int(truncatingIfNeeded: position.hash & tableMask)
         if slot.pointee.key == position.hash {
             tableMove = slot.pointee.move
-            if Int(slot.pointee.depth) == depth {
+            // 枝を落とす段は、より深く読んだ点も使う。ほかの段は読みの深さを崩さない
+            if Int(slot.pointee.depth) == depth || (prunes && Int(slot.pointee.depth) > depth) {
                 let score = Int(slot.pointee.score)
                 switch slot.pointee.bound {
                 case Self.boundExact: return score
@@ -366,6 +527,16 @@ private nonisolated final class ChessSearcher {
                 default:              if score <= alpha { return score }
                 }
             }
+        }
+
+        let inCheck = prunes && position.inCheck(color)
+
+        // 自分がパスしても相手を上回るなら、この枝は読むまでもない
+        if prunes && !inCheck && depth >= 3 && ply &+ 6 < Self.maxPly && beta < ChessAI.mate - 100
+            && position.pieces(of: color) & ~(position.pawns | position.kings) != 0 {
+            let score = -search(position.passingTurn(), depth: depth &- 3, alpha: -beta, beta: -beta &+ 1, ply: ply &+ 1)
+            if aborted { return 0 }
+            if score >= beta { return beta }
         }
 
         let count = position.pseudoMoves(for: color, into: base)
@@ -390,7 +561,22 @@ private nonisolated final class ChessSearcher {
             if next.inCheck(color) { continue }
             legal &+= 1
 
-            let score = -search(next, depth: depth &- 1, alpha: -beta, beta: -alpha, ply: ply &+ 1)
+            var score: Int
+            let givesCheck = prunes && next.inCheck(next.turn)
+            // チェックの応手は 1 手ぶん余計に読む
+            let extended = inCheck && ply &+ 6 < Self.maxPly ? depth : depth &- 1
+            // 後ろの手（有望でない静かな手）は浅く読み、良さそうなら読み直す
+            if prunes && legal > 3 && depth >= 3 && !inCheck && !givesCheck && !move.isCapture
+                && move.promotion == nil {
+                let reduction = legal > 10 && depth >= 5 ? 2 : 1
+                score = -search(next, depth: extended &- reduction, alpha: -alpha &- 1, beta: -alpha, ply: ply &+ 1)
+                if aborted { return 0 }
+                if score > alpha {
+                    score = -search(next, depth: extended, alpha: -beta, beta: -alpha, ply: ply &+ 1)
+                }
+            } else {
+                score = -search(next, depth: extended, alpha: -beta, beta: -alpha, ply: ply &+ 1)
+            }
             if aborted { return 0 }
             if score > best {
                 best = score
@@ -455,7 +641,7 @@ private nonisolated final class ChessSearcher {
         if aborted { return 0 }
 
         let color = position.turn
-        let stand = ChessAI.evaluate(position, for: color)
+        let stand = rich ? ChessAI.evaluateRich(position, for: color) : ChessAI.evaluate(position, for: color)
         if left <= 0 { return stand }
         if stand >= beta { return beta }
         var alpha = max(alphaIn, stand)

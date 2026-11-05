@@ -590,6 +590,7 @@ final class GameViewModel {
         isNewHighScore      = false
         showUnlockBanner    = false
         showRiverUnlockBanner = false
+        ChessStore.reset()
         // Array(repeating:count:) でゼロ埋め配列を作り直して統計をクリア
         questionAttempts    = Array(repeating: 0, count: 10)
         questionCorrects    = Array(repeating: 0, count: 10)

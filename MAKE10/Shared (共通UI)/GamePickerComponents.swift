@@ -62,6 +62,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case klotski        // クロツキ
     case hakoiri        // 箱入り娘
     case huarongdao     // 華容道
+    case chess          // チェス（クロツキをクリアすると開く。PuzzleProgress.swift を参照）
     case memory         // どうぶつめくり（神経衰弱）
     case stickerStorage // シール管理・遊ぶ画面
     case stickerDex     // シールじてん（v1.6.0 から。シール帳・シールやさんからも開ける）
@@ -85,6 +86,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .klotski:          return "🧱"
         case .hakoiri:          return "👘"
         case .huarongdao:       return "🏮"
+        case .chess:            return "♟️"
         case .memory:           return "🐘"
         case .stickerStorage:   return "🖼️"
         case .stickerDex:       return "📖"
@@ -117,6 +119,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .klotski:           return "klotski_title"
         case .hakoiri:           return "hakoiri_title"
         case .huarongdao:        return "huarongdao_title"
+        case .chess:             return "chess_title"
         case .memory:            return "memory_title"
         case .stickerStorage:    return "sticker_storage_title"
         case .stickerDex:        return "sticker_dex_title"
@@ -143,6 +146,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
         case .klotski:          return Color(red: 0.89, green: 0.40, blue: 0.31)   // クロツキの大きい積み木の色
         case .hakoiri:          return Color(red: 0.16, green: 0.24, blue: 0.42)   // 箱入り娘の藍
         case .huarongdao:       return Color(red: 0.70, green: 0.19, blue: 0.16)   // 華容道の曹操（朱漆）
+        case .chess:            return ChessInk.frame   // チェス盤の枠の色
         case .memory:           return .brown
         case .stickerStorage:   return .pink
         case .stickerDex:       return .cyan

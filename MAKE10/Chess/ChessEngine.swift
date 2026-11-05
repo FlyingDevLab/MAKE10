@@ -9,7 +9,7 @@
 // ★ Web 版から変えたところ ★
 //   Web 版は盤を 64 個の文字の配列で持ち、手を指すたびに配列を複製する。
 //   読みやすいが、1手を深く読むには遅い（深さ 6 で 6〜34 秒、Mac の実測）。
-//   アプリでは 10 段目に深さ 6 を読ませたいので、盤を「ビットボード」で持つ。
+//   アプリの上の段はもっと深く読むので、盤を「ビットボード」で持つ。
 //
 //     pawns … kings   その種類の駒がいるマスに 1 が立った 64 ビットの整数
 //     whites / blacks その色の駒がいるマス
@@ -47,6 +47,11 @@ nonisolated enum ChessColor: UInt8, Hashable, Sendable {
     case black = 1
 
     var opposite: ChessColor { self == .white ? .black : .white }
+
+    /// FEN の手番の字
+    var fenLetter: String { self == .white ? "w" : "b" }
+
+    init(fenLetter: String) { self = fenLetter == "b" ? .black : .white }
 }
 
 nonisolated enum ChessPieceType: UInt8, Hashable, Sendable, CaseIterable {
@@ -190,7 +195,6 @@ nonisolated struct ChessMove: Hashable, Sendable {
         if flags & Self.flagCastleQ != 0 { return .queenSide }
         return nil
     }
-    var isDoublePush: Bool { flags & Self.flagDouble != 0 }
     var isCapture: Bool { capturedCode != Self.none }
 
     /// 'e2e4'・'e7e8q' の形。途中保存はこの文字で手を持つ。
@@ -392,7 +396,6 @@ nonisolated struct ChessPosition: Sendable {
     fileprivate(set) var hash: UInt64 = 0
 
     static let startFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-    static let emptyFen = "8/8/8/8/8/8/8/8 w - - 0 1"
 
     // MARK: 駒を見る
 
@@ -506,13 +509,14 @@ nonisolated struct ChessPosition: Sendable {
         recomputeHash()
     }
 
-    var fen: String {
+    /// FEN の駒の並びの部分。上の段から書く。
+    static func placement(_ piece: (Int) -> ChessPiece?) -> String {
         var rows: [String] = []
         for r in 0..<8 {
             var row = ""
             var gap = 0
             for c in 0..<8 {
-                if let p = piece(at: r * 8 + c) {
+                if let p = piece(r * 8 + c) {
                     if gap > 0 { row += String(gap); gap = 0 }
                     row.append(p.fen)
                 } else {
@@ -522,13 +526,17 @@ nonisolated struct ChessPosition: Sendable {
             if gap > 0 { row += String(gap) }
             rows.append(row)
         }
+        return rows.joined(separator: "/")
+    }
+
+    var fen: String {
         var castle = ""
         if castleRights & 1 != 0 { castle += "K" }
         if castleRights & 2 != 0 { castle += "Q" }
         if castleRights & 4 != 0 { castle += "k" }
         if castleRights & 8 != 0 { castle += "q" }
         let ep = enPassant >= 0 ? ChessSquare.name(Int(enPassant)) : "-"
-        return "\(rows.joined(separator: "/")) \(turn == .white ? "w" : "b") "
+        return "\(Self.placement(piece(at:))) \(turn.fenLetter) "
             + "\(castle.isEmpty ? "-" : castle) \(ep) \(halfMove) \(fullMove)"
     }
 
@@ -539,6 +547,20 @@ nonisolated struct ChessPosition: Sendable {
         var next = self
         next.turn = color
         next.hash ^= ChessTables.shared.zobristTurn
+        return next
+    }
+
+    /// 手番だけを相手に渡した局面（読みの枝刈りに使う。実際の対局では使わない）。
+    /// アンパッサンの権利はその 1 手限りなので消す。
+    func passingTurn() -> ChessPosition {
+        var next = self
+        let t = ChessTables.shared
+        if next.enPassant >= 0 {
+            next.hash ^= t.zobristEpFile[Int(next.enPassant) & 7]
+            next.enPassant = -1
+        }
+        next.turn = turn.opposite
+        next.hash ^= t.zobristTurn
         return next
     }
 
@@ -1070,17 +1092,6 @@ nonisolated struct ChessPosition: Sendable {
         return max(0, taken - next.gainAfter(target, color.opposite))
     }
 
-    /// color がそのマスで取り始めたときの損得。得なら正、損なら負。取れないマスなら 0。
-    func exchange(at target: Int, by color: ChessColor) -> Int {
-        guard target >= 0, let piece = piece(at: target), piece.color != color else { return 0 }
-        let from = cheapestAttacker(of: target, by: color)
-        if from < 0 { return 0 }
-        var next = self
-        next.slide(from: from, to: target)
-        // 最初の 1 回だけは「やめる自由」を掛けない。取りに行くと決めた手だから
-        return piece.type.value - next.gainAfter(target, color.opposite)
-    }
-
     /// その手で取りに行ったときの損得。exchange と違い「この駒で取ったら」を数える。
     func exchange(of move: ChessMove) -> Int {
         guard let captured = move.captured else { return 0 }
@@ -1092,12 +1103,31 @@ nonisolated struct ChessPosition: Sendable {
         return captured.type.value - next.gainAfter(move.to, move.piece.color.opposite)
     }
 
-    /// 残っている駒の合計。キングは数えない（交換できないため）。
-    func material(of color: ChessColor) -> Int {
-        let mine = pieces(of: color)
-        return ChessPieceType.allCases.filter { $0 != .king }.reduce(0) {
-            $0 + (bitboard(of: $1) & mine).nonzeroBitCount * $1.value
+}
+
+// MARK: - 棋譜の文字
+
+nonisolated enum ChessNotation {
+    /// 1. e4 e5 2. Nf3 … の形。同じ色が続く並びも書ける（駒の動きを覚えるレッスン）。
+    static func text(_ moves: [(san: String, color: ChessColor)], firstNumber: Int) -> String {
+        var text = ""
+        var number = firstNumber
+        var previous: ChessColor?
+        for item in moves {
+            if item.color == .white {
+                if previous != nil { number += 1 }
+                text += (text.isEmpty ? "" : " ") + "\(number). \(item.san)"
+            } else if previous == nil {
+                text += "\(number)... \(item.san)"
+            } else if previous == .black {
+                number += 1
+                text += " \(number)... \(item.san)"
+            } else {
+                text += " \(item.san)"
+            }
+            previous = item.color
         }
+        return text
     }
 }
 
@@ -1108,16 +1138,25 @@ nonisolated struct ChessPosition: Sendable {
 nonisolated struct ChessGame: Sendable {
     private(set) var position: ChessPosition
     private var seen: [ChessPosition.Key: Int]
+    /// これまでに現れた局面の札。読みの中で千日手を避けるのに使う
+    private(set) var hashes: [UInt64]
 
     init(fen: String = ChessPosition.startFen) {
         position = ChessPosition(fen: fen)
         seen = [position.key: 1]
+        hashes = [position.hash]
     }
 
     /// 手を指す。
     mutating func play(_ move: ChessMove) {
         position.apply(move)
         seen[position.key, default: 0] += 1
+        hashes.append(position.hash)
+    }
+
+    /// 手番だけを変える。「相手は動かない」レッスンで使う。
+    mutating func setTurn(_ color: ChessColor) {
+        position = position.withTurn(color)
     }
 
     /// いまの局面が現れた回数
@@ -1135,8 +1174,6 @@ nonisolated struct ChessGame: Sendable {
         var game: ChessGame
         var moves: [ChessMove]
         var sans: [String]
-        /// 読めなかった手の文字。最後まで読めたら nil
-        var stopped: String?
     }
 
     /// 棋譜の文字列を 1 手ずつ指していく。読めない手が出たらそこで止める。
@@ -1145,12 +1182,9 @@ nonisolated struct ChessGame: Sendable {
         text = text.replacingOccurrences(of: "\\{[^}]*\\}", with: " ", options: .regularExpression)       // { } の注釈
         text = text.replacingOccurrences(of: "\\d+\\s*\\.(\\.\\.)?", with: " ", options: .regularExpression) // 1. や 1...
         text = text.replacingOccurrences(of: "(1-0|0-1|1/2-1/2|\\*)", with: " ", options: .regularExpression)
-        var result = LineResult(game: self, moves: [], sans: [], stopped: nil)
+        var result = LineResult(game: self, moves: [], sans: [])
         for token in text.split(whereSeparator: \.isWhitespace).map(String.init) {
-            guard let move = result.game.position.parseSan(token) else {
-                result.stopped = token
-                return result
-            }
+            guard let move = result.game.position.parseSan(token) else { return result }
             result.sans.append(result.game.position.san(of: move))
             result.moves.append(move)
             result.game.play(move)

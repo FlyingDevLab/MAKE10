@@ -187,3 +187,13 @@
 
 ### コミット
 - コミットしたら、作業中のブランチを origin へプッシュまでする。main はリリース済み（またはリリース直前）の版。次のバージョンは main から作業ブランチを作り、リリースしたら main にマージしてタグを付ける。
+
+## チェス（v1.7.0）
+
+- `MAKE10/Chess/` にある。ルール（ChessEngine）・相手（ChessAI）・練習相手（ChessCPU）・段の上げ下げ（ChessLadder）・保存（ChessStore）・進行（ChessViewModel）・画面（ChessView / ChessPieceView）。
+- クロツキをクリアすると華容道と一緒に開く。レッスン（第1〜3巻、全57回）と「あそぶ」3モード（コンピュータ・ふたりで・ならべて）がある。
+- レッスンは `MAKE10/Chess/Lessons/`。文章は `chess_lessons.json`（Web 版 lessons.js 3 巻の変換）で、日本語と英語のみ。xcstrings には入れていない。進行（ChessLessonSession）は SwiftUI を知らないので、自動で全問を解いて確かめられる。
+- 報酬はコンピュータモードの勝利のみ。額は勝った瞬間の段で決まる（`EnergyRewards.chessWinRewards`）。段は画面に出さない。
+- 段の上げ下げ: 勝ち +1、チェックメイト 半分（切り上げ）、投了 −2（詰みより重くしない）、引き分け −2、もどす 押すたびに −2。「ならべて」では動かさない。
+- 途中の対局は 1 手ごとに保存（端末の中だけ）。コンピュータ戦は決着のあとに「もどす」を使えない（勝ち直しで報酬を取れないように）。
+- 全 10 段は Web 版より強くしてある（`ChessAI.levels`）。4 段以上は局面を細かく見て（rich）、7 段以上は枝を落として深く読み千日手を避ける（prunes・avoidsRepetition）。10 段は深さ 9。

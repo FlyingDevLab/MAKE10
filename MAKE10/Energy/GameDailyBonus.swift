@@ -47,7 +47,7 @@ final class GameDailyBonus {
     static let targets: Set<GamePickerSelection> = [
         .normal, .blitz, .quiz, .whackAMole, .maze,
         .pinball, .coinDrop, .janken, .tenPuzzle, .riverCrossing,
-        .klotski, .hakoiri, .huarongdao, .memory,
+        .klotski, .hakoiri, .huarongdao, .chess, .memory,
     ]
 
     /// ゲームごとに、最後に受け取った日（キーは GamePickerSelection の rawValue、値は "2026-10-15"）。

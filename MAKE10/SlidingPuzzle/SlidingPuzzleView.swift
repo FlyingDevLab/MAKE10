@@ -494,8 +494,8 @@ private struct PuzzleResultCard: View {
             .multilineTextAlignment(.center)
 
             // 今回のクリアで開いたもの
-            if let opened = viewModel.openedStep {
-                Text("puzzle_opened \(opened.openedName)")
+            if !viewModel.openedSteps.isEmpty {
+                Text("puzzle_opened \(viewModel.openedSteps.map(\.openedName).formatted(.list(type: .and)))")
                     .font(.system(size: 15, weight: .black, design: .rounded))
                     .foregroundStyle(theme.accent)
                     .multilineTextAlignment(.center)

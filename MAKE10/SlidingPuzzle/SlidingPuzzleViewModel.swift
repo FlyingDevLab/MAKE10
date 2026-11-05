@@ -79,7 +79,7 @@ final class SlidingPuzzleViewModel {
     /// 更新する前の記録（初めて解いたときは nil）
     private(set) var previousBest: Int? = nil
     /// 今回のクリアであたらしく開いた段（「○○が ひらいた！」に使う）
-    private(set) var openedStep:   PuzzleStep? = nil
+    private(set) var openedSteps:  [PuzzleStep] = []
 
     /// 自己最少手数（未クリアなら nil）
     var best: Int? { ScoreBoard.fewestMoves(for: kind.bestKey) }
@@ -272,7 +272,7 @@ final class SlidingPuzzleViewModel {
         // 次の段を開き、はじめてのクリアなら初回クリア報酬を渡す（PuzzleProgress.swift を参照）
         let result = PuzzleProgress.shared.clear(kind.step)
         EnergyStore.shared.grantFirstClearBonus(result.firstClearReward)
-        openedStep = result.opened
+        openedSteps = result.opened
         GameDailyBonus.shared.claim(kind.pickerSelection)   // その日はじめてなら「きょう はじめての ボーナス」
         SoundManager.shared.playCorrect()
 
@@ -329,6 +329,6 @@ final class SlidingPuzzleViewModel {
         showsResult  = false
         isNewBest    = false
         previousBest = nil
-        openedStep   = nil
+        openedSteps  = []
     }
 }

@@ -49,6 +49,7 @@ private enum Screen {
     case tenPuzzle
     case riverCrossing
     case slidingPuzzle(SlidingPuzzleKind)   // クロツキ・箱入り娘・華容道（画面は共有）
+    case chess
     case memory
     case stickerStorage
     case stickerDex
@@ -153,6 +154,10 @@ struct MakeTenContentView: View {
                     SlidingPuzzleView(kind: kind)
                         .id(kind)           // ゲームを切り替えたら盤を作り直す
                         .portraitFramed()   // 盤が 4:5 の縦長
+                        .transition(.opacity)
+                case .chess:
+                    ChessView()
+                        .portraitFramed()   // 盤の下にボタンを積む
                         .transition(.opacity)
                 case .memory:
                     MemoryGameView()
@@ -343,7 +348,7 @@ struct MakeTenContentView: View {
     /// 縦のみで遊ぶ画面かどうか。盤面が縦長の前提で作られているゲームだけ true を返す。
     private var isPortraitOnlyScreen: Bool {
         switch screen {
-        case .pinball, .coinDrop, .tenPuzzle, .riverCrossing, .slidingPuzzle:
+        case .pinball, .coinDrop, .tenPuzzle, .riverCrossing, .slidingPuzzle, .chess:
             return true
         case .make10, .quizHome, .quizPlaying, .whackAMole, .maze, .janken, .memory,
              .stickerStorage, .stickerDex, .stickerShop, .gacha, .thanksNotebook:
@@ -384,6 +389,7 @@ struct MakeTenContentView: View {
             case .hakoiri, .hakoiriHard: return String(localized: "hakoiri_title")
             case .huarongdao: return String(localized: "huarongdao_title")
             }
+        case .chess:               return String(localized: "chess_title")
         case .memory:              return String(localized: "memory_title")
         case .stickerStorage:      return String(localized: "sticker_storage_title")
         case .stickerDex:          return String(localized: "sticker_dex_title")
@@ -414,7 +420,7 @@ struct MakeTenContentView: View {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .quizHome }
             }
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .riverCrossing, .slidingPuzzle, .memory, .stickerStorage, .stickerDex,
+             .janken, .tenPuzzle, .riverCrossing, .slidingPuzzle, .chess, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:
             return {
                 withAnimation(.easeInOut(duration: 0.3)) { screen = .make10 }
@@ -433,7 +439,7 @@ struct MakeTenContentView: View {
             }
         case .quizPlaying:                                               return nil
         case .whackAMole, .maze, .pinball, .coinDrop,
-             .janken, .tenPuzzle, .riverCrossing, .slidingPuzzle, .memory, .stickerStorage, .stickerDex,
+             .janken, .tenPuzzle, .riverCrossing, .slidingPuzzle, .chess, .memory, .stickerStorage, .stickerDex,
              .stickerShop, .gacha, .thanksNotebook:                       return nil
         }
     }
@@ -458,6 +464,7 @@ struct MakeTenContentView: View {
         case .tenPuzzle:           return "tenPuzzle"
         case .riverCrossing:       return "riverCrossing"
         case .slidingPuzzle(let kind): return "slidingPuzzle-\(kind.rawValue)"
+        case .chess:               return "chess"
         case .memory:              return "memory"
         case .stickerStorage:      return "stickerStorage"
         case .stickerDex:          return "stickerDex"
@@ -482,6 +489,7 @@ struct MakeTenContentView: View {
         case .klotski:    screen = .slidingPuzzle(.klotski)
         case .hakoiri:    screen = .slidingPuzzle(.hakoiri)
         case .huarongdao: screen = .slidingPuzzle(.huarongdao)
+        case .chess:      screen = .chess
         case .memory:     screen = .memory
         case .sticker:    screen = .stickerStorage
         case .janken:     screen = .janken
@@ -535,6 +543,7 @@ struct MakeTenContentView: View {
                         case .klotski:        screen = .slidingPuzzle(.klotski)
                         case .hakoiri:        screen = .slidingPuzzle(.hakoiri)
                         case .huarongdao:     screen = .slidingPuzzle(.huarongdao)
+                        case .chess:          screen = .chess
                         case .memory:         screen = .memory
                         case .stickerStorage: screen = .stickerStorage
                         case .stickerDex:     screen = .stickerDex

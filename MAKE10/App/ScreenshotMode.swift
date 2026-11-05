@@ -35,6 +35,7 @@ enum ScreenshotScene: String {
     case klotski      // クロツキの盤（はじめの配置）
     case hakoiri      // 箱入り娘の盤（はじめの配置）
     case huarongdao   // 華容道の盤（はじめの配置）
+    case chess        // チェスの盤
     case memory       // どうぶつめくり 5×5（まん中にロゴ）で、何組かそろえたところ
     case quiz         // 絵文字クイズ（ヨーロッパの国旗）で正解したところ
     case sticker      // シール帳であそぶ画面

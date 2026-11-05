@@ -1,0 +1,3149 @@
+{
+ "volumes": [
+  {
+   "no": 1,
+   "en": "Basics",
+   "ja": "きそ",
+   "chapters": [
+    {
+     "en": "The board",
+     "ja": "ばんと マスの なまえ"
+    },
+    {
+     "en": "The pieces",
+     "ja": "こまの うごき"
+    },
+    {
+     "en": "Notation",
+     "ja": "きふの きほん"
+    },
+    {
+     "en": "Special rules",
+     "ja": "とくべつな きまり"
+    },
+    {
+     "en": "Starting line",
+     "ja": "はじめの ならび"
+    },
+    {
+     "en": "How games end",
+     "ja": "しょうぶの つきかた"
+    },
+    {
+     "en": "Read a game",
+     "ja": "きふを よむ"
+    },
+    {
+     "en": "Free play",
+     "ja": "おまけ"
+    }
+   ],
+   "lessons": [
+    {
+     "chapter": 0,
+     "en": "Eight by eight",
+     "ja": "8かける8の ばん",
+     "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The board is 8 squares by 8 squares: 64 in all.",
+       "ja": "チェスの ばんは たて8・よこ8の 64マス。白マスと 黒マスが こうたいに ならんで いる。"
+      },
+      {
+       "t": "p",
+       "en": "Columns are files (a-h). Rows are ranks (1-8).",
+       "ja": "たての れつ 8本には、左から じゅんに a b c d e f g h の 字が ついて いる。よこの れつ 8本には、下から じゅんに 1 2 3 4 5 6 7 8 の すうじが ついて いる。ばんの まわりに 書いて あるのが それ。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "file",
+         "ja": "たての れつ",
+         "sym": "a〜h"
+        },
+        {
+         "en": "rank",
+         "ja": "よこの れつ",
+         "sym": "1〜8"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Rank 1 is White's side. The numbers grow as you go away from it.",
+       "ja": "白が すわる がわが 1だんめ。おくへ いくほど すうじが 大きく なる。"
+      }
+     ],
+     "task": {
+      "en": "Press the four corners of the board.",
+      "ja": "ばんの 4つの かど を おしてみよう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "a1",
+       "h1",
+       "a8",
+       "h8"
+      ],
+      "ordered": false
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "The name of a square",
+     "ja": "マスの なまえ",
+     "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Each square is named by its file letter, then its rank number.",
+       "ja": "たての 字と よこの すうじを つなげると、64マス ぜんぶに なまえが つく。e4 なら「e の れつ」の「4だんめ」。"
+      },
+      {
+       "t": "p",
+       "en": "Letter first, number second. Always.",
+       "ja": "じゅんばんは いつも おなじ。さきに 字、あとに すうじ。4e とは 書かない。"
+      },
+      {
+       "t": "key",
+       "en": "Learn these names and you can read notation. Notation is made of them.",
+       "ja": "この なまえが わかると、きふが よめる ように なる。きふは マスの なまえで 書いて あるから。"
+      }
+     ],
+     "task": {
+      "en": "Press each square as it is named.",
+      "ja": "いわれた マスを 1つずつ おしてみよう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "e4",
+       "a7",
+       "c2",
+       "f6",
+       "h5",
+       "d8"
+      ],
+      "ordered": true,
+      "mark": "frame"
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Light squares and dark squares",
+     "ja": "白マスと 黒マス",
+     "fen": "8/8/8/8/8/8/8/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The bottom-left square a1 is dark. The bottom-right square h1 is light.",
+       "ja": "左下の a1 は 黒マス。右下の h1 は 白マス。ばんを おくときは、いつも じぶんの 右下が 白マスに なる ように おく。"
+      },
+      {
+       "t": "p",
+       "en": "This matters most for the bishop, which never changes colour.",
+       "ja": "マスの いろが いちばん きいて くるのは ビショップ。ビショップは ななめにしか うごけない ので、はじめに いた マスの いろから 一生 出られない。くわしくは レッスン6で。"
+      },
+      {
+       "t": "key",
+       "en": "a1 is dark. The square at your bottom right is light.",
+       "ja": "a1 は 黒。じぶんの 右下は 白。"
+      }
+     ],
+     "task": {
+      "en": "Press every light square on the first rank.",
+      "ja": "1だんめ（いちばん 下の れつ）の 白マスを ぜんぶ おしてみよう。4つ あるよ。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "b1",
+       "d1",
+       "f1",
+       "h1"
+      ],
+      "ordered": false,
+      "mark": "rank"
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Pawn",
+     "ja": "ポーン",
+     "fen": "8/8/8/2ppp3/3P1P2/8/P7/8 w - - 0 1",
+     "still": true,
+     "goals": [
+      "c5",
+      "e5"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "A pawn moves one square forward. Never backward, never sideways.",
+       "ja": "ポーンは 前へ 1マスだけ。うしろへは もどれない。よこへも 行けない。ぜんぶの こまの 中で、ポーンだけが 一方通行。"
+      },
+      {
+       "t": "p",
+       "en": "From its starting square, a pawn may go two squares at once.",
+       "ja": "ただし はじめの いちに いる ときだけ、1マスでも 2マスでも えらべる。この ばんの a2 の ポーンで ためしてみて。2マス 行けるのは 1回きり。"
+      },
+      {
+       "t": "p",
+       "en": "Taking means moving onto an enemy piece and removing it.",
+       "ja": "ここで「とる」を おぼえよう。あいての こまが いる マスに 自分の こまを すすめると、その こまは ばんから いなくなる。かわりに 自分の こまが そこに 立つ。チェスでは これが「とる」。みかたの こまが いる マスには 入れない。"
+      },
+      {
+       "t": "p",
+       "en": "A pawn captures diagonally, not forward.",
+       "ja": "そして ポーンは、うごく むきと とる むきが ちがう。すすむのは まっすぐ 前だけど、とるのは ななめ 前。だから まっすぐ 前に いる こまは とれない。すすめなく なる だけ。じつは この「むきが ちがう」のは ポーンだけで、ほかの こまは ぜんぶ、うごける ところが そのまま とれる ところ。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Pawn",
+         "ja": "ポーン",
+         "sym": "—",
+         "pc": "P",
+         "symJa": "なし"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Forward to move, diagonal to take. Only the pawn works this way.",
+       "ja": "すすむのは まっすぐ、とるのは ななめ。ポーンだけ ちがう。"
+      }
+     ],
+     "task": {
+      "en": "Take the two marked pawns. The pawn straight ahead cannot be taken.",
+      "ja": "しるしの ついた ポーン 2つを とろう。d5 の ポーンは まっすぐ 前に いるので、どうしても とれない。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "capture": [
+        "c5",
+        "e5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Knight",
+     "ja": "ナイト",
+     "fen": "8/8/3p4/1pPPPp2/2PNP3/2PPP3/8/8 w - - 0 1",
+     "still": true,
+     "only": "N",
+     "goals": [
+      "b5",
+      "d6",
+      "f5"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The knight moves in an L: two squares, then one to the side.",
+       "ja": "ナイトは L の かたちに うごく。まっすぐ 2マス 行って、そこから よこへ 1マス。いつも おなじ かたち、いつも おなじ きょり。"
+      },
+      {
+       "t": "p",
+       "en": "The knight is the only piece that jumps over others.",
+       "ja": "そして ナイトだけが、とちゅうの こまを とびこえられる。まわりを ぜんぶ かこまれて いても、ナイトは 外へ 出られる。とびこえた こまは とらない。"
+      },
+      {
+       "t": "p",
+       "en": "A knight always lands on the opposite colour.",
+       "ja": "おもしろい ことに、ナイトは うごく たびに マスの いろが かわる。白マスから とんだら つぎは 黒マス、そのつぎは また 白マス。つぎの レッスンの ビショップは ちょうど 反対で、ずっと おなじ いろの マスから 出られない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Knight",
+         "ja": "ナイト",
+         "sym": "N",
+         "pc": "N"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "The knight moves in an L, and is the only piece that jumps.",
+       "ja": "ナイトは L じがた。ただ1つ とびこえられる こま。"
+      }
+     ],
+     "task": {
+      "en": "Jump out and take all three marked pawns, one after another.",
+      "ja": "ナイトは みかたの ポーンに ぐるりと かこまれて いる。とびこえて 外に 出て、しるしの ポーン 3つを とろう。3つは つづけて とれる。もどらなくても いいよ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "capture": [
+        "b5",
+        "d6",
+        "f5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Bishop",
+     "ja": "ビショップ",
+     "fen": "5p2/8/7p/8/4p3/p3p3/8/2B5 w - - 0 1",
+     "still": true,
+     "goals": [
+      "a3",
+      "f8",
+      "h6",
+      "e3"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The bishop moves only on diagonals.",
+       "ja": "ビショップは ななめに まっすぐ、何マスでも うごける。たてや よこには うごけない。とびこえる ことも できない。"
+      },
+      {
+       "t": "p",
+       "en": "A bishop can never leave its own colour of square.",
+       "ja": "ななめに うごくと、マスの いろは ずっと かわらない。黒マスから はじまった ビショップは、どこまで いっても 黒マス。白マスには 一生 たどりつけない。まえの レッスンの ナイトは うごく たびに いろが かわった。ちょうど 反対。"
+      },
+      {
+       "t": "p",
+       "en": "That is why each side has two: one for each colour.",
+       "ja": "だから ビショップは どちらの がわにも 2まい ある。1まいは 白マスの ビショップ、もう1まいは 黒マスの ビショップ。2まい そろって はじめて、ばんの ぜんぶの マスに とどく ように なる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Bishop",
+         "ja": "ビショップ",
+         "sym": "B",
+         "pc": "B"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "A light-square bishop and a dark-square bishop. The pair makes one set.",
+       "ja": "白マスの ビショップと 黒マスの ビショップ。2まいで 1くみ。"
+      }
+     ],
+     "task": {
+      "en": "Take the four marked pawns. One pawn cannot be taken at all.",
+      "ja": "しるしの ついた ポーン 4つを とろう。ぐるりと 一周 できる ならび だよ。しるしの ない ポーンが 1つ あるけど、それは どうしても とれない。なぜか かんがえてみて。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "capture": [
+        "a3",
+        "f8",
+        "h6",
+        "e3"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Rook",
+     "ja": "ルーク",
+     "fen": "8/p2p2p1/3P4/8/p2R2p1/8/8/8 w - - 0 1",
+     "still": true,
+     "only": "R",
+     "goals": [
+      "a4",
+      "a7",
+      "d7",
+      "g7",
+      "g4"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The rook moves in straight lines: up, down, left, right.",
+       "ja": "ルークは たてと よこに まっすぐ、何マスでも うごける。ななめには うごけない。"
+      },
+      {
+       "t": "p",
+       "en": "It cannot jump over anything.",
+       "ja": "とちゅうに こまが あると、そこで 止まる。とびこえる ことは できない。あいての こまが あれば、その マスで とって 止まる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Rook",
+         "ja": "ルーク",
+         "sym": "R",
+         "pc": "R"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Rook: straight lines only, and no jumping.",
+       "ja": "ルークは たて・よこ。とびこえ なし。"
+      }
+     ],
+     "task": {
+      "en": "Take all five marked pawns. Your own pawn blocks the way up.",
+      "ja": "ルークで、しるしの ついた ポーン 5つを ぜんぶ とろう。まっすぐ 上に 行こうと すると すぐ 止まる。d6 に いるのは みかたの ポーン。みかたでも とびこえる ことは できない。まわって いけば、ぐるりと 一周 できるよ。あいては うごかない。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "capture": [
+        "a4",
+        "a7",
+        "d7",
+        "g7",
+        "g4"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Queen",
+     "ja": "クイーン",
+     "fen": "8/3p2p1/8/8/p2Q4/8/8/p7 w - - 0 1",
+     "still": true,
+     "goals": [
+      "d7",
+      "g7",
+      "a4",
+      "a1"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The queen moves like a rook and a bishop together.",
+       "ja": "クイーンは たて・よこ・ななめの ぜんぶに、まっすぐ 何マスでも うごける。ルークの うごきと ビショップの うごきを あわせた もの。"
+      },
+      {
+       "t": "p",
+       "en": "She still cannot jump over pieces.",
+       "ja": "いちばん とおくまで とどく こまだけど、とびこえる ことは できない。とちゅうに こまが あれば そこで 止まる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Queen",
+         "ja": "クイーン",
+         "sym": "Q",
+         "pc": "Q"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Queen = rook + bishop.",
+       "ja": "クイーン ＝ ルーク ＋ ビショップ。"
+      }
+     ],
+     "task": {
+      "en": "Take all four marked pawns with the queen.",
+      "ja": "クイーンで、しるしの ついた ポーン 4つを ぜんぶ とろう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "capture": [
+        "d7",
+        "g7",
+        "a4",
+        "a1"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "King",
+     "ja": "キング",
+     "fen": "8/8/8/6p1/3K1n2/8/8/8 w - - 0 1",
+     "still": true,
+     "goals": [
+      "d6"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The king moves one square in any direction.",
+       "ja": "キングは たて・よこ・ななめの どこへでも うごけるけど、1マスだけ。いちばん だいじな こまなのに、いちばん ゆっくり あるく。"
+      },
+      {
+       "t": "p",
+       "en": "A king may never step onto a square the enemy attacks.",
+       "ja": "そして キングには もう1つ きまりが ある。あいてに ねらわれて いる マスには 入れない。じぶんから とられる ところへ 歩いて いく ことは できない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "King",
+         "ja": "キング",
+         "sym": "K",
+         "pc": "K"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "The king moves one square, and never onto an attacked one.",
+       "ja": "キングは 1マス。ねらわれた マスには 入れない。"
+      }
+     ],
+     "task": {
+      "en": "Walk the king to d6. The knight blocks one square, and is protected.",
+      "ja": "キングを しるしの d6 まで あるかせよう。まっすぐ 上に 行こうと すると、1マス 入れない ところが ある。あいての ナイトが そこを ねらって いるから。まわって いこう。ナイトは g5 の ポーンに まもられて いる。となりまで 行っても とれない。とった しゅんかん キングが とられて しまう からで、そういう 手は さいしょから さすことが できない。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "reach": [
+        "d6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "Letters and squares",
+     "ja": "こまの きごうと いきさき",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "A move is written as the piece letter plus the square it goes to.",
+       "ja": "きふは とても みじかく 書く。「こまの きごう」と「行き さきの マス」を つなげる だけ。Nf3 なら「ナイトが f3 へ」。"
+      },
+      {
+       "t": "p",
+       "en": "Knight is N, because King already took K.",
+       "ja": "きごうは えいごの あたまの 字。でも ナイト（Knight）だけ ちがって N。あたまの K は キング（King）が さきに つかって いるから、2ばんめの 字を つかう。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "King",
+         "ja": "キング",
+         "sym": "K",
+         "pc": "K"
+        },
+        {
+         "en": "Queen",
+         "ja": "クイーン",
+         "sym": "Q",
+         "pc": "Q"
+        },
+        {
+         "en": "Rook",
+         "ja": "ルーク",
+         "sym": "R",
+         "pc": "R"
+        },
+        {
+         "en": "Bishop",
+         "ja": "ビショップ",
+         "sym": "B",
+         "pc": "B"
+        },
+        {
+         "en": "Knight",
+         "ja": "ナイト",
+         "sym": "N",
+         "pc": "N"
+        },
+        {
+         "en": "Pawn",
+         "ja": "ポーン",
+         "sym": "—",
+         "pc": "P",
+         "symJa": "なし"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Pawns have no letter. e4 means a pawn went to e4.",
+       "ja": "ポーンには きごうが ない。e4 と マスの なまえ だけが 書いて あったら、それは ポーンの 手。いちばん 数が おおい こまなので、いちばん みじかく 書く。"
+      },
+      {
+       "t": "key",
+       "en": "No letter means a pawn. The knight is N.",
+       "ja": "字が ついて いなければ ポーン。ナイトは N。"
+      }
+     ],
+     "task": {
+      "en": "Play each written move on the board.",
+      "ja": "ばんの 下に 1手ずつ 出る きふの とおりに さしてみよう。白と 黒を こうたいに うごかすよ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "Taking is written with x",
+     "ja": "とる ときは x",
+     "fen": "4k3/8/5n2/3p4/2B1P1b1/5N2/8/4K3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "An x in the middle means the move took a piece.",
+       "ja": "こまを とった 手には、まん中に x を 入れる。Bxc6 なら「ビショップが c6 へ 行って、そこに いた こまを とった」。"
+      },
+      {
+       "t": "p",
+       "en": "A capturing pawn writes the file it came from.",
+       "ja": "ポーンが とる ときだけ、ちょっと ちがう。ポーンには きごうが ない ので、かわりに「どの れつから 来たか」を 書く。exd5 なら「e の れつの ポーンが d5 で とった」。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Bishop takes c6",
+         "ja": "ビショップが c6 で とる",
+         "sym": "Bxc6"
+        },
+        {
+         "en": "e-pawn takes d5",
+         "ja": "e れつの ポーンが d5 で とる",
+         "sym": "exd5"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "x marks a capture. A capturing pawn names the file it came from.",
+       "ja": "x は「とった」の しるし。ポーンは 出てきた れつを 書く。"
+      }
+     ],
+     "task": {
+      "en": "Play the three written captures.",
+      "ja": "とる 手を 3つ、きふの とおりに さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "exd5",
+        "Nxd5",
+        "Bxd5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "When two pieces can go there",
+     "ja": "2まい とも 行ける とき",
+     "fen": "4k3/8/8/8/8/3B1N2/3p1PPP/rN3R1K w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "If two identical pieces can reach the same square, the notation says which one.",
+       "ja": "d2 の 黒ポーンは、つぎの 手で クイーンに なって しまう。とめられるのは 白の ナイト 2まい だけ。b1 の ナイトも、f3 の ナイトも、どちらも d2 の ポーンを とれる。Nxd2 と 書いた だけでは、どちらが とったのか わからない。"
+      },
+      {
+       "t": "p",
+       "en": "Add the file it came from. If the files match, add the rank instead.",
+       "ja": "そこで、出てきた れつの 字を あいだに 入れる。b の れつから 来た ナイトなら Nbxd2。f の れつから 来た ナイトなら Nfxd2。もし 2まいが おなじ れつに いる ときは、かわりに だんの すうじを 書く。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "b-knight takes d2",
+         "ja": "b から 来た ナイトが d2 で とる",
+         "sym": "Nbxd2"
+        },
+        {
+         "en": "f-knight takes d2",
+         "ja": "f から 来た ナイトが d2 で とる",
+         "sym": "Nfxd2"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Pawns never need this. They already name their file.",
+       "ja": "では ポーンは どう なるのか。じつは ポーンだけ、この 書きたしが いらない。"
+      },
+      {
+       "t": "p",
+       "en": "Two pawns can only meet on a square they both capture on.",
+       "ja": "まず、2まいの ポーンが おなじ マスへ 行けるのは「とる」ときだけ。まっすぐ すすむ だけなら、1つの マスへ 行ける ポーンは かならず 1まいしか ない。おなじ れつに 2まい いても、さきに いる ポーンが うしろの ポーンを ふさいで しまうから。"
+      },
+      {
+       "t": "p",
+       "en": "And a capturing pawn writes its file anyway, as you learned last lesson.",
+       "ja": "そして ポーンが とる ときは、まえの レッスンで ならった とおり、かならず 出てきた れつを 書く。この ばんの f2 と h2 の ポーンを 見て。どちらも g3 で とれる。もし g3 に あいての こまが 来たら、f の ポーンなら fxg3、h の ポーンなら hxg3。書きたす までも なく、はじめから 書き分けて ある。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "f-pawn takes g3",
+         "ja": "f の れつの ポーンが g3 で とる",
+         "sym": "fxg3"
+        },
+        {
+         "en": "h-pawn takes g3",
+         "ja": "h の れつの ポーンが g3 で とる",
+         "sym": "hxg3"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Add just enough to say which piece it was. No more than that.",
+       "ja": "どちらの こまか わかる ぶんだけ 書きたす。わかる なら 書かない。ポーンは もともと 書いて あるので、足さない。"
+      }
+     ],
+     "task": {
+      "en": "Take the pawn with the f-knight. That move is Nfxd2.",
+      "ja": "f3 の ナイトで d2 の ポーンを とろう。その 手は Nfxd2。まちがえて b1 の ナイトで とると、それは Nbxd2 に なって しまう。おまけに 1だんめが あいて、a1 の ルークに f1 の ルークを とられる。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "Nfxd2"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Promotion",
+     "ja": "プロモーション",
+     "fen": "4k3/P7/8/8/8/8/8/4K3 w - - 0 1",
+     "goals": [
+      "a8"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "A pawn that reaches the far end turns into another piece.",
+       "ja": "ポーンが いちばん おくの だん（白なら 8だんめ）まで たどりつくと、べつの こまに なれる。これが プロモーション。"
+      },
+      {
+       "t": "p",
+       "en": "You choose: queen, rook, bishop or knight. Almost always the queen.",
+       "ja": "なる こまは じぶんで えらぶ。クイーン・ルーク・ビショップ・ナイトの 4つから。いちばん つよい クイーンを えらぶ ことが ほとんど。キングには なれない。ポーンの ままで いる ことも できない。"
+      },
+      {
+       "t": "p",
+       "en": "Already have a queen? You can still promote to another one.",
+       "ja": "すでに クイーンが ばんに いても かまわない。クイーンが 2まいに なる ことも ある。とられた こまが もどって くる わけでは ないので、8まい ぜんぶが クイーンに なる ことだって ありえる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "promote to queen",
+         "ja": "クイーンに なった",
+         "sym": "e8=Q"
+        },
+        {
+         "en": "promote to knight",
+         "ja": "ナイトに なった",
+         "sym": "e8=N"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Notation puts = and the new piece at the end.",
+       "ja": "きふでは「＝ なった こま」を うしろに つける。"
+      }
+     ],
+     "task": {
+      "en": "Push the pawn to a8 and choose what it becomes.",
+      "ja": "ポーンを a8 まで すすめて、なる こまを えらんでみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "flag": "promo"
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "En passant",
+     "ja": "アンパッサン",
+     "fen": "4k3/3p4/8/4P3/8/8/8/4K3 b - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "A pawn that jumps two squares past an enemy pawn can be taken anyway.",
+       "ja": "ポーンは はじめの いちから 2マス すすめる。でも その 2マスを つかって、あいての ポーンの よこを すりぬける ことが ある。"
+      },
+      {
+       "t": "p",
+       "en": "You capture it as if it had moved only one square.",
+       "ja": "その ときだけ、すりぬけられた ほうの ポーンは「1マスしか すすまなかった ことに して」とる ことが できる。あいての ポーンは よこに いるのに、とった ポーンは ななめ 前の マスに すすむ。ふしぎな 手。"
+      },
+      {
+       "t": "p",
+       "en": "Only on the very next move. Wait one turn and the chance is gone.",
+       "ja": "できるのは すりぬけられた すぐ つぎの 1手だけ。ほかの 手を さして しまうと、もう 二どと とれない。チェスで いちばん「いま だけ」の きまり。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "en passant",
+         "ja": "アンパッサン",
+         "sym": "exd6"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "The pawn that slipped past can be taken on the very next move only.",
+       "ja": "すりぬけた ポーンは、すぐ つぎの 手でだけ とれる。"
+      }
+     ],
+     "task": {
+      "en": "Play d5 for black, then take it en passant with exd6.",
+      "ja": "まず 黒の ポーンを 2マス すすめて（d5）、白の ポーンで とってみよう（exd6）。白の ポーンが どこに すすむか よく 見ていて。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "d5",
+        "exd6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Check, and three ways out",
+     "ja": "チェックと にげかた",
+     "fen": "4r2k/8/8/8/B7/3P2N1/8/4K3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Check means the king is under attack.",
+       "ja": "キングが あいてに ねらわれて いる ことを チェックと いう。きふでは うしろに + を つける。"
+      },
+      {
+       "t": "p",
+       "en": "You must get out of check. There are exactly three ways.",
+       "ja": "チェックされたら、ほうって おく ことは できない。かならず その 1手で なんとか しなければ ならない。ほうほうは ちょうど 3つ。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "move the king",
+         "ja": "キングが にげる",
+         "sym": "1"
+        },
+        {
+         "en": "block the line",
+         "ja": "あいだに 入る",
+         "sym": "2"
+        },
+        {
+         "en": "take the attacker",
+         "ja": "ねらって いる こまを とる",
+         "sym": "3"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "A blocking piece must be protected, or it is just given away.",
+       "ja": "「あいだに 入る」には 気を つける ことが ある。入れた こまが みかたに まもられて いるか たしかめる こと。まもられて いないと、その こまを そのまま とられて、また チェックに なって しまう。あいだに 入った いみが なくなる。"
+      },
+      {
+       "t": "p",
+       "en": "Here e4 is covered by the d3 pawn, and e2 by the king itself.",
+       "ja": "この ばんは だいじょうぶ。e4 は d3 の ポーンが まもって いるし、e2 は キング じしんが まもって いる。ナイトを とられても、とり返せる。"
+      },
+      {
+       "t": "p",
+       "en": "If none of the three works, the game is over.",
+       "ja": "この 3つの どれも できない とき、それが チェックメイト。しょうぶが つく。くわしくは 6章で。"
+      },
+      {
+       "t": "key",
+       "en": "Move, block, capture. There is no fourth way.",
+       "ja": "にげる・あいだに 入る・とる。この 3つしか ない。"
+      }
+     ],
+     "task": {
+      "en": "White is in check. Find a way out — any of the three works here.",
+      "ja": "白の キングが e8 の ルークに ねらわれて いる。この ばんでは 3つの ほうほうが ぜんぶ つかえる。どれか 1つで にげてみよう。3つとも ルールの うえでは 正しい。どれが いちばん 得かは、また べつの はなし。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "escape": true
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Castling",
+     "ja": "キャスリング",
+     "fen": "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Castling moves the king and a rook in one turn.",
+       "ja": "キャスリングは、1手で キングと ルークを いっしょに うごかす とくべつな 手。キングが よこへ 2マス すすみ、ルークが その むこうがわへ とびこえる ように まわる。1手で 2つの こまが うごくのは この 手 だけ。"
+      },
+      {
+       "t": "p",
+       "en": "Short side is O-O. Long side is O-O-O.",
+       "ja": "ルークに ちかい がわ（キングサイド）へ するのが O-O。とおい がわ（クイーンサイド）へ するのが O-O-O。きふでは こまの きごうも マスの なまえも 書かない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "short castling",
+         "ja": "キングサイド",
+         "sym": "O-O"
+        },
+        {
+         "en": "long castling",
+         "ja": "クイーンサイド",
+         "sym": "O-O-O"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Four conditions must all hold.",
+       "ja": "できる ための きまりが 4つ ある。1つでも かけたら できない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "king and that rook have never moved",
+         "ja": "キングと その ルークが 1回も うごいて いない",
+         "sym": "1"
+        },
+        {
+         "en": "the squares between are empty",
+         "ja": "あいだの マスが 空いて いる",
+         "sym": "2"
+        },
+        {
+         "en": "the king is not in check now",
+         "ja": "いま チェックされて いない",
+         "sym": "3"
+        },
+        {
+         "en": "the king does not pass through or land on an attacked square",
+         "ja": "キングが 通る マスも 着く マスも ねらわれて いない",
+         "sym": "4"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "The conditions cover the king's path only. An attacked rook is fine.",
+       "ja": "きまりが かかるのは キングの 通り道だけ。ルークが ねらわれて いても できる。"
+      }
+     ],
+     "task": {
+      "en": "Castle on the king side: O-O.",
+      "ja": "キングサイドの キャスリング（O-O）を してみよう。キングを g1 へ うごかせば できるよ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "flag": "castleK"
+      }
+     }
+    },
+    {
+     "chapter": 4,
+     "en": "The starting position",
+     "ja": "はじめの ならび",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Pawns fill the second rank. The big pieces stand behind them.",
+       "ja": "ポーンは 8まい、2だんめに ぜんぶ ならべる。その うしろの 1だんめに、のこりの 8まいが ならぶ。あいての がわも おなじ ならび。"
+      },
+      {
+       "t": "p",
+       "en": "From the corner inward: rook, knight, bishop.",
+       "ja": "ならびかたは かどから 中へ じゅんばんに、ルーク・ナイト・ビショップ。左右 どちらも おなじ。のこった 2マスに クイーンと キングが 入る。"
+      },
+      {
+       "t": "p",
+       "en": "The queen stands on her own colour.",
+       "ja": "クイーンと キングの どちらが どちらか、まちがえやすい。おぼえかたが ある。クイーンは じぶんと おなじ いろの マスに すわる。白の クイーンは 白マスの d1、黒の クイーンは 黒マスの d8。"
+      },
+      {
+       "t": "key",
+       "en": "The queen stands on her own colour. The white queen starts on d1.",
+       "ja": "クイーンは じぶんの いろの マス。白クイーンは d1。"
+      }
+     ],
+     "task": {
+      "en": "Place the eight white pieces on the first rank.",
+      "ja": "白の 8まいを 1だんめに ならべよう。下の こまを えらんで、おく マスを おす。"
+     },
+     "goal": {
+      "kind": "setup",
+      "want": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+      "palette": [
+       "R",
+       "N",
+       "B",
+       "Q",
+       "K"
+      ]
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Checkmate",
+     "ja": "チェックメイト",
+     "fen": "6k1/5ppp/8/8/8/8/8/R5K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Checkmate is check with no way out. The game ends at once.",
+       "ja": "キングが ねらわれて いて、しかも 3つの にげかた（にげる・あいだに 入る・とる）が どれも できない とき、それが チェックメイト。その しゅんかん しょうぶが つく。"
+      },
+      {
+       "t": "p",
+       "en": "The king is never actually captured.",
+       "ja": "ちなみに キングが じっさいに とられる ことは ない。とられる 1手 前で ゲームが おわる から。きふでは うしろに # を つける。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "check",
+         "ja": "チェック",
+         "sym": "+"
+        },
+        {
+         "en": "checkmate",
+         "ja": "チェックメイト",
+         "sym": "#"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Black's own three pawns box the king in. Only the back rank is left.",
+       "ja": "黒の キングは じぶんの ポーン 3まいに ふさがれて いる。にげ道は 8だんめ だけ。"
+      }
+     ],
+     "task": {
+      "en": "Find checkmate in one move.",
+      "ja": "白の 1手で チェックメイトに できる。どこへ ルークを 行かせれば いいか さがしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "status": "checkmate"
+      }
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Stalemate",
+     "ja": "ステイルメイト",
+     "fen": "k7/2K5/8/8/7B/8/8/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Stalemate: the player to move has no legal move, but is not in check.",
+       "ja": "てばんが きたのに、さす 手が 1つも ない。でも キングは ねらわれて いない。この ときは ステイルメイトと いって、ひきわけに なる。まけでは ない。"
+      },
+      {
+       "t": "p",
+       "en": "Pass is not allowed in chess. You must move.",
+       "ja": "チェックメイトと にて いるけど、ぜんぜん ちがう けっか。チェスでは「パス」が できない から こう なる。うごける 手が ないのに うごかなければ ならない、という 行きどまり。"
+      },
+      {
+       "t": "p",
+       "en": "A losing player can sometimes save a draw this way.",
+       "ja": "まけそうな ほうが、わざと ステイルメイトを ねらって ひきわけに もちこむ ことも ある。おぼえて おくと、あと 1まいしか のこって いなくても あきらめなく なる。"
+      },
+      {
+       "t": "key",
+       "en": "No legal move, and not in check. That is a draw.",
+       "ja": "さす 手が ない ＋ チェックされて いない ＝ ひきわけ。"
+      }
+     ],
+     "task": {
+      "en": "Make it stalemate in one move. Giving check is not it.",
+      "ja": "白の 1手で ステイルメイトに できる。黒の キングの 行ける マスを ぜんぶ ふさいで、しかも チェックには しない 手を さがそう。ビショップの ななめの 線を よく 見て。a7 を ねらえる ところは 1つだけ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "status": "stalemate"
+      }
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Draws, and giving up",
+     "ja": "ひきわけと とうりょう",
+     "fen": "8/8/4k3/8/8/2K5/5B2/8 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "There are five ways a game ends in a draw.",
+       "ja": "ひきわけに なる かたちは、ステイルメイトの ほかにも ある。この ばんは 5ばんめの かたち。白は キングと ビショップ 1まいだけ。どう さしても チェックメイトに できない ので、その ときに ひきわけに なる。"
+      },
+      {
+       "t": "p",
+       "en": "Try it. You move White. Black runs by itself.",
+       "ja": "ほんとうに できないのか、じぶんで ためしてみよう。白を うごかすのは きみ。黒は かってに にげる。おいかけても、かこんでも、ぜったいに 詰まない。"
+      },
+      {
+       "t": "p",
+       "en": "Three sets to try. None of them can ever mate.",
+       "ja": "駒の くみあわせを 3つから えらべる。どれを えらんでも 詰ませられない。気が すむまで さしてみて。「できた！」が 出た あとも、そのまま つづけられる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "stalemate",
+         "ja": "さす 手が ない",
+         "sym": "1"
+        },
+        {
+         "en": "agreement",
+         "ja": "ふたりで きめる",
+         "sym": "2"
+        },
+        {
+         "en": "threefold repetition",
+         "ja": "おなじ ばんめんが 3回",
+         "sym": "3"
+        },
+        {
+         "en": "fifty-move rule",
+         "ja": "50手 とらず・ポーンも うごかず",
+         "sym": "4"
+        },
+        {
+         "en": "dead position",
+         "ja": "詰ませられない こまだけ",
+         "sym": "5"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Repetition and the fifty-move rule are claimed, not automatic.",
+       "ja": "3と4は、きた しゅんかんに おわる わけでは ない。「ひきわけに しよう」と 言える ように なる だけ。言わずに さしつづける ことも できる。（5回 おなじに なったり、75手 たつと、こんどは じどうで おわる）"
+      },
+      {
+       "t": "p",
+       "en": "Resigning means admitting the loss before mate.",
+       "ja": "もう1つ、とうりょう（リザイン）が ある。チェックメイトに なる 前に「まけました」と じぶんで みとめる こと。つよい ひとどうしの たいきょくは、ほとんどが これで おわる。さいごまで さす ほうが しつれい、と かんがえる ひとも いる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "White won",
+         "ja": "白の かち",
+         "sym": "1-0"
+        },
+        {
+         "en": "Black won",
+         "ja": "黒の かち",
+         "sym": "0-1"
+        },
+        {
+         "en": "Draw",
+         "ja": "ひきわけ",
+         "sym": "1/2-1/2"
+        }
+       ]
+      },
+      {
+       "t": "key",
+       "en": "Every game score ends with one of these three.",
+       "ja": "きふの いちばん うしろに、この 3つの どれかが 書いて ある。"
+      }
+     ],
+     "task": {
+      "en": "Pick a set and chase the black king. See for yourself that it never ends.",
+      "ja": "くみあわせを えらんで、白で 黒を おいかけてみよう。12手 さしても 詰まない ことを たしかめて。"
+     },
+     "goal": {
+      "kind": "chase",
+      "moves": 12,
+      "sets": [
+       {
+        "en": "King + bishop vs king",
+        "ja": "キング＋ビショップ 対 キング",
+        "fen": "8/8/4k3/8/8/2K5/5B2/8 w - - 0 1"
+       },
+       {
+        "en": "King + knight vs king",
+        "ja": "キング＋ナイト 対 キング",
+        "fen": "8/8/4k3/8/8/2K5/5N2/8 w - - 0 1"
+       },
+       {
+        "en": "Bishops on the same colour",
+        "ja": "おなじ いろの ビショップ どうし",
+        "fen": "8/2b5/4k3/8/8/2K5/5B2/8 w - - 0 1"
+       }
+      ]
+     }
+    },
+    {
+     "chapter": 6,
+     "en": "Move numbers",
+     "ja": "てばんの ばんごう",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "One number covers both sides: white first, then black.",
+       "ja": "きふには ばんごうが ついて いる。1つの ばんごうに、白の 手と 黒の 手が 2つ ならぶ。「1. e4 e5」なら、1手めに 白が e4、黒が e5 と さした という こと。"
+      },
+      {
+       "t": "p",
+       "en": "Here is a famous four-move trap.",
+       "ja": "この レッスンの きふは「スカラーズメイト」と よばれる、4手で おわって しまう わなの かたち。クイーンと ビショップの 2まいで f7 を ねらう。黒が 気づかなければ、ほんとうに 4手で おわる。"
+      },
+      {
+       "t": "p",
+       "en": "Step through it and watch f7.",
+       "ja": "ボタンで 1手ずつ すすめて みよう。白が どこを ねらって いるか、3手めで わかる。さいごの 手に # が ついて いる ことも たしかめて。"
+      },
+      {
+       "t": "key",
+       "en": "Any game score can be read if you put it on the board one move at a time.",
+       "ja": "はじめて 見る きふも、1手ずつ 盤に うつせば かならず 読める。"
+      }
+     ],
+     "task": {
+      "en": "Step forward and back through the game.",
+      "ja": "じぶんでは させない レッスン。ボタンで すすめたり もどしたり しながら 読もう。"
+     },
+     "goal": {
+      "kind": "replay",
+      "line": "1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7#"
+     }
+    },
+    {
+     "chapter": 6,
+     "en": "Play from the notation",
+     "ja": "きふの とおりに さす",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Last lesson. Read the notation and play every move yourself.",
+       "ja": "さいごの レッスン。こんどは 自分で 1手ずつ さす。書いて ある きふを 読んで、その とおりに 盤を うごかそう。"
+      },
+      {
+       "t": "p",
+       "en": "This is Legall’s Trap, known since the 1700s.",
+       "ja": "この きふは「レガールの わな」と よばれて いる、1700年代から しられて いる かたち。白は とちゅうで クイーンを とられる。それでも 7手めに チェックメイトに なる。"
+      },
+      {
+       "t": "p",
+       "en": "Everything from volume 1 is in here.",
+       "ja": "この 7手の 中に、1巻で ならった ことが ほとんど 出て くる。こまの きごう、x、+、#、そして 2まいの ナイトの 書き分け。ゆっくり 読んでみて。"
+      },
+      {
+       "t": "key",
+       "en": "If you can read it, you can play it. Finish, and volume 1 is done.",
+       "ja": "読めれば させる。さいごまで いけたら 1巻は おわり。"
+      }
+     ],
+     "task": {
+      "en": "Play all thirteen moves from the notation.",
+      "ja": "ばんの 下に 1つずつ 出る 手を、読んで さしていこう。ぜんぶで 13手。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "d6",
+        "Nc3",
+        "Bg4",
+        "Nxe5",
+        "Bxd1",
+        "Bxf7+",
+        "Ke7",
+        "Nd5#"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 7,
+     "en": "Play the computer",
+     "ja": "コンピュータと さす",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "No lesson here. You play White and the computer plays Black. All the rules are on.",
+       "ja": "ここは レッスンでは ない。白が きみで、黒は コンピュータが さす。1巻で ならった きまりは ぜんぶ きいて いる。プロモーション・アンパッサン・キャスリング・チェックメイト・ステイルメイト・ひきわけ、ぜんぶ。"
+      },
+      {
+       "t": "p",
+       "en": "Black stays near its own side. But it takes a piece nobody protects, and it takes back when it can.",
+       "ja": "黒は あまり 前に 出て こない。でも、まもられて いない こまは とりに くるし、とられた ときは とりかえせるなら とりかえす。"
+      },
+      {
+       "t": "p",
+       "en": "Checkmate wins. If Black has no move and is not in check, it is a stalemate — a draw.",
+       "ja": "黒を 詰ませたら きみの かち。黒が 動けなく なっても チェックされて いなければ ステイルメイトで ひきわけ。レッスン19の とおり。"
+      },
+      {
+       "t": "p",
+       "en": "Illegal moves simply will not go.",
+       "ja": "ルールに ない 手は させない ように なって いる。だから 「これは さして いいのかな」と 思ったら、ためしに さわってみれば わかる。行ける マスに しるしが 出る。"
+      },
+      {
+       "t": "p",
+       "en": "Your moves pile up as notation below. You can copy it.",
+       "ja": "さした 手は 下に きふに なって つみあがる。コピーも できる。おもしろい たいきょくに なったら、自分の ところに 書きうつして おこう。この レッスンを とじると きえて しまう から。"
+      },
+      {
+       "t": "p",
+       "en": "To play with a friend, use Two players at the top. To set up your own pieces, use Set up.",
+       "ja": "ともだちと ふたりで さしたい ときは、上の「ふたりで」へ。好きな こまを ならべて あそびたい ときは「ならべて」へ。"
+      },
+      {
+       "t": "key",
+       "en": "A piece nobody protects can be taken.",
+       "ja": "まもられて いない こまは とられる。"
+      }
+     ],
+     "task": {
+      "en": "White moves first.",
+      "ja": "白から どうぞ。"
+     },
+     "goal": {
+      "kind": "free",
+      "cpu": true
+     }
+    }
+   ]
+  },
+  {
+   "no": 2,
+   "en": "Tactics",
+   "ja": "せんじゅつ",
+   "chapters": [
+    {
+     "en": "Value and trades",
+     "ja": "ねうちと とりかえ"
+    },
+    {
+     "en": "Two at once",
+     "ja": "ふたつ いっぺんに"
+    },
+    {
+     "en": "Stuck on a line",
+     "ja": "うごけなく する"
+    },
+    {
+     "en": "Hidden attacks",
+     "ja": "かくれた ねらい"
+    },
+    {
+     "en": "Mating patterns",
+     "ja": "詰みの かたち"
+    },
+    {
+     "en": "Giving a piece up",
+     "ja": "すてる"
+    },
+    {
+     "en": "Spot it yourself",
+     "ja": "見分ける"
+    },
+    {
+     "en": "More puzzles",
+     "ja": "おまけ"
+    }
+   ],
+   "lessons": [
+    {
+     "chapter": 0,
+     "en": "What the pieces are worth",
+     "ja": "こまの ねうち",
+     "fen": "4k3/8/8/8/8/8/P7/1NBQK2R w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Each piece is worth a number of pawns.",
+       "ja": "こまには ねうちが ある。ポーン 1つを もとに して、ほかの こまが その 何こ ぶんかを あらわす。この すうじが あると、とりかえて いいか わるいかを じぶんで 決められる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "Pawn",
+         "ja": "ポーン",
+         "sym": "1"
+        },
+        {
+         "en": "Knight",
+         "ja": "ナイト",
+         "sym": "3"
+        },
+        {
+         "en": "Bishop",
+         "ja": "ビショップ",
+         "sym": "3"
+        },
+        {
+         "en": "Rook",
+         "ja": "ルーク",
+         "sym": "5"
+        },
+        {
+         "en": "Queen",
+         "ja": "クイーン",
+         "sym": "9"
+        },
+        {
+         "en": "King",
+         "ja": "キング",
+         "sym": "♾️"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "The king has no number: you can never trade it.",
+       "ja": "キングだけ すうじが ない。とられたら そこで おわる こまなので、ほかの こまと とりかえる ことが できない。「9こ ぶん」の ように くらべられない から ♾️。"
+      },
+      {
+       "t": "p",
+       "en": "Knight and bishop are both 3. Which is better depends on the board.",
+       "ja": "ナイトと ビショップは どちらも 3。どちらが つよいかは、盤の かたちで かわる。盤が ひらいて いる ときは ビショップが とおくまで とどく。ポーンが かたまって うごけない ときは、とびこえられる ナイトが はたらく。だから どちらかを 上と 書く ことは できない。"
+      },
+      {
+       "t": "p",
+       "en": "Two bishops together are a different story.",
+       "ja": "でも ビショップが 2まい そろって いる ときは、はっきり つよい。1巻で ならった とおり、白マスの ビショップと 黒マスの ビショップで、やっと 盤の ぜんぶの マスに とどく から。つよい ひとの あいだでも、ナイトと ビショップの どちらが すきかは わかれる。じぶんで さしながら さがして みて。"
+      },
+      {
+       "t": "key",
+       "en": "These numbers are a guide, not a law. The board decides.",
+       "ja": "この すうじは 目やす。さいごに 決めるのは 盤の かたち。"
+      }
+     ],
+     "task": {
+      "en": "Press each white piece to see what it is worth.",
+      "ja": "白の こまを ぜんぶ おして、ねうちを たしかめよう。6つ あるよ。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "a2",
+       "b1",
+       "c1",
+       "h1",
+       "d1",
+       "e1"
+      ],
+      "ordered": false,
+      "say": "value"
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Pieces nobody is guarding",
+     "ja": "まもられて いない こま",
+     "fen": "4k3/pp6/8/3n2p1/7b/8/PP3P2/3RK2R w - - 0 1",
+     "goals": [
+      "d5"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "Before you take, look at who is guarding the square.",
+       "ja": "とれる こまが あっても、すぐに とっては いけない。その こまを だれかが まもって いたら、とった しゅんかん とりかえされる。"
+      },
+      {
+       "t": "p",
+       "en": "Guarded means the trade costs you.",
+       "ja": "ルークで 3の こまを とって、5の ルークを とりかえされたら、2 そんする。とれる ことと、とって いい ことは ちがう。"
+      },
+      {
+       "t": "p",
+       "en": "An unguarded piece is free.",
+       "ja": "だれにも まもられて いない こまは、ただで とれる。この 盤には とれる こまが 2つ あるけれど、ただで とれるのは 1つだけ。"
+      },
+      {
+       "t": "key",
+       "en": "Before taking, check who guards that square.",
+       "ja": "とる まえに、その マスを まもって いる こまが いないか たしかめる。"
+      }
+     ],
+     "task": {
+      "en": "Take the piece that nobody is guarding.",
+      "ja": "まもられて いない こまを とろう。しるしの ついた マスに いるよ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Rxd5"
+      }
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Take with the cheapest piece",
+     "ja": "とりかえすと とくか そんか",
+     "fen": "4k3/pp6/4p3/3n4/2P5/8/PP6/3RK3 w - - 0 1",
+     "goals": [
+      "d5"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "Here the knight is guarded, but you have two attackers.",
+       "ja": "d5 の ナイトは e6 の ポーンに まもられて いる。でも こちらは 2まいで ねらって いる。c4 の ポーンと、d1 の ルーク。"
+      },
+      {
+       "t": "p",
+       "en": "Which piece you take with changes everything.",
+       "ja": "どちらで とるかで、けっかが まるきり かわる。ルークで とると、ポーンに とりかえされて 5を 失い 3を 得る。ポーンで とると、とりかえされても 1を 失って 3を 得る。"
+      },
+      {
+       "t": "p",
+       "en": "Line them up cheapest first.",
+       "ja": "とりあいに なりそうな マスは、安い こまから じゅんに 当てて いく。こう 数えると、とった ほうが いいのか、やめた ほうが いいのかが わかる。"
+      },
+      {
+       "t": "p",
+       "en": "And the trade does not stop there.",
+       "ja": "それに、とりあいは 1手で おわらない。黒が e6 の ポーンで とりかえして くると、その ポーンは d5 に 出て くる。d5 を まもって いた ポーンが、d5 に 立つ わけだから、もう だれも まもって いない。d1 の ルークで とりかえせる。さいごまで かぞえて はじめて、とくか そんかが わかる。"
+      },
+      {
+       "t": "key",
+       "en": "Start the trade with your cheapest attacker.",
+       "ja": "とりあいは、安い こまから はじめる。"
+      }
+     ],
+     "task": {
+      "en": "Win the knight on d5. Choose which piece takes it, then play the trade out.",
+      "ja": "d5 の ナイトを とろう。どちらの こまで とるかを よく かんがえて。とりあいは さいごまで つづくよ。黒は 自分で 指して くる。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answers": [
+        "cxd5",
+        "exd5",
+        "Rxd5"
+       ],
+       "notes": [
+        {
+         "en": "You took with the cheap pawn. Black will take back with the e-pawn.",
+         "ja": "安い ポーンで とった。これで 3の ナイトが 手に 入る。黒は e6 の ポーンで とりかえして くるよ。"
+        },
+        {
+         "en": "Black took back. Look at d5 again — the guard moved onto the square, so nobody guards it now.",
+         "ja": "とりかえされた。失ったのは 1の ポーン。でも おわりでは ない。d5 を まもって いた ポーンが、d5 に 出て きた。もう だれも まもって いない。"
+        },
+        {
+         "en": "A knight and a pawn for one pawn: three ahead. That is what starting cheap does.",
+         "ja": "とりかえした。かぞえると、3の ナイトと 1の ポーンを とって、1の ポーンを 失った。3 とく。安い こまから はじめたから こうなる。"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Counting is not enough",
+     "ja": "かぞえる だけでは たりない",
+     "fen": "4k3/pp3p2/2p1p3/3n4/2B2N2/8/PP6/3RK3 w - - 0 1",
+     "goals": [
+      "d5"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "White attacks d5 three times. Black guards it twice.",
+       "ja": "d5 の ナイトを、白は 3まいで ねらって いる。ビショップ・ナイト・ルーク。くらべて 黒が まもって いるのは 2まい。c6 と e6 の ポーン。"
+      },
+      {
+       "t": "p",
+       "en": "Three against two — but taking still gains nothing.",
+       "ja": "3たい2。数では 勝って いる。それでも、ここで とりあいを はじめても とくに ならない。"
+      },
+      {
+       "t": "p",
+       "en": "Because the guards are pawns.",
+       "ja": "まもって いるのが ポーン（1）だから。こちらは 3や 5の こまを 出して いく ことに なる。安い こまで まもられて いると、数で 勝って いても 得に ならない。"
+      },
+      {
+       "t": "key",
+       "en": "Count the pieces, then look at what they are worth.",
+       "ja": "かぞえて、それから ねうちを 見る。数だけでは 決まらない。"
+      }
+     ],
+     "task": {
+      "en": "Press the three white pieces that attack d5.",
+      "ja": "d5 を ねらって いる 白の こまを ぜんぶ おそう。3まい あるよ。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "c4",
+       "f4",
+       "d1"
+      ],
+      "ordered": false
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "The knight fork",
+     "ja": "ナイトの フォーク",
+     "fen": "3q3k/pp6/8/4N3/8/8/PP6/4K3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "One piece attacking two at the same time is a fork.",
+       "ja": "1つの こまで、あいての こまを 2つ いっぺんに ねらう ことを フォークと いう。ねらわれた ほうは、どちらか 1つしか まもれない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "fork",
+         "ja": "フォーク（両取り）",
+         "sym": ""
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "The knight is the best forker, because its move is hard to block.",
+       "ja": "フォークが いちばん うまいのは ナイト。たてでも よこでも ななめでも ない うごき方を するので、あいだに 入って ふせぐ ことが できない。しかも とびこえる ので、まわりを かためても 止められない。"
+      },
+      {
+       "t": "p",
+       "en": "A fork with check is the strongest kind.",
+       "ja": "とくに つよいのが、王手と いっしょに かける フォーク。あいては 王手を 外す ことしか できない。もう ひとつの こまを まもって いる ひまが ない。だから かならず とれる。"
+      },
+      {
+       "t": "key",
+       "en": "A fork with check always wins the other piece.",
+       "ja": "王手と いっしょの フォークは、かならず もう片方が とれる。"
+      }
+     ],
+     "task": {
+      "en": "Fork the king and the queen with your knight.",
+      "ja": "ナイトで 王手を かけながら、クイーンも いっぺんに ねらおう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Nf7+"
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Even a pawn can fork",
+     "ja": "ポーンでも できる",
+     "fen": "4k3/pp6/3n1n2/8/4P3/8/PP6/4K3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Any piece can fork, not just the knight.",
+       "ja": "フォークは ナイトだけの ものでは ない。どの こまでも できる。ビショップでも ルークでも クイーンでも、2つを いっぺんに ねらえば それは フォーク。"
+      },
+      {
+       "t": "p",
+       "en": "A pawn fork is the hardest to answer.",
+       "ja": "そして いちばん きついのが、ポーンの フォーク。ねうちが 1しか ない こまに ねらわれると、3や 5の こまは とられる わけに いかない。どちらかを あきらめる しか なくなる。"
+      },
+      {
+       "t": "p",
+       "en": "Right now your pawn is the one being attacked, twice.",
+       "ja": "この 盤は いま、こちらの e4 の ポーンが ナイト 2まいに ねらわれて いる。にげたく なる ところだけど、よく 見て。前に 1マス すすむと、こんどは こちらが 2まいを ねらう ことに なる。"
+      },
+      {
+       "t": "key",
+       "en": "The cheaper the forking piece, the worse it is to face.",
+       "ja": "安い こまで ねらう ほど、あいては こまる。"
+      }
+     ],
+     "task": {
+      "en": "Push the pawn so it attacks both knights at once.",
+      "ja": "ポーンを 1マス すすめて、ナイト 2まいを いっぺんに ねらおう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "e5"
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "Pinned to the king",
+     "ja": "キングの 前の ピン",
+     "fen": "3k4/pp2p3/3n4/8/2P5/8/PP6/3RK3 b - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Two enemy pieces on one line, with the king behind.",
+       "ja": "1本の 線の 上に、あいての こまが 2つ ならぶ ことが ある。d の れつを 見て。ルーク・ナイト・キングが たてに ならんで いる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "pin",
+         "ja": "ピン（釘付け）",
+         "sym": ""
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "The piece in front cannot move at all.",
+       "ja": "この とき、まえに いる ナイトは **1マスも** うごけない。うごいた しゅんかん、うしろの キングが ルークに とられる かたちに なるから。じぶんの キングを あぶなく する 手は、ルールで さす ことが できない。"
+      },
+      {
+       "t": "p",
+       "en": "A pinned piece is a piece that is there but cannot help.",
+       "ja": "だから この ナイトは、盤の 上に いるのに 何も できない。まもりにも 行けないし、にげる ことも できない。くぎで うちつけられた ように なる。これが ピン。"
+      },
+      {
+       "t": "key",
+       "en": "Pinned to the king means it cannot move at all.",
+       "ja": "うしろが キングの ピンは、ぜったいに うごけない。"
+      }
+     ],
+     "task": {
+      "en": "One black piece cannot move at all. Press it.",
+      "ja": "この 盤に、1マスも うごけない こまが 1つ ある。どれか おそう。黒の こまを 1つずつ 見て いけば 見つかるよ。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "d6"
+      ],
+      "ordered": false,
+      "show": [
+       "d1",
+       "d8"
+      ]
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "Pinned to the queen",
+     "ja": "クイーンの 前の ピン",
+     "fen": "3qk3/pp6/5n2/6B1/8/8/PP6/4K3 b - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The piece behind does not have to be the king.",
+       "ja": "うしろに いるのが キングで なくても、ピンは かかる。この 盤では ビショップ・ナイト・クイーンが ななめに ならんで いる。"
+      },
+      {
+       "t": "p",
+       "en": "This knight can move. It just should not.",
+       "ja": "ただし さっきとは ちがう。この ナイトは **うごける**。ルールは 止めない。ためしに 7とおり うごかせる。でも、どこへ うごいても、そのあと ビショップが クイーンを とって しまう。"
+      },
+      {
+       "t": "p",
+       "en": "So it is stuck for a different reason.",
+       "ja": "つまり この ナイトは「うごけない」のでは なく「うごいたら そんする」。けっきょく うごけない のは 同じだけど、りゆうが ちがう。あいてが うっかり うごかして くれる ことも ある。"
+      },
+      {
+       "t": "key",
+       "en": "King behind: cannot move. Anything else behind: should not move.",
+       "ja": "うしろが キングなら「うごけない」。ほかの こまなら「うごくと そんする」。"
+      }
+     ],
+     "task": {
+      "en": "Press the knight that can move but must not.",
+      "ja": "うごく ことは できる のに、うごいたら クイーンを とられて しまう こまが ある。おそう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "f6"
+      ],
+      "ordered": false,
+      "show": [
+       "g5",
+       "d8"
+      ]
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The skewer",
+     "ja": "スキュア",
+     "fen": "5q2/pp2k3/8/8/8/8/P6P/2B1K3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "A skewer is a pin turned around.",
+       "ja": "スキュアは ピンの うらがえし。ピンは、ねうちの 高い こまが **うしろ**に いた。スキュアは 高い こまが **まえ**に いる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "pin",
+         "ja": "ピン（釘付け）",
+         "symJa": "うしろが 高い"
+        },
+        {
+         "en": "skewer",
+         "ja": "スキュア（串刺し）",
+         "symJa": "まえが 高い"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Attack the front one, and it has to move.",
+       "ja": "まえの こまを ねらうと、それは うごくしか ない。とくに それが キングなら、王手に なるので ぜったいに うごく。そして どいた あと、うしろに いた こまが むき出しに なる。"
+      },
+      {
+       "t": "p",
+       "en": "Pin holds it still. Skewer makes it move.",
+       "ja": "ピンは「うごかせない」ので つよい。スキュアは「うごかせる」ので つよい。まるで 反対だけど、どちらも 1本の 線に 2つ ならんで いる ことを つかって いる。"
+      },
+      {
+       "t": "key",
+       "en": "Pin holds it. Skewer moves it out of the way.",
+       "ja": "ピンは とめる。スキュアは どかす。"
+      }
+     ],
+     "task": {
+      "en": "Check the king with your bishop, then take what was behind it.",
+      "ja": "ビショップで 王手を かけよう。キングが どいた あと、うしろに いる クイーンが とれる。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Ba3+"
+      },
+      "show": [
+       "a3",
+       "f8"
+      ]
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "The attack behind your own piece",
+     "ja": "かくれた ねらい",
+     "fen": "6k1/pp1b2pp/8/8/3N4/8/PP4PP/3RK3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Your rook is aiming down the d-file, but your own knight is in the way.",
+       "ja": "d1 の ルークは d の れつを ねらって いる。でも その 線の 上に、みかたの ナイトが 立って いる。だから いまは 何も ねらえて いない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "discovered attack",
+         "ja": "ディスカバードアタック（開き攻撃）",
+         "sym": ""
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Move the knight, and the line opens by itself.",
+       "ja": "ナイトを どかすと、ふさいで いた 線が ひらく。ナイトが どこへ うごいても ひらく。これが かくれた ねらい。あいては ナイトの ほうを 見て いるので、うしろから 出て くる 線に 気づきにくい。"
+      },
+      {
+       "t": "p",
+       "en": "And the knight itself can attack something as it leaves.",
+       "ja": "こわいのは、どく ナイトが そのとき べつの ところを ねらえる こと。1手で 2か所を ねらえる ことに なる。フォークと にて いるけど、ねらって いるのが 2まいの こま、というのが ちがう。"
+      },
+      {
+       "t": "key",
+       "en": "Look behind your own pieces. Moving one opens a line.",
+       "ja": "じぶんの こまの うしろを 見る。どければ 線が ひらく。"
+      }
+     ],
+     "task": {
+      "en": "Which black piece gets attacked the moment the knight moves?",
+      "ja": "ナイトが どいた とたんに ねらわれる 黒の こまが ある。どれか おそう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "d7"
+      ],
+      "ordered": false
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Discovered check",
+     "ja": "ディスカバードチェック",
+     "fen": "3k4/pp4pp/8/5q2/3N4/8/PP4PP/3RK3 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "When the line that opens hits the king, it is a discovered check.",
+       "ja": "ひらいた 線が、あいての キングに 当たる ことが ある。これが ディスカバードチェック（開き王手）。この 盤では、ナイトが どけば ルークが キングに 当たる。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "discovered check",
+         "ja": "ディスカバードチェック（開き王手）",
+         "sym": "+"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "A check cannot be ignored. So the moving piece can do anything.",
+       "ja": "ここが つよい。王手は ほうって おけない。あいては 王手を 外す ことで せいいっぱいで、どいた ナイトの ことを かまって いられない。だから ナイトは、どこへ うごいても いい。"
+      },
+      {
+       "t": "p",
+       "en": "Even taking a well-guarded piece.",
+       "ja": "まもられて いる こまを とっても いい。取り返す ひまが ないから。ふつうなら 損な 手が、開き王手の あいだだけ ただの 得に なる。"
+      },
+      {
+       "t": "key",
+       "en": "During a discovered check, the moving piece can do anything.",
+       "ja": "開き王手の あいだ、どいた こまは 何を しても いい。"
+      }
+     ],
+     "task": {
+      "en": "Take the queen with your knight, opening the rook’s check.",
+      "ja": "ナイトで クイーンを とろう。同時に ルークの 王手が ひらく。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Nxf5+"
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Double check",
+     "ja": "ダブルチェック",
+     "fen": "3k4/1p2p1pp/2q5/8/3N4/8/PP4PP/3RK3 w - - 0 1",
+     "goals": [
+      "c6"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "Sometimes the moving piece gives check too. Two checks at once.",
+       "ja": "どいた こまも、そのとき 王手を かける ことが ある。2まいから 同時に 王手。これが ダブルチェック。開き王手の いちばん つよい かたち。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "double check",
+         "ja": "ダブルチェック（両王手）",
+         "sym": "++"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Remember the three ways out of check.",
+       "ja": "1巻で ならった、王手から にげる 3つの ほうほうを 思い出して。あいだに 入る・ねらって いる こまを とる・キングが にげる。この 3つ しか ない。"
+      },
+      {
+       "t": "p",
+       "en": "Two of them stop working.",
+       "ja": "ダブルチェックでは、はじめの 2つが きかない。あいだに 入っても、2本の 線を いっぺんには ふさげない。とろうとしても、1手で 2まいは とれない。のこるのは キングが にげる だけ。"
+      },
+      {
+       "t": "p",
+       "en": "So a guarded piece can be taken for free.",
+       "ja": "この 盤の クイーンは b7 の ポーンに まもられて いる。ふつうなら とっても 取り返される。でも ダブルチェックなら、取り返す 手が そもそも 指せない。"
+      },
+      {
+       "t": "key",
+       "en": "Double check leaves only one answer: the king must move.",
+       "ja": "ダブルチェックは、キングが にげる しか ない。"
+      }
+     ],
+     "task": {
+      "en": "Take the queen. The pawn guards it, but it cannot take back.",
+      "ja": "ナイトで クイーンを とろう。b7 の ポーンが まもって いるけど、取り返せない。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Nxc6+"
+      }
+     }
+    },
+    {
+     "chapter": 4,
+     "en": "Back-rank mate",
+     "ja": "バックランクメイト",
+     "fen": "6k1/5ppp/8/8/8/8/1B3PPP/3R2K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The pawns in front of the king protect it — and trap it.",
+       "ja": "キングの 前に ポーンが 3まい ならんで いる。まもって くれて いるけど、同時に にげ道を ふさいで いる。キングは 前に 出られない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "back-rank mate",
+         "ja": "バックランクメイト（下段の詰み）",
+         "sym": "#"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "A rook on the back rank covers the whole row.",
+       "ja": "そこへ ルークが いちばん 下の だんに 入ると、その だん ぜんぶを よこ一列 ねらう ことに なる。キングは 前にも 出られず、よこにも にげられない。これで 詰み。"
+      },
+      {
+       "t": "p",
+       "en": "Your own king has exactly the same weakness.",
+       "ja": "この 盤を よく 見て。白の キングも まったく 同じ かたちを して いる。g1 の キングの 前に f2・g2・h2 の ポーン。黒に ルークが あったら、同じ ことを やられて いた。"
+      },
+      {
+       "t": "key",
+       "en": "Make a hole for your king before someone makes one for you.",
+       "ja": "じぶんの ポーンが にげ道を ふさぐ。1マス 空けて おくと あんしん。"
+      }
+     ],
+     "task": {
+      "en": "Mate in one.",
+      "ja": "1手で 詰ませよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Rd8#"
+      }
+     }
+    },
+    {
+     "chapter": 4,
+     "en": "Smothered mate",
+     "ja": "スマザードメイト",
+     "fen": "6rk/6pp/8/q3N3/8/8/PP4P1/6K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "This black king is walled in by its own pieces.",
+       "ja": "こんどは キングの まわりが ぜんぶ じぶんの こまで うまって いる。g8 に ルーク、g7 と h7 に ポーン。どこへも にげられない。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "smothered mate",
+         "ja": "スマザードメイト（窒息詰め）",
+         "sym": "#"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Only the knight can reach a king like that.",
+       "ja": "ふつうの こまは、まわりが うまって いる キングに とどかない。線が ふさがれて いるから。でも ナイトだけは とびこえられる。1巻で ならった とおり。"
+      },
+      {
+       "t": "p",
+       "en": "Walled in means nowhere to run.",
+       "ja": "そして まわりが うまって いる ことが、そのまま 詰みに なる。王手を かけられても、にげる マスが 1つも ない。じぶんの こまに かこまれて いる から。"
+      },
+      {
+       "t": "key",
+       "en": "The knight jumps, so a walled-in king is not safe at all.",
+       "ja": "ナイトは とびこえる。かこまれた キングほど あぶない。"
+      }
+     ],
+     "task": {
+      "en": "Mate in one with the knight.",
+      "ja": "ナイトで 1手で 詰ませよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Nf7#"
+      }
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Sacrifice for mate",
+     "ja": "詰ますための サクリファイス",
+     "fen": "5r1k/6pp/7N/8/8/1Q6/5PPP/6K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Sometimes you give away your strongest piece on purpose.",
+       "ja": "いちばん つよい クイーンを、わざと とらせる ことが ある。ふつうなら とんでもない そんだけど、そのあと 詰むなら 話は べつ。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "sacrifice",
+         "ja": "サクリファイス（捨て駒）",
+         "sym": ""
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Once it is mate, the pieces left do not matter.",
+       "ja": "詰んだら そこで しょうぶは おわる。のこった こまを 数える ばめんが 来ない。だから「9の クイーンを すてて 詰ます」は、ちゃんと 得な 手。"
+      },
+      {
+       "t": "p",
+       "en": "Look at who is guarding g8.",
+       "ja": "この 盤を 見て。h6 の ナイトが g8 を まもって いる。だから クイーンが g8 に 入っても、キングは とれない。とれるのは f8 の ルークだけ。"
+      },
+      {
+       "t": "p",
+       "en": "And when the rook takes, it blocks the king in.",
+       "ja": "そして ルークが g8 に 来ると、キングの にげ道が ふさがる。まわりが じぶんの こまで うまる。前の 回で ならった あの かたちに なる。"
+      },
+      {
+       "t": "key",
+       "en": "If it is mate, the value of the piece does not matter.",
+       "ja": "詰むなら、こまの ねうちは かんけい ない。"
+      }
+     ],
+     "task": {
+      "en": "Give up the queen, then mate with the knight.",
+      "ja": "クイーンを すてて、ナイトで 詰ませよう。白の 手は 2つ。クイーンを すてた あと、黒が とりかえすのは ばんが さすよ。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answers": [
+        "Qg8+",
+        "Rxg8",
+        "Nf7#"
+       ],
+       "notes": [
+        {
+         "en": "The queen is there to be taken. Black has only one move.",
+         "ja": "9の クイーンを すてた。キングは とれない。g8 は h6 の ナイトが まもって いる。とれるのは f8 の ルークだけ。黒に ほかの 手は ない。"
+        },
+        {
+         "en": "The rook took — and now it is standing on the escape square.",
+         "ja": "ルークが とりかえした。これで g8 は 黒の ルークで うまった。キングの まわりを 見て。g7 と h7 は ポーン、g8 は ルーク。じぶんの こまで かこまれて いる。"
+        },
+        {
+         "en": "Mate. The queen was worth nine; it did not matter.",
+         "ja": "詰み。f7 の ナイトが h8 を おさえた。ほかの にげ道は、g8 が ルーク、g7 と h7 が ポーンで、ぜんぶ 黒の じぶんの こま。f7 の ナイトを とれる こまも ない。すてた クイーンは 9。でも しょうぶが おわったので、数える ばめんは 来ない。"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Decoy",
+     "ja": "おびき出す",
+     "fen": "7k/2q3pp/8/4N3/8/8/5PPP/3R2K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The second reason to give a piece up: to drag an enemy piece somewhere.",
+       "ja": "すてる りゆうは もう1つ ある。あいての こまを、行かせたい マスへ ひっぱり出す ため。これを おびき出すと いう。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "decoy",
+         "ja": "おびき出す",
+         "sym": ""
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Give it something it has no choice but to take.",
+       "ja": "こつは「とるしか ない」かたちに する こと。王手を かければ、あいては それを 外す ことしか できない。外す ほうほうが 1つだけなら、そこへ 行かせる ことが できる。"
+      },
+      {
+       "t": "p",
+       "en": "And d8 happens to be a forking square.",
+       "ja": "この 盤で ルークを d8 に すてると、クイーンは とるしか なくなる。そして d8 という マスは、e5 の ナイトから 見ると、キングと いっしょに ねらえる マス。前に ならった フォークが 待って いる。"
+      },
+      {
+       "t": "key",
+       "en": "Throw it where you want them to go.",
+       "ja": "とらせたい マスへ、わざと すてる。"
+      }
+     ],
+     "task": {
+      "en": "Sacrifice the rook to pull the queen onto a forking square.",
+      "ja": "ルークを すてて、クイーンを ナイトの フォークに かかる マスへ ひっぱり出そう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Rd8+"
+      }
+     }
+    },
+    {
+     "chapter": 5,
+     "en": "Deflection",
+     "ja": "そらす",
+     "fen": "2r3k1/5pp1/2b4p/8/Q7/8/5PPP/3R2K1 w - - 0 1",
+     "goals": [
+      "c6"
+     ],
+     "body": [
+      {
+       "t": "p",
+       "en": "The opposite of a decoy: drive a piece away from its job.",
+       "ja": "おびき出すの 反対が、そらす。あっちは「来させる」、こっちは「どかせる」。"
+      },
+      {
+       "t": "pairs",
+       "items": [
+        {
+         "en": "decoy",
+         "ja": "おびき出す",
+         "symJa": "来させる"
+        },
+        {
+         "en": "deflection",
+         "ja": "そらす",
+         "symJa": "どかせる"
+        }
+       ]
+      },
+      {
+       "t": "p",
+       "en": "Some pieces are doing a job.",
+       "ja": "盤の 上の こまには、仕事を して いる ものが ある。だれかを まもって いたり、だいじな マスを おさえて いたり。見た目は じっと して いるけど、いなく なったら こまる こま。"
+      },
+      {
+       "t": "p",
+       "en": "Give that piece something it must take.",
+       "ja": "その こまに、どうしても 取らなければ ならない ものを 出す。こまは 仕事を はなれて 取りに 行く。そのとき、まもられて いた ほうが 落ちる。"
+      },
+      {
+       "t": "p",
+       "en": "First, learn to see the job.",
+       "ja": "そらす 手を 見つける より さきに、「だれが 何を まもって いるか」が 見える ように なる ほうが 大事。この 回は それを さがす。"
+      },
+      {
+       "t": "key",
+       "en": "Find the piece doing a job, then make it leave.",
+       "ja": "まもって いる こまを 見つけて、そこから どかせる。"
+      }
+     ],
+     "task": {
+      "en": "The queen is eyeing one black piece. Press the piece that guards it.",
+      "ja": "白の クイーンが ねらって いる 黒の こまが 1つ ある。それを まもって いる こまは どれ？ おそう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "c8"
+      ],
+      "ordered": false
+     }
+    },
+    {
+     "chapter": 6,
+     "en": "No title this time",
+     "ja": "なにが ひそんで いる？",
+     "fen": "1r4k1/5ppp/8/n7/8/8/3R1PPP/3R2K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Until now the lesson title told you what to look for.",
+       "ja": "ここまでは、回の 題が こたえを 半分 教えて くれて いた。「フォークの 回」と 書いて あれば、フォークを さがせば よかった。"
+      },
+      {
+       "t": "p",
+       "en": "A real board has no title.",
+       "ja": "でも ほんとうの 対局に 題は ない。盤を 見て、ならった ものの 中から じぶんで えらぶ ことに なる。この 回は それを やってみる。"
+      },
+      {
+       "t": "p",
+       "en": "Two things you have learned fit together here.",
+       "ja": "ヒントを 1つだけ。この 盤には、ならった わざが 2つ つながって いる。1つめで あいての こまを どかし、2つめで 詰ます。6章と 5章を 思い出して。"
+      },
+      {
+       "t": "key",
+       "en": "Look for the piece doing a job, then ask what happens if it leaves.",
+       "ja": "仕事を して いる こまを さがす。それが いなく なったら 何が おきる？"
+      }
+     ],
+     "task": {
+      "en": "Find the move. It leads to mate in two.",
+      "ja": "この 盤で いちばん いい 手を 見つけよう。2手で 詰む。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "answer": "Rd8+",
+       "answers": [
+        "Rd8+",
+        "Rxd8",
+        "Rxd8#"
+       ],
+       "notes": [
+        {
+         "en": "Rd8+ steps in with check. Black has exactly one legal move: take the rook.",
+         "ja": "Rd8+。ルークが チェックで 入りこむ。黒が 指せる 手は 1つだけ。この ルークを とる しか ない。"
+        },
+        {
+         "en": "Black's rook took on d8. It was pulled away from where it was. Now your other rook can take it.",
+         "ja": "黒の ルークが d8 に つられて 出て きた。もう1つの ルークで これを とれば、また チェック。"
+        },
+        {
+         "en": "Checkmate! Black's own pawns on f7, g7 and h7 block the king's way out.",
+         "ja": "チェックメイト！ f7・g7・h7 の 黒の ポーンが じゃまで、キングは 逃げられない。"
+        }
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 7,
+     "en": "Four more, no titles",
+     "ja": "まざった もんだい",
+     "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Four problems. Nobody tells you which trick it is.",
+       "ja": "題の ついて いない 問題が 4つ。どれも 1手。ならった ものの どれかが ひそんで いる。上の ボタンで えらべる。"
+      },
+      {
+       "t": "p",
+       "en": "Stuck? The hint shows which piece to move.",
+       "ja": "わからなく なったら ヒントを おして。どの こまを うごかすかだけ 教えて くれる。行き先は 自分で さがす。"
+      },
+      {
+       "t": "key",
+       "en": "Ask three things: what can I take, what is undefended, what is lined up.",
+       "ja": "なにが とれる？ まもられて いない こまは？ 1本の 線に 2つ ならんで いない？"
+      }
+     ],
+     "task": {
+      "en": "Pick a problem and find the move.",
+      "ja": "問題を えらんで、いちばん いい 手を 見つけよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "moves": 1,
+      "win": {},
+      "sets": [
+       {
+        "en": "Problem 1",
+        "ja": "もんだい 1",
+        "fen": "6k1/5ppp/8/8/8/8/5PPP/4R1K1 w - - 0 1",
+        "answer": "Re8#"
+       },
+       {
+        "en": "Problem 2",
+        "ja": "もんだい 2",
+        "fen": "6k1/5ppp/8/3q1N2/8/8/PP4PP/6K1 w - - 0 1",
+        "answer": "Ne7+"
+       },
+       {
+        "en": "Problem 3",
+        "ja": "もんだい 3",
+        "fen": "4k3/pp4pp/8/7n/8/8/PP4P1/4K2R w - - 0 1",
+        "answer": "Rxh5"
+       },
+       {
+        "en": "Problem 4",
+        "ja": "もんだい 4",
+        "fen": "4k3/pp4pp/8/2q5/4N3/8/PP3PPP/4R1K1 w - - 0 1",
+        "answer": "Nxc5+"
+       }
+      ]
+     }
+    }
+   ]
+  },
+  {
+   "no": 3,
+   "en": "Openings",
+   "ja": "じょばん",
+   "chapters": [
+    {
+     "en": "Three rules",
+     "ja": "じょばんの 3つの きまり"
+    },
+    {
+     "en": "Three mistakes",
+     "ja": "やっては いけない こと"
+    },
+    {
+     "en": "Openings with names",
+     "ja": "名前の ある じょばん"
+    },
+    {
+     "en": "A real game",
+     "ja": "実戦の きふ"
+    }
+   ],
+   "lessons": [
+    {
+     "chapter": 0,
+     "en": "Take the centre",
+     "ja": "中央を とる",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The four squares in the middle are where games start.",
+       "ja": "盤の まん中の 4マス、d4・e4・d5・e5。たいきょくは まず ここの とりあいから 始まる。どちらも ここを おさえたい。"
+      },
+      {
+       "t": "p",
+       "en": "A piece in the middle reaches more squares.",
+       "ja": "なぜ まん中が いいのか。こまは 中央に いるほど たくさんの マスに 行ける から。ナイトを 中央に 置くと 8マスに 行けるけど、すみに 置くと 2マスしか 行けない。同じ ナイトなのに、はたらきが 4ばい ちがう。"
+      },
+      {
+       "t": "p",
+       "en": "And a centre pawn opens roads for the pieces behind it.",
+       "ja": "それに、中央の ポーンを 1つ 出すと、うしろに いる ビショップと クイーンの 道が あく。中央を とる 手は、こまを 出す じゅんびにも なって いる。"
+      },
+      {
+       "t": "key",
+       "en": "Hold the centre and your pieces work harder.",
+       "ja": "中央を おさえると、おなじ こまが よく はたらく。"
+      }
+     ],
+     "task": {
+      "en": "Press the four centre squares.",
+      "ja": "まん中の 4マスを おそう。"
+     },
+     "goal": {
+      "kind": "squares",
+      "ask": [
+       "d4",
+       "e4",
+       "d5",
+       "e5"
+      ],
+      "ordered": false
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Get your pieces out",
+     "ja": "こまを 出す",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "At the start, only pawns and knights can move at all.",
+       "ja": "はじめの 盤を 見て。うごけるのは ポーンと ナイトだけ。ビショップも ルークも クイーンも、じぶんの ポーンに ふさがれて いる。序盤は この こまたちを 外へ 出す 時間。"
+      },
+      {
+       "t": "p",
+       "en": "Knights and bishops first. Rooks and queen later.",
+       "ja": "出す じゅんばんが ある。ナイトと ビショップが さき、ルークと クイーンは あと。2巻で ならった とおり、ねうちの 高い こまを 早く 出すと、安い こまに ねらわれて にげ回る ことに なる。"
+      },
+      {
+       "t": "p",
+       "en": "This is the Italian Game, one of the oldest.",
+       "ja": "この レッスンの きふは「イタリアン」と よばれる 序盤の はじまり。白も 黒も、中央に ポーンを 出し、ナイトを 出し、ビショップを 出す。おなじ ことを 両方が やって いる。"
+      },
+      {
+       "t": "key",
+       "en": "Pawns open the roads. Knights and bishops come out first.",
+       "ja": "ポーンで 道を あけて、ナイトと ビショップを 出す。"
+      }
+     ],
+     "task": {
+      "en": "Play the six moves.",
+      "ja": "きふの とおりに 6手 さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Bc5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 0,
+     "en": "Tuck the king away",
+     "ja": "キングを 安全に",
+     "fen": "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4",
+     "body": [
+      {
+       "t": "p",
+       "en": "Third rule: get the king out of the middle.",
+       "ja": "3つめの きまり。キングを まん中から どかす こと。いま 白の キングは e1 に いる。中央の たてよこの 線は、これから いちばん こまが 行き来する ところ。"
+      },
+      {
+       "t": "p",
+       "en": "Castling does two jobs in one move.",
+       "ja": "キャスリング（1巻で ならったね）は、1手で 2つ できる。キングを すみへ にがす ことと、ルークを 中央に つれて くる こと。序盤で いちばん とくな 1手。"
+      },
+      {
+       "t": "p",
+       "en": "Early is better than clever.",
+       "ja": "早めに やって おく ほうが いい。あとまわしに して いると、キングの 前に こまが 来て できなく なったり、1巻で ならった 4つの きまりの どれかが かけたり する。"
+      },
+      {
+       "t": "key",
+       "en": "Castle early. The middle is the dangerous place.",
+       "ja": "早めに キャスリング。まん中は これから あぶない。"
+      }
+     ],
+     "task": {
+      "en": "Castle, then let Black bring a knight out.",
+      "ja": "キャスリングして、黒も ナイトを 出そう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "O-O",
+        "Nf6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Moving the same piece again and again",
+     "ja": "おなじ こまを 何度も",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "In the opening, every move counts. You only get one at a time.",
+       "ja": "序盤は こまを 出す 時間。でも 1手ずつ しか 指せない。だから「何手 つかって、どれだけ 出せたか」で 差が つく。"
+      },
+      {
+       "t": "p",
+       "en": "Move one piece twice and the other side gets ahead.",
+       "ja": "おなじ こまを 2回 3回 うごかすと、その あいだ あいては ちがう こまを 出して いる。手数は 同じなのに、ならんで いる こまの 数が ちがって くる。"
+      },
+      {
+       "t": "p",
+       "en": "Watch this knight go out and come back.",
+       "ja": "この きふの 白は、ナイトを f3 へ 出して、g1 へ もどして、また f3 へ 出す。3手 つかって、はじめと おなじ ところに いる。"
+      },
+      {
+       "t": "p",
+       "en": "Play it, then compare the two sides.",
+       "ja": "さいごまで さしたら、盤を 見くらべて。白で 出て いる こまは 1つ。黒は 3つ。おなじ 4手ずつ さしたのに。"
+      },
+      {
+       "t": "key",
+       "en": "Each extra move on the same piece is a move you did not develop.",
+       "ja": "おなじ こまを 何度も うごかすと、その ぶん おくれる。"
+      }
+     ],
+     "task": {
+      "en": "Play the eight moves and compare the two sides.",
+      "ja": "8手 さして、さいごに 白と 黒を 見くらべよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Ng1",
+        "Nf6",
+        "Nf3",
+        "Bc5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Bringing the queen out too early",
+     "ja": "早すぎる クイーン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The queen is the strongest, so it is tempting to use her first.",
+       "ja": "クイーンは いちばん つよい。だから 早く 出して あばれたく なる。でも 早すぎると、つよさが そのまま 弱みに なる。"
+      },
+      {
+       "t": "p",
+       "en": "A strong piece cannot trade itself for a cheap one.",
+       "ja": "2巻の ねうちの 話を 思い出して。9の クイーンは、3の ナイトや 1の ポーンに とられる わけに いかない。だから ねらわれる たびに、にげる しか ない。にげる 1手は、こまを 出す 1手では ない。"
+      },
+      {
+       "t": "p",
+       "en": "Here White spends three of five moves on the queen alone.",
+       "ja": "この きふの 白は、5手の うち 3手を クイーンだけに つかう。そのあいだ 黒は ナイトを 2つ 出し、中央に ポーンを 2つ ならべる。中央の ポーンは 白が 1つ、黒が 2つ。"
+      },
+      {
+       "t": "p",
+       "en": "You have seen this opening win before.",
+       "ja": "1巻の「てばんの ばんごう」で 読んだ スカラーズメイトも、クイーンを 早く 出す 形だった。あれは 黒が 気づかなかった ときだけ うまく いく。気づかれると、この きふの ように なる。"
+      },
+      {
+       "t": "key",
+       "en": "The queen comes out late, after the cheap pieces.",
+       "ja": "クイーンは あとから。安い こまが 先。"
+      }
+     ],
+     "task": {
+      "en": "Play the ten moves. Count how many are queen moves.",
+      "ja": "10手 さしてみよう。白の 手の うち、クイーンが 何手 か 数えて。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Qh5",
+        "Nc6",
+        "Bc4",
+        "g6",
+        "Qf3",
+        "Nf6",
+        "Qg3",
+        "d5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 1,
+     "en": "Pushing the edge pawns",
+     "ja": "はしの ポーン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The a- and h-pawns are the ones on the edge.",
+       "ja": "a の れつと h の れつの ポーンを「はしの ポーン」と いう。序盤に これを 動かすのは、たいてい 損に なる。"
+      },
+      {
+       "t": "p",
+       "en": "They do neither of the two jobs.",
+       "ja": "理由は 2つ。1つめ、はしは 中央では ない。中央の とりあいに 入れない。2つめ、動かしても うしろの こまの 道が あかない。ビショップも クイーンも、はしの ポーンの うしろには いない。"
+      },
+      {
+       "t": "p",
+       "en": "Four moves, nothing out.",
+       "ja": "この きふの 白は、4手 つかって こまが 1つも 出て いない。ぜんぶ もとの ところ。黒は 中央に ポーンを 2つ ならべて、こまを 2つ 出して いる。"
+      },
+      {
+       "t": "key",
+       "en": "Edge pawns give you neither the centre nor an open road.",
+       "ja": "はしの ポーンは、中央も 道も くれない。"
+      }
+     ],
+     "task": {
+      "en": "Play the eight moves and look at how little White has.",
+      "ja": "8手 さして、白に 何が のこったか 見てみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "a4",
+        "e5",
+        "h4",
+        "d5",
+        "a5",
+        "Nf6",
+        "h5",
+        "Bc5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The Italian Game",
+     "ja": "イタリアン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "White points a bishop straight at f7.",
+       "ja": "ビショップを c4 に 出す かたち。この ビショップは、黒の キングの 前の f7 を まっすぐ 見て いる。f7 は、はじめ キングしか まもって いない マス。1巻の スカラーズメイトでも ねらわれて いた ところ。"
+      },
+      {
+       "t": "p",
+       "en": "Both sides just follow the three rules.",
+       "ja": "1章で ならった 3つの きまりを、白も 黒も そのまま やって いる だけの かたち。中央に ポーンを 出し、ナイトを 出し、ビショップを 出す。だから いちばん 分かりやすい。イタリアの 人たちが 書き のこした ので この 名前。"
+      },
+      {
+       "t": "key",
+       "en": "The oldest and plainest way to follow the rules.",
+       "ja": "きまりを そのまま やると、この かたちに なる。"
+      }
+     ],
+     "task": {
+      "en": "Play the Italian Game.",
+      "ja": "イタリアンを さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4",
+        "Bc5",
+        "c3",
+        "Nf6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The Ruy Lopez",
+     "ja": "ルイロペス",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The bishop goes to b5 instead, aiming at the knight.",
+       "ja": "ビショップを c4 では なく b5 に 出す かたち。ねらって いるのは f7 では なく、c6 の ナイト。その ナイトは、黒の 中央の ポーン e5 を まもって いる こま。"
+      },
+      {
+       "t": "p",
+       "en": "Attack the guard, not the thing it guards.",
+       "ja": "2巻の「まもって いる こまを どかせる」話に にて いる。まもり手を ねらうと、まもられて いる ほうが ぐらつく。すぐに 取れる わけでは ないけれど、ずっと 気に なる。"
+      },
+      {
+       "t": "p",
+       "en": "Named after a Spanish priest who wrote about it in 1561.",
+       "ja": "スペインの ルイ・ロペスと いう ひとが 1561年の 本に 書いた ので、その 名前が ついて いる。スパニッシュとも よばれる。"
+      },
+      {
+       "t": "key",
+       "en": "Aim at the piece that is doing the guarding.",
+       "ja": "まもって いる こまの ほうを ねらう。"
+      }
+     ],
+     "task": {
+      "en": "Play the Ruy Lopez.",
+      "ja": "ルイロペスを さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bb5",
+        "a6",
+        "Ba4",
+        "Nf6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The Sicilian Defence",
+     "ja": "シシリアン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Black answers 1.e4 with the c-pawn, not the e-pawn.",
+       "ja": "白の e4 に、黒が e5 では なく c5 と こたえる かたち。おなじ 中央の とりあいでも、左右が そろわない。"
+      },
+      {
+       "t": "p",
+       "en": "The two sides end up wanting different things.",
+       "ja": "白と 黒が 鏡の ように 同じ ことを する かたちでは なく なるので、おたがい 行く 先が ちがって くる。よく 指される こたえ方。"
+      },
+      {
+       "t": "p",
+       "en": "Watch the 4th move: a capture with a knight.",
+       "ja": "この きふでは 4手めに ナイトで とり返して いる。cxd4 と Nxd4。1巻の「とる ときは x」が ここで 出て くる。"
+      },
+      {
+       "t": "key",
+       "en": "Meeting e4 with c5 makes the game lopsided on purpose.",
+       "ja": "わざと 左右を そろえない こたえ方。"
+      }
+     ],
+     "task": {
+      "en": "Play the Sicilian Defence.",
+      "ja": "シシリアンを さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "c5",
+        "Nf3",
+        "d6",
+        "d4",
+        "cxd4",
+        "Nxd4",
+        "Nf6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The French Defence",
+     "ja": "フレンチ",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Black plays e6 first, planning d5 next.",
+       "ja": "黒が まず e6 と 小さく 出て、つぎに d5 と 中央に ならべる かたち。e5 で ぶつけるのでは なく、1つ ずらして かまえる。"
+      },
+      {
+       "t": "p",
+       "en": "One piece pays for it: the c8 bishop.",
+       "ja": "ただし、こまった ことが 1つ。e6 の ポーンが、c8 の ビショップの 道を ふさいで しまう。この きふを さしきった あと、c8 の ビショップを さわって みて。行ける マスは d7 の 1つだけ。しかも その 先も じぶんの ポーンに ふさがれて いる。"
+      },
+      {
+       "t": "p",
+       "en": "Named after a match between London and Paris in 1834.",
+       "ja": "1834年の ロンドン 対 パリの 対局で 使われた ので、フランスの 名前が ついて いる。"
+      },
+      {
+       "t": "key",
+       "en": "The e6 pawn shuts its own bishop in.",
+       "ja": "e6 の ポーンは、じぶんの ビショップの 道を ふさぐ。"
+      }
+     ],
+     "task": {
+      "en": "Play the French, then try to move the c8 bishop.",
+      "ja": "フレンチを さしてみよう。さいごに c8 の ビショップを さわって みて。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "e6",
+        "d4",
+        "d5",
+        "Nc3",
+        "Bb4"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The Caro-Kann",
+     "ja": "カロカン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Also preparing d5 — but with the c-pawn.",
+       "ja": "フレンチと 同じで、つぎに d5 と ならべる じゅんび。ちがうのは、e6 では なく c6 と 出す こと。"
+      },
+      {
+       "t": "p",
+       "en": "This way the bishop gets out first.",
+       "ja": "たった 1マス ちがう だけで、c8 の ビショップの 道が ふさがらない。この きふの さいごの 手が それ。Bf5 で ビショップが そとに 出て いる。フレンチの ビショップと 見くらべて みて。"
+      },
+      {
+       "t": "p",
+       "en": "Named after two players who wrote about it in 1886.",
+       "ja": "1886年に カロと カンと いう ふたりが しらべた ので、ふたりの 名前を ならべて こう よばれる。"
+      },
+      {
+       "t": "key",
+       "en": "c6 instead of e6 keeps the bishop’s road open.",
+       "ja": "e6 では なく c6。それだけで ビショップが 出られる。"
+      }
+     ],
+     "task": {
+      "en": "Play the Caro-Kann and see where the bishop lands.",
+      "ja": "カロカンを さしてみよう。ビショップが どこに 出るか 見てね。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "e4",
+        "c6",
+        "d4",
+        "d5",
+        "Nc3",
+        "dxe4",
+        "Nxe4",
+        "Bf5"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The Queen’s Gambit",
+     "ja": "クイーンズギャンビット",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "This time White starts with the d-pawn.",
+       "ja": "ここまでは ぜんぶ e4 から 始まって いた。こんどは d4 から。白が クイーンの 側の ポーンを 先に 出す かたち。"
+      },
+      {
+       "t": "p",
+       "en": "A gambit means offering a pawn.",
+       "ja": "2手めの c4 が この 序盤の 顔。黒の d5 の ポーンに ポーンを ぶつけて いる。「ギャンビット」とは ポーンを さし出す こと。黒は とっても いいし、とらなくても いい。この きふの 黒は とらずに e6 と ならべて いる。"
+      },
+      {
+       "t": "p",
+       "en": "One of the oldest openings on record.",
+       "ja": "とても 古くから ある かたちで、いまも よく 指される。"
+      },
+      {
+       "t": "key",
+       "en": "A gambit is an offer. You can always decline it.",
+       "ja": "ギャンビットは「どうぞ」。とるか とらないかは あいてが きめる。"
+      }
+     ],
+     "task": {
+      "en": "Play the Queen’s Gambit.",
+      "ja": "クイーンズギャンビットを さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "d4",
+        "d5",
+        "c4",
+        "e6",
+        "Nc3",
+        "Nf6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 2,
+     "en": "The London System",
+     "ja": "ロンドン",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "The bishop comes out before the pawn wall goes up.",
+       "ja": "d4 の つぎに、すぐ ビショップを f4 へ 出す かたち。あとから e3 と ポーンを 出す。"
+      },
+      {
+       "t": "p",
+       "en": "Order matters: bishop first, then the pawn.",
+       "ja": "じゅんばんが 大事。先に e3 と して しまうと、フレンチの ビショップと 同じ ことに なる。じぶんの ポーンの うしろに とじこめられる。だから ビショップを 先に 外へ 出して おく。"
+      },
+      {
+       "t": "p",
+       "en": "It is a shape, not a reply to one move.",
+       "ja": "この かたちは、黒が どう こたえても だいたい 同じ ように 組める。おぼえる ことが 少ないので、はじめの うちは 組みやすい。"
+      },
+      {
+       "t": "key",
+       "en": "Let the bishop out before you build the pawn wall.",
+       "ja": "ポーンの かべを 作る 前に、ビショップを 外へ。"
+      }
+     ],
+     "task": {
+      "en": "Play the London System.",
+      "ja": "ロンドンを さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "d4",
+        "d5",
+        "Bf4",
+        "Nf6",
+        "e3",
+        "e6"
+       ]
+      }
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "The Opera Game",
+     "ja": "オペラ座の 対局",
+     "fen": "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+     "body": [
+      {
+       "t": "p",
+       "en": "Paris, 1858. White is Paul Morphy; two players shared the black pieces.",
+       "ja": "1858年、パリの オペラ座で 指された 対局。白は ポール・モーフィー。黒は ふたりの 人が 相談しながら 指した。オペラ座で 指されたので「オペラ座の 対局」と よばれて いる。"
+      },
+      {
+       "t": "p",
+       "en": "Watch the two sides follow — and not follow — the three rules.",
+       "ja": "17手で おわる 短い たいきょく。3章の 3つの きまりを、白は そのまま やり、黒は やらない。ボタンで 1手ずつ 送りながら、そこを 見て みて。"
+      },
+      {
+       "t": "p",
+       "en": "White gets everything out and castles on move 12.",
+       "ja": "白は こまを つぎつぎ 出して、12手めで キャスリング。14手めが おわった ところで、白は まだ もとの ところに いる こまが 0。黒は 2つ（f8 の ビショップと h8 の ルーク）。黒の キングも e8 に いた まま。"
+      },
+      {
+       "t": "p",
+       "en": "And here is the strange part.",
+       "ja": "おもしろいのは ここ。詰んだ ときに のこって いる こまの ねうちを 数えると、白は 15、黒は 25。黒の ほうが 10も 多い。白は さいごに ビショップと クイーンを すてて いる から。それでも 詰まされるのは 黒の ほう。2巻で ならった とおり、詰むなら こまの 数は かんけいない。"
+      },
+      {
+       "t": "key",
+       "en": "Having more pieces does not help if you are the one getting mated.",
+       "ja": "こまが 多くても、詰まされたら おわり。"
+      }
+     ],
+     "task": {
+      "en": "Step through the game one move at a time.",
+      "ja": "ボタンで 1手ずつ 送りながら 読もう。ぜんぶで 33手。"
+     },
+     "goal": {
+      "kind": "replay",
+      "line": "1. e4 e5 2. Nf3 d6 3. d4 Bg4 4. dxe5 Bxf3 5. Qxf3 dxe5 6. Bc4 Nf6 7. Qb3 Qe7 8. Nc3 c6 9. Bg5 b5 10. Nxb5 cxb5 11. Bxb5+ Nbd7 12. O-O-O Rd8 13. Rxd7 Rxd7 14. Rd1 Qe6 15. Bxd7+ Nxd7 16. Qb8+ Nxb8 17. Rd8#"
+     }
+    },
+    {
+     "chapter": 3,
+     "en": "Finish it yourself",
+     "ja": "さいごを 自分で",
+     "fen": "4kb1r/p2r1ppp/4qn2/1B2p1B1/4P3/1Q6/PPP2PPP/2KR4 w k - 2 15",
+     "body": [
+      {
+       "t": "p",
+       "en": "This is the position before the last five moves.",
+       "ja": "さっきの 対局の、さいごの 5手の 直前。こんどは じぶんで さしてみよう。ならった ものが 3つ つながって いる。"
+      },
+      {
+       "t": "p",
+       "en": "First, remove the guard.",
+       "ja": "1つめ Bxd7+。d7 の ナイトを とる。この ナイトは 黒の まもりに なって いた。2巻の「そらす」で ならった、仕事を して いる こまを どかす 手。"
+      },
+      {
+       "t": "p",
+       "en": "Then give up the queen.",
+       "ja": "2つめ Qb8+。いちばん つよい クイーンを すてる。黒には これを とる 手しか のこって いない。ほんとうに 1つだけ。2巻の「おびき出す」の かたち。"
+      },
+      {
+       "t": "p",
+       "en": "And mate on the back rank.",
+       "ja": "3つめ Rd8# で 詰み。ルークが いちばん 下の だんに 入る。2巻の バックランクメイト。黒の キングは キャスリングを しないまま、まん中に のこって いた。"
+      },
+      {
+       "t": "key",
+       "en": "Three things you learned, one after another.",
+       "ja": "そらす → すてる → 詰ます。3つが つながる。"
+      }
+     ],
+     "task": {
+      "en": "Play the last five moves.",
+      "ja": "さいごの 5手を さしてみよう。"
+     },
+     "goal": {
+      "kind": "moves",
+      "win": {
+       "line": [
+        "Bxd7+",
+        "Nxd7",
+        "Qb8+",
+        "Nxb8",
+        "Rd8#"
+       ]
+      }
+     }
+    }
+   ]
+  }
+ ]
+}
