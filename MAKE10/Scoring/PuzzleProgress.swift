@@ -5,12 +5,11 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/11/04.
 //
 
-// かわわたり → クロツキ → 華容道 → 箱入り娘 と続く「順番に解放する」道のりの記録。CHESS はクロツキから開く。
+// かわわたり → クロツキ → 華容道 → 箱入り娘 → CHESS と続く「順番に解放する」道のりの記録。
 //
 // ★ 解放の順番 ★
 //   10びょうモードの記録ができる（スコア1以上） → かわわたり 1問目
-//   1問目 → 2問目 → 3問目 → 4問目 → クロツキ → 華容道 → 箱入り娘（標準） → 箱入り娘（むずかしい）
-//   クロツキをクリアすると、華容道といっしょに CHESS も開く。
+//   1問目 → 2問目 → 3問目 → 4問目 → クロツキ → 華容道 → 箱入り娘（標準） → 箱入り娘（むずかしい） → CHESS
 //   手数は問わない。最短でなくても、クリアすれば次が開く。
 //
 // ★ 記録（ScoreBoard）とは別に持っている理由 ★
@@ -22,10 +21,6 @@
 //   initiallyOpenThrough を変えるだけ。たとえば .klotski にすると、
 //   クロツキまでが最初から開く。初回クリア報酬はクリアしたときに渡すので、開いたまま遊んでももらえる。
 //
-// ★ CHESS をクロツキの次にしている理由 ★
-//   かわわたりとクロツキを自力で解ける子なら、チェスのルールは十分に理解できるため。
-//   華容道・箱入り娘は同じ盤の続きなので、チェスを遊ぶのにそこまで解く必要はない。
-//
 // ★ 数字ではなく名前の集まりで持っている理由 ★
 //   「何段目まで進んだか」を数字で持つと、将来ゲームを途中に足したときに、保存した数字の意味がずれる。
 
@@ -33,7 +28,7 @@ import SwiftUI
 
 // MARK: - PuzzleStep
 
-/// 道のりの1段。並び順がそのまま解放の順番（CHESS は枝分かれなので最後に置いている）。
+/// 道のりの1段。並び順がそのまま解放の順番。
 /// rawValue は保存に使うので変えないこと。
 enum PuzzleStep: String, CaseIterable {
     case river1, river2, river3, river4
@@ -50,10 +45,10 @@ enum PuzzleStep: String, CaseIterable {
         case .river2:      return [.river3]
         case .river3:      return [.river4]
         case .river4:      return [.klotski]
-        case .klotski:     return [.huarongdao, .chess]
+        case .klotski:     return [.huarongdao]
         case .huarongdao:  return [.hakoiri]
         case .hakoiri:     return [.hakoiriHard]
-        case .hakoiriHard: return []
+        case .hakoiriHard: return [.chess]
         case .chess:       return []
         }
     }
@@ -176,7 +171,7 @@ final class PuzzleProgress: CloudSyncSource {
     struct ClearResult {
         /// 初回クリア報酬（kcal）。2回目以降は 0
         let firstClearReward: Double
-        /// 今回あたらしく開いた段（画面に知らせる）。クロツキでは華容道と CHESS の 2 つ
+        /// 今回あたらしく開いた段（画面に知らせる）
         let opened: [PuzzleStep]
     }
 

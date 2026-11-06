@@ -62,7 +62,7 @@ enum GamePickerSelection: String, CaseIterable, Hashable {
     case klotski        // クロツキ
     case hakoiri        // 箱入り娘
     case huarongdao     // 華容道
-    case chess          // チェス（クロツキをクリアすると開く。PuzzleProgress.swift を参照）
+    case chess          // チェス（箱入り娘のむずかしいモードをクリアすると開く。PuzzleProgress.swift を参照）
     case memory         // どうぶつめくり（神経衰弱）
     case stickerStorage // シール管理・遊ぶ画面
     case stickerDex     // シールじてん（v1.6.0 から。シール帳・シールやさんからも開ける）
