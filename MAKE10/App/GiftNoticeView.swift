@@ -5,10 +5,12 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/01.
 //
 //  エネルギーをプレゼントしたことを知らせるカード。タイトル画面の上に重ねて出す。
-//  次の3種類を、同じ見た目で出し分ける。
+//  エネルギーのお知らせのほか、シールじてんのコンプリートのお祝いも同じカードで出す。
+//  次の4種類を、同じ見た目で出し分ける。
 //    ・アップデートのお礼       : 紙吹雪＋ガチャ・シールやさんへのボタン付き
 //    ・はじめまして（新規インストール）: 紙吹雪＋ガチャ・シールやさんへのボタン付き
 //    ・毎日のログインボーナス   : 控えめに「とじる」だけ（毎日出るので、にぎやかにしすぎない）
+//    ・シールじてんのコンプリート: 紙吹雪＋シールじてんへのボタン付き（シールづくりを案内する）
 //
 //  役割分担:
 //    - GiftNoticeView（このファイル）: お知らせの見た目と演出
@@ -25,6 +27,8 @@ enum GiftNotice: Equatable {
     case updateThanks
     /// 毎日のログインボーナス・はじめまして（DailyBonus を参照）。
     case daily(DailyBonus.Notice)
+    /// シールじてんのコンプリート（CustomStickerStore を参照）。エネルギーは渡さない。
+    case dexComplete
 
     /// 一覧で区別するための識別子（カードの切り替え演出のやり直しに使う）。
     var id: String {
@@ -32,6 +36,7 @@ enum GiftNotice: Equatable {
         case .updateThanks:     return "update"
         case .daily(.welcome):  return "welcome"
         case .daily(.login):    return "login"
+        case .dexComplete:      return "dexComplete"
         }
     }
 
@@ -39,8 +44,8 @@ enum GiftNotice: Equatable {
     /// 毎日のログインボーナスは毎日出るので、控えめにする。
     var celebrates: Bool {
         switch self {
-        case .updateThanks, .daily(.welcome): return true
-        case .daily(.login):                  return false
+        case .updateThanks, .daily(.welcome), .dexComplete: return true
+        case .daily(.login):                                return false
         }
     }
 }
@@ -57,6 +62,8 @@ struct GiftNoticeView: View {
     let onOpenGacha: () -> Void
     /// 「シールやさん」が押されたときの処理。
     let onOpenShop: () -> Void
+    /// 「シールじてん」が押されたときの処理。
+    let onOpenDex: () -> Void
     /// 「とじる」が押されたときの処理。
     let onClose: () -> Void
 
@@ -71,6 +78,7 @@ struct GiftNoticeView: View {
         switch notice {
         case .updateThanks, .daily(.welcome): return "🎁"
         case .daily(.login):                  return "🍌"   // バナナ1本分＝ガチャ1回分
+        case .dexComplete:                    return "🏆"
         }
     }
 
@@ -80,14 +88,17 @@ struct GiftNoticeView: View {
         case .daily(.welcome):               return "welcome_gift_title"
         case .daily(.login(_, true)):        return "login_bonus_title_streak"
         case .daily(.login(_, false)):       return "login_bonus_title"
+        case .dexComplete:                   return "sticker_complete_title"
         }
     }
 
-    private var kcal: Double {
+    /// 渡したエネルギー（kcal）。エネルギーを渡さないお知らせは nil。
+    private var kcal: Double? {
         switch notice {
         case .updateThanks:                  return AppMigration.pendingGiftKcal
         case .daily(.welcome):               return DailyBonusTuning.welcomeGift
         case .daily(.login(let kcal, _)):    return kcal
+        case .dexComplete:                   return nil
         }
     }
 
@@ -95,6 +106,7 @@ struct GiftNoticeView: View {
         switch notice {
         case .updateThanks, .daily(.welcome): return "update_gift_message"   // 「エネルギーを プレゼント！」（共用）
         case .daily(.login):                  return "login_bonus_message"
+        case .dexComplete:                    return "sticker_complete_message"
         }
     }
 
@@ -112,18 +124,21 @@ struct GiftNoticeView: View {
                     .font(.system(size: 22, weight: .black, design: .rounded))
                     .foregroundStyle(DS.textPrimary)
                     .multilineTextAlignment(.center)
-                VStack(spacing: 4) {
-                    HStack(spacing: 2) {
-                        Text("energy_label")
-                        Text(verbatim: "🔥")
+                    .fixedSize(horizontal: false, vertical: true)   // 長い言語でも、切らずに折り返す
+                if let kcal {
+                    VStack(spacing: 4) {
+                        HStack(spacing: 2) {
+                            Text("energy_label")
+                            Text(verbatim: "🔥")
+                        }
+                        .font(.system(size: 15, weight: .black, design: .rounded))
+                        // 単位の kcal は全言語共通なので、ローカライズせずそのまま出す
+                        Text(verbatim: "+\(EnergyStore.format(kcal))kcal")
+                            .font(.system(size: 34, weight: .black, design: .rounded))
+                            .monospacedDigit()
                     }
-                    .font(.system(size: 15, weight: .black, design: .rounded))
-                    // 単位の kcal は全言語共通なので、ローカライズせずそのまま出す
-                    Text(verbatim: "+\(EnergyStore.format(kcal))kcal")
-                        .font(.system(size: 34, weight: .black, design: .rounded))
-                        .monospacedDigit()
+                    .foregroundStyle(DS.energy)
                 }
-                .foregroundStyle(DS.energy)
                 Text(message)
                     .font(.system(size: 14, weight: .bold, design: .rounded))
                     .foregroundStyle(DS.textBody)
@@ -136,7 +151,11 @@ struct GiftNoticeView: View {
                         .multilineTextAlignment(.center)
                 }
 
-                if notice.celebrates {
+                if notice == .dexComplete {
+                    // シールづくりは、シールじてんの「オリジナル」の欄から始める
+                    actionButton("sticker_dex_title", systemImage: "book.closed", action: onOpenDex)
+                        .padding(.top, 4)
+                } else if notice.celebrates {
                     // もらったエネルギーをすぐ使えるよう、ガチャとシールやさんへの近道を置く
                     HStack(spacing: 12) {
                         actionButton("gacha_title", systemImage: "gift", action: onOpenGacha)

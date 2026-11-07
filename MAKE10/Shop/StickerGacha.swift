@@ -5,7 +5,7 @@
 //  Created by 空飛ぶ研究室(FlyingDevLab) on 2026/10/01.
 //
 //  エネルギーを使って、ランダムなシールを手に入れる「ガチャ」の処理。
-//  全シール（StickerCatalog.all）が常に同じ確率で出る。
+//  全シール（オリジナルシールも入れた StickerCatalog.pool）が常に同じ確率で出る。
 //
 //  役割分担:
 //    - StickerGacha（このファイル）: 値段の確認・抽選・シールの受け渡し
@@ -72,6 +72,7 @@ enum StickerGacha {
     // ⚠️ 変更注意: 「全シールが同じ確率」はガチャ画面にも表示する約束。
     //   確率を変えるときは画面の説明文も合わせて直すこと。
     static func draw(count: Int) -> [String] {
-        (0..<count).compactMap { _ in StickerCatalog.all.randomElement() }
+        let pool = StickerCatalog.pool
+        return (0..<count).compactMap { _ in pool.randomElement() }
     }
 }

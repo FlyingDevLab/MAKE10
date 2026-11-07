@@ -153,7 +153,7 @@ final class GameViewModel {
     var tappedTileValue:  Int?        = nil
     /// Blitzモード解放バナーの表示フラグ（解放直後のゲーム終了画面で1度だけ表示）
     var showUnlockBanner: Bool        = false
-    /// 10びょうモードで はじめて記録ができて、かわわたりが開いたセッションか
+    /// 10びょうモードで はじめて10問正解して、かわわたりが開いたセッションか
     var showRiverUnlockBanner: Bool   = false
     /// 今回が歴代最高スコアかどうか（リザルト画面の「New Record!」表示に使う）。
     /// 30びょう・10びょうそれぞれのモードで、そのモードの記録を更新したときに true になる。
@@ -529,8 +529,8 @@ final class GameViewModel {
         // 保存先は currentScoreKey がモードに応じて振り分ける（30びょうと10びょうは別キー）。
         isNewHighScore = ScoreBoard.saveIfBetter(score: score, for: currentScoreKey)
 
-        // 10びょうモードに記録ができたら、かわわたりを開く（PuzzleProgress.swift を参照）
-        if gameMode == .blitz && score > 0 {
+        // 10びょうモードで10問正解したら、かわわたりを開く（PuzzleProgress.swift を参照）
+        if gameMode == .blitz && score >= PuzzleProgress.riverUnlockBlitzScore {
             showRiverUnlockBanner = PuzzleProgress.shared.unlock(.river1)
             if showRiverUnlockBanner { SoundManager.shared.playUnlock() }
         }
@@ -596,6 +596,7 @@ final class GameViewModel {
         questionCorrects    = Array(repeating: 0, count: 10)
         ScoreBoard.resetAll()        // 全ゲームのスコア・ベストタイムを一括削除
         StickerStore.shared.reset()  // シールデータもリセット（こちらは StickerStore が責任を持つ）
+        CustomStickerStore.shared.reset()    // 作ったオリジナルシールも消す
         EnergyStore.shared.reset()   // エネルギー残高も 0 に戻す
         StickerShop.shared.reset()   // ショップの品揃え・売り切れも消す（次に開いたとき新しく開店する）
         ThanksNotebookStore.shared.reset()   // ありがとう てちょうの記録も消す

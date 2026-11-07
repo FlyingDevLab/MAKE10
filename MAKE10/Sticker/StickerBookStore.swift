@@ -146,6 +146,15 @@ final class StickerBookStore {
         return counts
     }
 
+    /// 処分したオリジナルシールを、全ページから取り除く（開いていないページも含む）。
+    func purge(_ ids: Set<String>) {
+        for index in pages.indices where pages[index].stickers.contains(where: { ids.contains($0.emoji) }) {
+            pages[index].stickers.removeAll { ids.contains($0.emoji) }
+            touch(index)
+        }
+        saveBook()
+    }
+
     // MARK: 保存
 
     /// 全ページの「紙の縦横比・背景色・シール」を保存する。
@@ -337,6 +346,8 @@ extension StickerBookStore: CloudSyncSource {
         }
 
         var page = remote.page
+        // まだ処分を知らない端末から届いたページに、処分したオリジナルシールが残っていても受け取らない
+        page.stickers.removeAll { CustomStickerStore.shared.isDisposed($0.emoji) }
         page.modifiedAt = payload.modifiedAt
         pages[index] = page
         writeStrokes(remote.strokes, page: index)

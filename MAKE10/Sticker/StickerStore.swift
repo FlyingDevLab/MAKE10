@@ -226,6 +226,7 @@ final class StickerStore {
         discovered.formUnion(new)
         UserDefaults.standard.set(Array(discovered).sorted(), forKey: Self.discoveredKey)
         touch()
+        CustomStickerStore.shared.recordUnlockIfComplete()   // コンプリートしたら、シールづくりを解放する
     }
 
     private static let discoveredKey   = "stickerDiscovered"
@@ -342,6 +343,22 @@ final class StickerStore {
         savePlay()
     }
 
+    // MARK: - 公開API（処分）
+
+    /// 処分したオリジナルシールを、ゲーム画面・ストレージ・シール帳の全ページから取り除く。
+    func purge(_ ids: Set<String>) {
+        guard !ids.isEmpty else { return }
+        stickers.removeAll { ids.contains($0.emoji) }
+        storageEmojis.removeAll { ids.contains($0) }
+        discovered.subtract(ids)
+        autoExchange.subtract(ids)
+        UserDefaults.standard.set(Array(discovered).sorted(),   forKey: Self.discoveredKey)
+        UserDefaults.standard.set(Array(autoExchange).sorted(), forKey: Self.autoExchangeKey)
+        saveGame()
+        saveStorage()
+        StickerBookStore.shared.purge(ids)
+    }
+
     // MARK: - 公開API（リセット）
 
     /// 進捗リセット時に全データをまとめてクリアする。
@@ -366,9 +383,7 @@ final class StickerStore {
     /// MAKE10ボード・ストレージ・シール画面のどこにあっても1枚と数える。
     ///
     /// ★ 「これまでに手に入れた枚数」を別に記録していない理由 ★
-    ///   シールを捨てる・消す方法はない（進捗リセットを除く）ため、
-    ///   いま持っている枚数＝これまでに手に入れた枚数になる。
-    ///   将来シールを消費する機能を作るときに、ここを初期値にして記録を始めればよい。
+    ///   救済枠は「いま持っている枚数が少ないシール」を選びたいので、交換や処分で減った数のままでよい。
     func ownedCounts() -> [String: Int] {
         var counts: [String: Int] = [:]
         for s in stickers      { counts[s.emoji, default: 0] += 1 }
@@ -543,7 +558,13 @@ extension StickerStore: CloudSyncSource {
     /// iCloud から届いたシールを反映する。あとで変えたほうを残す。
     /// 保存は UserDefaults に直接書く（saveGame / saveStorage は「変えた」扱いになり、送り返してしまうため）。
     func applyCloudPayload(_ payload: CloudPayload, for name: String, force: Bool) -> CloudApplyResult {
-        guard let remote = try? JSONDecoder().decode(CloudStickers.self, from: payload.data) else { return .applied }
+        guard var remote = try? JSONDecoder().decode(CloudStickers.self, from: payload.data) else { return .applied }
+        // まだ処分を知らない端末から届いた記録に、処分したオリジナルシールが残っていても受け取らない
+        let customs = CustomStickerStore.shared
+        remote.game.removeAll { customs.isDisposed($0.emoji) }
+        remote.storage.removeAll { customs.isDisposed($0) }
+        remote.discovered?.removeAll { customs.isDisposed($0) }
+        remote.autoExchange?.removeAll { customs.isDisposed($0) }
         let localDate = UserDefaults.standard.object(forKey: Self.modifiedAtKey) as? Date ?? .distantPast
         // 「見つけた」は、どちらの端末で見つけた種類も残す（足し合わせ）。減ることはない記録なので、新しさで選ばない
         let remoteDiscovered = Set(remote.discovered ?? [])

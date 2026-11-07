@@ -259,8 +259,7 @@ struct StickerPlayView: View {
 
                     // トレイから引き出し中の絵文字（指に追従するゴースト。画面全体の位置で動く）
                     if let ghost = trayGhost {
-                        Text(ghost.emoji)
-                            .font(.system(size: PlayC.baseFontSize * 1.3))
+                        StickerFace(ghost.emoji, size: PlayC.baseFontSize * 1.3)
                             .shadow(color: .black.opacity(0.20), radius: 8, x: 0, y: 4)
                             .position(ghost.location)
                             .allowsHitTesting(false)
@@ -484,8 +483,7 @@ struct StickerPlayView: View {
             palette[bgIndex].color
             DrawingCanvasView(paperSize: size)
             ForEach(store.playStickers) { sticker in
-                Text(sticker.emoji)
-                    .font(.system(size: PlayC.baseFontSize * CGFloat(sticker.scale)))
+                StickerFace(sticker.emoji, size: PlayC.baseFontSize * CGFloat(sticker.scale))
                     .rotationEffect(.degrees(sticker.rotation))
                     .position(x: sticker.xRatio * size.width, y: sticker.yRatio * size.height)
             }
@@ -929,8 +927,7 @@ private struct PlayStickerView: View {
                     .fill(DS.primary.opacity(0.10))
                     .overlay(Circle().strokeBorder(DS.primary, lineWidth: 2.5))
             }
-            Text(sticker.emoji)
-                .font(.system(size: PlayC.baseFontSize * scale))
+            StickerFace(sticker.emoji, size: PlayC.baseFontSize * scale)
                 .rotationEffect(.degrees(sticker.rotation + liveRotation.degrees))
         }
         .frame(width: hitSize, height: hitSize)
@@ -1146,8 +1143,7 @@ private struct TrayItemView: View {
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
-            Text(group.emoji)
-                .font(.system(size: 34))
+            StickerFace(group.emoji, size: 34)
                 .frame(width: 52, height: 52)
                 .opacity(isLifting ? 0.35 : 1.0)
 

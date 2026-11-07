@@ -29,7 +29,7 @@
 //    ゲーム画面やシール帳に貼ってあるシールは、作品をこわさないよう交換しない（StickerStore 冒頭を参照）。
 //
 //  ★ このファイルの構成 ★
-//    StickerDexView … 画面本体（あつめた数・カテゴリごとの一覧・とじるボタン）
+//    StickerDexView … 画面本体（あつめた数・オリジナルの欄・カテゴリごとの一覧・とじるボタン）
 //    StickerDexCell … 一覧の1マス（シール1種類分）
 
 import SwiftUI
@@ -54,6 +54,9 @@ struct StickerDexView: View {
     /// 交換すると変わるので、そのつど数え直す（StickerStore は @Observable なので、変わると描き直される）。
     private var owned: [String: Int] { store.ownedCounts() }
 
+    /// 一覧のマスの並べ方。
+    private static let gridColumns = [GridItem(.adaptive(minimum: 64), spacing: 8)]   // ← 変更可（マスの最小幅）
+
     /// あつめた種類の数（全シールのうち、一度でも手に入れたもの）。
     private var collectedCount: Int {
         StickerCatalog.all.filter { store.isDiscovered($0) }.count
@@ -69,6 +72,12 @@ struct StickerDexView: View {
     @State private var askAutoFor: [String] = []
     /// 交換したあとに一瞬出す「🔥 +30」（nil なら出さない）。
     @State private var gainedKcal: Double? = nil
+    /// シールづくりの画面を出しているか。
+    @State private var showMaker = false
+    /// 「このシールを すてる？」と聞いているオリジナルシール（nil なら聞いていない）。
+    @State private var disposing: String? = nil
+
+    private let customStore = CustomStickerStore.shared
 
     // MARK: body
 
@@ -99,6 +108,10 @@ struct StickerDexView: View {
         .animation(.easeInOut(duration: 0.2), value: selectedEmoji)
         .animation(.easeInOut(duration: 0.2), value: showExchangeAllConfirm)
         .animation(.easeInOut(duration: 0.2), value: askAutoFor)
+        .animation(.easeInOut(duration: 0.2), value: disposing)
+        .fullScreenCover(isPresented: $showMaker) { CustomStickerMakerView() }
+        // 1.7.0 より前にコンプリートしていた人のために、開いたときにも解放を記録する
+        .onAppear { customStore.recordUnlockIfComplete() }
         .animation(.spring(response: 0.3, dampingFraction: 0.6), value: gainedKcal)
     }
 
@@ -107,17 +120,19 @@ struct StickerDexView: View {
         VStack(spacing: 0) {
             header
 
+            // 数えるのは重いので、描き直しごとに1回だけにする
+            let counts = owned
             ScrollView {
                 LazyVStack(alignment: .leading, spacing: 20, pinnedViews: [.sectionHeaders]) {
+                    if customStore.isUnlocked {
+                        customSection(counts)
+                    }
                     ForEach(StickerCatalog.categories) { category in
                         Section {
-                            LazyVGrid(
-                                columns: [GridItem(.adaptive(minimum: 64), spacing: 8)],   // ← 変更可（マスの最小幅）
-                                spacing: 8
-                            ) {
+                            LazyVGrid(columns: Self.gridColumns, spacing: 8) {
                                 ForEach(category.emojis, id: \.self) { emoji in
                                     let found = store.isDiscovered(emoji)
-                                    StickerDexCell(emoji: emoji, count: owned[emoji, default: 0],
+                                    StickerDexCell(emoji: emoji, count: counts[emoji, default: 0],
                                                    isCollected: found, isAuto: store.autoExchange.contains(emoji))
                                         // 見つけたシールだけ押せる（まだのシールは、何もしない）
                                         .onTapGesture {
@@ -150,17 +165,7 @@ struct StickerDexView: View {
                     .font(.system(size: 24, weight: .black, design: .rounded))
                     .foregroundStyle(DS.primary)
                 Spacer()
-                Button {
-                    SoundManager.shared.playTap()
-                    dismiss()
-                } label: {
-                    Image(systemName: "xmark")
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundStyle(DS.muted)
-                        .frame(width: 40, height: 40)
-                        .background(Circle().fill(Color.black.opacity(0.05)))
-                }
-                .buttonStyle(.plain)
+                StickerCloseButton { dismiss() }
             }
             }
 
@@ -183,11 +188,50 @@ struct StickerDexView: View {
                 .frame(height: 10)
             }
 
+            // まだ解放していないときは、コンプリートのごほうびを見せておく
+            if !customStore.isUnlocked {
+                Text("sticker_custom_locked_hint")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundStyle(DS.muted)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+
             exchangeAllButton
         }
         .padding(.horizontal, 20)
         .padding(.top, 20)
         .padding(.bottom, 12)
+    }
+
+    /// オリジナルの欄。作ったシールと、新しく作るボタンを並べる。
+    private func customSection(_ counts: [String: Int]) -> some View {
+        Section {
+            LazyVGrid(columns: Self.gridColumns, spacing: 8) {
+                ForEach(customStore.ids, id: \.self) { id in
+                    StickerDexCell(emoji: id, count: counts[id, default: 0],
+                                   isCollected: true, isAuto: store.autoExchange.contains(id))
+                        .onTapGesture {
+                            SoundManager.shared.playTap()
+                            selectedEmoji = id
+                        }
+                }
+                Button {
+                    SoundManager.shared.playTap()
+                    showMaker = true
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.system(size: 26, weight: .bold))
+                        .foregroundStyle(DS.primary)
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 64)
+                        .background(RoundedRectangle(cornerRadius: DS.rowRadius).fill(DS.primary.opacity(0.10)))
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(Text("sticker_custom_make_title"))
+            }
+        } header: {
+            sectionHeader("sticker_custom_section") { EmptyView() }
+        }
     }
 
     /// カテゴリの見出し。そのカテゴリで何種類あつめたかも出す。
@@ -196,15 +240,23 @@ struct StickerDexView: View {
         // ⚠️ 変更注意: キーは文字列の連結で作ること。LocalizedStringKey の中で "\(...)" と埋め込むと
         //   「sticker_category_%@」という別のキーとして扱われ、翻訳が見つからなくなる。
         let titleKey = LocalizedStringKey("sticker_category_" + category.id)
-        return HStack {
-            Text(titleKey)
-                .font(.system(size: 17, weight: .black, design: .rounded))
-                .foregroundStyle(DS.textPrimary)
-            Spacer()
+        return sectionHeader(titleKey) {
             Text(verbatim: "\(got) / \(category.emojis.count)")
                 .font(.system(size: 14, weight: .bold, design: .rounded))
                 .monospacedDigit()
                 .foregroundStyle(got == category.emojis.count ? DS.energy : DS.muted)
+        }
+    }
+
+    /// 欄の見出し。左にタイトル、右に trailing を出す。
+    private func sectionHeader<Trailing: View>(_ title: LocalizedStringKey,
+                                               @ViewBuilder trailing: () -> Trailing) -> some View {
+        HStack {
+            Text(title)
+                .font(.system(size: 17, weight: .black, design: .rounded))
+                .foregroundStyle(DS.textPrimary)
+            Spacer()
+            trailing()
         }
         .padding(.vertical, 8)
         .padding(.horizontal, 4)
@@ -252,9 +304,22 @@ extension StickerDexView {
                 isAuto:    store.autoExchange.contains(emoji),
                 onExchange: { exchangeOne(emoji) },
                 onToggleAuto: { on in store.setAutoExchange(on, for: [emoji]) },
+                onDispose: CustomStickerStore.isCustom(emoji) ? { selectedEmoji = nil; disposing = emoji } : nil,
                 onClose:   { selectedEmoji = nil }
             )
             .transition(.scale(scale: 0.9).combined(with: .opacity))
+        }
+        if let id = disposing {
+            dimmed { disposing = nil }
+            let total = owned[id, default: 0]
+            confirmCard(
+                title:   "sticker_custom_dispose_title",
+                body:    Text("sticker_custom_dispose_body \(total) \(total - store.unusedCount(of: id)) \(EnergyStore.format(customStore.disposalKcal(for: id)))"),
+                yes:     "sticker_custom_dispose_ok",
+                no:      "reset_confirm_cancel",
+                onYes:   { disposeSticker(id) },
+                onNo:    { disposing = nil }
+            )
         }
         if showExchangeAllConfirm {
             dimmed { showExchangeAllConfirm = false }
@@ -271,7 +336,7 @@ extension StickerDexView {
             dimmed { askAutoFor = [] }
             confirmCard(
                 title:   "sticker_auto_ask_title",
-                body:    Text("sticker_auto_ask_body \(askAutoFor.joined(separator: " "))"),
+                body:    Text("sticker_auto_ask_body \(askAutoFor.map { StickerFace.spokenName($0) }.joined(separator: " "))"),
                 yes:     "sticker_auto_ask_yes",
                 no:      "sticker_auto_ask_no",
                 onYes:   { store.setAutoExchange(true, for: askAutoFor); askAutoFor = [] },
@@ -301,6 +366,13 @@ extension StickerDexView {
             selectedEmoji = nil
             askAutoFor = [emoji]
         }
+    }
+
+    /// オリジナルシールを処分する。持っていた分のエネルギーを「🔥 +30kcal」と同じように見せる。
+    private func disposeSticker(_ id: String) {
+        disposing = nil
+        let kcal = customStore.dispose(id)
+        if kcal > 0 { showGain(kcal) }
     }
 
     private func exchangeAll() {
@@ -375,6 +447,28 @@ extension StickerDexView {
     }
 }
 
+// MARK: - StickerCloseButton
+
+/// シールの画面の右上に置く「×」のボタン（シールじてん・シールづくりで共通）。
+struct StickerCloseButton: View {
+    let action: () -> Void
+
+    var body: some View {
+        Button {
+            SoundManager.shared.playTap()
+            action()
+        } label: {
+            Image(systemName: "xmark")
+                .font(.system(size: 17, weight: .bold))
+                .foregroundStyle(DS.muted)
+                .frame(width: 40, height: 40)
+                .background(Circle().fill(Color.black.opacity(0.05)))
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(Text("settings_close_button"))
+    }
+}
+
 // MARK: - StickerExchangeCard
 
 /// シール1種類のカード。枚数を見せ、1枚交換と、自動交換のオン／オフができる。
@@ -387,6 +481,8 @@ private struct StickerExchangeCard: View {
     let isAuto: Bool
     let onExchange:   () -> Void
     let onToggleAuto: (Bool) -> Void
+    /// オリジナルシールを処分する。ふつうのシールでは nil（ボタンを出さない）。
+    let onDispose:    (() -> Void)?
     let onClose:      () -> Void
 
     var body: some View {
@@ -407,8 +503,12 @@ private struct StickerExchangeCard: View {
 
     private var content: some View {
         VStack(spacing: 14) {
-            Text(emoji)
-                .font(.system(size: 72))
+            StickerFace(emoji, size: 72)
+            if CustomStickerStore.isCustom(emoji) {
+                Text(verbatim: StickerFace.spokenName(emoji))
+                    .font(.system(size: 16, weight: .bold, design: .rounded))
+                    .foregroundStyle(DS.textPrimary)
+            }
             // ★ 「2 / 3」のような分数にしない理由 ★
             //   子どもが「3つのうち2つめ」や分数と読み違えないよう、ことばで「つかっていない」「ぜんぶ」と分けて書く。
             Text("sticker_exchange_counts \(unused) \(total)")
@@ -443,6 +543,15 @@ private struct StickerExchangeCard: View {
             }
             .tint(DS.energy)
 
+            if let onDispose {
+                Button(action: onDispose) {
+                    Text("sticker_custom_dispose_button")
+                        .font(.system(size: 14, weight: .bold, design: .rounded))
+                        .foregroundStyle(DS.blitzColor)
+                }
+                .buttonStyle(.plain)
+            }
+
             Button(action: onClose) {
                 Text("settings_close_button")
                     .font(.system(size: 16, weight: .semibold, design: .rounded))
@@ -469,8 +578,7 @@ private struct StickerDexCell: View {
     let isAuto: Bool
 
     var body: some View {
-        Text(emoji)
-            .font(.system(size: 36))   // ← 変更可（シールの大きさ）
+        StickerFace(emoji, size: 36)   // ← 変更可（シールの大きさ）
             // ★ 絵文字を黒いシルエットにする方法 ★
             //   絵文字はカラーの画像なので、文字色（foregroundStyle）では色を変えられない。
             //   colorMultiply(.black) は「すべての色に黒を掛ける」ので、透明な部分はそのままに
@@ -503,6 +611,6 @@ private struct StickerDexCell: View {
                 }
             }
             .accessibilityElement(children: .ignore)
-            .accessibilityLabel(isCollected ? Text(verbatim: "\(emoji) ×\(count)") : Text(verbatim: "?"))
+            .accessibilityLabel(isCollected ? Text(verbatim: "\(StickerFace.spokenName(emoji)) ×\(count)") : Text(verbatim: "?"))
     }
 }

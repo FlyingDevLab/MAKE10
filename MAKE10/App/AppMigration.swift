@@ -43,6 +43,7 @@ enum AppMigration {
     static func runIfNeeded() {
         migrateTo150()
         migrateTo160()
+        migrateTo170()
     }
 
     // MARK: 1.5.0
@@ -96,6 +97,26 @@ enum AppMigration {
 
     /// 1.6.0 への更新時の処理を済ませたかの印（UserDefaults のキー）。
     private static let migration160Done = "migration_1_6_0_done"
+
+    // MARK: 1.7.0
+
+    /// 1.7.0 への更新時の処理。プライバシーポリシーをもう一度確かめて、同意してもらう。
+    ///
+    /// ★ もう一度同意してもらう理由 ★（ユーザーと決めた）
+    ///   1.7.0 から、シールづくりでカメラを使えるようになった。写真には顔が写ることがあり、
+    ///   カメラに保護者の制限もかけていないので、保護者に新しいポリシーを確かめてもらう。
+    ///   1.6.0 より前から更新した人は migrateTo160 で同意の印が外れているので、ここでは何も起きない
+    ///   （同意画面は1回だけ出る）。プレゼントは渡さない。
+    private static func migrateTo170() {
+        let defaults = UserDefaults.standard
+        guard !defaults.bool(forKey: Self.migration170Done) else { return }
+        // AppSettings を通して外す（画面が読む値と UserDefaults の両方がそろうように）
+        AppSettings.shared.hasAgreedToTerms = false
+        defaults.set(true, forKey: Self.migration170Done)
+    }
+
+    /// 1.7.0 への更新時の処理を済ませたかの印（UserDefaults のキー）。
+    private static let migration170Done = "migration_1_7_0_done"
 
     // MARK: プレゼント
 

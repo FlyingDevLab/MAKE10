@@ -233,7 +233,7 @@ struct TitleView: View {
         .onAppear {
             // デモで見た目だけ動いていた並びを捨て、保存済みの（自分で並べた）順番に戻す
             rankManager.reloadSaved()
-            // 10びょうモードの記録があれば かわわたり を開き、開いたばかりのタイルを前へ出す（PuzzleProgress.swift を参照）
+            // 10びょうモードで10問正解していれば かわわたり を開き、開いたばかりのタイルを前へ出す（PuzzleProgress.swift を参照）
             PuzzleProgress.shared.refreshBlitzRecord()
             PuzzleProgress.shared.takeTilesToBringForward().forEach(rankManager.bringToFront)
             // ← 変更可：初回デモ開始までの待機時間（秒）

@@ -160,7 +160,7 @@ struct GachaView: View {
         VStack(spacing: 6) {
             EnergyBadge(showsLabel: true, fontSize: 22)
             // ⚠️ 変更注意: 「全シールが同じ確率」は StickerGacha.draw の仕様と一致させること
-            Text("gacha_odds \(StickerCatalog.all.count)")
+            Text("gacha_odds \(StickerCatalog.pool.count)")
                 .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundStyle(DS.muted)
                 .multilineTextAlignment(.center)
@@ -570,8 +570,7 @@ private struct GachaResultCell: View {
     var body: some View {
         ZStack {
             if isRevealed {
-                Text(item.emoji)
-                    .font(.system(size: size))
+                StickerFace(item.emoji, size: size)
                     // エネルギーに変えたシールは、うすくして「シールばこには入っていない」ことを見せる
                     .opacity(item.isExchanged ? 0.4 : 1)
                     .transition(.scale(scale: 0.2).combined(with: .opacity))

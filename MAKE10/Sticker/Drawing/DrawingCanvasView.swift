@@ -40,13 +40,28 @@ struct DrawingCanvasView: View {
     let paperSize: CGSize
 
     var body: some View {
+        // ★ 描画順 ★
+        // 確定済みストローク → 現在描画中のストローク（activeStroke）の順に描く。
+        // こうすることで指を動かしている最中もリアルタイムに線が見える。
+        StrokeLayer(strokes: store.strokes + (store.activeStroke.map { [$0] } ?? []), paperSize: paperSize)
+        // 親（StickerPlayView）のジェスチャーがタッチを受け取れるよう、
+        // このビュー自体はヒットテストに参加しない
+        .allowsHitTesting(false)
+    }
+}
+
+// MARK: - StrokeLayer
+
+/// 線だけの層。シール帳（DrawingCanvasView）とシールづくり（CustomStickerArt）で共通。
+struct StrokeLayer: View {
+    let strokes:   [DrawingStroke]
+    /// 紙の大きさ（pt）
+    let paperSize: CGSize
+
+    var body: some View {
         Canvas { context, _ in
-            // ★ 描画順 ★
-            // 確定済みストローク → 現在描画中のストローク（activeStroke）の順に描く。
-            // こうすることで指を動かしている最中もリアルタイムに線が見える。
-            let allStrokes = store.strokes + (store.activeStroke.map { [$0] } ?? [])
-            for stroke in allStrokes {
-                drawStroke(stroke, in: &context)
+            for stroke in strokes {
+                stroke.draw(in: &context, paperSize: paperSize)
             }
         }
         // ★ .drawingGroup() が必要な理由 ★
@@ -54,33 +69,33 @@ struct DrawingCanvasView: View {
         //   Metal レイヤー上での合成が必要。このモディファイアがないと
         //   消しゴムが「透明」ではなく「黒」になってしまう。
         .drawingGroup()
-        // 親（StickerPlayView）のジェスチャーがタッチを受け取れるよう、
-        // このビュー自体はヒットテストに参加しない
-        .allowsHitTesting(false)
     }
+}
 
-    // MARK: - 描画
+// MARK: - DrawingStroke の描画
 
-    /// 1本のストロークを GraphicsContext に描画するヘルパー。
+extension DrawingStroke {
+
+    /// この線を GraphicsContext に描画する。
     /// - Parameters:
-    ///   - stroke: 描画するストローク
     ///   - context: Canvas の描画コンテキスト（inout で受け取り blendMode を変更する）
-    private func drawStroke(_ stroke: DrawingStroke, in context: inout GraphicsContext) {
+    ///   - paperSize: 紙の大きさ（pt）。線は紙に対する割合で持っているので、これを掛けて位置に戻す
+    func draw(in context: inout GraphicsContext, paperSize: CGSize) {
         // ★ 消しゴムの仕組み ★
         //   blendMode を .clear にすることで、描画した領域が「透明な穴」になる。
         //   .drawingGroup() があるときだけ正しく動作する。
-        if stroke.isEraser {
+        if isEraser {
             context.blendMode = .clear
         } else {
             context.blendMode = .normal
         }
 
-        let color = stroke.isEraser
+        let color = isEraser
             ? Color.clear  // 消しゴムは色不要（blendMode.clear で処理）
-            : Color(hex: stroke.colorHex)
+            : Color(hex: colorHex)
 
         // 太さは紙の幅に対する割合で保存されている（DrawingStore.swift 冒頭を参照）
-        let lineWidth = stroke.width * paperSize.width
+        let lineWidth = width * paperSize.width
 
         let style = StrokeStyle(
             lineWidth: lineWidth,
@@ -88,15 +103,20 @@ struct DrawingCanvasView: View {
             lineJoin:  .round    // 折れ曲がり部分も丸くする
         )
 
-        if stroke.points.count == 1 {
+        /// 紙に対する割合（0.0〜1.0）の点を、紙の上の位置（pt）に直す。
+        func toPaper(_ point: DrawingPoint) -> CGPoint {
+            CGPoint(x: point.x * paperSize.width, y: point.y * paperSize.height)
+        }
+
+        if points.count == 1 {
             // ★ タップ（点）の描画 ★
             //   点が1つしかない場合は Drag ではなくタップ。
             //   円を描くことで「点」として表現する。
-            let pt = toPaper(stroke.points[0])
+            let pt = toPaper(points[0])
             let half = lineWidth / 2
             let rect = CGRect(x: pt.x - half, y: pt.y - half,
                               width: lineWidth, height: lineWidth)
-            if stroke.isEraser {
+            if isEraser {
                 // 消しゴムタップ：blendMode.clear で円形に消す
                 context.fill(Path(ellipseIn: rect), with: .color(Color.white))
             } else {
@@ -106,16 +126,11 @@ struct DrawingCanvasView: View {
             // ★ 通常の線の描画 ★
             //   点の列をつなぐパスを作って stroke（線として描画）する。
             var path = Path()
-            path.move(to: toPaper(stroke.points[0]))
-            for point in stroke.points.dropFirst() {
+            path.move(to: toPaper(points[0]))
+            for point in points.dropFirst() {
                 path.addLine(to: toPaper(point))
             }
             context.stroke(path, with: .color(color), style: style)
         }
-    }
-
-    /// 紙に対する割合（0.0〜1.0）の点を、紙の上の位置（pt）に直す。
-    private func toPaper(_ point: DrawingPoint) -> CGPoint {
-        CGPoint(x: point.x * paperSize.width, y: point.y * paperSize.height)
     }
 }

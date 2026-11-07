@@ -79,8 +79,7 @@ struct DraggableStickerView: View {
     }
 
     var body: some View {
-        Text(sticker.emoji)
-            .font(.system(size: 36))
+        StickerFace(sticker.emoji, size: 36)
             // ドラッグ中は拡大、静止時は等倍
             .scaleEffect(isHeld ? 1.30 : 1.0)
             // ドラッグ中だけ影を表示（静止中はフラットに見せる）

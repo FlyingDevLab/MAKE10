@@ -309,8 +309,7 @@ struct StickerShopView: View {
                 .onTapGesture { selectedEmoji = nil }
 
             VStack(spacing: 14) {
-                Text(emoji)
-                    .font(.system(size: 88))
+                StickerFace(emoji, size: 88)
 
                 if isSoldOut {
                     Text("shop_sold_out")
@@ -459,8 +458,7 @@ private struct ShopShelfCell: View {
 
     var body: some View {
         Button(action: onTap) {
-            Text(emoji)
-                .font(.system(size: 36))   // ← 変更可（棚のシールの大きさ）
+            StickerFace(emoji, size: 36)   // ← 変更可（棚のシールの大きさ）
                 .frame(maxWidth: .infinity)
                 .aspectRatio(1, contentMode: .fit)
                 .background(

@@ -194,7 +194,7 @@ struct FinishedView: View {
         }
 
         // ── かわわたり解放バナー ─────────────────────────
-        // 10びょうモードで はじめて記録ができたセッションのみ表示する
+        // 10びょうモードで はじめて10問正解したセッションのみ表示する
         if viewModel.showRiverUnlockBanner {
             Text("puzzle_opened \(PuzzleStep.river1.openedName)")
                 .font(.system(size: 18, weight: .black, design: .rounded))

@@ -180,6 +180,7 @@ final class CloudSyncManager {
         manager.register(StickerBookStore.shared)      // シール帳の12ページ（page-01〜page-12）
         manager.register(WallpaperStore.shared)        // かべがみ（wallpaper）
         manager.register(StickerStore.shared)          // もっているシール（stickers）
+        manager.register(CustomStickerStore.shared)    // オリジナルシール（customStickers）
         manager.register(StickerShop.shared)           // シールやさんの その日の状態（shop）
         manager.register(EnergyStore.shared)           // エネルギー（energy）
         manager.register(ScoreBoardSync.shared)        // ハイスコア・ベストタイム（scores）

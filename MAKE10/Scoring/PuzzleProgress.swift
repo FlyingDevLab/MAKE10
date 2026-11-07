@@ -8,7 +8,7 @@
 // かわわたり → クロツキ → 華容道 → 箱入り娘 → CHESS と続く「順番に解放する」道のりの記録。
 //
 // ★ 解放の順番 ★
-//   10びょうモードの記録ができる（スコア1以上） → かわわたり 1問目
+//   10びょうモードの1回のプレイで10問正解する → かわわたり 1問目
 //   1問目 → 2問目 → 3問目 → 4問目 → クロツキ → 華容道 → 箱入り娘（標準） → 箱入り娘（むずかしい） → CHESS
 //   手数は問わない。最短でなくても、クリアすれば次が開く。
 //
@@ -101,7 +101,10 @@ final class PuzzleProgress: CloudSyncSource {
 
     static let shared = PuzzleProgress()
 
-    /// ここまでの段は、最初から遊べる。nil なら10びょうモードの記録ができるまで何も開かない。
+    /// かわわたりを開くのに必要な、10びょうモードの正解数（1回のプレイで）。
+    static let riverUnlockBlitzScore = 10   // ← 変更可
+
+    /// ここまでの段は、最初から遊べる。nil なら10びょうモードで riverUnlockBlitzScore 問正解するまで何も開かない。
     /// アップデートで開放範囲を広げるときは、ここを変えるだけでよい（このファイル冒頭を参照）。
     static let initiallyOpenThrough: PuzzleStep? = nil   // ← 変更可
 
@@ -139,12 +142,12 @@ final class PuzzleProgress: CloudSyncSource {
 
     // MARK: 解放
 
-    /// 10びょうモードの記録があれば、かわわたりを開く。
+    /// 10びょうモードの最高記録が riverUnlockBlitzScore に届いていれば、かわわたりを開く。
     /// タイトル画面を出すたびに呼ぶ（前の版からの記録や、iCloud から届いた記録でも開くように）。
     /// init で呼ばないのは、ここから iCloud の係（CloudSyncManager）に触るため。
     /// iCloud の係は起動時にこの係を登録するので、init の中で触ると、お互いの初期化を待ち合ってしまう。
     func refreshBlitzRecord() {
-        if ScoreBoard.highScore(for: UDKey.blitzHighScore) > 0 { unlock(.river1) }
+        if ScoreBoard.highScore(for: UDKey.blitzHighScore) >= Self.riverUnlockBlitzScore { unlock(.river1) }
     }
 
     /// 段を開く。

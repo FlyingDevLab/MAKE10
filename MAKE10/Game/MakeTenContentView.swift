@@ -199,6 +199,7 @@ struct MakeTenContentView: View {
                     notice:      notice,
                     onOpenGacha: { closeGiftNotice(notice, openingScreen: .gacha) },
                     onOpenShop:  { closeGiftNotice(notice, openingScreen: .stickerShop) },
+                    onOpenDex:   { closeGiftNotice(notice, openingScreen: .stickerDex) },
                     onClose:     { closeGiftNotice(notice, openingScreen: nil) }
                 )
                 .id(notice.id)   // 次のお知らせに切り替わったとき、登場の演出をやり直す
@@ -261,7 +262,9 @@ struct MakeTenContentView: View {
         //   タイトル画面に戻ってきたときに確かめる。タイトル画面にずっといる場合に備えて、30秒ごとにも確かめる。
         //   結果画面の分は EnergyRewardBanner が数え上げの終わりに確かめる。
         .onChange(of: isOnTitleScreen) { _, onTitle in
-            if onTitle { checkBreakReminder() }
+            guard onTitle else { return }
+            refreshGiftNotices()   // ガチャなどでコンプリートして戻ってきたときに、お祝いを出す
+            checkBreakReminder()
         }
         // ⚠️ 変更注意: Timer.publish(...).autoconnect() を body に直接書くと、画面が描き直されるたびに
         //   タイマーが作り直されて（タイトルのデモで頻繁に起きる）いつまでも発火しない。.task のループにしている。
@@ -297,12 +300,15 @@ struct MakeTenContentView: View {
     }
 
     /// その日のログインボーナスを受け取り、まだ見せていないお知らせを並べ直す。
-    /// 出す順: アップデートのお礼 → はじめまして → ログインボーナス
+    /// 出す順: アップデートのお礼 → シールじてんのコンプリート → はじめまして → ログインボーナス
     private func refreshGiftNotices() {
         guard !ScreenshotMode.isActive else { return }   // 撮影中はお知らせのカードを出さない
         DailyBonus.checkIn()
         var notices: [GiftNotice] = []
         if AppMigration.hasPendingGiftNotice { notices.append(.updateThanks) }
+        // 1.7.0 より前にコンプリートしていた人にも、ここで1回お祝いと案内を出す
+        CustomStickerStore.shared.recordUnlockIfComplete()
+        if CustomStickerStore.shared.hasPendingCompleteNotice { notices.append(.dexComplete) }
         notices += DailyBonus.pendingNotices.map { .daily($0) }
         giftNotices = notices
     }
@@ -311,6 +317,7 @@ struct MakeTenContentView: View {
     private func closeGiftNotice(_ notice: GiftNotice, openingScreen: Screen?) {
         switch notice {
         case .updateThanks:      AppMigration.markGiftNoticeShown()
+        case .dexComplete:       CustomStickerStore.shared.markCompleteNoticeShown()
         case .daily(let daily):  DailyBonus.markShown(daily)
         }
         withAnimation(.easeInOut(duration: 0.25)) {

@@ -191,8 +191,7 @@ struct StickerStorageView: View {
 
             // 飛ぶ絵文字オーバーレイ
             if isFlying {
-                Text(flyEmoji)
-                    .font(.system(size: 56))
+                StickerFace(flyEmoji, size: 56)
                     .shadow(color: .black.opacity(0.15), radius: 6, x: 0, y: 3)
                     .position(x: size.width / 2, y: flyY)
                     .allowsHitTesting(false)
@@ -320,8 +319,7 @@ struct StickerStorageView: View {
 
                 // ── 遠方左 L2：N≥5 のとき表示 ──
                 if n >= 5 {
-                    Text(groups[(i - 2 + n) % n].emoji)
-                        .font(.system(size: farSize))
+                    StickerFace(groups[(i - 2 + n) % n].emoji, size: farSize)
                         .opacity(farOpacity)
                         .offset(x: -farOffset + dragX * 0.65)
                         .animation(.interactiveSpring(), value: dragX)
@@ -329,8 +327,7 @@ struct StickerStorageView: View {
 
                 // ── 隣接左 L1：N≥3 のとき表示 ──
                 if n >= 3 {
-                    Text(groups[(i - 1 + n) % n].emoji)
-                        .font(.system(size: sideSize))
+                    StickerFace(groups[(i - 1 + n) % n].emoji, size: sideSize)
                         .opacity(sideOpacity)
                         .offset(x: -sideOffset + dragX * 0.45)
                         .animation(.interactiveSpring(), value: dragX)
@@ -343,8 +340,7 @@ struct StickerStorageView: View {
 
                 // ── 隣接右 R1：N≥2 のとき表示 ──
                 if n >= 2 {
-                    Text(groups[(i + 1) % n].emoji)
-                        .font(.system(size: sideSize))
+                    StickerFace(groups[(i + 1) % n].emoji, size: sideSize)
                         .opacity(sideOpacity)
                         .offset(x: sideOffset + dragX * 0.45)
                         .animation(.interactiveSpring(), value: dragX)
@@ -352,8 +348,7 @@ struct StickerStorageView: View {
 
                 // ── 遠方右 R2：N≥4 のとき表示 ──
                 if n >= 4 {
-                    Text(groups[(i + 2) % n].emoji)
-                        .font(.system(size: farSize))
+                    StickerFace(groups[(i + 2) % n].emoji, size: farSize)
                         .opacity(farOpacity)
                         .offset(x: farOffset + dragX * 0.65)
                         .animation(.interactiveSpring(), value: dragX)
@@ -370,8 +365,7 @@ struct StickerStorageView: View {
     // 中央スロット：大きい絵文字＋右下の枚数バッジ（2枚以上のときのみ）。
     private func centerSlot(group: EmojiGroup) -> some View {
         ZStack(alignment: .bottomTrailing) {
-            Text(group.emoji)
-                .font(.system(size: centerSize))
+            StickerFace(group.emoji, size: centerSize)
 
             if group.count >= 2 {
                 countBadge(group.count)

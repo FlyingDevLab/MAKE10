@@ -72,7 +72,8 @@ final class StickerShop {
     // MARK: 表示用の値
 
     /// 並んでいるシール（表示順）。
-    var lineup: [String] { state?.lineup ?? [] }
+    /// 処分したオリジナルシールは、その日の品揃えからも消す。
+    var lineup: [String] { (state?.lineup ?? []).filter { !CustomStickerStore.shared.isDisposed($0) } }
 
     /// 指定したシールが売り切れかどうか。
     func isSoldOut(_ emoji: String) -> Bool {
@@ -81,8 +82,8 @@ final class StickerShop {
 
     /// 全部売り切れて閉店しているかどうか。
     var isClosed: Bool {
-        guard let state, !state.lineup.isEmpty else { return false }
-        return state.lineup.allSatisfy { state.soldOut.contains($0) }
+        guard let state, !lineup.isEmpty else { return false }
+        return lineup.allSatisfy { state.soldOut.contains($0) }
     }
 
     /// 次に品揃えが入れ替わる時刻（翌日の0時）。閉店中の「つぎの かいてんまで」表示に使う。
@@ -108,7 +109,7 @@ final class StickerShop {
         // 自動交換にした種類は並べない（買っても すぐエネルギーにしたい種類なので、品ぞろえの枠を使わない）
         let autoExchange = StickerStore.shared.autoExchange
         let lineup = Self.makeLineup(
-            catalog: StickerCatalog.all.filter { !autoExchange.contains($0) },
+            catalog: StickerCatalog.pool.filter { !autoExchange.contains($0) },
             owned:   StickerStore.shared.ownedCounts(),
             using:   &rng
         )
@@ -121,7 +122,7 @@ final class StickerShop {
     /// シールを1枚買う。買えたらストレージへ直送し、売り切れにする。
     /// シールを渡してからエネルギーを減らす順の理由は StickerGacha.pull を参照。
     func buy(_ emoji: String) -> PurchaseResult {
-        guard var current = state, current.lineup.contains(emoji) else { return .notInLineup }
+        guard var current = state, lineup.contains(emoji) else { return .notInLineup }
         guard !current.soldOut.contains(emoji) else { return .soldOut }
 
         let energy = EnergyStore.shared
